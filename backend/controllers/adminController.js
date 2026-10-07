@@ -241,6 +241,41 @@ exports.createDepartment = async (req, res) => {
   }
 };
 
+// PUT /api/admin/departments/:id
+// Admin can update department head (HOD) and other details
+exports.updateDepartment = async (req, res) => {
+  try {
+    const { head, name, code, description } = req.body;
+    const dept = await Department.findById(req.params.id);
+    if (!dept) {
+      return res.status(404).json({ success: false, message: 'Department not found.' });
+    }
+
+    if (head !== undefined) dept.head = head.trim();
+    if (name) dept.name = name.trim();
+    if (code) dept.code = code.trim().toUpperCase();
+    if (description !== undefined) dept.description = description;
+
+    await dept.save();
+
+    await AuditTrail.create({
+      user: req.user._id,
+      userName: req.user.name,
+      role: 'ADMIN',
+      action: 'UPDATE_DEPARTMENT',
+      targetType: 'DEPARTMENT',
+      targetId: dept._id.toString(),
+      details: `Department "${dept.name}" (${dept.code}) updated. Head of Department set to: "${dept.head}".`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    return res.json({ success: true, message: `Department head updated successfully to ${dept.head}`, department: dept });
+  } catch (err) {
+    console.error('updateDepartment error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to update department: ' + err.message });
+  }
+};
+
 // GET /api/admin/cohorts
 exports.getCohorts = async (req, res) => {
   try {

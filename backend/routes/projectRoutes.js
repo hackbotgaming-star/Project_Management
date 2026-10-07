@@ -10,5 +10,6 @@ router.patch('/:id', authenticateToken, projectController.updateProject);
 router.post('/', authenticateToken, projectController.createProject);
 router.post('/:id/members', authenticateToken, projectController.addTeamMembers);
 router.delete('/:id/members/:memberId', authenticateToken, projectController.removeTeamMember);
+router.delete('/:id', authenticateToken, projectController.deleteProject);
 
 module.exports = router;

@@ -281,3 +281,58 @@ exports.addTeamMembers = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Failed to add team members.' });
   }
 };
+
+// DELETE /api/projects/:id
+// Allows students to delete unwanted projects they belong to (or created), and Admins
+exports.deleteProject = async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (!project) {
+      return res.status(404).json({ success: false, message: 'Project not found.' });
+    }
+
+    // Role check: Students can delete projects where they are team members
+    // Admin can delete any project
+    // Faculty can delete if they are the assigned facultyMentor
+    if (req.user.role === 'STUDENT') {
+      const isMember = project.teamMembers.some((m) => m.toString() === req.user._id.toString());
+      if (!isMember) {
+        return res.status(403).json({ success: false, message: 'You are not authorized to delete this project.' });
+      }
+    } else if (req.user.role === 'FACULTY') {
+      const isMentor = project.facultyMentor && project.facultyMentor.toString() === req.user._id.toString();
+      if (!isMentor) {
+        return res.status(403).json({ success: false, message: 'Faculty can only delete projects they mentor.' });
+      }
+    }
+
+    // Clean up associated tasks, milestones, and documents
+    const Task = require('../models/Task');
+    const Milestone = require('../models/Milestone');
+    const Document = require('../models/Document');
+
+    await Promise.all([
+      Task.deleteMany({ project: project._id }),
+      Milestone.deleteMany({ project: project._id }),
+      Document.deleteMany({ project: project._id }),
+      Project.findByIdAndDelete(project._id),
+    ]);
+
+    await AuditTrail.create({
+      user: req.user._id,
+      userName: req.user.name,
+      role: req.user.role,
+      action: 'DELETE_PROJECT',
+      targetType: 'PROJECT',
+      targetId: project._id.toString(),
+      details: `Project "${project.title}" (${project.code}) and associated records were deleted by ${req.user.name} (${req.user.role}).`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    return res.json({ success: true, message: `Project "${project.title}" deleted successfully.` });
+  } catch (err) {
+    console.error('deleteProject error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to delete project: ' + err.message });
+  }
+};
+

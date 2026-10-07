@@ -13,6 +13,7 @@ router.put('/projects/:id/status', adminController.updateProjectStatus);
 router.get('/departments', adminController.getDepartments);
 router.get('/departments/:id', adminController.getDepartmentDetails);
 router.post('/departments', adminController.createDepartment);
+router.put('/departments/:id', adminController.updateDepartment);
 router.get('/cohorts', adminController.getCohorts);
 router.post('/cohorts', adminController.createCohort);
 router.get('/audit-trail', adminController.getAuditTrail);

@@ -130,12 +130,6 @@ async function ensureAllEngineeringDepartments() {
       });
       if (!existing) {
         await Department.create(dept);
-      } else {
-        existing.name = dept.name;
-        existing.code = dept.code;
-        existing.head = dept.head;
-        existing.description = dept.description;
-        await existing.save();
       }
     } catch (e) {
       console.warn(`Could not sync department ${dept.code}:`, e.message);
@@ -159,22 +153,7 @@ async function seedDatabase() {
     });
   }
 
-  // 1. Remove all demo data collections (projects, tasks, milestones, documents, notifications)
-  await Project.deleteMany({});
-  await Task.deleteMany({});
-  await Milestone.deleteMany({});
-  await Document.deleteMany({});
-  await Notification.deleteMany({});
-
-  // 2. Remove all users EXCEPT the 3 official demo accounts
-  const KEPT_EMAILS = [
-    'student@university.edu',
-    'faculty@university.edu',
-    'admin@university.edu'
-  ];
-  await User.deleteMany({ email: { $nin: KEPT_EMAILS } });
-
-  // 3. Ensure the 3 official credentials exist with exact passwords
+  // Ensure default demo accounts exist without deleting new projects created by users
   const studentPw = await User.hashPassword('student123');
   const facultyPw = await User.hashPassword('faculty123');
   const adminPw = await User.hashPassword('admin123');

@@ -349,7 +349,13 @@
               <p id="detailDeptDesc" class="text-xs text-outline mt-1 max-w-2xl"></p>
             </div>
             <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 min-w-[220px]">
-              <div class="text-[10px] text-outline uppercase font-mono mb-1">Head of Department</div>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-[10px] text-outline uppercase font-mono">Head of Department</span>
+                <button onclick="openEditDeptHeadModal()" class="text-[10px] text-tertiary hover:underline flex items-center gap-0.5 font-medium">
+                  <span class="material-symbols-outlined text-[12px]">edit</span>
+                  <span>Change HOD</span>
+                </button>
+              </div>
               <div id="detailDeptHead" class="font-bold text-xs text-on-surface flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-secondary text-base">supervisor_account</span>
                 <span></span>
@@ -1053,6 +1059,46 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL: EDIT HEAD OF DEPARTMENT (HOD)      -->
+  <!-- ========================================== -->
+  <div id="editDeptHeadModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2">
+          <span class="material-symbols-outlined text-tertiary text-xl">supervisor_account</span>
+          <h3 class="font-headline font-bold text-base text-on-surface">Assign Head of Department</h3>
+        </div>
+        <button onclick="closeModal('editDeptHeadModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="editDeptHeadForm" class="space-y-4">
+        <input type="hidden" id="editDeptHeadDeptId">
+        
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Department Name</label>
+          <input id="editDeptHeadDeptName" readonly class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-outline font-medium cursor-not-allowed">
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Head of Department (HOD) Name <span class="text-error">*</span></label>
+          <input id="editDeptHeadNameInput" required placeholder="e.g. Dr. Jane Smith, Ph.D." class="w-full p-2.5 bg-surface-container-high rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          <p class="text-[10px] text-outline mt-1">Designates the academic administrator leading this engineering branch.</p>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('editDeptHeadModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnSaveDeptHead" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">save</span>
+            <span>Update HOD</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- APPLICATION SCRIPTS -->
   <script>
     let adminData = null;
@@ -1473,10 +1519,16 @@
               </div>
             </div>
 
-            <button type="button" onclick="event.stopPropagation(); openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="w-full mt-3 py-2 px-3 rounded-xl bg-surface-container hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-all flex items-center justify-center gap-1.5 border border-outline-variant/20">
-              <span>Open Department Portal</span>
-              <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </button>
+            <div class="flex items-center gap-2 mt-3">
+              <button type="button" onclick="event.stopPropagation(); openEditDeptHeadModal('${d.id || ''}', '${d.name.replace(/'/g, "\\'")}', '${(d.head || '').replace(/'/g, "\\'")}')" class="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-outline hover:text-secondary font-medium text-xs transition-all flex items-center justify-center gap-1 border border-outline-variant/20" title="Edit Head of Department">
+                <span class="material-symbols-outlined text-sm">edit</span>
+                <span>HOD</span>
+              </button>
+              <button type="button" onclick="event.stopPropagation(); openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="flex-1 py-2 px-3 rounded-xl bg-surface-container hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-all flex items-center justify-center gap-1.5 border border-outline-variant/20">
+                <span>Open Portal</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </button>
+            </div>
           </div>
         </div>
       `).join('');
@@ -1658,6 +1710,70 @@
       document.getElementById('newUserRole').value = role;
       openModal('createUserModal');
     }
+
+    // Open Edit Head of Department Modal
+    function openEditDeptHeadModal(deptId, deptName, currentHead) {
+      if (!adminData || !adminData.departmentStatistics) return;
+      let targetDept = null;
+      if (deptId) {
+        targetDept = adminData.departmentStatistics.find(d => d.id === deptId || d._id === deptId);
+      }
+      if (!targetDept && deptName) {
+        targetDept = adminData.departmentStatistics.find(d => d.name.toLowerCase() === deptName.toLowerCase());
+      }
+      if (!targetDept && currentViewingDeptName) {
+        targetDept = adminData.departmentStatistics.find(d => d.name.toLowerCase() === currentViewingDeptName.toLowerCase());
+      }
+
+      if (!targetDept) {
+        alert('Could not find department details.');
+        return;
+      }
+
+      document.getElementById('editDeptHeadDeptId').value = targetDept.id || targetDept._id || '';
+      document.getElementById('editDeptHeadDeptName').value = `${targetDept.name} (${targetDept.code})`;
+      document.getElementById('editDeptHeadNameInput').value = targetDept.head || currentHead || '';
+      openModal('editDeptHeadModal');
+    }
+
+    // Submit Edit Head of Department Form
+    document.getElementById('editDeptHeadForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const deptId = document.getElementById('editDeptHeadDeptId').value;
+      const head = document.getElementById('editDeptHeadNameInput').value.trim();
+      const btn = document.getElementById('btnSaveDeptHead');
+      if (!deptId || !head) {
+        alert('Department ID and Head of Department name are required.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Updating...';
+
+      try {
+        const res = await fetch(`/api/admin/departments/${deptId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ head })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('editDeptHeadModal');
+          alert(`Head of Department updated successfully to: ${head}`);
+          await loadAdminDashboard();
+          if (currentViewingDeptName) {
+            openDepartmentView(currentViewingDeptName);
+          }
+        } else {
+          alert(json.message || 'Failed to update Head of Department.');
+        }
+      } catch (err) {
+        alert('Network or server error updating department head: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">save</span><span>Update HOD</span>';
+      }
+    });
 
     // ==========================================
     // DEDICATED WORKING COHORT PORTAL LOGIC

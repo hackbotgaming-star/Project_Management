@@ -1111,10 +1111,16 @@
               <div class="text-outline">Advisor: <span class="text-secondary font-medium">${proj.facultyMentor ? proj.facultyMentor.name : 'Unassigned'}</span></div>
               <div class="text-primary font-bold">${proj.progressPercentage}% Complete</div>
             </div>
-            <a href="/projects/${proj._id}" class="px-3.5 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm self-start sm:self-auto">
-              <span class="material-symbols-outlined text-[16px]">folder_special</span>
-              <span>Open Project Workspace &rarr;</span>
-            </a>
+            <div class="flex items-center gap-2 self-start sm:self-auto">
+              <button onclick="deleteStudentProject('${proj._id}', '${proj.title.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-error/20 border border-outline-variant/30 hover:border-error/40 text-outline hover:text-error font-medium text-xs flex items-center gap-1 transition-all" title="Delete Unwanted Project">
+                <span class="material-symbols-outlined text-[16px]">delete</span>
+                <span>Delete</span>
+              </button>
+              <a href="/projects/${proj._id}" class="px-3.5 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm">
+                <span class="material-symbols-outlined text-[16px]">folder_special</span>
+                <span>Open Project Workspace &rarr;</span>
+              </a>
+            </div>
           </div>
         </div>
       `).join('');
@@ -1794,6 +1800,28 @@
         alert('Failed to update profile.');
       } finally {
         if (btn) btn.disabled = false;
+      }
+    }
+
+    async function deleteStudentProject(projectId, projectTitle) {
+      if (!confirm(`Are you sure you want to permanently delete project "${projectTitle}"?\n\nThis will remove the project along with its tasks, milestones, and documents.`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/projects/${projectId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert(`Project "${projectTitle}" deleted successfully.`);
+          loadStudentDashboard();
+        } else {
+          alert(json.message || 'Failed to delete project.');
+        }
+      } catch (err) {
+        alert('Network or server error deleting project: ' + err.message);
       }
     }
 

@@ -84,6 +84,9 @@
       <button onclick="openEditProjectModal()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-outline hover:text-on-surface transition-all" title="Edit Project Settings">
         <span class="material-symbols-outlined text-[18px]">settings</span>
       </button>
+      <button onclick="confirmDeleteCurrentProject()" class="p-2 rounded-xl bg-surface-container hover:bg-error/20 border border-outline-variant/30 text-outline hover:text-error transition-all" title="Delete Unwanted Project">
+        <span class="material-symbols-outlined text-[18px]">delete</span>
+      </button>
       <div class="h-4 w-px bg-outline-variant/30 hidden sm:block"></div>
       <div id="userBadge" class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-surface-container border border-outline-variant/20 text-xs">
         <span id="currentUserRoleBadge" class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-primary/20 text-primary font-semibold">USER</span>
@@ -1288,6 +1291,30 @@
         btn.textContent = 'Save Settings';
       }
     });
+
+    // Delete Project Function
+    async function confirmDeleteCurrentProject() {
+      const projTitle = projectData ? projectData.title : 'this project';
+      if (!confirm(`Are you sure you want to permanently delete "${projTitle}"?\n\nThis will remove the project along with its tasks, milestones, and documents.`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/projects/${currentProjectId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert(`Project "${projTitle}" deleted successfully.`);
+          goBack();
+        } else {
+          alert(json.message || 'Failed to delete project.');
+        }
+      } catch (err) {
+        alert('Network error deleting project: ' + err.message);
+      }
+    }
   </script>
 </body>
 </html>
