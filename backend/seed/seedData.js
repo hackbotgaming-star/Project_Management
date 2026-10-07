@@ -146,340 +146,105 @@ async function ensureAllEngineeringDepartments() {
 async function seedDatabase() {
   await ensureAllEngineeringDepartments();
 
-  const userCount = await User.countDocuments();
-  if (userCount > 0) {
-    console.log('Database already initialized with records.');
-    return;
+  // Create or verify default Cohort
+  let defaultCohort = await Cohort.findOne({ code: 'CS492-SP25' });
+  if (!defaultCohort) {
+    defaultCohort = await Cohort.create({
+      name: 'CS-492 Capstone Cohort 2025',
+      code: 'CS492-SP25',
+      term: 'Spring',
+      year: 2025,
+      department: 'Computer Science & Engineering',
+      status: 'ACTIVE',
+    });
   }
 
-  console.log('🌱 Seeding initial academic database records...');
+  // 1. Remove all demo data collections (projects, tasks, milestones, documents, notifications)
+  await Project.deleteMany({});
+  await Task.deleteMany({});
+  await Milestone.deleteMany({});
+  await Document.deleteMany({});
+  await Notification.deleteMany({});
 
-  // Create Departments
-  for (const dept of ALL_ENGINEERING_DEPARTMENTS) {
-    const exists = await Department.findOne({ code: dept.code });
-    if (!exists) await Department.create(dept);
-  }
+  // 2. Remove all users EXCEPT the 3 official demo accounts
+  const KEPT_EMAILS = [
+    'student@university.edu',
+    'faculty@university.edu',
+    'admin@university.edu'
+  ];
+  await User.deleteMany({ email: { $nin: KEPT_EMAILS } });
 
-  // Create Cohorts
-  const cohortSpring25 = await Cohort.create({
-    name: 'CS-492 Capstone Cohort 2025',
-    code: 'CS492-SP25',
-    term: 'Spring',
-    year: 2025,
-    department: 'Computer Science & Engineering',
-    status: 'ACTIVE',
-  });
-
-  const cohortFall25 = await Cohort.create({
-    name: 'CS-491 Preparatory Capstone 2025',
-    code: 'CS491-FA25',
-    term: 'Fall',
-    year: 2025,
-    department: 'Computer Science & Engineering',
-    status: 'UPCOMING',
-  });
-
-  // Hash passwords
+  // 3. Ensure the 3 official credentials exist with exact passwords
   const studentPw = await User.hashPassword('student123');
   const facultyPw = await User.hashPassword('faculty123');
   const adminPw = await User.hashPassword('admin123');
 
-  // 1. Create Students
-  const student1 = await User.create({
-    name: 'Alex Chen',
-    email: 'student@university.edu',
-    password: studentPw,
-    role: 'STUDENT',
-    department: 'Computer Science & Engineering',
-    cohort: 'CS-492 Capstone Cohort 2025',
-    studentId: 'STU-2025-084',
-    title: 'Senior Capstone Researcher',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-    bio: 'Lead Architect on Autonomous Quadrotor swarm navigation.',
-  });
+  // Student
+  let studentUser = await User.findOne({ email: 'student@university.edu' });
+  if (!studentUser) {
+    studentUser = await User.create({
+      name: 'Alex Chen',
+      email: 'student@university.edu',
+      password: studentPw,
+      role: 'STUDENT',
+      department: 'Computer Science & Engineering',
+      cohort: 'CS-492 Capstone Cohort 2025',
+      studentId: 'STU-2025-084',
+      title: 'Senior Capstone Student',
+      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
+      bio: 'Undergraduate Engineering Capstone Student.',
+    });
+  }
 
-  const student2 = await User.create({
-    name: 'Elena Rostova',
-    email: 'elena@university.edu',
-    password: studentPw,
-    role: 'STUDENT',
-    department: 'Computer Science & Engineering',
-    cohort: 'CS-492 Capstone Cohort 2025',
-    studentId: 'STU-2025-085',
-    title: 'Perception Systems Specialist',
-    avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150',
-    bio: 'Focusing on real-time SLAM & LiDAR point cloud sensor fusion.',
-  });
+  // Faculty
+  let facultyUser = await User.findOne({ email: 'faculty@university.edu' });
+  if (!facultyUser) {
+    facultyUser = await User.create({
+      name: 'Dr. Aris Thorne',
+      email: 'faculty@university.edu',
+      password: facultyPw,
+      role: 'FACULTY',
+      department: 'Computer Science & Engineering',
+      cohort: 'CS-492 Capstone Cohort 2025',
+      facultyId: 'FAC-8041',
+      title: 'Associate Professor & Advisor',
+      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
+      bio: 'Faculty Capstone Advisor & Reviewer.',
+    });
+  }
 
-  const student3 = await User.create({
-    name: 'Marcus Brody',
-    email: 'marcus@university.edu',
-    password: studentPw,
-    role: 'STUDENT',
-    department: 'Computer Science & Engineering',
-    cohort: 'CS-492 Capstone Cohort 2025',
-    studentId: 'STU-2025-091',
-    title: 'Hardware & Telemetry Engineer',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-    bio: 'Embedded firmware on STM32 microcontrollers and CAN-bus telemetry.',
-  });
+  // Admin
+  let adminUser = await User.findOne({ email: 'admin@university.edu' });
+  if (!adminUser) {
+    adminUser = await User.create({
+      name: 'Dean Eleanor Vance',
+      email: 'admin@university.edu',
+      password: adminPw,
+      role: 'ADMIN',
+      department: 'Office of Academic Affairs',
+      title: 'Dean of Engineering & ABET Program Coordinator',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+      bio: 'Institutional oversight, capstone committee chair, and accreditation administrator.',
+    });
+  }
 
-  // 2. Create Faculty
-  const faculty1 = await User.create({
-    name: 'Dr. Aris Thorne',
-    email: 'faculty@university.edu',
-    password: facultyPw,
-    role: 'FACULTY',
-    department: 'Computer Science & Engineering',
-    cohort: 'CS-492 Capstone Cohort 2025',
-    facultyId: 'FAC-8041',
-    title: 'Associate Professor & Advisor',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150',
-    bio: 'Specializing in edge robotics, autonomous path planning, and embedded computer vision.',
-  });
-
-  const faculty2 = await User.create({
-    name: 'Dr. Marcus Vance',
-    email: 'mvance@university.edu',
-    password: facultyPw,
-    role: 'FACULTY',
-    department: 'Computer Science & Engineering',
-    facultyId: 'FAC-8042',
-    title: 'Professor of Distributed Systems',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-    bio: 'Distributed consensus algorithms and fault-tolerant cloud backends.',
-  });
-
-  // 3. Create Admin
-  const adminUser = await User.create({
-    name: 'Dean Eleanor Vance',
-    email: 'admin@university.edu',
-    password: adminPw,
+  // Record clean audit trail
+  await AuditTrail.deleteMany({});
+  await AuditTrail.create({
+    user: adminUser._id,
+    userName: adminUser.name,
     role: 'ADMIN',
-    department: 'Office of Academic Affairs',
-    title: 'Dean of Engineering & ABET Program Coordinator',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-    bio: 'Institutional oversight, capstone committee chair, and accreditation administrator.',
+    action: 'CLEAN_DATABASE_INITIALIZATION',
+    targetType: 'SYSTEM',
+    details: 'Database cleaned: All demo projects, tasks, milestones, and documents removed. Only official credentials active.',
+    ipAddress: '127.0.0.1',
   });
 
-  // Create Projects
-  const project1 = await Project.create({
-    title: 'Apex Lab: Autonomous Quadrotor SLAM & Swarm Navigation',
-    code: 'CAP-2025-01',
-    abstract: 'Development of an edge-accelerated simultaneous localization and mapping (SLAM) algorithm for GPS-denied indoor multi-agent quadrotor flight.',
-    department: 'Computer Science & Engineering',
-    cohort: 'CS-492 Capstone Cohort 2025',
-    status: 'IN_PROGRESS',
-    health: 'ON_TRACK',
-    teamMembers: [student1._id, student2._id, student3._id],
-    facultyMentor: faculty1._id,
-    progressPercentage: 68,
-    startDate: new Date('2025-01-15'),
-    endDate: new Date('2025-05-20'),
-    defenseDate: new Date('2025-05-18T10:00:00Z'),
-    defenseLocation: 'Hall 304 / ABET Capstone Boardroom',
-    tags: ['Robotics', 'SLAM', 'Embedded ROS2', 'Computer Vision'],
-    repositoryUrl: 'https://github.com/apex-lab/quadrotor-slam',
-    documentationUrl: 'https://docs.apexlab.edu',
-  });
-
-  const project2 = await Project.create({
-    title: 'BioSensing Wearable: Real-Time Cardiac Arrhythmia Detection',
-    code: 'CAP-2025-02',
-    abstract: 'Ultra low-power wearable ECG telemetry with TinyML on-device inference for early ventricular fibrillation alerts.',
-    department: 'Electrical & Computer Engineering',
-    cohort: 'CS-492 Capstone Cohort 2025',
-    status: 'UNDER_REVIEW',
-    health: 'AT_RISK',
-    teamMembers: [student2._id],
-    facultyMentor: faculty1._id,
-    progressPercentage: 45,
-    startDate: new Date('2025-01-20'),
-    endDate: new Date('2025-05-25'),
-    defenseDate: new Date('2025-05-22T14:00:00Z'),
-    tags: ['TinyML', 'Wearables', 'Digital Signal Processing'],
-  });
-
-  const project3 = await Project.create({
-    title: 'Quantum-Resistant Distributed Ledger for Academic Credentialing',
-    code: 'CAP-2025-03',
-    abstract: 'Lattice-based cryptographic protocol for verifiable university degree attestation and cross-institutional credit transfers.',
-    department: 'Computer Science & Engineering',
-    cohort: 'CS-492 Capstone Cohort 2025',
-    status: 'APPROVED',
-    health: 'ON_TRACK',
-    teamMembers: [student3._id],
-    facultyMentor: faculty2._id,
-    progressPercentage: 92,
-    startDate: new Date('2024-09-01'),
-    endDate: new Date('2025-05-10'),
-    defenseDate: new Date('2025-05-12T09:00:00Z'),
-    tags: ['Cryptography', 'Blockchain', 'Security'],
-  });
-
-  // Create Tasks for Project 1
-  await Task.create([
-    {
-      project: project1._id,
-      title: 'Optimize LiDAR Odometry EKF Loop on Jetson Orin Nano',
-      description: 'Profile execution time of the extended Kalman filter using NVIDIA Nsight Systems and reduce memory overhead to < 18ms latency.',
-      assignedTo: student1._id,
-      createdBy: student1._id,
-      priority: 'CRITICAL',
-      status: 'IN_PROGRESS',
-      dueDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-    },
-    {
-      project: project1._id,
-      title: 'Calibrate RealSense D435i Stereo Depth Intrinsics',
-      description: 'Run OpenCV checkerboard calibration script across 60 capture frames and write JSON camera matrix.',
-      assignedTo: student2._id,
-      createdBy: student1._id,
-      priority: 'HIGH',
-      status: 'DONE',
-      dueDate: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-    },
-    {
-      project: project1._id,
-      title: 'Assemble 3D Printed Carbon-Fiber Drone Frame Chassis',
-      description: 'Mount flight controller, ESC distribution board, and vibration dampening pads.',
-      assignedTo: student3._id,
-      createdBy: student1._id,
-      priority: 'MEDIUM',
-      status: 'DONE',
-      dueDate: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-    },
-    {
-      project: project1._id,
-      title: 'Submit Midterm Progress Architecture Report to Dr. Thorne',
-      description: 'Compile mathematical formulation of SLAM state estimation and upload final PDF to Review Center.',
-      assignedTo: student1._id,
-      createdBy: faculty1._id,
-      priority: 'HIGH',
-      status: 'REVIEW',
-      dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-    },
-  ]);
-
-  // Create Milestones for Project 1
-  await Milestone.create([
-    {
-      project: project1._id,
-      title: 'Phase 1: System Requirements & Architecture Specification',
-      description: 'Detailed subsystem hardware specifications, interface control document (ICD), and ROS2 topic graph.',
-      dueDate: new Date('2025-02-15'),
-      status: 'APPROVED',
-      deliverableUrl: 'https://docs.apexlab.edu/phase1-spec.pdf',
-      submittedDeliverable: 'Phase 1 System Specification Document v1.2',
-      submissionNotes: 'All hardware pinouts and power budget analysis completed.',
-      submittedAt: new Date('2025-02-14'),
-      submittedBy: student1._id,
-      facultyFeedback: 'Excellent rigorous mathematical modeling. Clear hardware breakdown.',
-      grade: '98/100',
-      evaluatedBy: faculty1._id,
-      reviewedAt: new Date('2025-02-16'),
-    },
-    {
-      project: project1._id,
-      title: 'Phase 2: Mid-Term Defense & Simulation Benchmarks',
-      description: 'Gazebo simulation validating multi-drone collision avoidance and real-time octomap reconstruction.',
-      dueDate: new Date(Date.now() + 4 * 24 * 60 * 60 * 1000),
-      status: 'SUBMITTED',
-      deliverableUrl: 'https://apexlab.edu/deliverables/midterm-benchmarks.zip',
-      submittedDeliverable: 'Gazebo simulation recordings & Gazebo SITL test logs',
-      submissionNotes: 'Simulation runs at 60fps with 3 quadrotors in dynamic obstacle course. Awaiting mentor sign-off.',
-      submittedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-      submittedBy: student1._id,
-      facultyFeedback: '',
-      evaluatedBy: null,
-    },
-    {
-      project: project1._id,
-      title: 'Phase 3: Hardware Field Flight Validation & Final Defense',
-      description: 'Live physical autonomous flight test through GPS-denied obstacle corridor before faculty capstone committee.',
-      dueDate: new Date('2025-05-18'),
-      status: 'PENDING',
-      deliverableUrl: '',
-    },
-  ]);
-
-  // Create Documents
-  await Document.create([
-    {
-      project: project1._id,
-      title: 'System_Architecture_ICD_v2.4.pdf',
-      category: 'Architecture',
-      fileUrl: '/uploads/System_Architecture_ICD_v2.4.pdf',
-      fileType: 'PDF',
-      fileSize: '4.8 MB',
-      version: 'v2.4',
-      uploadedBy: student1._id,
-    },
-    {
-      project: project1._id,
-      title: 'ROS2_DDS_QoS_Profiles.yaml',
-      category: 'Configuration',
-      fileUrl: '/uploads/ROS2_DDS_QoS_Profiles.yaml',
-      fileType: 'YAML',
-      fileSize: '18 KB',
-      version: 'v1.1',
-      uploadedBy: student2._id,
-    },
-  ]);
-
-  // Create Notifications
-  await Notification.create([
-    {
-      user: student1._id,
-      title: 'Milestone 2 Under Review',
-      message: 'Your Mid-Term Defense & Simulation Benchmarks deliverable was queued for Dr. Thorne.',
-      type: 'INFO',
-      link: '/student/dashboard#milestones',
-    },
-    {
-      user: faculty1._id,
-      title: 'Review Required: Apex Lab Phase 2',
-      message: 'Alex Chen submitted "Mid-Term Defense & Simulation Benchmarks" for project CAP-2025-01.',
-      type: 'WARNING',
-      link: '/faculty/dashboard#reviews',
-    },
-    {
-      user: adminUser._id,
-      title: 'ABET Review Cycle Active',
-      message: 'All 3 Capstone teams are registered. Faculty workload balances updated.',
-      type: 'SUCCESS',
-      link: '/admin/dashboard',
-    },
-  ]);
-
-  // Create Initial Audit Trail
-  await AuditTrail.create([
-    {
-      user: adminUser._id,
-      userName: adminUser.name,
-      role: 'ADMIN',
-      action: 'SYSTEM_INITIALIZATION',
-      targetType: 'SYSTEM',
-      details: 'Initialized ProjectHub Academic workspace with roles STUDENT, FACULTY, and ADMIN.',
-      ipAddress: '127.0.0.1',
-    },
-    {
-      user: adminUser._id,
-      userName: adminUser.name,
-      role: 'ADMIN',
-      action: 'ASSIGN_FACULTY_MENTOR',
-      targetType: 'PROJECT',
-      targetId: project1._id.toString(),
-      details: `Assigned Dr. Aris Thorne as advisor to Apex Lab: Autonomous Quadrotor SLAM.`,
-      ipAddress: '127.0.0.1',
-    },
-  ]);
-
-  console.log(' Academic database seeded successfully!');
-  console.log('Credentials:');
-  console.log(' Student: student@university.edu / student123');
-  console.log(' Faculty: faculty@university.edu / faculty123');
-  console.log(' Admin:   admin@university.edu   / admin123');
+  console.log('✅ Database cleaned: All demo projects, tasks, milestones & documents removed.');
+  console.log('Active Credentials:');
+  console.log(' - Student: student@university.edu / student123');
+  console.log(' - Faculty: faculty@university.edu / faculty123');
+  console.log(' - Admin:   admin@university.edu   / admin123');
 }
 
 module.exports = { seedDatabase };
