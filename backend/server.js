@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(cors({ origin: true, credentials: true }));
 
 // Serve static assets from public folder and extracted workspace
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.use('/stitch', express.static(path.join(__dirname, '../stitch_projecthub_academic_workspace')));
 
 // ==========================================
@@ -39,20 +39,20 @@ app.use('/stitch', express.static(path.join(__dirname, '../stitch_projecthub_aca
 
 // Landing Page
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/landing.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/landing.html'));
 });
 
 // Dedicated Login Portals
 app.get('/login/student', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/login-student.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/login-student.html'));
 });
 
 app.get('/login/faculty', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/login-faculty.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/login-faculty.html'));
 });
 
 app.get('/login/admin', (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/login-admin.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/login-admin.html'));
 });
 
 // General /login fallback
@@ -67,27 +67,27 @@ app.get('/login', (req, res) => {
 
 // Student Protected Dashboard & Subroutes
 app.get(/^\/student\/.*/, authenticateToken, requireStudent, (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/student-dashboard.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/student-dashboard.html'));
 });
 
 // Faculty Protected Dashboard & Subroutes
 app.get(/^\/faculty\/.*/, authenticateToken, requireFaculty, (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/faculty-dashboard.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/faculty-dashboard.html'));
 });
 
 // Admin Protected Dashboard & Subroutes
 app.get(/^\/admin\/.*/, authenticateToken, requireAdmin, (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/admin-dashboard.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/admin-dashboard.html'));
 });
 
 // Dedicated Working Task Details Page (accessible by Student, Faculty, Admin)
 app.get(['/tasks/:id', '/task/:id', '/tasks'], authenticateToken, (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/task-details.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/task-details.html'));
 });
 
 // Dedicated Working Project Details Page (accessible by Student, Faculty, Admin)
 app.get(['/projects/:id', '/project/:id', '/projects'], authenticateToken, (req, res) => {
-  res.sendFile(path.join(__dirname, '../views/project-details.html'));
+  res.sendFile(path.join(__dirname, '../frontend/views/project-details.html'));
 });
 
 // ==========================================
