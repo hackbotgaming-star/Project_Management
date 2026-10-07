@@ -14,6 +14,10 @@ router.post('/login/student', authController.loginStudent);
 router.post('/login/faculty', authController.loginFaculty);
 router.post('/login/admin', authController.loginAdmin);
 
+// Password recovery endpoints
+router.post('/forgot-password', authController.forgotPassword);
+router.post('/reset-password', authController.resetPassword);
+
 // Session & Current User
 router.post('/logout', authenticateToken, authController.logout);
 router.get('/me', authenticateToken, authController.getCurrentUser);

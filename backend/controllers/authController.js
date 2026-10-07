@@ -312,3 +312,93 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
+// 4. FORGOT PASSWORD (Initiates reset, generates 6-digit verification code or token)
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) {
+      return res.status(400).json({ success: false, message: 'Academic email address is required.' });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      // For security, don't reveal non-existent emails, but tell user code was generated if exists
+      return res.status(404).json({ success: false, message: 'No registered user found with that email address.' });
+    }
+
+    // Generate a secure 6-digit numeric reset OTP/code
+    const resetCode = Math.floor(100000 + Math.random() * 900000).toString();
+    user.resetPasswordToken = resetCode;
+    user.resetPasswordExpires = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes validity
+    await user.save();
+
+    await AuditTrail.create({
+      user: user._id,
+      userName: user.name,
+      role: user.role,
+      action: 'PASSWORD_RESET_REQUESTED',
+      details: `Password reset code requested for ${user.email}.`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    console.log(`[PASSWORD RESET] Generated OTP Code for ${user.email}: ${resetCode}`);
+
+    return res.json({
+      success: true,
+      message: 'Password reset code generated successfully. Valid for 15 minutes.',
+      resetCode, // Return in response for instant demo convenience
+      email: user.email,
+    });
+  } catch (err) {
+    console.error('forgotPassword error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to process password reset: ' + err.message });
+  }
+};
+
+// 5. RESET PASSWORD (Verifies OTP and updates to new password)
+exports.resetPassword = async (req, res) => {
+  try {
+    const { email, resetCode, newPassword } = req.body;
+    if (!email || !resetCode || !newPassword) {
+      return res.status(400).json({ success: false, message: 'Email, reset code, and new password are required.' });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({ success: false, message: 'New password must be at least 6 characters.' });
+    }
+
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+      resetPasswordToken: resetCode.trim(),
+      resetPasswordExpires: { $gt: new Date() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Invalid or expired password reset code.' });
+    }
+
+    // Hash and store the new password
+    user.password = await User.hashPassword(newPassword);
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    await AuditTrail.create({
+      user: user._id,
+      userName: user.name,
+      role: user.role,
+      action: 'PASSWORD_RESET_SUCCESS',
+      details: `Password successfully updated for ${user.email}.`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    return res.json({
+      success: true,
+      message: 'Password updated successfully! You can now log in with your new password.',
+    });
+  } catch (err) {
+    console.error('resetPassword error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to reset password: ' + err.message });
+  }
+};
+
