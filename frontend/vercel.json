@@ -1,0 +1,76 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://PROJECT_RENDER_URL.onrender.com/api/:path*"
+    },
+    {
+      "source": "/stitch/:path*",
+      "destination": "https://PROJECT_RENDER_URL.onrender.com/stitch/:path*"
+    },
+    {
+      "source": "/",
+      "destination": "/views/landing.html"
+    },
+    {
+      "source": "/login",
+      "destination": "/views/landing.html"
+    },
+    {
+      "source": "/login/student",
+      "destination": "/views/login-student.html"
+    },
+    {
+      "source": "/login/faculty",
+      "destination": "/views/login-faculty.html"
+    },
+    {
+      "source": "/login/admin",
+      "destination": "/views/login-admin.html"
+    },
+    {
+      "source": "/student/dashboard",
+      "destination": "/views/student-dashboard.html"
+    },
+    {
+      "source": "/faculty/dashboard",
+      "destination": "/views/faculty-dashboard.html"
+    },
+    {
+      "source": "/admin/dashboard",
+      "destination": "/views/admin-dashboard.html"
+    },
+    {
+      "source": "/tasks/:id",
+      "destination": "/views/task-details.html"
+    },
+    {
+      "source": "/task/:id",
+      "destination": "/views/task-details.html"
+    },
+    {
+      "source": "/tasks",
+      "destination": "/views/task-details.html"
+    },
+    {
+      "source": "/projects/:id",
+      "destination": "/views/project-details.html"
+    },
+    {
+      "source": "/project/:id",
+      "destination": "/views/project-details.html"
+    },
+    {
+      "source": "/projects",
+      "destination": "/views/project-details.html"
+    },
+    {
+      "source": "/css/:path*",
+      "destination": "/public/css/:path*"
+    },
+    {
+      "source": "/js/:path*",
+      "destination": "/public/js/:path*"
+    }
+  ]
+}
