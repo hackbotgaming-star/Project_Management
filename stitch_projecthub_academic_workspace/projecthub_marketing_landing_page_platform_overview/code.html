@@ -1,0 +1,739 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ProjectHub — Academic Research &amp; Capstone Management</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Geist and Inter Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration verbatim as specified -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#464555",
+            "primary": "#c3c0ff",
+            "on-error": "#690005",
+            "on-primary-container": "#dad7ff",
+            "on-secondary-fixed": "#001f26",
+            "inverse-surface": "#dfe2ef",
+            "primary-fixed": "#e2dfff",
+            "surface": "#0f131c",
+            "on-surface": "#dfe2ef",
+            "on-primary": "#1d00a5",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#dfe2ef",
+            "on-surface-variant": "#c7c4d8",
+            "outline": "#918fa1",
+            "surface-container": "#1c1f29",
+            "secondary-fixed-dim": "#4cd7f6",
+            "primary-container": "#4f46e5",
+            "tertiary": "#4edea3",
+            "secondary-fixed": "#acedff",
+            "on-primary-fixed": "#0f0069",
+            "tertiary-fixed": "#6ffbbe",
+            "error-container": "#93000a",
+            "on-secondary-container": "#00424e",
+            "inverse-primary": "#4d44e3",
+            "on-error-container": "#ffdad6",
+            "on-secondary": "#003640",
+            "inverse-on-surface": "#2c303a",
+            "surface-container-low": "#181b25",
+            "surface-bright": "#353943",
+            "surface-tint": "#c3c0ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary-fixed-dim": "#c3c0ff",
+            "surface-container-highest": "#31353f",
+            "on-tertiary-container": "#67f4b7",
+            "on-tertiary": "#003824",
+            "on-secondary-fixed-variant": "#004e5c",
+            "background": "#0f131c",
+            "surface-variant": "#31353f",
+            "surface-dim": "#0f131c",
+            "on-tertiary-fixed-variant": "#005236",
+            "secondary-container": "#03b5d3",
+            "secondary": "#4cd7f6",
+            "tertiary-container": "#006e4b",
+            "surface-container-lowest": "#0a0e17",
+            "on-tertiary-fixed": "#002113",
+            "surface-container-high": "#262a34",
+            "error": "#ffb4ab"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-lg": "2rem",
+            "gutter": "1rem",
+            "space-2xl": "2rem",
+            "margin": "1rem",
+            "gutter-lg": "1.5rem",
+            "space-lg": "1rem",
+            "space-sm": "0.5rem",
+            "margin-md": "1.5rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Geist"],
+            "label-sm": ["Geist"],
+            "headline-md": ["Geist"],
+            "body-sm": ["Inter"],
+            "headline-lg": ["Geist"],
+            "code-sm": ["Geist"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-xl": ["Geist"],
+            "label-md": ["Geist"],
+            "headline-xl-mobile": ["Geist"]
+          },
+          "fontSize": {
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "code-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    /* Perspective for workspace telemetry card */
+    .perspective-stage {
+      perspective: 1400px;
+    }
+    .hero-card-transform {
+      transform: rotateX(8deg) rotateY(-1deg) scale(0.98);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    }
+    .hero-card-transform:hover {
+      transform: rotateX(2deg) rotateY(0deg) scale(1);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen selection:bg-primary-container selection:text-on-primary overflow-x-hidden">
+<!-- TOP APP BAR / BRAND HEADER -->
+<header class="sticky top-0 z-50 w-full bg-surface-container/80 backdrop-blur-md border-b border-outline-variant/30">
+<div class="max-w-7xl mx-auto px-space-lg md:px-space-xl h-16 flex items-center justify-between">
+<!-- Brand Logo Anchor -->
+<div class="flex items-center gap-space-md">
+<a class="flex items-center gap-space-sm group" href="#">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary group-hover:border-primary/50 transition-colors">
+<span class="material-symbols-outlined text-primary text-[22px]" data-icon="school">school</span>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center gap-space-xs">
+<span class="font-headline-md text-headline-md text-on-surface tracking-tight font-bold">ProjectHub</span>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-label-sm bg-primary-container/20 text-primary border border-primary/30">v3.0</span>
+</div>
+<span class="font-label-sm text-[11px] text-outline tracking-wider hidden sm:block">Academic Research &amp; Capstone</span>
+</div>
+</a>
+</div>
+<!-- Center Navigation Links -->
+<nav class="hidden lg:flex items-center gap-space-xl">
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-1" href="#platform">
+          Platform
+          <span class="material-symbols-outlined text-[16px] text-outline" data-icon="keyboard_arrow_down">keyboard_arrow_down</span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" href="#roles">Roles</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors flex items-center gap-space-xs" href="#accreditation">
+          Accreditation
+          <span class="w-1.5 h-1.5 rounded-full bg-secondary animate-pulse"></span>
+</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" href="#pilot">University Pilot</a>
+<a class="text-on-surface-variant hover:text-on-surface font-label-md text-label-md transition-colors" href="#pricing">Pricing</a>
+</nav>
+<!-- Right Action Cluster -->
+<div class="flex items-center gap-space-sm md:gap-space-md">
+<!-- Theme Mode Toggle -->
+<button aria-label="Toggle Theme" class="p-2 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="light_mode">light_mode</span>
+</button>
+<!-- Sign In Link -->
+<a class="hidden sm:inline-flex items-center px-space-md py-1.5 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-high text-body-md font-headline-sm transition-colors" href="#login">
+          Sign In
+        </a>
+<!-- Schedule Campus Demo Primary CTA -->
+<a class="inline-flex items-center gap-space-xs px-space-lg py-2 bg-primary-container hover:bg-primary-container/90 text-on-primary font-headline-sm text-body-md rounded-lg shadow-sm hover:shadow-indigo-500/20 hover:scale-[1.01] active:scale-[0.98] transition-all" href="#demo">
+<span>Schedule Campus Demo</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+</div>
+</header>
+<!-- MAIN CANVAS -->
+<main class="relative z-10">
+<!-- AMBIENT ILLUMINATION BACKGROUND -->
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-[620px] pointer-events-none overflow-hidden -z-10 opacity-40">
+<div class="absolute -top-40 left-1/4 w-[500px] h-[500px] bg-primary-container/30 rounded-full blur-[130px]"></div>
+<div class="absolute top-10 right-1/4 w-[420px] h-[420px] bg-secondary/15 rounded-full blur-[120px]"></div>
+</div>
+<!-- HERO SECTION -->
+<section class="pt-space-2xl pb-space-2xl px-space-lg md:px-space-xl max-w-7xl mx-auto text-center">
+<!-- Announcement Pill -->
+<div class="inline-flex items-center gap-space-sm px-space-md py-1.5 rounded-full bg-surface-container-high border border-outline-variant/50 text-body-sm mb-space-xl hover:border-secondary/50 transition-colors cursor-pointer group shadow-sm">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-on-surface font-label-md text-label-md">ProjectHub 3.0 Platform Update</span>
+<span class="text-outline-variant">•</span>
+<span class="text-secondary font-label-md text-label-md flex items-center gap-0.5">
+          Automated ABET Capstone Governance
+          <span class="material-symbols-outlined text-[14px] group-hover:translate-x-0.5 transition-transform" data-icon="chevron_right">chevron_right</span>
+</span>
+</div>
+<!-- Main Headline -->
+<h1 class="text-headline-xl-mobile md:text-headline-xl font-headline-xl tracking-tight text-on-surface max-w-4xl mx-auto mb-space-md">
+        Transform Collegiate Project Management
+        <span class="block mt-2 bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">
+          From Proposal to Accredited Thesis Defense
+        </span>
+</h1>
+<!-- Supporting Copy -->
+<p class="text-body-lg font-body-lg text-on-surface-variant max-w-2xl mx-auto mb-space-2xl">
+        An intelligent academic workspace uniting undergraduate engineering teams, faculty research mentors, and university deans into a single verifiable workflow.
+      </p>
+<!-- Primary & Secondary CTA Buttons -->
+<div class="flex flex-col sm:flex-row items-center justify-center gap-space-md mb-space-2xl">
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-3 rounded-lg bg-primary-container text-on-primary font-headline-sm text-body-lg hover:bg-primary-container/90 active:scale-[0.98] shadow-lg shadow-indigo-950/40 border border-primary/20 transition-all" href="#pilot-signup">
+<span class="material-symbols-outlined text-[20px]" data-icon="rocket_launch">rocket_launch</span>
+<span>Launch Department Pilot</span>
+</a>
+<a class="w-full sm:w-auto inline-flex items-center justify-center gap-space-sm px-space-xl py-3 rounded-lg bg-surface-container-high border border-outline-variant/50 text-on-surface font-headline-sm text-body-lg hover:bg-surface-variant hover:border-outline transition-all active:scale-[0.98]" href="#rubrics">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="fact_check">fact_check</span>
+<span>Explore Interactive Defense Rubrics</span>
+</a>
+</div>
+<!-- TRUSTED INSTITUTION LOGOS STRIP -->
+<div class="pt-space-md pb-space-xl border-t border-outline-variant/20 flex flex-col items-center">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-outline mb-space-md">
+          Standardized in Leading Engineering &amp; Applied Science Colleges
+        </span>
+<div class="flex flex-wrap items-center justify-center gap-8 md:gap-14 opacity-70 grayscale hover:grayscale-0 transition-all">
+<div class="flex items-center gap-2 text-on-surface-variant font-headline-sm text-body-md">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="token">token</span>
+<span>MIT Lincoln Labs Cohort</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-headline-sm text-body-md">
+<span class="material-symbols-outlined text-secondary text-[20px]" data-icon="architecture">architecture</span>
+<span>Stanford Aero/Astro</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-headline-sm text-body-md">
+<span class="material-symbols-outlined text-tertiary text-[20px]" data-icon="precision_manufacturing">precision_manufacturing</span>
+<span>Purdue Polytechnic</span>
+</div>
+<div class="flex items-center gap-2 text-on-surface-variant font-headline-sm text-body-md">
+<span class="material-symbols-outlined text-primary-fixed text-[20px]" data-icon="hub">hub</span>
+<span>Georgia Tech ECE</span>
+</div>
+</div>
+</div>
+<!-- HERO WORKSPACE PREVIEW: Angled Perspective Interactive Card -->
+<div class="perspective-stage mt-space-lg">
+<div class="hero-card-transform mx-auto rounded-xl bg-surface-container-low border border-outline-variant/40 shadow-2xl p-space-md md:p-space-lg text-left relative overflow-hidden backdrop-blur-xl">
+<!-- Subtle top gradient hairline -->
+<div class="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-primary to-transparent opacity-70"></div>
+<!-- Mock Header Window Bar -->
+<div class="flex items-center justify-between pb-space-md mb-space-md border-b border-outline-variant/30">
+<div class="flex items-center gap-space-sm">
+<div class="flex gap-1.5">
+<div class="w-3 h-3 rounded-full bg-error/60"></div>
+<div class="w-3 h-3 rounded-full bg-amber-500/60"></div>
+<div class="w-3 h-3 rounded-full bg-tertiary/60"></div>
+</div>
+<span class="text-outline text-body-sm font-code-sm ml-2 hidden sm:inline">capstone-2025 / autonomous-drone-fleet / gate-review-3.json</span>
+</div>
+<!-- Workspace Status Badges -->
+<div class="flex items-center gap-space-xs md:gap-space-sm">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-secondary-container/20 text-secondary border border-secondary/30 text-label-sm font-label-sm uppercase">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary animate-ping"></span>
+                Sprint 06 Burndown: Optimal
+              </span>
+<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded bg-tertiary-container/30 text-tertiary border border-tertiary/30 text-label-sm font-label-sm uppercase">
+<span class="material-symbols-outlined text-[14px]" data-icon="verified">verified</span>
+                ABET Gate 3 Signed
+              </span>
+</div>
+</div>
+<!-- Inside Workspace Grid: Commit Stream, Burndown Telemetry, Advisor Rubric -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-md">
+<!-- Left: Active Commits & BOM Verification (4 Cols) -->
+<div class="lg:col-span-4 flex flex-col gap-space-md">
+<div class="p-space-md rounded-lg bg-surface-container border border-outline-variant/20">
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-body-sm text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="terminal">terminal</span>
+                    Hardware &amp; Firmware Logs
+                  </span>
+<span class="text-label-sm font-code-sm text-tertiary">SYNCED (git:main)</span>
+</div>
+<div class="space-y-space-xs font-code-sm text-body-sm">
+<div class="p-2 rounded bg-surface-container-lowest/80 border border-outline-variant/20 flex items-center justify-between">
+<div>
+<div class="text-primary text-[12px] font-medium">feat(esc): CAN bus motor telemetry</div>
+<div class="text-outline text-[11px]">Commit #a49f82d • 14 min ago by @alec-chen</div>
+</div>
+<span class="text-[10px] text-tertiary font-bold px-1.5 py-0.5 rounded bg-tertiary/10 border border-tertiary/30">PASS</span>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest/80 border border-outline-variant/20 flex items-center justify-between">
+<div>
+<div class="text-primary text-[12px] font-medium">docs(bom): Bill of Materials Rev 3.2</div>
+<div class="text-outline text-[11px]">DigiKey batch invoice verified • $1,420</div>
+</div>
+<span class="text-[10px] text-secondary font-bold px-1.5 py-0.5 rounded bg-secondary/10 border border-secondary/30">AUDITED</span>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest/80 border border-outline-variant/20 flex items-center justify-between">
+<div>
+<div class="text-primary text-[12px] font-medium">cad: SolidWorks carbon fuselage v4</div>
+<div class="text-outline text-[11px]">FEA stress load verified at 4.2G</div>
+</div>
+<span class="text-[10px] text-tertiary font-bold px-1.5 py-0.5 rounded bg-tertiary/10 border border-tertiary/30">PASS</span>
+</div>
+</div>
+</div>
+<!-- Quick Progress Snapshot -->
+<div class="p-space-md rounded-lg bg-surface-container border border-outline-variant/20 flex items-center justify-between">
+<div>
+<div class="text-outline text-label-sm font-label-sm">MILESTONE DEFENSE WINDOW</div>
+<div class="text-on-surface font-headline-sm text-headline-sm">Nov 28, 2025 • 09:00 EST</div>
+</div>
+<div class="text-right">
+<div class="text-secondary font-headline-sm text-headline-sm">Jury Room 402</div>
+<div class="text-outline text-body-sm">4 Faculty Reviewers</div>
+</div>
+</div>
+</div>
+<!-- Center: Burndown Chart & Milestone Telemetry (5 Cols) -->
+<div class="lg:col-span-5 p-space-md rounded-lg bg-surface-container border border-outline-variant/20 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="stacked_line_chart">stacked_line_chart</span>
+<span class="font-headline-sm text-body-sm text-on-surface">Capstone Velocity &amp; Telemetry</span>
+</div>
+<div class="flex items-center gap-3 text-label-sm font-label-sm">
+<span class="flex items-center gap-1 text-primary"><span class="w-2 h-2 rounded bg-primary"></span> Ideal</span>
+<span class="flex items-center gap-1 text-secondary"><span class="w-2 h-2 rounded bg-secondary"></span> Actual</span>
+</div>
+</div>
+<!-- Segmented Progress Bar Matrix -->
+<div class="space-y-space-md mt-space-md">
+<div>
+<div class="flex justify-between text-body-sm font-body-sm mb-1">
+<span class="text-on-surface">Autonomous Swarm Formation Control</span>
+<span class="text-tertiary font-code-sm">92% Complete</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container-highest overflow-hidden flex">
+<div class="bg-tertiary h-full w-[70%]"></div>
+<div class="bg-primary h-full w-[22%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm font-body-sm mb-1">
+<span class="text-on-surface">LiDAR Point Cloud Pipeline (ROS 2)</span>
+<span class="text-secondary font-code-sm">84% Complete</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container-highest overflow-hidden flex">
+<div class="bg-secondary h-full w-[84%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-body-sm font-body-sm mb-1">
+<span class="text-on-surface">ABET Criterion 3 (Engineering Design) Report</span>
+<span class="text-primary font-code-sm">100% Locked</span>
+</div>
+<div class="w-full h-2 rounded bg-surface-container-highest overflow-hidden flex">
+<div class="bg-primary-container h-full w-full"></div>
+</div>
+</div>
+</div>
+<!-- Embedded Micro Graph Preview -->
+<div class="mt-space-lg p-space-sm bg-surface-container-lowest/60 rounded border border-outline-variant/20 flex items-center justify-between text-body-sm font-body-sm">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-tertiary" data-icon="check_circle">check_circle</span>
+<div>
+<div class="text-on-surface text-[12px] font-medium">Deliverable Submission Signed</div>
+<div class="text-outline text-[11px]">Cryptographic SHA256 receipt recorded</div>
+</div>
+</div>
+<span class="font-code-sm text-[11px] text-on-surface-variant bg-surface-container-high px-2 py-1 rounded">0x92f8...c17b</span>
+</div>
+</div>
+<!-- Telemetry Metrics Bar -->
+<div class="grid grid-cols-3 gap-2 pt-space-md border-t border-outline-variant/20 mt-space-md">
+<div class="text-center p-2 rounded bg-surface-container-low">
+<div class="text-outline text-label-sm font-label-sm">COMMITS</div>
+<div class="text-on-surface font-headline-sm text-headline-sm font-bold">482</div>
+</div>
+<div class="text-center p-2 rounded bg-surface-container-low">
+<div class="text-outline text-label-sm font-label-sm">TEST COV</div>
+<div class="text-tertiary font-headline-sm text-headline-sm font-bold">96.4%</div>
+</div>
+<div class="text-center p-2 rounded bg-surface-container-low">
+<div class="text-outline text-label-sm font-label-sm">BUDGET</div>
+<div class="text-secondary font-headline-sm text-headline-sm font-bold">$4,850</div>
+</div>
+</div>
+</div>
+<!-- Right: Faculty Advisor Rubric & Jury Scoring (3 Cols) -->
+<div class="lg:col-span-3 p-space-md rounded-lg bg-surface-container border border-outline-variant/20 flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-space-sm">
+<span class="font-headline-sm text-body-sm text-on-surface flex items-center gap-1.5">
+<span class="material-symbols-outlined text-primary-fixed text-[18px]" data-icon="rate_review">rate_review</span>
+                    Faculty Rubric Score
+                  </span>
+<span class="px-2 py-0.5 rounded text-[11px] font-label-sm bg-primary/10 text-primary border border-primary/20">RUBRIC v4</span>
+</div>
+<div class="text-xs text-outline mb-space-md">Lead Evaluator: Dr. H. Vance (IEEE Fellow)</div>
+<!-- Rubric Criteria Items -->
+<div class="space-y-space-sm font-body-sm">
+<div class="p-2 rounded bg-surface-container-lowest/80 border border-outline-variant/20">
+<div class="flex justify-between text-body-sm">
+<span class="text-on-surface">1. Math &amp; Kinematics Formulation</span>
+<span class="text-tertiary font-headline-sm font-bold">10/10</span>
+</div>
+<div class="text-outline text-[11px] mt-0.5">Rigorous non-linear Lyapunov proof validated.</div>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest/80 border border-outline-variant/20">
+<div class="flex justify-between text-body-sm">
+<span class="text-on-surface">2. Hardware Prototyping</span>
+<span class="text-tertiary font-headline-sm font-bold">9.5/10</span>
+</div>
+<div class="text-outline text-[11px] mt-0.5">Dual redundant IMU wiring confirmed.</div>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest/80 border border-outline-variant/20">
+<div class="flex justify-between text-body-sm">
+<span class="text-on-surface">3. Oral Presentation &amp; Defense</span>
+<span class="text-secondary font-headline-sm font-bold">Pending</span>
+</div>
+<div class="text-outline text-[11px] mt-0.5">Scheduled for capstone symposium week.</div>
+</div>
+</div>
+</div>
+<!-- Composite Final Score Card -->
+<div class="mt-space-md p-space-sm rounded bg-primary-container/20 border border-primary/30 flex items-center justify-between">
+<div>
+<div class="text-outline text-label-sm font-label-sm uppercase">Composite Grade</div>
+<div class="text-on-primary-container font-headline-md text-headline-md font-bold">98.2% (Grade A)</div>
+</div>
+<div class="w-9 h-9 rounded-full bg-primary-container flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="award_star">award_star</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- KEY PLATFORM PILLARS (Bento Grid) -->
+<section class="py-space-2xl px-space-lg md:px-space-xl max-w-7xl mx-auto border-t border-outline-variant/20" id="platform">
+<div class="text-center max-w-3xl mx-auto mb-space-2xl">
+<div class="inline-flex items-center gap-2 px-space-md py-1 rounded-full bg-surface-container-high border border-outline-variant/40 text-secondary text-label-md font-label-md uppercase mb-space-sm">
+<span class="material-symbols-outlined text-[16px]" data-icon="category">category</span>
+          Engineered for Rigorous Collegiate Standards
+        </div>
+<h2 class="text-headline-lg md:text-headline-xl font-headline-xl tracking-tight text-on-surface">
+          Three Purpose-Built Pillars for Academic Excellence
+        </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant mt-2">
+          Eliminate disjointed email threads, lost shared folders, and frantic accreditation audit preps.
+        </p>
+</div>
+<!-- Bento Cards Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+<!-- Pillar 1: Student Collaboration -->
+<div class="p-space-xl rounded-xl bg-surface-container-low border border-outline-variant/30 hover:border-primary/40 transition-all flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-lg bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary mb-space-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" data-icon="diversity_3">diversity_3</span>
+</div>
+<div class="text-secondary text-label-sm font-label-sm uppercase tracking-wider mb-1">Undergraduate &amp; Graduate</div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-space-sm">Student Collaboration</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mb-space-lg">
+              Synchronize git repositories, live design logs, sensor schematics, and bill of materials in one high-velocity workbench.
+            </p>
+<!-- Feature Bullet List -->
+<ul class="space-y-space-sm border-t border-outline-variant/20 pt-space-md text-body-sm">
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-[18px]" data-icon="sync">sync</span>
+<span>Bidirectional GitHub &amp; GitLab synchronization</span>
+</li>
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="receipt_long">receipt_long</span>
+<span>Automated Bill of Materials &amp; hardware procurement logs</span>
+</li>
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="edit_note">edit_note</span>
+<span>Cryptographically timestamped lab notebook logs</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-xl pt-space-md border-t border-outline-variant/20 flex items-center justify-between text-body-sm font-headline-sm text-primary group-hover:text-primary-fixed transition-colors">
+<span>Explore Engineering Workspace</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Pillar 2: Faculty Review Center -->
+<div class="p-space-xl rounded-xl bg-surface-container-low border border-outline-variant/30 hover:border-secondary/40 transition-all flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-lg bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary mb-space-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" data-icon="rate_review">rate_review</span>
+</div>
+<div class="text-tertiary text-label-sm font-label-sm uppercase tracking-wider mb-1">Advisors &amp; Research Mentors</div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-space-sm">Faculty Review Center</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mb-space-lg">
+              Streamline iterative critique with side-by-side LaTeX compilation, inline PDF redlining, and dynamic rubric grading matrices.
+            </p>
+<!-- Feature Bullet List -->
+<ul class="space-y-space-sm border-t border-outline-variant/20 pt-space-md text-body-sm">
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="code">code</span>
+<span>In-browser LaTeX diffing &amp; Overleaf integration</span>
+</li>
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-[18px]" data-icon="checklist">checklist</span>
+<span>One-click weighted rubric evaluation &amp; scoring</span>
+</li>
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="record_voice_over">record_voice_over</span>
+<span>Oral capstone jury defense synchronization</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-xl pt-space-md border-t border-outline-variant/20 flex items-center justify-between text-body-sm font-headline-sm text-secondary group-hover:text-secondary-fixed transition-colors">
+<span>View Faculty Workflows</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+<!-- Pillar 3: Institutional Compliance -->
+<div class="p-space-xl rounded-xl bg-surface-container-low border border-outline-variant/30 hover:border-tertiary/40 transition-all flex flex-col justify-between group">
+<div>
+<div class="w-12 h-12 rounded-lg bg-tertiary-container/30 border border-tertiary/40 flex items-center justify-center text-tertiary mb-space-lg group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-[26px]" data-icon="verified_user">verified_user</span>
+</div>
+<div class="text-primary text-label-sm font-label-sm uppercase tracking-wider mb-1">Deans &amp; ABET Coordinators</div>
+<h3 class="text-headline-md font-headline-md text-on-surface mb-space-sm">Institutional Compliance</h3>
+<p class="text-body-md font-body-md text-on-surface-variant mb-space-lg">
+              Automate accreditation dossier creation. Instantly map student deliverables directly to ABET Student Outcomes (1 through 7).
+            </p>
+<!-- Feature Bullet List -->
+<ul class="space-y-space-sm border-t border-outline-variant/20 pt-space-md text-body-sm">
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-tertiary text-[18px]" data-icon="assignment_turned_in">assignment_turned_in</span>
+<span>ABET Criterion 3 &amp; 5 auto-compilation engines</span>
+</li>
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-secondary text-[18px]" data-icon="download_for_offline">download_for_offline</span>
+<span>Exportable digital accreditation binders (PDF/ZIP)</span>
+</li>
+<li class="flex items-center gap-space-sm text-on-surface">
+<span class="material-symbols-outlined text-primary text-[18px]" data-icon="balance">balance</span>
+<span>Multi-cohort workload balancing &amp; grade equity</span>
+</li>
+</ul>
+</div>
+<div class="mt-space-xl pt-space-md border-t border-outline-variant/20 flex items-center justify-between text-body-sm font-headline-sm text-tertiary group-hover:text-tertiary-fixed transition-colors">
+<span>Inspect Compliance Suite</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</div>
+</div>
+</div>
+</section>
+<!-- ACCREDITATION AUDIT READINESS & INTERACTIVE STATS SECTION -->
+<section class="py-space-2xl px-space-lg md:px-space-xl max-w-7xl mx-auto" id="accreditation">
+<div class="rounded-2xl bg-gradient-to-b from-surface-container to-surface-container-low border border-outline-variant/30 p-space-xl md:p-space-2xl relative overflow-hidden">
+<!-- Glow highlight behind stats -->
+<div class="absolute -right-20 -bottom-20 w-96 h-96 bg-primary-container/20 rounded-full blur-3xl pointer-events-none"></div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-center">
+<!-- Left: Narrative -->
+<div class="lg:col-span-6 space-y-space-md">
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded bg-tertiary-container/30 text-tertiary border border-tertiary/30 text-label-sm font-label-sm uppercase">
+<span class="material-symbols-outlined text-[15px]" data-icon="gavel">gavel</span>
+              Continuous Accreditation Assurance
+            </span>
+<h2 class="text-headline-lg md:text-headline-xl font-headline-xl text-on-surface tracking-tight">
+              Turn Multi-Year Accreditation Panics into a 15-Minute Continuous Export.
+            </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant">
+              Every design journal, peer feedback rubric, and advisor milestone sign-off is automatically cataloged with immutable audit trails. When evaluator teams arrive, hand them a verified ProjectHub digital portfolio.
+            </p>
+<div class="pt-space-sm flex flex-wrap gap-space-md">
+<a class="inline-flex items-center gap-2 px-space-lg py-2.5 rounded-lg bg-primary-container text-on-primary font-headline-sm text-body-md hover:bg-primary-container/90 transition-all" href="#demo">
+<span>Download Sample ABET Binder</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="file_download">file_download</span>
+</a>
+<a class="inline-flex items-center gap-2 px-space-lg py-2.5 rounded-lg bg-surface-container-high border border-outline-variant/40 text-on-surface font-headline-sm text-body-md hover:bg-surface-variant transition-all" href="#compliance">
+<span>View Rubric Standards</span>
+</a>
+</div>
+</div>
+<!-- Right: 3 Key Metrics Cards -->
+<div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-3 gap-space-md">
+<div class="p-space-lg rounded-xl bg-surface-container-lowest/90 border border-outline-variant/30 text-center flex flex-col justify-center items-center">
+<div class="w-10 h-10 rounded-full bg-tertiary-container/30 text-tertiary flex items-center justify-center mb-space-sm">
+<span class="material-symbols-outlined text-[22px]" data-icon="verified">verified</span>
+</div>
+<div class="text-headline-xl font-headline-xl text-on-surface font-bold text-tertiary">100%</div>
+<div class="text-body-sm font-headline-sm text-on-surface mt-1">Audit Readiness</div>
+<div class="text-outline text-label-sm font-label-sm mt-1">Zero missing artifact flags across 4 cohorts</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest/90 border border-outline-variant/30 text-center flex flex-col justify-center items-center">
+<div class="w-10 h-10 rounded-full bg-secondary-container/20 text-secondary flex items-center justify-center mb-space-sm">
+<span class="material-symbols-outlined text-[22px]" data-icon="domain">domain</span>
+</div>
+<div class="text-headline-xl font-headline-xl text-on-surface font-bold text-secondary">68+</div>
+<div class="text-body-sm font-headline-sm text-on-surface mt-1">Departments Onboarded</div>
+<div class="text-outline text-label-sm font-label-sm mt-1">Mechanical, Aero, ECE, Bioengineering</div>
+</div>
+<div class="p-space-lg rounded-xl bg-surface-container-lowest/90 border border-outline-variant/30 text-center flex flex-col justify-center items-center">
+<div class="w-10 h-10 rounded-full bg-primary-container/20 text-primary flex items-center justify-center mb-space-sm">
+<span class="material-symbols-outlined text-[22px]" data-icon="cloud_done">cloud_done</span>
+</div>
+<div class="text-headline-xl font-headline-xl text-on-surface font-bold text-primary">Zero</div>
+<div class="text-body-sm font-headline-sm text-on-surface mt-1">Lost Deliverables</div>
+<div class="text-outline text-label-sm font-label-sm mt-1">Dual-redundant cloud archives with S3 backing</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CAMPUS PILOT CTA SECTION -->
+<section class="py-space-2xl px-space-lg md:px-space-xl max-w-5xl mx-auto text-center" id="pilot">
+<div class="p-space-2xl rounded-2xl bg-surface-container border border-primary/30 relative shadow-2xl">
+<div class="max-w-2xl mx-auto space-y-space-md">
+<span class="text-label-sm font-label-sm uppercase tracking-wider text-secondary">Spring 2026 Academic Cohort Enrollment Open</span>
+<h2 class="text-headline-lg md:text-headline-xl font-headline-xl text-on-surface tracking-tight">
+            Deploy ProjectHub Across Your Department in Under 48 Hours
+          </h2>
+<p class="text-body-lg font-body-lg text-on-surface-variant">
+            Join visionary engineering deans and department heads transforming thesis, research labs, and capstone milestones into audit-ready digital assets.
+          </p>
+<div class="pt-space-md flex flex-col sm:flex-row justify-center items-center gap-space-md">
+<input class="w-full sm:w-80 px-space-md py-3 rounded-lg bg-surface-container-lowest border border-outline-variant text-on-surface placeholder:text-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-body-md" placeholder="faculty@university.edu" type="email">
+<button class="w-full sm:w-auto px-space-xl py-3 rounded-lg bg-primary-container text-on-primary font-headline-sm text-body-md hover:bg-primary-container/90 transition-all active:scale-[0.98]">
+              Request Department Access
+            </button>
+</div>
+<div class="flex items-center justify-center gap-6 text-label-sm text-outline pt-space-sm">
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="check">check</span>
+              FERPA Compliant
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="check">check</span>
+              Canvas / Blackboard SSO
+            </span>
+<span class="flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px] text-tertiary" data-icon="check">check</span>
+              No Credit Card Needed
+            </span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- UNIVERSITY TIER FOOTER -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant/30 pt-space-2xl pb-space-xl mt-space-2xl">
+<div class="max-w-7xl mx-auto px-space-lg md:px-space-xl">
+<div class="grid grid-cols-2 md:grid-cols-5 gap-space-xl mb-space-2xl">
+<!-- Col 1: Brand Info -->
+<div class="col-span-2">
+<div class="flex items-center gap-space-sm mb-space-md">
+<div class="w-8 h-8 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[20px]" data-icon="school">school</span>
+</div>
+<span class="font-headline-md text-headline-md text-on-surface font-bold">ProjectHub</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant max-w-sm mb-space-md">
+            The next-generation academic operating system uniting students, faculty research mentors, and university deans into a high-precision, audit-ready project workflow.
+          </p>
+<div class="flex items-center gap-space-sm text-outline">
+<a aria-label="GitHub" class="p-2 rounded bg-surface-container hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="terminal">terminal</span>
+</a>
+<a aria-label="Documentation" class="p-2 rounded bg-surface-container hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="description">description</span>
+</a>
+<a aria-label="Support" class="p-2 rounded bg-surface-container hover:text-on-surface transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]" data-icon="help">help</span>
+</a>
+</div>
+</div>
+<!-- Col 2: Academic Pillars -->
+<div class="space-y-space-sm">
+<div class="text-label-md font-label-md uppercase tracking-wider text-on-surface">Platform</div>
+<ul class="space-y-space-xs text-body-sm font-body-sm text-on-surface-variant">
+<li><a class="hover:text-primary transition-colors" href="#">Capstone Workspace</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Thesis Defense Jury</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Live BOM &amp; Inventory</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">Git Sync Engine</a></li>
+<li><a class="hover:text-primary transition-colors" href="#">LaTeX Redline Tool</a></li>
+</ul>
+</div>
+<!-- Col 3: Accreditation & Compliance -->
+<div class="space-y-space-sm">
+<div class="text-label-md font-label-md uppercase tracking-wider text-on-surface">Accreditation</div>
+<ul class="space-y-space-xs text-body-sm font-body-sm text-on-surface-variant">
+<li><a class="hover:text-secondary transition-colors" href="#">ABET Outcome Mapping</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Syllabus Guidelines</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Criterion 3 &amp; 5 Export</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">Digital Audit Binders</a></li>
+<li><a class="hover:text-secondary transition-colors" href="#">FERPA Compliance</a></li>
+</ul>
+</div>
+<!-- Col 4: Institutional Resources -->
+<div class="space-y-space-sm">
+<div class="text-label-md font-label-md uppercase tracking-wider text-on-surface">Institutions</div>
+<ul class="space-y-space-xs text-body-sm font-body-sm text-on-surface-variant">
+<li><a class="hover:text-tertiary transition-colors" href="#">Campus Pilot Program</a></li>
+<li><a class="hover:text-tertiary transition-colors" href="#">LMS Canvas LTI App</a></li>
+<li><a class="hover:text-tertiary transition-colors" href="#">Blackboard Connector</a></li>
+<li><a class="hover:text-tertiary transition-colors" href="#">Security Architecture</a></li>
+<li>
+<a class="hover:text-tertiary transition-colors flex items-center gap-1.5" href="#">
+<span>System Status</span>
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+</a>
+</li>
+</ul>
+</div>
+</div>
+<!-- Bottom Bar with FERPA and Copyright -->
+<div class="pt-space-lg border-t border-outline-variant/20 flex flex-col md:flex-row items-center justify-between text-body-sm text-outline gap-space-md">
+<div>
+          © 2025 ProjectHub, Inc. All rights reserved. Academic Workspace Protocol for Higher Education.
+        </div>
+<div class="flex items-center gap-space-lg text-label-sm font-label-sm">
+<a class="hover:text-on-surface transition-colors" href="#">FERPA Statement</a>
+<a class="hover:text-on-surface transition-colors" href="#">Student Privacy Policy</a>
+<a class="hover:text-on-surface transition-colors" href="#">Security Whitepaper</a>
+<a class="hover:text-on-surface transition-colors" href="#">Cookie Preferences</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

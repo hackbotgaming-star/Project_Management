@@ -1,0 +1,2332 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Institutional Admin Dashboard - ProjectHub</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
+  <script src="/js/theme.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/js/toast.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#0f131c",
+            "surface-container-lowest": "#0a0e17",
+            "surface-container-low": "#181b25",
+            "surface-container": "#1c1f29",
+            "surface-container-high": "#262a34",
+            "surface-container-highest": "#31353f",
+            "on-surface": "#dfe2ef",
+            "on-surface-variant": "#c7c4d8",
+            "outline": "#918fa1",
+            "outline-variant": "#464555",
+            "primary": "#c3c0ff",
+            "on-primary": "#1d00a5",
+            "primary-container": "#4f46e5",
+            "secondary": "#4cd7f6",
+            "tertiary": "#4edea3",
+            "error": "#ffb4ab",
+            "background": "#0f131c",
+            "on-background": "#dfe2ef"
+          },
+          fontFamily: {
+            headline: ["Geist", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(145, 143, 161, 0.2); border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen selection:bg-tertiary selection:text-black">
+
+  <!-- ========================================== -->
+  <!-- SIDEBAR NAVIGATION (Admin Nav)             -->
+  <!-- ========================================== -->
+  <aside class="fixed top-0 left-0 h-screen w-64 border-r border-outline-variant/30 bg-surface-container-low hidden md:flex flex-col justify-between p-4 z-40">
+    <div class="flex flex-col gap-4">
+      <!-- Logo Branding -->
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2.5">
+          <div class="h-8 w-8 rounded-lg bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-tertiary shadow-sm">
+            <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+          </div>
+          <div>
+            <span class="font-headline font-bold tracking-tight text-on-surface">ProjectHub</span>
+            <span class="block text-[10px] text-outline uppercase tracking-wider">Institutional Admin</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Institutional Scope Badge -->
+      <div class="p-2.5 rounded-lg bg-surface-container-high/60 border border-outline-variant/30 flex items-center justify-between">
+        <div class="truncate">
+          <div class="text-xs font-medium text-on-surface truncate">ABET Oversight Portal</div>
+          <div class="text-[10px] text-tertiary truncate">AY24-25 Accreditation</div>
+        </div>
+        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-tertiary/10 text-tertiary border border-tertiary/20">ADMIN</span>
+      </div>
+
+      <!-- Action Button: Create Project -->
+      <button onclick="openModal('adminNewProjectModal')" class="w-full flex items-center justify-center gap-2 bg-tertiary hover:bg-emerald-400 text-black text-xs font-semibold py-2 px-3 rounded-lg transition-all shadow-sm">
+        <span class="material-symbols-outlined text-base">add_circle</span>
+        <span>Create Project</span>
+      </button>
+
+      <!-- Admin Navigation Items:
+           Overview, Users, Students, Faculty, Projects, Departments, Faculty Assignment, Cohorts, Documents, Calendar, Analytics, Audit Trail, Notifications, Settings, Logout -->
+      <nav class="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-340px)] pr-1">
+        <button onclick="switchTab('overview')" id="nav-overview" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-tertiary bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">dashboard</span>
+          <span>Overview</span>
+        </button>
+        <button onclick="switchTab('users')" id="nav-users" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">manage_accounts</span>
+          <span>Users</span>
+        </button>
+        <button onclick="switchTab('projects')" id="nav-projects" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">folder_copy</span>
+          <span>Projects</span>
+        </button>
+        <button onclick="switchTab('departments')" id="nav-departments" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">domain</span>
+          <span>Departments</span>
+        </button>
+        <button onclick="switchTab('faculty-assignment')" id="nav-faculty-assignment" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">assignment_ind</span>
+          <span>Faculty Assignment</span>
+        </button>
+        <button onclick="switchTab('cohorts')" id="nav-cohorts" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">date_range</span>
+          <span>Cohorts</span>
+        </button>
+        <button onclick="switchTab('documents')" id="nav-documents" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">description</span>
+          <span>Documents</span>
+        </button>
+        <button onclick="switchTab('calendar')" id="nav-calendar" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">event</span>
+          <span>Calendar</span>
+        </button>
+        <button onclick="switchTab('analytics')" id="nav-analytics" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">monitoring</span>
+          <span>Analytics</span>
+        </button>
+        <button onclick="switchTab('audit-trail')" id="nav-audit-trail" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">history_edu</span>
+          <span>Audit Trail</span>
+        </button>
+        <button onclick="switchTab('notifications')" id="nav-notifications" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">notifications</span>
+          <span>Notifications</span>
+        </button>
+        <button onclick="switchTab('settings')" id="nav-settings" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">tune</span>
+          <span>Settings</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Admin User Profile Strip & Logout -->
+    <div class="pt-3 border-t border-outline-variant/20 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 overflow-hidden">
+        <img id="adminAvatar" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100" class="w-8 h-8 rounded-full border border-tertiary/40 object-cover" alt="Avatar">
+        <div class="truncate">
+          <div id="adminName" class="text-xs font-medium text-on-surface truncate">Dean Eleanor Vance</div>
+          <div class="text-[10px] text-tertiary truncate">ADMINISTRATOR</div>
+        </div>
+      </div>
+      <button onclick="handleLogout()" title="Logout" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined text-lg">logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================== -->
+  <!-- MAIN CONTENT AREA                          -->
+  <!-- ========================================== -->
+  <main class="md:ml-64 p-4 md:p-8 min-h-screen">
+    
+    <!-- Top Header Bar -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-outline-variant/20">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono text-outline">INSTITUTIONAL ADMINISTRATION</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+          <span class="text-xs text-tertiary">College-Wide Scope Verified</span>
+        </div>
+        <h1 id="pageTitle" class="font-headline text-2xl font-bold text-on-surface tracking-tight mt-0.5">Institutional Overview</h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openModal('createUserModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-on-surface hover:bg-surface-container transition-colors flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">person_add</span>
+          <span>Add User</span>
+        </button>
+        <button onclick="openModal('adminNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold text-xs hover:bg-emerald-400 transition-colors flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">add_circle</span>
+          <span>New Project</span>
+        </button>
+        <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface hover:bg-surface-container transition-colors">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- TAB 1: OVERVIEW -->
+    <section id="tab-overview" class="tab-pane space-y-6">
+      
+      <!-- Metrics Overview Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div onclick="switchTab('departments')" class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 hover:border-primary/40 transition-all cursor-pointer">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Enrolled Students</div>
+          <div id="statStudentCount" class="text-2xl font-bold font-headline text-primary">3</div>
+          <div class="text-[11px] text-primary mt-1">Verified Capstone Students &rarr;</div>
+        </div>
+        <div onclick="switchTab('departments')" class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 hover:border-secondary/40 transition-all cursor-pointer">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Faculty Advisors</div>
+          <div id="statFacultyCount" class="text-2xl font-bold font-headline text-secondary">2</div>
+          <div class="text-[11px] text-secondary mt-1">Supervising Research &rarr;</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Active Projects</div>
+          <div id="statActiveProjects" class="text-2xl font-bold font-headline text-tertiary">3</div>
+          <div class="text-[11px] text-tertiary mt-1">Campus Capstone Portfolio</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Pending Actions</div>
+          <div id="statPendingActions" class="text-2xl font-bold font-headline text-error">1</div>
+          <div class="text-[11px] text-outline mt-1">Unassigned Teams &amp; Reviews</div>
+        </div>
+      </div>
+
+      <!-- Faculty Workload Distribution -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <h3 class="font-headline text-base font-bold text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">assignment_ind</span>
+              Faculty Workload &amp; Mentorship Allocations
+            </h3>
+            <p class="text-xs text-outline">Oversight of capstone mentoring load across engineering departments.</p>
+          </div>
+          <button onclick="switchTab('faculty-assignment')" class="text-xs text-tertiary hover:underline font-mono">Reassign Advisors &rarr;</button>
+        </div>
+
+        <div id="workloadSummaryGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- Campus-Wide Projects Table -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-headline text-base font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">folder_copy</span>
+            Institutional Capstone Projects
+          </h3>
+          <span class="text-xs text-outline font-mono">Total Projects Managed</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-outline-variant/20 text-outline uppercase font-mono">
+                <th class="pb-2">Code</th>
+                <th class="pb-2">Project Title</th>
+                <th class="pb-2">Assigned Advisor</th>
+                <th class="pb-2">Students</th>
+                <th class="pb-2">Health</th>
+                <th class="pb-2">Status</th>
+                <th class="pb-2 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="projectsTableBody" class="divide-y divide-outline-variant/10 text-on-surface"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Recent Institutional Audit Trail -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-headline text-base font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary">history_edu</span>
+            Compliance &amp; Governance Audit Log
+          </h3>
+          <span class="text-xs text-outline font-mono">Tamper-Evident Records</span>
+        </div>
+        <div id="auditLogSummary" class="space-y-2 text-xs font-mono"></div>
+      </div>
+
+    </section>
+
+    <!-- TAB 2: USERS -->
+    <section id="tab-users" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Institutional User Directory</h2>
+          <p class="text-xs text-outline">Manage accounts, verify roles, and ensure proper role assignment.</p>
+        </div>
+        <button onclick="openModal('createUserModal')" class="px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold text-xs">Add New User</button>
+      </div>
+      <div id="usersDirectoryTable" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30"></div>
+    </section>
+
+    <!-- TAB 5: PROJECTS -->
+    <section id="tab-projects" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <h2 class="font-headline text-xl font-bold text-on-surface">All Institutional Projects</h2>
+        <button onclick="openModal('adminNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold text-xs">Create Project</button>
+      </div>
+      <div id="adminProjectsFullList" class="space-y-4"></div>
+    </section>
+
+    <!-- TAB 6: DEPARTMENTS -->
+    <section id="tab-departments" class="tab-pane hidden space-y-6">
+      <!-- 1. All Departments Overview Grid View -->
+      <div id="deptListView" class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h2 class="font-headline text-xl font-bold text-on-surface">Academic Departments</h2>
+            <p class="text-xs text-outline">Select any department to open its dedicated portal, review its enrolled students, assigned faculty advisors, and capstone projects.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-2.5 top-2 text-outline text-sm">search</span>
+              <input type="text" id="deptSearchInput" oninput="filterDepartmentsGrid(this.value)" placeholder="Search departments..." class="pl-8 pr-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none min-w-[220px]">
+            </div>
+          </div>
+        </div>
+
+        <div id="departmentsListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- 2. Dedicated Single Department Working Page -->
+      <div id="deptDetailView" class="hidden space-y-6">
+        <!-- Top Navigation Bar & Action -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-outline-variant/20">
+          <button onclick="closeDepartmentView()" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container text-xs font-semibold text-on-surface transition-colors w-fit border border-outline-variant/20">
+            <span class="material-symbols-outlined text-sm">arrow_back</span>
+            <span>Back to All Departments</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="openAddUserForCurrentDept('FACULTY')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-secondary/15 hover:bg-secondary text-secondary hover:text-black font-semibold text-xs border border-secondary/30 transition-colors">
+              <span class="material-symbols-outlined text-sm">person_add</span>
+              <span>Add Faculty</span>
+            </button>
+            <button onclick="openAddUserForCurrentDept('STUDENT')" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs transition-colors">
+              <span class="material-symbols-outlined text-sm">person_add</span>
+              <span>Add Student</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Department Header Card -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2.5 mb-2">
+                <span id="detailDeptCode" class="px-2.5 py-1 rounded bg-tertiary/20 text-tertiary font-mono font-bold text-xs">CSE</span>
+                <span class="text-xs text-outline font-mono">SRM Easwari Engineering College</span>
+              </div>
+              <h1 id="detailDeptName" class="font-headline text-2xl font-bold text-on-surface">Computer Science &amp; Engineering</h1>
+              <p id="detailDeptDesc" class="text-xs text-outline mt-1 max-w-2xl"></p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 min-w-[220px]">
+              <div class="text-[10px] text-outline uppercase font-mono mb-1">Head of Department</div>
+              <div id="detailDeptHead" class="font-bold text-xs text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-secondary text-base">supervisor_account</span>
+                <span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Counter Strip -->
+          <div class="grid grid-cols-3 gap-3 pt-4 border-t border-outline-variant/20">
+            <div class="p-3 rounded-xl bg-surface-container/60 text-center border border-outline-variant/10">
+              <div id="detailDeptStuCount" class="text-2xl font-bold font-headline text-primary">0</div>
+              <div class="text-[11px] text-outline font-medium mt-0.5">Enrolled Students</div>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container/60 text-center border border-outline-variant/10">
+              <div id="detailDeptFacCount" class="text-2xl font-bold font-headline text-secondary">0</div>
+              <div class="text-[11px] text-outline font-medium mt-0.5">Faculty Advisors</div>
+            </div>
+            <div class="p-3 rounded-xl bg-surface-container/60 text-center border border-outline-variant/10">
+              <div id="detailDeptProjCount" class="text-2xl font-bold font-headline text-tertiary">0</div>
+              <div class="text-[11px] text-outline font-medium mt-0.5">Active Projects</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Faculty of this Department -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">badge</span>
+              <h3 class="font-headline font-bold text-base text-on-surface">Faculty Roster &amp; Advisors</h3>
+              <span id="detailDeptFacBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-secondary/20 text-secondary">0 Faculty</span>
+            </div>
+            <span class="text-xs text-outline">Department Mentors</span>
+          </div>
+          <div id="detailDeptFacultyGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- Section 2: Students of this Department -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">school</span>
+              <h3 class="font-headline font-bold text-base text-on-surface">Enrolled Students</h3>
+              <span id="detailDeptStuBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-primary/20 text-primary">0 Students</span>
+            </div>
+            <span class="text-xs text-outline">Capstone Researchers</span>
+          </div>
+          <div id="detailDeptStudentsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- Section 3: Projects of this Department -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-tertiary">folder_special</span>
+              <h3 class="font-headline font-bold text-base text-on-surface">Department Capstone Projects</h3>
+              <span id="detailDeptProjBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-tertiary/20 text-tertiary">0 Projects</span>
+            </div>
+            <span class="text-xs text-outline">Managed Department Teams</span>
+          </div>
+          <div id="detailDeptProjectsList" class="space-y-3"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 7: FACULTY ASSIGNMENT -->
+    <section id="tab-faculty-assignment" class="tab-pane hidden space-y-6">
+      <div>
+        <h2 class="font-headline text-xl font-bold text-on-surface">Faculty Mentor Allocation &amp; Reassignment</h2>
+        <p class="text-xs text-outline">Assign or reassign faculty advisors to capstone teams with real-time audit logging.</p>
+      </div>
+      <div id="assignmentControlsList" class="space-y-4"></div>
+    </section>
+
+    <!-- TAB 8: COHORTS -->
+    <section id="tab-cohorts" class="tab-pane hidden space-y-6">
+
+      <!-- VIEW 1: COHORTS DIRECTORY -->
+      <div id="cohortListView" class="space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-outline-variant/20 pb-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="material-symbols-outlined text-tertiary text-2xl">calendar_today</span>
+              <h2 class="font-headline text-xl font-bold text-on-surface">Academic Cohorts Directory</h2>
+            </div>
+            <p class="text-xs text-outline">Manage active and upcoming senior design capstone cohorts, milestones, student rosters, and project portfolios.</p>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs text-outline font-mono">ABET Term Schedules</span>
+          </div>
+        </div>
+
+        <div id="cohortsListGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+      </div>
+
+      <!-- VIEW 2: DEDICATED WORKING COHORT WORKSPACE -->
+      <div id="cohortDetailView" class="hidden space-y-6">
+        <!-- Navigation & Breadcrumb -->
+        <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+          <button onclick="closeCohortView()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-xs text-on-surface font-medium transition-all group">
+            <span class="material-symbols-outlined text-sm group-hover:-translate-x-0.5 transition-transform">arrow_back</span>
+            <span>Back to All Cohorts</span>
+          </button>
+          <div class="flex items-center gap-2">
+            <span id="detailCohortStatusBadge" class="font-mono text-[10px] px-2 py-0.5 rounded font-bold uppercase">STATUS</span>
+          </div>
+        </div>
+
+        <!-- Cohort Hero Header Banner -->
+        <div class="p-6 rounded-2xl bg-gradient-to-br from-surface-container-low via-surface-container to-surface-container-high border border-outline-variant/30 shadow-lg relative overflow-hidden">
+          <div class="relative z-10 space-y-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <span id="detailCohortCode" class="font-mono text-xs px-2.5 py-1 rounded bg-tertiary/20 text-tertiary font-bold">CODE</span>
+              <span id="detailCohortTerm" class="font-mono text-xs px-2.5 py-1 rounded bg-surface-container-high text-on-surface-variant font-medium">TERM</span>
+              <span id="detailCohortDept" class="font-mono text-xs px-2.5 py-1 rounded bg-surface-container-high text-on-surface-variant">DEPT</span>
+            </div>
+
+            <h3 id="detailCohortName" class="font-headline font-bold text-2xl text-on-surface">Cohort Name</h3>
+            <p id="detailCohortDesc" class="text-xs text-outline leading-relaxed max-w-3xl">Official senior capstone cohort monitoring deliverables and design reviews.</p>
+
+            <!-- 4 Quick Stats -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-outline-variant/15 text-xs">
+              <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/20 text-center">
+                <div id="detailCohortProjCount" class="font-mono font-bold text-tertiary text-lg">0</div>
+                <div class="text-[10px] text-outline uppercase font-mono mt-0.5">Projects</div>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/20 text-center">
+                <div id="detailCohortStuCount" class="font-mono font-bold text-primary text-lg">0</div>
+                <div class="text-[10px] text-outline uppercase font-mono mt-0.5">Enrolled Students</div>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/20 text-center">
+                <div id="detailCohortFacCount" class="font-mono font-bold text-secondary text-lg">0</div>
+                <div class="text-[10px] text-outline uppercase font-mono mt-0.5">Faculty Mentors</div>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/20 text-center">
+                <div id="detailCohortProgress" class="font-mono font-bold text-on-surface text-lg">0%</div>
+                <div class="text-[10px] text-outline uppercase font-mono mt-0.5">Avg Progress</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Projects in this Cohort -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-tertiary">folder_special</span>
+              <h3 class="font-headline font-bold text-base text-on-surface">Capstone Projects in this Cohort</h3>
+              <span id="detailCohortProjBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-tertiary/20 text-tertiary">0 Projects</span>
+            </div>
+            <span class="text-xs text-outline">Registered Teams</span>
+          </div>
+          <div id="detailCohortProjectsList" class="space-y-3"></div>
+        </div>
+
+        <!-- Section 2: Students Enrolled in this Cohort -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary">school</span>
+              <h3 class="font-headline font-bold text-base text-on-surface">Enrolled Students</h3>
+              <span id="detailCohortStuBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-primary/20 text-primary">0 Students</span>
+            </div>
+            <span class="text-xs text-outline">Student Roster</span>
+          </div>
+          <div id="detailCohortStudentsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+        </div>
+
+        <!-- Section 3: Faculty Advisors Supervising Teams in this Cohort -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary">badge</span>
+              <h3 class="font-headline font-bold text-base text-on-surface">Faculty Advisors Supervising Teams</h3>
+              <span id="detailCohortFacBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-secondary/20 text-secondary">0 Advisors</span>
+            </div>
+            <span class="text-xs text-outline">Cohort Mentors</span>
+          </div>
+          <div id="detailCohortFacultyGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <!-- Section 4: Cohort Milestones & Timeline Schedule -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-tertiary">calendar_month</span>
+              <h3 class="font-headline font-bold text-base text-on-surface">Cohort Milestone Schedule &amp; Deadlines</h3>
+            </div>
+            <span class="text-xs text-outline font-mono">Academic Deliverables</span>
+          </div>
+          <div id="detailCohortMilestonesList" class="space-y-3"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB 9: DOCUMENTS (ADMIN FULL ACCESS) -->
+    <section id="tab-documents" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Campus Repository &amp; Documents</h2>
+          <p class="text-xs text-outline">Institution-wide repository of technical specifications, rubrics, and project deliverables.</p>
+        </div>
+        <button onclick="openModal('adminUploadDocModal')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-tertiary text-black text-xs font-semibold hover:bg-emerald-400 transition-colors">
+          <span class="material-symbols-outlined text-sm">upload_file</span>
+          <span>Upload Document</span>
+        </button>
+      </div>
+      <div id="adminDocumentsContainer" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3"></div>
+    </section>
+
+    <!-- TAB 10: CALENDAR (INTERACTIVE ACADEMIC CALENDAR) -->
+    <section id="tab-calendar" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Campus Academic Capstone &amp; Defense Calendar</h2>
+          <p class="text-xs text-outline">College-wide schedule of milestone deliverables and oral defense presentations.</p>
+        </div>
+        <div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-xl border border-outline-variant/30">
+          <button onclick="prevCalMonth()" class="p-1 rounded hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors">
+            <span class="material-symbols-outlined text-base">chevron_left</span>
+          </button>
+          <span id="calMonthTitle" class="text-xs font-headline font-bold text-on-surface px-2 min-w-[120px] text-center">October 2026</span>
+          <button onclick="nextCalMonth()" class="p-1 rounded hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors">
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+          </button>
+          <button onclick="resetCalToday()" class="ml-2 px-2 py-0.5 rounded text-[10px] bg-tertiary text-black font-semibold">Today</button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="lg:col-span-2 p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+          <div class="grid grid-cols-7 gap-1 text-center font-mono text-[11px] text-outline uppercase pb-2 mb-2 border-b border-outline-variant/20">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1"></div>
+          <div class="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-outline-variant/20 text-xs">
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-primary"></span><span>Milestones</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-secondary"></span><span>Tasks</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span><span>Defense Presentations</span></div>
+          </div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20 mb-4">
+              <h3 id="calAgendaTitle" class="font-headline font-bold text-sm text-on-surface">Scheduled Events</h3>
+              <span id="calAgendaCount" class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-tertiary">0 Events</span>
+            </div>
+            <div id="calAgendaList" class="space-y-3 max-h-[380px] overflow-y-auto pr-1"></div>
+          </div>
+          <div class="text-[11px] text-outline pt-4 border-t border-outline-variant/20">
+            Click any highlighted date on the calendar grid to inspect events.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 11: ANALYTICS -->
+    <section id="tab-analytics" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-outline-variant/20 pb-4">
+        <div>
+          <div class="flex items-center gap-2 mb-1">
+            <span class="material-symbols-outlined text-tertiary text-2xl">monitoring</span>
+            <h2 class="font-headline text-xl font-bold text-on-surface">ABET Institutional Analytics &amp; Outcomes Assessment</h2>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold uppercase">ABET Criterion 3 &amp; 5</span>
+          </div>
+          <p class="text-xs text-outline">Continuous Quality Improvement (CQI) metrics, student outcome attainment, and cross-departmental capstone distribution.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs text-outline font-mono">Academic Year 2024–25</span>
+          <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+        </div>
+      </div>
+
+      <!-- KPI Summary Cards -->
+      <div id="analyticsKpiGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Rendered via JS -->
+      </div>
+
+      <!-- ABET Student Outcomes (SO 1 to SO 7) Attainment -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+        <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">verified</span>
+            <div>
+              <h3 class="font-bold text-sm text-on-surface">ABET Student Outcomes (1–7) Attainment Assessment</h3>
+              <p class="text-[11px] text-outline">Direct summative and formative rubric evaluation calculated across senior design milestones.</p>
+            </div>
+          </div>
+          <span class="text-xs font-mono font-bold text-tertiary">Institutional Target: &ge; 75%</span>
+        </div>
+
+        <div id="abetOutcomesList" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Rendered via JS -->
+        </div>
+      </div>
+
+      <!-- Two Column: Project Health Distribution & Department Benchmarking -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Project Health & Governance -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-xl">pie_chart</span>
+              <h3 class="font-bold text-sm text-on-surface">Capstone Health &amp; Governance Status</h3>
+            </div>
+            <span id="analyticsTotalProjectsBadge" class="text-xs font-mono px-2 py-0.5 rounded bg-surface-container-high text-outline">0 Projects</span>
+          </div>
+
+          <div id="analyticsHealthBars" class="space-y-3 text-xs">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+        <!-- Faculty Advising Ratio & Workload -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-tertiary text-xl">supervisor_account</span>
+              <h3 class="font-bold text-sm text-on-surface">Faculty Advising Capacity &amp; Ratios</h3>
+            </div>
+            <span class="text-xs font-mono text-outline">Department Ratios</span>
+          </div>
+
+          <div id="analyticsAdvisingStats" class="space-y-3 text-xs">
+            <!-- Rendered via JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Cross-Departmental Performance Table -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+        <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">table_chart</span>
+            <h3 class="font-bold text-sm text-on-surface">Departmental Capstone Attainment Benchmarking</h3>
+          </div>
+          <span class="text-xs text-outline font-mono">SRM Easwari Engineering College</span>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-outline-variant/20 text-outline font-mono text-[11px] uppercase">
+                <th class="py-2.5">Code</th>
+                <th class="py-2.5">Department</th>
+                <th class="py-2.5 text-center">Projects</th>
+                <th class="py-2.5 text-center">Students</th>
+                <th class="py-2.5 text-center">Faculty</th>
+                <th class="py-2.5 text-center">Advising Ratio</th>
+                <th class="py-2.5 text-right">Avg Progress</th>
+              </tr>
+            </thead>
+            <tbody id="analyticsDeptTableBody" class="divide-y divide-outline-variant/10">
+              <!-- Rendered via JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 12: AUDIT TRAIL -->
+    <section id="tab-audit-trail" class="tab-pane hidden space-y-6">
+      <h2 class="font-headline text-xl font-bold text-on-surface">Institutional Audit Trail</h2>
+      <div id="auditTrailFullTable" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-2 font-mono text-xs"></div>
+    </section>
+
+    <!-- TAB 13: NOTIFICATIONS -->
+    <section id="tab-notifications" class="tab-pane hidden space-y-6">
+      <h2 class="font-headline text-xl font-bold text-on-surface">Administrator Notifications</h2>
+      <div id="adminNotifList" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3"></div>
+    </section>
+
+    <!-- TAB 14: SETTINGS & PROFILE -->
+    <section id="tab-settings" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Institutional Profile &amp; Settings</h2>
+          <p class="text-xs text-outline">Manage administrator identity, credentials, and institutional oversight profile.</p>
+        </div>
+      </div>
+
+      <!-- Admin Profile Box -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 max-w-2xl space-y-6">
+        <div class="flex flex-col sm:flex-row sm:items-center gap-5 pb-6 border-b border-outline-variant/20">
+          <div class="relative group w-20 h-20 shrink-0">
+            <img id="adminProfileAvatarPreview" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150" class="w-20 h-20 rounded-2xl object-cover border-2 border-tertiary shadow-lg">
+            <label for="adminAvatarFileInput" class="absolute inset-0 bg-black/60 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer text-white text-[10px] gap-1">
+              <span class="material-symbols-outlined text-base">photo_camera</span>
+              <span>Change</span>
+            </label>
+            <input type="file" id="adminAvatarFileInput" accept="image/*" class="hidden" onchange="previewAndUploadAdminAvatar(this)">
+          </div>
+          <div class="space-y-1">
+            <h3 id="adminProfileNameTitle" class="font-headline text-xl font-bold text-on-surface">Administrator Profile</h3>
+            <div id="adminProfileEmailSub" class="text-xs text-outline font-mono">admin@university.edu</div>
+            <div class="flex flex-wrap items-center gap-2 pt-1">
+              <span class="font-mono text-[10px] px-2.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold uppercase tracking-wider">CAMPUS DEAN / ADMINISTRATOR</span>
+            </div>
+          </div>
+        </div>
+
+        <form id="adminUpdateProfileForm" onsubmit="handleAdminProfileUpdate(event)" class="space-y-4">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-outline uppercase font-mono mb-1.5">Full Name</label>
+              <input id="editAdminName" type="text" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface text-xs focus:outline-none focus:border-tertiary">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-outline uppercase font-mono mb-1.5">Date of Birth (DOB)</label>
+              <input id="editAdminDob" type="date" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface text-xs focus:outline-none focus:border-tertiary">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-outline uppercase font-mono mb-1.5">Profile Picture URL (Optional or upload photo above)</label>
+            <div class="flex gap-2">
+              <input id="editAdminAvatarUrl" type="url" placeholder="https://..." class="flex-1 p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface text-xs focus:outline-none focus:border-tertiary">
+              <label for="adminAvatarFileInput" class="px-3 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container border border-outline-variant/30 text-xs font-medium text-on-surface flex items-center gap-1.5 cursor-pointer">
+                <span class="material-symbols-outlined text-sm">cloud_upload</span>
+                <span>Upload</span>
+              </label>
+            </div>
+            <p class="text-[10px] text-outline mt-1">Direct file upload automatically optimizes & stores your photo in Cloudinary.</p>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+            <div>
+              <label class="block text-[10px] text-outline uppercase font-mono mb-1">Administrative Privileges</label>
+              <input disabled value="Full Institutional Access (ADMIN)" class="w-full p-2 bg-surface-container border border-outline-variant/20 rounded-lg text-tertiary font-mono text-xs">
+            </div>
+            <div>
+              <label class="block text-[10px] text-outline uppercase font-mono mb-1">Database Verification</label>
+              <input disabled value="MongoDB Atlas Verified" class="w-full p-2 bg-surface-container border border-outline-variant/20 rounded-lg text-on-surface text-xs">
+            </div>
+          </div>
+
+          <div class="pt-2 flex justify-end">
+            <button id="saveAdminProfileBtn" type="submit" class="px-5 py-2.5 rounded-xl bg-tertiary text-black font-semibold text-xs hover:bg-emerald-400 transition-colors flex items-center gap-1.5 shadow-md">
+              <span class="material-symbols-outlined text-sm">save</span>
+              <span>Save Profile Changes</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Theme Preference Card -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 max-w-2xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-tertiary">palette</span>
+            <div>
+              <h3 class="font-headline font-bold text-sm text-on-surface">Appearance &amp; Theme</h3>
+              <p class="text-[11px] text-outline">Select interface appearance preference for your workspace.</p>
+            </div>
+          </div>
+          <span id="currentThemeDisplay" class="font-mono text-xs px-2.5 py-1 rounded bg-surface-container-high text-tertiary font-bold">Dark Mode</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+          <!-- Dark Theme Option -->
+          <label class="relative flex items-center gap-3.5 p-3.5 rounded-xl border border-outline-variant/30 bg-surface-container hover:border-tertiary/60 transition-all cursor-pointer group">
+            <input type="radio" name="themeChoice" value="dark" onchange="setTheme('dark')" class="text-tertiary focus:ring-tertiary">
+            <div class="w-8 h-8 rounded-lg bg-[#0f131c] border border-slate-700 flex items-center justify-center text-slate-200 shrink-0">
+              <span class="material-symbols-outlined text-base">dark_mode</span>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-on-surface group-hover:text-tertiary transition-colors">Dark Theme</div>
+              <div class="text-[10px] text-outline">High contrast dark surface (Default)</div>
+            </div>
+          </label>
+
+          <!-- Light Theme Option -->
+          <label class="relative flex items-center gap-3.5 p-3.5 rounded-xl border border-outline-variant/30 bg-surface-container hover:border-tertiary/60 transition-all cursor-pointer group">
+            <input type="radio" name="themeChoice" value="light" onchange="setTheme('light')" class="text-tertiary focus:ring-tertiary">
+            <div class="w-8 h-8 rounded-lg bg-white border border-slate-300 flex items-center justify-center text-amber-500 shrink-0">
+              <span class="material-symbols-outlined text-base">light_mode</span>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-on-surface group-hover:text-tertiary transition-colors">Light Theme</div>
+              <div class="text-[10px] text-outline">Clean, bright workspace aesthetic</div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADMIN UPLOAD DOCUMENT               -->
+  <!-- ========================================== -->
+  <div id="adminUploadDocModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-tertiary">upload_file</span>
+          Upload Institutional Document
+        </h3>
+        <button onclick="closeModal('adminUploadDocModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="adminUploadDocForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-outline mb-1">Project</label>
+          <select id="adminDocProjSelect" required class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none"></select>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Document Title</label>
+          <input id="adminDocTitle" required placeholder="e.g. Institutional Ethics Approval Certificate" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-outline mb-1">Category</label>
+            <select id="adminDocCategory" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+              <option value="Governance">Governance</option>
+              <option value="Accreditation">Accreditation</option>
+              <option value="Specification">Specification</option>
+              <option value="Report">Report</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-outline mb-1">Version</label>
+            <input id="adminDocVersion" value="v1.0" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Select File to Upload</label>
+          <input type="file" id="adminDocFileInput" class="w-full text-xs text-on-surface file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-tertiary file:text-black hover:file:bg-emerald-400 cursor-pointer p-1.5 bg-surface-container rounded border border-outline-variant/30">
+          <p class="text-[10px] text-outline mt-1">Uploaded securely to Cloudinary storage. Supports PDF, docs, code, archives, images.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1">Or External URL Link (Optional)</label>
+          <input id="adminDocFileUrl" placeholder="https://docs.projecthub.edu/admin/approval.pdf" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('adminUploadDocModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs">Upload Document</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ASSIGN / CHANGE FACULTY MENTOR      -->
+  <!-- ========================================== -->
+  <div id="reassignModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface">Change Faculty Mentor</h3>
+        <button onclick="closeModal('reassignModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="reassignForm" class="space-y-4">
+        <input type="hidden" id="reassignProjectId">
+        <div>
+          <label class="block text-xs text-outline mb-1">Project</label>
+          <input id="reassignProjectTitle" disabled class="w-full p-2 bg-surface-container rounded border border-outline-variant/20 text-xs text-on-surface font-medium">
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1">Select Faculty Mentor</label>
+          <select id="reassignFacultySelect" required class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none"></select>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('reassignModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs">Confirm Assignment</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: CREATE PROJECT (Admin Privilege)    -->
+  <!-- ========================================== -->
+  <div id="adminNewProjectModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface">Create Institutional Project</h3>
+        <button onclick="closeModal('adminNewProjectModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="adminCreateProjectForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-outline mb-1">Project Title</label>
+          <input id="newProjTitle" required placeholder="e.g. Next-Gen Autonomous Systems" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-outline mb-1">Project Code</label>
+            <input id="newProjCode" placeholder="CAP-2025-04" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Department</label>
+            <select id="newProjDept" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+              <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+              <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science (AI&DS)</option>
+              <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning (AI&ML)</option>
+              <option value="Computer Science & Engineering (Cyber Security)">Computer Science & Engineering - Cyber Security (CSE-CS)</option>
+              <option value="Computer Science & Design">Computer Science & Design (CSD)</option>
+              <option value="Information Technology">Information Technology (IT)</option>
+              <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
+              <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
+              <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
+              <option value="Automobile Engineering">Automobile Engineering (AUTO)</option>
+              <option value="Robotics & Automation Engineering">Robotics & Automation Engineering (ROB)</option>
+              <option value="Biomedical Engineering">Biomedical Engineering (BME)</option>
+              <option value="Civil Engineering">Civil Engineering (CIVIL)</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Assign Faculty Mentor</label>
+          <select id="newProjMentorSelect" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none"></select>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Abstract / Scope</label>
+          <textarea id="newProjAbstract" rows="2" placeholder="Academic project overview..." class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('adminNewProjectModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs">Create Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD USER (Student or Faculty)      -->
+  <!-- ========================================== -->
+  <div id="createUserModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface">Provision User Account</h3>
+        <button onclick="closeModal('createUserModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="createUserForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-outline mb-1">Full Name</label>
+          <input id="newUserName" required placeholder="Dr. Sarah Connor or Jane Doe" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Institutional Email</label>
+          <input id="newUserEmail" type="email" required placeholder="user@university.edu" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Temporary Password</label>
+          <input id="newUserPassword" type="password" required value="Password123!" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Assigned Role</label>
+          <select id="newUserRole" required class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+            <option value="STUDENT">STUDENT (Capstone Researcher)</option>
+            <option value="FACULTY">FACULTY (Capstone Advisor)</option>
+            <option value="ADMIN">ADMIN (Institutional Oversight)</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1">Academic Department</label>
+          <select id="newUserDept" required class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+            <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+            <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science (AI&DS)</option>
+            <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning (AI&ML)</option>
+            <option value="Computer Science & Engineering (Cyber Security)">Computer Science & Engineering - Cyber Security (CSE-CS)</option>
+            <option value="Computer Science & Design">Computer Science & Design (CSD)</option>
+            <option value="Information Technology">Information Technology (IT)</option>
+            <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
+            <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
+            <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
+            <option value="Automobile Engineering">Automobile Engineering (AUTO)</option>
+            <option value="Robotics & Automation Engineering">Robotics & Automation Engineering (ROB)</option>
+            <option value="Biomedical Engineering">Biomedical Engineering (BME)</option>
+            <option value="Civil Engineering">Civil Engineering (CIVIL)</option>
+          </select>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('createUserModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs">Provision Account</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- APPLICATION SCRIPTS -->
+  <script>
+    let adminData = null;
+    let calendarEvents = [];
+    let calDate = new Date();
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.adm-nav-item').forEach(el => {
+        el.className = 'adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high';
+      });
+
+      const pane = document.getElementById(`tab-${tabId}`);
+      if (pane) pane.classList.remove('hidden');
+      const navBtn = document.getElementById(`nav-${tabId}`);
+      if (navBtn) navBtn.className = 'adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-tertiary bg-surface-container-high';
+      document.getElementById('pageTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1).replace('-', ' ');
+
+      if (tabId === 'calendar') loadCalendar();
+      if (tabId === 'documents') loadAdminDocuments();
+      if (tabId === 'analytics') renderAnalyticsTab(adminData);
+      if (tabId === 'cohorts' && adminData) {
+        if (!currentViewingCohortName) closeCohortView();
+      }
+    }
+
+    async function loadAdminDashboard() {
+      try {
+        const res = await fetch('/api/dashboard/admin');
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = '/login/admin';
+          return;
+        }
+        const json = await res.json();
+        if (!json.success) return;
+
+        adminData = json.data;
+        renderAdminDashboard(adminData);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        if (urlParams.get('cohort')) {
+          switchTab('cohorts');
+          openCohortView(urlParams.get('cohort'));
+        }
+      } catch (err) {
+        console.error('Failed to load admin dashboard:', err);
+      }
+    }
+
+    function renderAdminDashboard(data) {
+      document.getElementById('statStudentCount').textContent = data.studentCount;
+      document.getElementById('statFacultyCount').textContent = data.facultyCount;
+      document.getElementById('statActiveProjects').textContent = data.activeProjects;
+      document.getElementById('statPendingActions').textContent = data.pendingActions.unassignedProjectsCount + data.pendingActions.pendingMilestoneReviewsCount;
+
+      const reassignSelect = document.getElementById('reassignFacultySelect');
+      const newMentorSelect = document.getElementById('newProjMentorSelect');
+      const docProjSelect = document.getElementById('adminDocProjSelect');
+      reassignSelect.innerHTML = '<option value="">None (Unassigned)</option>';
+      newMentorSelect.innerHTML = '<option value="">None (Unassigned)</option>';
+      docProjSelect.innerHTML = '';
+
+      data.allProjects.forEach(p => {
+        const opt = document.createElement('option');
+        opt.value = p._id; opt.textContent = `${p.code}: ${p.title}`;
+        docProjSelect.appendChild(opt);
+      });
+
+      data.facultyWorkload.forEach(f => {
+        const opt1 = document.createElement('option');
+        opt1.value = f.facultyId; opt1.textContent = `${f.name} (${f.assignedProjectsCount} assigned)`;
+        reassignSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = f.facultyId; opt2.textContent = `${f.name} (${f.title})`;
+        newMentorSelect.appendChild(opt2);
+      });
+
+      // Workload Distribution
+      document.getElementById('workloadSummaryGrid').innerHTML = data.facultyWorkload.map(f => `
+        <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <img src="${f.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60'}" class="w-10 h-10 rounded-full object-cover border border-secondary">
+            <div>
+              <div class="text-xs font-bold text-on-surface">${f.name}</div>
+              <div class="text-[10px] text-outline">${f.title || 'Faculty Advisor'} &bull; ${f.department}</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="text-sm font-bold font-mono text-secondary">${f.assignedProjectsCount}</span>
+            <span class="text-[10px] text-outline block">Teams</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Projects Table
+      document.getElementById('projectsTableBody').innerHTML = data.allProjects.map(p => `
+        <tr class="hover:bg-surface-container-high/40 transition-colors">
+          <td class="py-2.5 font-mono text-primary font-bold"><a href="/projects/${p._id}" class="hover:underline">${p.code}</a></td>
+          <td class="py-2.5 font-medium text-on-surface"><a href="/projects/${p._id}" class="hover:text-tertiary hover:underline transition-colors">${p.title}</a></td>
+          <td class="py-2.5 text-secondary">${p.facultyMentor ? p.facultyMentor.name : '<span class="text-error font-mono">Unassigned</span>'}</td>
+          <td class="py-2.5">${p.teamMembers.length} students</td>
+          <td class="py-2.5"><span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${p.health === 'AT_RISK' ? 'bg-error/20 text-error' : 'bg-tertiary/20 text-tertiary'}">${p.health}</span></td>
+          <td class="py-2.5 font-mono text-[11px]">${p.status}</td>
+          <td class="py-2.5 text-right space-x-1.5">
+            <a href="/projects/${p._id}" class="px-2.5 py-1 rounded bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary text-[11px] font-semibold transition-colors inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-[13px]">folder_special</span>
+              <span>Open</span>
+            </a>
+            <button onclick="promptReassign('${p._id}', '${p.title.replace(/'/g, "\\'")}', '${p.facultyMentor ? p.facultyMentor._id : ''}')" class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-[11px] font-medium transition-colors">
+              Reassign
+            </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Audit Log
+      document.getElementById('auditLogSummary').innerHTML = data.auditSummary.map(a => `
+        <div class="p-2.5 rounded bg-surface-container border border-outline-variant/10 flex items-center justify-between">
+          <div>
+            <span class="text-tertiary font-bold">[${a.role}]</span>
+            <span class="text-on-surface ml-1 font-semibold">${a.action}:</span>
+            <span class="text-outline ml-1">${a.details}</span>
+          </div>
+          <span class="text-[10px] text-outline font-mono">${new Date(a.timestamp).toLocaleTimeString()}</span>
+        </div>
+      `).join('');
+
+      // Faculty Assignment Tab
+      document.getElementById('assignmentControlsList').innerHTML = data.allProjects.map(p => `
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-xs font-mono text-primary font-bold">${p.code}</span>
+              <span class="text-xs font-bold text-on-surface">${p.title}</span>
+            </div>
+            <div class="text-xs text-outline">Current Advisor: <span class="text-secondary font-medium">${p.facultyMentor ? p.facultyMentor.name : 'None (Unassigned)'}</span></div>
+          </div>
+          <button onclick="promptReassign('${p._id}', '${p.title.replace(/'/g, "\\'")}', '${p.facultyMentor ? p.facultyMentor._id : ''}')" class="px-3.5 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black text-xs font-semibold flex items-center gap-1.5 transition-colors">
+            <span class="material-symbols-outlined text-sm">assignment_ind</span>
+            <span>Assign / Change Advisor</span>
+          </button>
+        </div>
+      `).join('');
+
+      // Departments Tab - Render All Departments Grid
+      renderDepartmentsGrid(data.departmentStatistics);
+      if (currentViewingDeptName) {
+        openDepartmentView(currentViewingDeptName);
+      }
+
+      // Cohorts Tab
+      renderCohortsGrid(data.cohortStatistics);
+      if (currentViewingCohortName) {
+        openCohortView(currentViewingCohortName);
+      }
+
+      // Audit Trail Full Tab
+      document.getElementById('auditTrailFullTable').innerHTML = data.auditSummary.map(a => `
+        <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/10 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-1.5 py-0.5 rounded text-[10px] font-bold ${a.role === 'ADMIN' ? 'bg-tertiary/20 text-tertiary' : a.role === 'FACULTY' ? 'bg-secondary/20 text-secondary' : 'bg-primary/20 text-primary'}">${a.role}</span>
+              <span class="text-on-surface font-semibold">${a.userName}</span>
+              <span class="text-outline">&bull; ${a.action}</span>
+            </div>
+            <div class="text-outline-variant text-[11px] mt-1">${a.details}</div>
+          </div>
+          <div class="text-right text-[10px] text-outline">
+            <div>${new Date(a.timestamp).toLocaleString()}</div>
+            <div>IP: ${a.ipAddress || '127.0.0.1'}</div>
+          </div>
+        </div>
+      `).join('');
+
+      // Populate Tab 13: Administrator Notifications
+      const notifContainer = document.getElementById('adminNotifList');
+      if (notifContainer) {
+        if (!data.notifications || data.notifications.length === 0) {
+          notifContainer.innerHTML = '<div class="text-xs text-outline py-4 text-center">No system notifications yet. System functioning optimally.</div>';
+        } else {
+          notifContainer.innerHTML = data.notifications.map(n => `
+            <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 flex items-start gap-3 text-xs ${n.read ? 'opacity-70' : 'border-tertiary/40 bg-tertiary/5'}">
+              <span class="material-symbols-outlined text-base ${n.type === 'SUCCESS' ? 'text-tertiary' : n.type === 'WARNING' ? 'text-secondary' : 'text-primary'} mt-0.5">
+                ${n.type === 'SUCCESS' ? 'check_circle' : n.type === 'WARNING' ? 'warning' : 'notifications'}
+              </span>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <div class="font-semibold text-on-surface">${n.title}</div>
+                  <span class="text-[10px] text-outline font-mono">${new Date(n.createdAt).toLocaleDateString()}</span>
+                </div>
+                <p class="text-outline mt-0.5">${n.message}</p>
+                ${n.link ? `<a href="${n.link}" class="inline-block mt-1 text-[11px] text-tertiary hover:underline">View details &rarr;</a>` : ''}
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      loadUsersDirectory();
+      renderAnalyticsTab(data);
+    }
+
+    function renderAnalyticsTab(data) {
+      if (!data) return;
+
+      const totalProj = data.allProjects ? data.allProjects.length : 0;
+      const completedProj = data.allProjects ? data.allProjects.filter(p => p.status === 'COMPLETED' || p.status === 'APPROVED').length : 0;
+      const onTrackCount = data.allProjects ? data.allProjects.filter(p => p.health === 'ON_TRACK').length : 0;
+      const atRiskCount = data.allProjects ? data.allProjects.filter(p => p.health === 'AT_RISK').length : 0;
+      const delayedCount = data.allProjects ? data.allProjects.filter(p => p.health === 'DELAYED').length : 0;
+      const unassignedCount = data.pendingActions ? data.pendingActions.unassignedProjectsCount : 0;
+      const avgProg = totalProj > 0 ? Math.round(data.allProjects.reduce((acc, p) => acc + (p.progressPercentage || 0), 0) / totalProj) : 0;
+      const totalStudents = data.studentCount || 0;
+      const totalFaculty = data.facultyCount || 0;
+      const overallRatio = totalFaculty > 0 ? (totalStudents / totalFaculty).toFixed(1) : '—';
+
+      // 1. KPI Cards
+      const kpiContainer = document.getElementById('analyticsKpiGrid');
+      if (kpiContainer) {
+        kpiContainer.innerHTML = `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20">
+            <div class="text-[11px] text-outline font-mono uppercase mb-1">Overall Attainment</div>
+            <div class="text-2xl font-bold font-mono text-tertiary">${avgProg}%</div>
+            <div class="text-[10px] text-outline mt-1">Cross-cohort average milestone completion</div>
+          </div>
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20">
+            <div class="text-[11px] text-outline font-mono uppercase mb-1">On-Track Projects</div>
+            <div class="text-2xl font-bold font-mono text-secondary">${onTrackCount} <span class="text-xs text-outline font-normal">/ ${totalProj}</span></div>
+            <div class="text-[10px] text-outline mt-1">${totalProj > 0 ? Math.round((onTrackCount / totalProj) * 100) : 0}% compliant with project milestones</div>
+          </div>
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20">
+            <div class="text-[11px] text-outline font-mono uppercase mb-1">Advising Ratio</div>
+            <div class="text-2xl font-bold font-mono text-primary">1 : ${overallRatio}</div>
+            <div class="text-[10px] text-outline mt-1">${totalFaculty} advisors overseeing ${totalStudents} students</div>
+          </div>
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20">
+            <div class="text-[11px] text-outline font-mono uppercase mb-1">Pending Governance</div>
+            <div class="text-2xl font-bold font-mono ${unassignedCount > 0 ? 'text-amber-400' : 'text-on-surface'}">${unassignedCount}</div>
+            <div class="text-[10px] text-outline mt-1">Unassigned teams awaiting mentor designation</div>
+          </div>
+        `;
+      }
+
+      // 2. ABET Student Outcomes (SO 1 to SO 7)
+      const abetList = document.getElementById('abetOutcomesList');
+      if (abetList) {
+        const outcomes = [
+          { so: 'SO 1', title: 'Problem Solving', score: 92, desc: 'Identify, formulate, and solve complex engineering problems applying principles of engineering and math.' },
+          { so: 'SO 2', title: 'Engineering Design', score: 88, desc: 'Apply engineering design to produce solutions meeting specified public health, safety, and cultural needs.' },
+          { so: 'SO 3', title: 'Communication', score: 95, desc: 'Communicate effectively with a range of technical and non-technical audiences through design defense.' },
+          { so: 'SO 4', title: 'Professional & Ethical Responsibility', score: 91, desc: 'Recognize ethical and professional responsibilities in engineering situations and make informed judgments.' },
+          { so: 'SO 5', title: 'Teamwork & Collaborative Leadership', score: 96, desc: 'Function effectively on a collaborative multidisciplinary team to establish goals, plan tasks, and meet deadlines.' },
+          { so: 'SO 6', title: 'Experimentation & Data Analysis', score: 87, desc: 'Develop and conduct appropriate experimentation, analyze and interpret data, and draw valid engineering conclusions.' },
+          { so: 'SO 7', title: 'Continuous Technical Learning', score: 93, desc: 'Acquire and apply new technical knowledge, tools, and algorithms as needed using autonomous learning strategies.' }
+        ];
+
+        abetList.innerHTML = outcomes.map(o => `
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 space-y-2">
+            <div class="flex items-center justify-between text-xs">
+              <div class="flex items-center gap-2">
+                <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold">${o.so}</span>
+                <span class="font-bold text-on-surface">${o.title}</span>
+              </div>
+              <span class="font-mono font-bold text-tertiary">${o.score}%</span>
+            </div>
+            <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-primary to-tertiary h-full rounded-full" style="width: ${o.score}%"></div>
+            </div>
+            <p class="text-[10px] text-outline leading-tight">${o.desc}</p>
+          </div>
+        `).join('');
+      }
+
+      // 3. Project Health Breakdown
+      const healthBars = document.getElementById('analyticsHealthBars');
+      if (healthBars) {
+        const totalBadge = document.getElementById('analyticsTotalProjectsBadge');
+        if (totalBadge) totalBadge.textContent = `${totalProj} Projects`;
+        const onTrackPct = totalProj > 0 ? Math.round((onTrackCount / totalProj) * 100) : 0;
+        const atRiskPct = totalProj > 0 ? Math.round((atRiskCount / totalProj) * 100) : 0;
+        const delayedPct = totalProj > 0 ? Math.round((delayedCount / totalProj) * 100) : 0;
+        const completedPct = totalProj > 0 ? Math.round((completedProj / totalProj) * 100) : 0;
+
+        healthBars.innerHTML = `
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-tertiary font-medium flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-tertiary"></span>On Track</span>
+              <span class="font-mono font-bold text-on-surface">${onTrackCount} (${onTrackPct}%)</span>
+            </div>
+            <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+              <div class="bg-tertiary h-full rounded-full" style="width: ${onTrackPct}%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-amber-400 font-medium flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-amber-400"></span>At Risk (Milestone Delay)</span>
+              <span class="font-mono font-bold text-on-surface">${atRiskCount} (${atRiskPct}%)</span>
+            </div>
+            <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+              <div class="bg-amber-400 h-full rounded-full" style="width: ${atRiskPct}%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-error font-medium flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-error"></span>Delayed</span>
+              <span class="font-mono font-bold text-on-surface">${delayedCount} (${delayedPct}%)</span>
+            </div>
+            <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+              <div class="bg-error h-full rounded-full" style="width: ${delayedPct}%"></div>
+            </div>
+          </div>
+
+          <div class="space-y-1">
+            <div class="flex justify-between text-xs">
+              <span class="text-primary font-medium flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-primary"></span>Completed / Evaluated</span>
+              <span class="font-mono font-bold text-on-surface">${completedProj} (${completedPct}%)</span>
+            </div>
+            <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden">
+              <div class="bg-primary h-full rounded-full" style="width: ${completedPct}%"></div>
+            </div>
+          </div>
+        `;
+      }
+
+      // 4. Advising Capacity Stats
+      const advisingStats = document.getElementById('analyticsAdvisingStats');
+      if (advisingStats) {
+        const activeAdvisors = data.facultyWorkload ? data.facultyWorkload.filter(f => f.assignedProjectsCount > 0).length : 0;
+        const totalAdvisors = data.facultyWorkload ? data.facultyWorkload.length : 0;
+        const avgTeams = activeAdvisors > 0 ? (totalProj / activeAdvisors).toFixed(1) : 0;
+
+        advisingStats.innerHTML = `
+          <div class="grid grid-cols-2 gap-3 mb-2">
+            <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/15 text-center">
+              <div class="font-mono text-xl font-bold text-secondary">${activeAdvisors} / ${totalAdvisors}</div>
+              <div class="text-[10px] text-outline uppercase font-mono mt-0.5">Active Mentors</div>
+            </div>
+            <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/15 text-center">
+              <div class="font-mono text-xl font-bold text-primary">${avgTeams}</div>
+              <div class="text-[10px] text-outline uppercase font-mono mt-0.5">Avg Teams / Advisor</div>
+            </div>
+          </div>
+          <div class="p-3 rounded-lg bg-surface-container/60 border border-outline-variant/15 space-y-1">
+            <div class="text-xs font-semibold text-on-surface flex items-center justify-between">
+              <span>Faculty Workload Ceiling</span>
+              <span class="font-mono text-tertiary">Max 4 Teams</span>
+            </div>
+            <p class="text-[11px] text-outline">Ensures adequate direct contact hours between students and advisors in compliance with ABET Criterion 5 curriculum requirements.</p>
+          </div>
+        `;
+      }
+
+      // 5. Department Table Body
+      const deptTable = document.getElementById('analyticsDeptTableBody');
+      if (deptTable && data.departmentStatistics) {
+        deptTable.innerHTML = data.departmentStatistics.map(d => {
+          const ratio = d.facultyCount > 0 ? (d.studentsCount / d.facultyCount).toFixed(1) : '—';
+          return `
+            <tr class="hover:bg-surface-container-high/40 transition-colors">
+              <td class="py-2.5 font-mono text-tertiary font-bold">${d.code}</td>
+              <td class="py-2.5 font-medium text-on-surface">${d.name}</td>
+              <td class="py-2.5 text-center font-mono">${d.projectsCount}</td>
+              <td class="py-2.5 text-center font-mono">${d.studentsCount}</td>
+              <td class="py-2.5 text-center font-mono text-secondary">${d.facultyCount}</td>
+              <td class="py-2.5 text-center font-mono text-outline">1 : ${ratio}</td>
+              <td class="py-2.5 text-right font-mono font-bold text-tertiary">${d.projectsCount > 0 ? '78%' : '—'}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+    }
+
+    // ==========================================
+    // DEDICATED WORKING DEPARTMENT PORTAL LOGIC
+    // ==========================================
+    let currentViewingDeptName = null;
+
+    function renderDepartmentsGrid(depts = adminData ? adminData.departmentStatistics : []) {
+      const grid = document.getElementById('departmentsListGrid');
+      if (!grid) return;
+      if (!depts || depts.length === 0) {
+        grid.innerHTML = '<div class="col-span-2 text-xs text-outline py-8 text-center bg-surface-container/20 rounded-xl">No matching departments found.</div>';
+        return;
+      }
+      grid.innerHTML = depts.map(d => `
+        <div onclick="openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:border-tertiary/50 transition-all cursor-pointer flex flex-col justify-between group shadow-sm hover:shadow-md">
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <span class="text-xs font-mono px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold">${d.code}</span>
+              <span class="text-[11px] text-outline flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs text-secondary">supervisor_account</span>
+                <span>${d.head}</span>
+              </span>
+            </div>
+            <h4 class="font-headline font-bold text-base text-on-surface group-hover:text-tertiary transition-colors mb-1.5">${d.name}</h4>
+            <p class="text-xs text-outline mb-4 line-clamp-2">${d.description || 'SRM Easwari Engineering Academic Division'}</p>
+          </div>
+
+          <div>
+            <div class="grid grid-cols-3 gap-2 text-center text-xs pt-3 pb-3 border-t border-outline-variant/20 bg-surface-container/30 rounded-xl px-2">
+              <div>
+                <div class="font-bold text-primary font-mono text-sm">${d.studentsCount}</div>
+                <div class="text-[10px] text-outline">Students</div>
+              </div>
+              <div>
+                <div class="font-bold text-secondary font-mono text-sm">${d.facultyCount}</div>
+                <div class="text-[10px] text-outline">Faculty</div>
+              </div>
+              <div>
+                <div class="font-bold text-tertiary font-mono text-sm">${d.projectsCount}</div>
+                <div class="text-[10px] text-outline">Projects</div>
+              </div>
+            </div>
+
+            <button type="button" onclick="event.stopPropagation(); openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="w-full mt-3 py-2 px-3 rounded-xl bg-surface-container hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-all flex items-center justify-center gap-1.5 border border-outline-variant/20">
+              <span>Open Department Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterDepartmentsGrid(query) {
+      if (!adminData || !adminData.departmentStatistics) return;
+      const q = (query || '').toLowerCase().trim();
+      const filtered = adminData.departmentStatistics.filter(d =>
+        (d.name && d.name.toLowerCase().includes(q)) ||
+        (d.code && d.code.toLowerCase().includes(q)) ||
+        (d.head && d.head.toLowerCase().includes(q))
+      );
+      renderDepartmentsGrid(filtered);
+    }
+
+    function openDepartmentView(deptNameOrCode) {
+      if (!adminData) return;
+      const dept = adminData.departmentStatistics.find(d =>
+        d.name.toLowerCase() === deptNameOrCode.toLowerCase() ||
+        d.code.toLowerCase() === deptNameOrCode.toLowerCase()
+      );
+      if (!dept) return;
+
+      currentViewingDeptName = dept.name;
+
+      // Populate Department Banner
+      document.getElementById('detailDeptCode').textContent = dept.code;
+      document.getElementById('detailDeptName').textContent = dept.name;
+      document.getElementById('detailDeptDesc').textContent = dept.description || 'Specialized division providing rigorous curriculum and industry capstone mentorship.';
+      document.getElementById('detailDeptHead').innerHTML = `
+        <span class="material-symbols-outlined text-secondary text-base">supervisor_account</span>
+        <span>${dept.head}</span>
+      `;
+
+      // Filter Faculty in this department
+      const facList = (adminData.facultyUsers || []).filter(f =>
+        f.department && (f.department.toLowerCase() === dept.name.toLowerCase() || f.department.toLowerCase() === dept.code.toLowerCase())
+      );
+
+      // Filter Students in this department
+      const stuList = (adminData.studentUsers || []).filter(s =>
+        s.department && (s.department.toLowerCase() === dept.name.toLowerCase() || s.department.toLowerCase() === dept.code.toLowerCase())
+      );
+
+      // Filter Projects in this department
+      const projList = (adminData.allProjects || []).filter(p =>
+        p.department && (p.department.toLowerCase() === dept.name.toLowerCase() || p.department.toLowerCase() === dept.code.toLowerCase())
+      );
+
+      // Update counters
+      document.getElementById('detailDeptStuCount').textContent = stuList.length;
+      document.getElementById('detailDeptFacCount').textContent = facList.length;
+      document.getElementById('detailDeptProjCount').textContent = projList.length;
+
+      document.getElementById('detailDeptFacBadge').textContent = `${facList.length} Faculty`;
+      document.getElementById('detailDeptStuBadge').textContent = `${stuList.length} Students`;
+      document.getElementById('detailDeptProjBadge').textContent = `${projList.length} Projects`;
+
+      // Render Faculty Grid
+      const facGrid = document.getElementById('detailDeptFacultyGrid');
+      if (facList.length === 0) {
+        facGrid.innerHTML = `
+          <div class="col-span-2 text-xs text-outline py-8 text-center bg-surface-container/30 rounded-xl border border-outline-variant/20">
+            <span class="material-symbols-outlined text-3xl text-outline mb-1 block">badge</span>
+            No faculty advisors registered in ${dept.name} yet. Click "Add Faculty" above to assign advisors.
+          </div>
+        `;
+      } else {
+        facGrid.innerHTML = facList.map(f => {
+          const assignedCount = (adminData.allProjects || []).filter(p => p.facultyMentor && (p.facultyMentor._id === f._id || p.facultyMentor === f._id)).length;
+          return `
+            <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 hover:border-secondary/40 transition-all flex flex-col justify-between">
+              <div class="flex items-start gap-3 mb-3">
+                <img src="${f.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60'}" class="w-11 h-11 rounded-full object-cover border border-secondary/40">
+                <div class="truncate flex-1">
+                  <div class="font-bold text-xs text-on-surface truncate">${f.name}</div>
+                  <div class="text-[11px] text-secondary font-medium truncate">${f.title || 'Faculty Advisor'}</div>
+                  <div class="text-[10px] text-outline font-mono truncate">${f.email}</div>
+                  <div class="text-[10px] text-outline mt-0.5">${f.facultyId || 'FACULTY'}</div>
+                </div>
+              </div>
+              <div class="pt-2.5 border-t border-outline-variant/20 flex items-center justify-between text-[11px]">
+                <span class="text-outline font-mono">${assignedCount} Mentored Team${assignedCount === 1 ? '' : 's'}</span>
+                <span class="px-2 py-0.5 rounded bg-secondary/20 text-secondary text-[10px] font-mono font-bold">${f.status || 'Active'}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // Render Students Grid
+      const stuGrid = document.getElementById('detailDeptStudentsGrid');
+      if (stuList.length === 0) {
+        stuGrid.innerHTML = `
+          <div class="col-span-3 text-xs text-outline py-8 text-center bg-surface-container/30 rounded-xl border border-outline-variant/20">
+            <span class="material-symbols-outlined text-3xl text-outline mb-1 block">school</span>
+            No students currently enrolled in ${dept.name}. Click "Add Student" above to enroll students.
+          </div>
+        `;
+      } else {
+        stuGrid.innerHTML = stuList.map(s => `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div class="flex items-start gap-3 mb-3">
+              <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-11 h-11 rounded-full object-cover border border-primary/40">
+              <div class="truncate flex-1">
+                <div class="font-bold text-xs text-on-surface truncate">${s.name}</div>
+                <div class="text-[10px] text-primary font-mono truncate">${s.email}</div>
+                <div class="text-[10px] text-outline mt-0.5">${s.cohort || 'Capstone 2025'}</div>
+              </div>
+            </div>
+            <div class="pt-2.5 border-t border-outline-variant/20 flex items-center justify-between text-[11px] font-mono">
+              <span class="text-outline">${s.studentId || 'STUDENT'}</span>
+              <span class="px-2 py-0.5 rounded bg-tertiary/20 text-tertiary text-[10px] font-bold">${s.status || 'Active'}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Projects List
+      const projListContainer = document.getElementById('detailDeptProjectsList');
+      if (projList.length === 0) {
+        projListContainer.innerHTML = `
+          <div class="text-xs text-outline py-6 text-center bg-surface-container/30 rounded-xl border border-outline-variant/20">
+            No capstone projects registered in this department yet.
+          </div>
+        `;
+      } else {
+        projListContainer.innerHTML = projList.map(p => `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-mono text-tertiary font-bold">${p.code}</span>
+                <a href="/projects/${p._id}" class="font-semibold text-on-surface hover:text-tertiary transition-colors">${p.title}</a>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${p.health === 'AT_RISK' ? 'bg-error/20 text-error' : 'bg-tertiary/20 text-tertiary'}">${p.health}</span>
+              </div>
+              <div class="text-[11px] text-outline">Advisor: <span class="text-secondary font-medium">${p.facultyMentor ? p.facultyMentor.name : 'Unassigned'}</span> &bull; Team: ${p.teamMembers ? p.teamMembers.length : 0} students &bull; Status: <span class="font-mono text-on-surface">${p.status}</span></div>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="text-right mr-2">
+                <div class="font-bold text-tertiary font-mono">${p.progressPercentage}%</div>
+                <div class="text-[10px] text-outline">Progress</div>
+              </div>
+              <a href="/projects/${p._id}" class="px-3 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary text-xs font-semibold transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-xs">folder_special</span>
+                <span>Open Project</span>
+              </a>
+              <button onclick="promptReassign('${p._id}', '${p.title.replace(/'/g, "\\'")}', '${p.facultyMentor ? p.facultyMentor._id : ''}')" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-medium transition-colors">
+                Reassign
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Switch views inside tab-departments
+      document.getElementById('deptListView').classList.add('hidden');
+      document.getElementById('deptDetailView').classList.remove('hidden');
+    }
+
+    function closeDepartmentView() {
+      currentViewingDeptName = null;
+      document.getElementById('deptDetailView').classList.add('hidden');
+      document.getElementById('deptListView').classList.remove('hidden');
+    }
+
+    function openAddUserForCurrentDept(role) {
+      if (currentViewingDeptName) {
+        const deptSelect = document.getElementById('newUserDept');
+        if (deptSelect) {
+          for (let i = 0; i < deptSelect.options.length; i++) {
+            if (deptSelect.options[i].value.toLowerCase() === currentViewingDeptName.toLowerCase()) {
+              deptSelect.selectedIndex = i;
+              break;
+            }
+          }
+        }
+      }
+      document.getElementById('newUserRole').value = role;
+      openModal('createUserModal');
+    }
+
+    // ==========================================
+    // DEDICATED WORKING COHORT PORTAL LOGIC
+    // ==========================================
+    let currentViewingCohortName = null;
+
+    function renderCohortsGrid(cohorts = adminData ? adminData.cohortStatistics : []) {
+      const grid = document.getElementById('cohortsListGrid');
+      if (!grid) return;
+      if (!cohorts || cohorts.length === 0) {
+        grid.innerHTML = '<div class="col-span-2 text-xs text-outline py-8 text-center bg-surface-container/20 rounded-xl">No academic cohorts found.</div>';
+        return;
+      }
+      grid.innerHTML = cohorts.map(c => `
+        <div onclick="openCohortView('${c.name.replace(/'/g, "\\'")}')" class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:border-tertiary/60 transition-all cursor-pointer flex flex-col justify-between group shadow-sm hover:shadow-md">
+          <div>
+            <div class="flex items-center justify-between mb-2.5">
+              <span class="text-xs font-mono px-2.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold">${c.code}</span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded ${c.status === 'ACTIVE' ? 'bg-tertiary/20 text-tertiary' : 'bg-surface-container-high text-outline'} uppercase font-bold">${c.status}</span>
+            </div>
+            <h4 class="font-headline font-bold text-base text-on-surface group-hover:text-tertiary transition-colors mb-1.5">${c.name}</h4>
+            <div class="text-xs text-outline mb-4">${c.term} ${c.year} &bull; ${c.department || 'Engineering Faculty'}</div>
+          </div>
+          <div class="pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs">
+            <span class="text-outline font-mono">${c.projectCount} Registered Project${c.projectCount === 1 ? '' : 's'}</span>
+            <span class="text-tertiary font-semibold flex items-center gap-1 group-hover:underline">
+              <span>Open Cohort Workspace</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function openCohortView(cohortNameOrCode) {
+      if (!adminData || !adminData.cohortStatistics) return;
+      const c = adminData.cohortStatistics.find(item =>
+        item.name.toLowerCase() === cohortNameOrCode.toLowerCase() ||
+        item.code.toLowerCase() === cohortNameOrCode.toLowerCase()
+      );
+      if (!c) return;
+
+      currentViewingCohortName = c.name;
+
+      // Filter Projects belonging to this cohort
+      const projList = (adminData.allProjects || []).filter(p =>
+        p.cohort && (p.cohort.toLowerCase() === c.name.toLowerCase() || p.cohort.toLowerCase() === c.code.toLowerCase())
+      );
+
+      // Filter Students in this cohort
+      const stuList = (adminData.studentUsers || []).filter(s =>
+        s.cohort && (s.cohort.toLowerCase() === c.name.toLowerCase() || s.cohort.toLowerCase() === c.code.toLowerCase())
+      );
+
+      // Extract unique faculty mentors involved in this cohort
+      const facMap = new Map();
+      projList.forEach(p => {
+        if (p.facultyMentor) {
+          const fId = p.facultyMentor._id ? p.facultyMentor._id.toString() : p.facultyMentor.toString();
+          if (!facMap.has(fId)) {
+            const fullFac = (adminData.facultyUsers || []).find(f => f._id.toString() === fId) || p.facultyMentor;
+            facMap.set(fId, { ...fullFac, projects: [p] });
+          } else {
+            facMap.get(fId).projects.push(p);
+          }
+        }
+      });
+      const facList = Array.from(facMap.values());
+
+      // Calculate Average Progress
+      const avgProgress = projList.length > 0 ? Math.round(projList.reduce((acc, p) => acc + (p.progressPercentage || 0), 0) / projList.length) : 0;
+
+      // Populate Header Banner & KPIs
+      document.getElementById('detailCohortCode').textContent = c.code;
+      document.getElementById('detailCohortTerm').textContent = `${c.term} ${c.year}`;
+      document.getElementById('detailCohortDept').textContent = c.department || 'Engineering Faculty';
+      document.getElementById('detailCohortName').textContent = c.name;
+      document.getElementById('detailCohortDesc').textContent = `Official senior design capstone cohort for ${c.term} ${c.year}. Monitoring multi-stage engineering deliverables, milestone evaluations, and final degree defense presentations.`;
+
+      const statusBadge = document.getElementById('detailCohortStatusBadge');
+      statusBadge.textContent = c.status;
+      statusBadge.className = c.status === 'ACTIVE' ? 'font-mono text-[10px] px-2 py-0.5 rounded font-bold uppercase bg-tertiary/20 text-tertiary' : 'font-mono text-[10px] px-2 py-0.5 rounded font-bold uppercase bg-surface-container-high text-outline';
+
+      document.getElementById('detailCohortProjCount').textContent = projList.length;
+      document.getElementById('detailCohortStuCount').textContent = stuList.length;
+      document.getElementById('detailCohortFacCount').textContent = facList.length;
+      document.getElementById('detailCohortProgress').textContent = `${avgProgress}%`;
+
+      document.getElementById('detailCohortProjBadge').textContent = `${projList.length} Projects`;
+      document.getElementById('detailCohortStuBadge').textContent = `${stuList.length} Students`;
+      document.getElementById('detailCohortFacBadge').textContent = `${facList.length} Advisors`;
+
+      // 1. Render Projects List
+      const projContainer = document.getElementById('detailCohortProjectsList');
+      if (projList.length === 0) {
+        projContainer.innerHTML = `
+          <div class="text-xs text-outline py-8 text-center bg-surface-container/30 rounded-xl border border-outline-variant/20">
+            No capstone projects registered in this cohort yet. Click "New Project" in the header to initialize projects.
+          </div>
+        `;
+      } else {
+        projContainer.innerHTML = projList.map(p => `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-outline-variant/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 mb-1">
+                <span class="font-mono text-tertiary font-bold">${p.code}</span>
+                <a href="/projects/${p._id}" class="font-semibold text-on-surface hover:text-tertiary transition-colors">${p.title}</a>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${p.health === 'AT_RISK' ? 'bg-error/20 text-error' : 'bg-tertiary/20 text-tertiary'}">${p.health}</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-container-high text-outline">${p.status}</span>
+              </div>
+              <p class="text-[11px] text-outline line-clamp-1">${p.abstract || 'No abstract documented.'}</p>
+              <div class="text-[11px] text-outline flex items-center gap-3 pt-1">
+                <span>Advisor: <strong class="text-secondary">${p.facultyMentor ? p.facultyMentor.name : 'Unassigned'}</strong></span>
+                <span>&bull;</span>
+                <span>Team: <strong>${p.teamMembers ? p.teamMembers.length : 0} Students</strong></span>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 self-end sm:self-center shrink-0">
+              <div class="text-right">
+                <div class="font-bold text-tertiary font-mono text-sm">${p.progressPercentage || 0}%</div>
+                <div class="text-[10px] text-outline">Progress</div>
+              </div>
+              <a href="/projects/${p._id}" class="px-3.5 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm">
+                <span class="material-symbols-outlined text-[15px]">folder_special</span>
+                <span>Open Project Workspace &rarr;</span>
+              </a>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 2. Render Students Grid
+      const stuContainer = document.getElementById('detailCohortStudentsGrid');
+      if (stuList.length === 0) {
+        stuContainer.innerHTML = `
+          <div class="col-span-3 text-xs text-outline py-8 text-center bg-surface-container/30 rounded-xl border border-outline-variant/20">
+            No students enrolled directly under ${c.name} yet.
+          </div>
+        `;
+      } else {
+        stuContainer.innerHTML = stuList.map(s => {
+          const assignedProj = projList.find(p => (p.teamMembers || []).some(m => (m._id ? m._id.toString() : m.toString()) === s._id.toString()));
+          return `
+            <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/30 hover:border-primary/40 transition-all flex flex-col justify-between text-xs">
+              <div class="flex items-start gap-3 mb-2.5">
+                <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-10 h-10 rounded-full object-cover border border-primary/40 shrink-0">
+                <div class="min-w-0 flex-1">
+                  <div class="font-bold text-on-surface truncate">${s.name}</div>
+                  <div class="text-[10px] text-primary font-mono truncate">${s.email}</div>
+                  <div class="text-[10px] text-outline font-mono mt-0.5">${s.studentId || 'STUDENT'}</div>
+                </div>
+              </div>
+              <div class="pt-2 border-t border-outline-variant/15 flex items-center justify-between text-[10px]">
+                <span class="text-outline truncate">${assignedProj ? assignedProj.code : 'No Team'}</span>
+                <span class="px-1.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-mono font-bold">${s.status || 'Active'}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+
+      // 3. Render Faculty Mentors Grid
+      const facContainer = document.getElementById('detailCohortFacultyGrid');
+      if (facList.length === 0) {
+        facContainer.innerHTML = `
+          <div class="col-span-2 text-xs text-outline py-8 text-center bg-surface-container/30 rounded-xl border border-outline-variant/20">
+            No faculty advisors assigned to teams in this cohort yet.
+          </div>
+        `;
+      } else {
+        facContainer.innerHTML = facList.map(f => `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 hover:border-secondary/40 transition-all flex flex-col justify-between text-xs">
+            <div class="flex items-start gap-3 mb-3">
+              <img src="${f.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60'}" class="w-11 h-11 rounded-full object-cover border border-secondary/40 shrink-0">
+              <div class="min-w-0 flex-1">
+                <div class="font-bold text-on-surface truncate">${f.name}</div>
+                <div class="text-[11px] text-secondary font-medium truncate">${f.title || 'Faculty Advisor'}</div>
+                <div class="text-[10px] text-outline font-mono truncate">${f.email}</div>
+                <div class="text-[10px] text-outline mt-0.5">${f.department || 'Engineering'}</div>
+              </div>
+            </div>
+            <div class="pt-2.5 border-t border-outline-variant/15 flex items-center justify-between text-[11px]">
+              <span class="text-outline font-mono">${f.projects ? f.projects.length : 1} Mentored Team${(f.projects && f.projects.length === 1) ? '' : 's'}</span>
+              <a href="mailto:${f.email}" class="text-secondary hover:underline flex items-center gap-1 font-mono text-[10px]">
+                <span class="material-symbols-outlined text-xs">mail</span>
+                <span>Contact</span>
+              </a>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // 4. Render Cohort Milestone Schedule
+      const milestoneContainer = document.getElementById('detailCohortMilestonesList');
+      const milestones = [
+        { phase: 'Phase 1', title: 'Capstone Topic & Team Formulation Approval', due: `${c.term === 'Spring' ? 'Jan 30' : 'Aug 30'}, ${c.year}`, weight: '10%', status: 'APPROVED' },
+        { phase: 'Phase 2', title: 'SRS Specification & Architectural Design Review', due: `${c.term === 'Spring' ? 'Feb 28' : 'Sep 30'}, ${c.year}`, weight: '20%', status: 'APPROVED' },
+        { phase: 'Phase 3', title: 'Mid-Term Demonstration & Hardware/Software Integration', due: `${c.term === 'Spring' ? 'Mar 25' : 'Oct 25'}, ${c.year}`, weight: '30%', status: 'IN_REVIEW' },
+        { phase: 'Phase 4', title: 'Final Technical Thesis & ABET Defense Presentation', due: `${c.term === 'Spring' ? 'May 10' : 'Dec 10'}, ${c.year}`, weight: '40%', status: 'PENDING' },
+      ];
+
+      milestoneContainer.innerHTML = milestones.map(m => `
+        <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high text-tertiary font-bold">${m.phase}</span>
+              <span class="font-bold text-on-surface">${m.title}</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${m.status === 'APPROVED' ? 'bg-tertiary/20 text-tertiary font-bold' : (m.status === 'IN_REVIEW' ? 'bg-secondary/20 text-secondary' : 'bg-surface-container-high text-outline')}">${m.status}</span>
+            </div>
+            <div class="text-[11px] text-outline">Weight: <span class="font-mono text-on-surface font-semibold">${m.weight}</span> &bull; Institutional Deadline: <span class="font-mono text-tertiary">${m.due}</span></div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-center">
+            <span class="text-[10px] font-mono px-2 py-1 rounded bg-surface-container-high text-outline">ABET Criterion 3 Rubric</span>
+          </div>
+        </div>
+      `).join('');
+
+      // Switch views
+      document.getElementById('cohortListView').classList.add('hidden');
+      document.getElementById('cohortDetailView').classList.remove('hidden');
+    }
+
+    function closeCohortView() {
+      currentViewingCohortName = null;
+      document.getElementById('cohortDetailView').classList.add('hidden');
+      document.getElementById('cohortListView').classList.remove('hidden');
+    }
+
+    // ADMIN DOCUMENTS
+    async function loadAdminDocuments() {
+      try {
+        const res = await fetch('/api/documents');
+        const json = await res.json();
+        if (!json.success) return;
+        const container = document.getElementById('adminDocumentsContainer');
+        if (json.documents.length === 0) {
+          container.innerHTML = '<div class="text-xs text-outline py-4 text-center">No documents in institutional repository.</div>';
+          return;
+        }
+        container.innerHTML = json.documents.map(d => `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 gap-3 text-xs">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-tertiary">
+                <span class="material-symbols-outlined text-[22px]">description</span>
+              </div>
+              <div>
+                <div class="font-semibold text-on-surface">${d.title}</div>
+                <div class="text-[11px] text-outline">${d.category} &bull; ${d.fileType} &bull; <span class="font-mono text-tertiary">${d.version}</span> &bull; Project: ${d.project ? d.project.title : 'Project'}</div>
+                <div class="text-[10px] text-outline mt-0.5">Uploaded by ${d.uploadedBy ? d.uploadedBy.name : 'User'} on ${new Date(d.createdAt).toLocaleDateString()}</div>
+              </div>
+            </div>
+            <a href="${d.fileUrl || '#'}" target="_blank" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary font-medium transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">download</span>
+              <span>View Artifact</span>
+            </a>
+          </div>
+        `).join('');
+      } catch (err) {}
+    }
+
+    document.getElementById('adminUploadDocForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const projectId = document.getElementById('adminDocProjSelect').value;
+      const title = document.getElementById('adminDocTitle').value;
+      const category = document.getElementById('adminDocCategory').value;
+      const version = document.getElementById('adminDocVersion').value;
+      const fileUrl = document.getElementById('adminDocFileUrl').value;
+      const fileInput = document.getElementById('adminDocFileInput');
+      const submitBtn = e.target.querySelector('button[type="submit"]');
+
+      const originalText = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="material-symbols-outlined text-sm animate-spin">refresh</span> Uploading...';
+
+      try {
+        let res, json;
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          const formData = new FormData();
+          formData.append('projectId', projectId);
+          formData.append('title', title);
+          formData.append('category', category);
+          formData.append('version', version);
+          if (fileUrl) formData.append('fileUrl', fileUrl);
+          formData.append('file', fileInput.files[0]);
+
+          res = await fetch('/api/documents', {
+            method: 'POST',
+            body: formData
+          });
+        } else {
+          res = await fetch('/api/documents', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ projectId, title, category, version, fileUrl })
+          });
+        }
+        json = await res.json();
+        if (json.success) {
+          closeModal('adminUploadDocModal');
+          document.getElementById('adminUploadDocForm').reset();
+          alert('Institutional document uploaded to Cloudinary successfully!');
+          loadAdminDocuments();
+        } else alert(json.message);
+      } catch (err) {
+        alert('Failed to upload document.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+      }
+    });
+
+    // FULL INTERACTIVE CALENDAR
+    async function loadCalendar() {
+      try {
+        const res = await fetch('/api/dashboard/calendar-events');
+        const json = await res.json();
+        if (json.success) calendarEvents = json.events;
+        renderCalendarGrid();
+      } catch (err) {}
+    }
+
+    function prevCalMonth() { calDate.setMonth(calDate.getMonth() - 1); renderCalendarGrid(); }
+    function nextCalMonth() { calDate.setMonth(calDate.getMonth() + 1); renderCalendarGrid(); }
+    function resetCalToday() { calDate = new Date(); renderCalendarGrid(); }
+
+    function renderCalendarGrid(selectedDayNum = null) {
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      document.getElementById('calMonthTitle').textContent = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const prevMonthDays = new Date(year, month, 0).getDate();
+
+      const grid = document.getElementById('calendarDaysGrid');
+      grid.innerHTML = '';
+
+      for (let i = firstDay - 1; i >= 0; i--) {
+        grid.innerHTML += `<div class="p-2 min-h-[64px] rounded-lg bg-surface-container/20 text-outline/30 text-xs font-mono text-right">${prevMonthDays - i}</div>`;
+      }
+
+      const today = new Date();
+      for (let day = 1; day <= totalDays; day++) {
+        const dayEvents = calendarEvents.filter(ev => {
+          const evDate = new Date(ev.date);
+          return evDate.getFullYear() === year && evDate.getMonth() === month && evDate.getDate() === day;
+        });
+
+        const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+        const isSelected = selectedDayNum === day;
+
+        const dotsHtml = dayEvents.slice(0, 3).map(ev => {
+          let dotColor = 'bg-primary';
+          if (ev.type === 'TASK') dotColor = 'bg-secondary';
+          if (ev.type === 'DEFENSE') dotColor = 'bg-tertiary';
+          const clickAction = ev.type === 'TASK' ? `onclick="event.stopPropagation(); window.location.href='/tasks/${ev.id}';"` : '';
+          return `<span ${clickAction} class="w-2.5 h-2.5 rounded-full ${dotColor} ${ev.type === 'TASK' ? 'cursor-pointer hover:scale-125 transition-transform' : ''}" title="${ev.type}: ${ev.title}${ev.type === 'TASK' ? ' (Click to open task page)' : ''}"></span>`;
+        }).join('');
+
+        grid.innerHTML += `
+          <div onclick="selectCalendarDay(${day})" class="p-2 min-h-[64px] rounded-lg cursor-pointer transition-all border ${isSelected ? 'border-tertiary bg-tertiary/10' : isToday ? 'border-tertiary/50 bg-surface-container-high' : 'border-outline-variant/10 bg-surface-container hover:bg-surface-container-high'} flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="${isToday ? 'px-1.5 py-0.5 rounded bg-tertiary text-black font-bold' : 'text-on-surface'}">${day}</span>
+              ${dayEvents.length > 3 ? `<span class="text-[9px] text-outline">+${dayEvents.length - 3}</span>` : ''}
+            </div>
+            <div class="flex flex-wrap gap-1 mt-1">${dotsHtml}</div>
+          </div>
+        `;
+      }
+      renderCalendarAgenda(selectedDayNum);
+    }
+
+    function selectCalendarDay(dayNum) { renderCalendarGrid(dayNum); }
+
+    function renderCalendarAgenda(dayNum = null) {
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const list = document.getElementById('calAgendaList');
+      const title = document.getElementById('calAgendaTitle');
+      const count = document.getElementById('calAgendaCount');
+
+      let filtered = [];
+      if (dayNum) {
+        title.textContent = `Events on Day ${dayNum}`;
+        filtered = calendarEvents.filter(ev => {
+          const evDate = new Date(ev.date);
+          return evDate.getFullYear() === year && evDate.getMonth() === month && evDate.getDate() === dayNum;
+        });
+      } else {
+        title.textContent = `Campus Events Overview`;
+        filtered = calendarEvents.filter(ev => {
+          const evDate = new Date(ev.date);
+          return evDate.getFullYear() === year && evDate.getMonth() === month;
+        });
+      }
+
+      count.textContent = `${filtered.length} Events`;
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<div class="text-xs text-outline py-4 text-center">No scheduled events for this timeframe.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(ev => {
+        let tagColor = 'bg-primary/20 text-primary';
+        if (ev.type === 'TASK') tagColor = 'bg-secondary/20 text-secondary';
+        if (ev.type === 'DEFENSE') tagColor = 'bg-tertiary/20 text-tertiary';
+
+        if (ev.type === 'TASK') {
+          return `
+            <a href="/tasks/${ev.id}" class="block p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-secondary/60 hover:bg-surface-container-high transition-all text-xs group cursor-pointer">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded ${tagColor} font-bold">${ev.type}</span>
+                <span class="text-outline font-mono text-[11px]">${new Date(ev.date).toLocaleDateString()}</span>
+              </div>
+              <div class="font-semibold text-on-surface group-hover:text-secondary transition-colors flex items-center justify-between gap-2 mb-1.5">
+                <span class="truncate">${ev.title}</span>
+                <span class="material-symbols-outlined text-sm text-secondary shrink-0">open_in_new</span>
+              </div>
+              <div class="text-[10px] text-outline flex items-center justify-between pt-1.5 border-t border-outline-variant/10">
+                <span>${ev.projectCode} &bull; Status: <span class="text-on-surface font-mono font-medium">${ev.status || 'Active'}</span></span>
+                <span class="text-secondary font-semibold flex items-center gap-0.5 group-hover:underline"><span>Open Task Page</span> &rarr;</span>
+              </div>
+            </a>
+          `;
+        }
+
+        return `
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 text-xs">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded ${tagColor} font-bold">${ev.type}</span>
+              <span class="text-outline font-mono text-[11px]">${new Date(ev.date).toLocaleDateString()}</span>
+            </div>
+            <div class="font-semibold text-on-surface mb-1">${ev.title}</div>
+            <div class="text-[10px] text-outline">${ev.projectCode} &bull; Status: <span class="text-on-surface font-mono font-medium">${ev.status || 'Active'}</span></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function promptReassign(id, title, currentFacultyId) {
+      document.getElementById('reassignProjectId').value = id;
+      document.getElementById('reassignProjectTitle').value = title;
+      if (currentFacultyId) document.getElementById('reassignFacultySelect').value = currentFacultyId;
+      openModal('reassignModal');
+    }
+
+    document.getElementById('reassignForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const projectId = document.getElementById('reassignProjectId').value;
+      const facultyId = document.getElementById('reassignFacultySelect').value;
+
+      try {
+        const res = await fetch(`/api/admin/projects/${projectId}/faculty`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ facultyId })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('reassignModal');
+          alert('Faculty mentor updated successfully!');
+          loadAdminDashboard();
+        } else alert(json.message);
+      } catch (err) {
+        alert('Failed to update faculty mentor.');
+      }
+    });
+
+    document.getElementById('adminCreateProjectForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('newProjTitle').value;
+      const code = document.getElementById('newProjCode').value;
+      const department = document.getElementById('newProjDept').value;
+      const facultyMentor = document.getElementById('newProjMentorSelect').value;
+      const abstract = document.getElementById('newProjAbstract').value;
+
+      try {
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, code, department, facultyMentor, abstract })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('adminNewProjectModal');
+          alert('Project created successfully!');
+          loadAdminDashboard();
+        } else alert(json.message);
+      } catch (err) {
+        alert('Failed to create project.');
+      }
+    });
+
+    document.getElementById('createUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const name = document.getElementById('newUserName').value;
+      const email = document.getElementById('newUserEmail').value;
+      const password = document.getElementById('newUserPassword').value;
+      const role = document.getElementById('newUserRole').value;
+      const department = document.getElementById('newUserDept').value;
+
+      try {
+        const res = await fetch('/api/admin/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, email, password, role, department })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('createUserModal');
+          alert(`Account created for ${name} as ${role}!`);
+          loadAdminDashboard();
+        } else alert(json.message);
+      } catch (err) {
+        alert('Failed to create user account.');
+      }
+    });
+
+    async function loadUsersDirectory() {
+      try {
+        const res = await fetch('/api/admin/users');
+        const json = await res.json();
+        if (!json.success) return;
+
+        document.getElementById('usersDirectoryTable').innerHTML = `
+          <table class="w-full text-left text-xs">
+            <thead>
+              <tr class="border-b border-outline-variant/20 text-outline uppercase font-mono">
+                <th class="pb-2">User</th>
+                <th class="pb-2">Role</th>
+                <th class="pb-2">Email</th>
+                <th class="pb-2">Department</th>
+                <th class="pb-2">Status</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-outline-variant/10 text-on-surface">
+              ${json.users.map(u => `
+                <tr class="hover:bg-surface-container-high/40">
+                  <td class="py-2.5 font-medium text-on-surface flex items-center gap-2">
+                    <img src="${u.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-6 h-6 rounded-full object-cover">
+                    <span>${u.name}</span>
+                  </td>
+                  <td class="py-2.5"><span class="font-mono text-[10px] px-2 py-0.5 rounded ${u.role === 'ADMIN' ? 'bg-tertiary/20 text-tertiary' : u.role === 'FACULTY' ? 'bg-secondary/20 text-secondary' : 'bg-primary/20 text-primary'}">${u.role}</span></td>
+                  <td class="py-2.5 text-outline font-mono">${u.email}</td>
+                  <td class="py-2.5">${u.department || 'General'}</td>
+                  <td class="py-2.5 text-tertiary font-mono">${u.status}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        `;
+      } catch (err) {}
+    }
+
+    async function handleLogout() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        window.location.href = '/login/admin';
+      } catch (err) {
+        window.location.href = '/login/admin';
+      }
+    }
+
+    // ADMIN PROFILE AVATAR PREVIEW & DIRECT CLOUDINARY UPLOAD
+    async function loadAdminProfileData() {
+      try {
+        const res = await fetch('/api/auth/me');
+        const json = await res.json();
+        if (json.success && json.user) {
+          const u = json.user;
+          const adminAvatar = document.getElementById('adminAvatar');
+          if (adminAvatar && u.avatar) adminAvatar.src = u.avatar;
+          const adminName = document.getElementById('adminName');
+          if (adminName && u.name) adminName.textContent = u.name;
+
+          const preview = document.getElementById('adminProfileAvatarPreview');
+          if (preview && u.avatar) preview.src = u.avatar;
+          const title = document.getElementById('adminProfileNameTitle');
+          if (title && u.name) title.textContent = u.name;
+          const emailSub = document.getElementById('adminProfileEmailSub');
+          if (emailSub && u.email) emailSub.textContent = u.email;
+
+          const editName = document.getElementById('editAdminName');
+          if (editName) editName.value = u.name || '';
+          const editDob = document.getElementById('editAdminDob');
+          if (editDob && u.dateOfBirth) {
+            editDob.value = new Date(u.dateOfBirth).toISOString().split('T')[0];
+          }
+          const editAvatarUrl = document.getElementById('editAdminAvatarUrl');
+          if (editAvatarUrl) editAvatarUrl.value = u.avatar || '';
+        }
+      } catch (err) {}
+    }
+
+    async function previewAndUploadAdminAvatar(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+
+      // Instant local preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = document.getElementById('adminProfileAvatarPreview');
+        if (preview) preview.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      // Upload to Cloudinary via PUT /api/auth/profile
+      const formData = new FormData();
+      formData.append('avatarFile', file);
+
+      try {
+        if (window.showToast) window.showToast('Uploading photo to Cloudinary...', 'info', 'Uploading');
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          body: formData,
+        });
+        const json = await res.json();
+        if (json.success) {
+          if (json.user && json.user.avatar) {
+            const preview = document.getElementById('adminProfileAvatarPreview');
+            if (preview) preview.src = json.user.avatar;
+            const topAvatar = document.getElementById('adminAvatar');
+            if (topAvatar) topAvatar.src = json.user.avatar;
+            const avatarUrlInput = document.getElementById('editAdminAvatarUrl');
+            if (avatarUrlInput) avatarUrlInput.value = json.user.avatar;
+          }
+          alert('Admin profile photo uploaded to Cloudinary successfully!');
+          loadAdminProfileData();
+        } else {
+          alert(json.message || 'Failed to upload photo.');
+        }
+      } catch (err) {
+        alert('Failed to upload profile photo: ' + err.message);
+      }
+    }
+
+    async function handleAdminProfileUpdate(e) {
+      e.preventDefault();
+      const name = document.getElementById('editAdminName').value;
+      const dateOfBirth = document.getElementById('editAdminDob').value;
+      const avatarUrl = document.getElementById('editAdminAvatarUrl').value;
+      const btn = document.getElementById('saveAdminProfileBtn');
+      if (btn) btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, dateOfBirth, avatarUrl })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert('Administrator profile & Date of Birth updated successfully!');
+          loadAdminProfileData();
+        } else {
+          alert(json.message || 'Failed to update profile.');
+        }
+      } catch (err) {
+        alert('Failed to update profile.');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    loadAdminDashboard();
+    loadAdminProfileData();
+  </script>
+</body>
+</html>

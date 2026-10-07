@@ -1,0 +1,1016 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ProjectHub - Academic Milestones Roadmap &amp; Thesis Defense Evaluation Center</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Typography Fonts (Geist & Inter) -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "outline-variant": "#464555",
+            "primary": "#c3c0ff",
+            "on-error": "#690005",
+            "on-primary-container": "#dad7ff",
+            "on-secondary-fixed": "#001f26",
+            "inverse-surface": "#dfe2ef",
+            "primary-fixed": "#e2dfff",
+            "surface": "#0f131c",
+            "on-surface": "#dfe2ef",
+            "on-primary": "#1d00a5",
+            "on-primary-fixed-variant": "#3323cc",
+            "on-background": "#dfe2ef",
+            "on-surface-variant": "#c7c4d8",
+            "outline": "#918fa1",
+            "surface-container": "#1c1f29",
+            "secondary-fixed-dim": "#4cd7f6",
+            "primary-container": "#4f46e5",
+            "tertiary": "#4edea3",
+            "secondary-fixed": "#acedff",
+            "on-primary-fixed": "#0f0069",
+            "tertiary-fixed": "#6ffbbe",
+            "error-container": "#93000a",
+            "on-secondary-container": "#00424e",
+            "inverse-primary": "#4d44e3",
+            "on-error-container": "#ffdad6",
+            "on-secondary": "#003640",
+            "inverse-on-surface": "#2c303a",
+            "surface-container-low": "#181b25",
+            "surface-bright": "#353943",
+            "surface-tint": "#c3c0ff",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary-fixed-dim": "#c3c0ff",
+            "surface-container-highest": "#31353f",
+            "on-tertiary-container": "#67f4b7",
+            "on-tertiary": "#003824",
+            "on-secondary-fixed-variant": "#004e5c",
+            "background": "#0f131c",
+            "surface-variant": "#31353f",
+            "surface-dim": "#0f131c",
+            "on-tertiary-fixed-variant": "#005236",
+            "secondary-container": "#03b5d3",
+            "secondary": "#4cd7f6",
+            "tertiary-container": "#006e4b",
+            "surface-container-lowest": "#0a0e17",
+            "on-tertiary-fixed": "#002113",
+            "surface-container-high": "#262a34",
+            "error": "#ffb4ab"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "margin-lg": "2rem",
+            "gutter": "1rem",
+            "space-2xl": "2rem",
+            "margin": "1rem",
+            "gutter-lg": "1.5rem",
+            "space-lg": "1rem",
+            "space-sm": "0.5rem",
+            "margin-md": "1.5rem",
+            "space-md": "0.75rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem"
+          },
+          "fontFamily": {
+            "headline-sm": ["Geist", "sans-serif"],
+            "label-sm": ["Geist", "sans-serif"],
+            "headline-md": ["Geist", "sans-serif"],
+            "body-sm": ["Inter", "sans-serif"],
+            "headline-lg": ["Geist", "sans-serif"],
+            "code-sm": ["JetBrains Mono", "monospace"],
+            "body-lg": ["Inter", "sans-serif"],
+            "body-md": ["Inter", "sans-serif"],
+            "headline-xl": ["Geist", "sans-serif"],
+            "label-md": ["Geist", "sans-serif"],
+            "headline-xl-mobile": ["Geist", "sans-serif"]
+          },
+          "fontSize": {
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "code-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      font-size: 18px;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #0a0e17;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #31353f;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #464555;
+    }
+    .gate-glow {
+      box-shadow: 0 0 16px -2px rgba(79, 70, 229, 0.45);
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex selection:bg-primary-container selection:text-on-primary font-body-md antialiased overflow-x-hidden">
+<!-- ========================================================================= -->
+<!-- SHARED COMPONENT 1: SideNavBar                                            -->
+<!-- ========================================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-64 border-r border-outline-variant/30 dark:border-outline-variant/20 bg-surface-container-low dark:bg-surface-container-lowest z-40 flex flex-col justify-between p-space-md transition-all duration-200">
+<!-- Top Branding & Workspace Identity -->
+<div class="flex flex-col gap-space-lg">
+<div class="flex items-center justify-between px-space-xs">
+<div class="text-headline-md font-headline-md text-on-surface dark:text-on-surface tracking-tight flex items-center gap-space-sm">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm border border-outline-variant/30">
+<span class="material-symbols-outlined text-[20px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">dataset</span>
+</div>
+<div class="flex flex-col">
+<span class="text-headline-sm font-headline-sm text-on-surface tracking-tight leading-tight">ProjectHub</span>
+<span class="text-label-sm font-label-sm text-outline tracking-normal">Academic Workspace</span>
+</div>
+</div>
+<span class="text-code-sm font-code-sm px-space-xs py-0.5 rounded bg-surface-container text-outline border border-outline-variant/30">v2.4</span>
+</div>
+<!-- Quick Action CTA -->
+<button class="flex items-center justify-center gap-space-xs w-full py-space-sm px-space-md bg-surface-container hover:bg-surface-container-high border border-outline-variant/40 rounded-lg text-primary font-headline-sm text-body-md transition-all duration-150 active:scale-[0.98]">
+<span class="material-symbols-outlined text-primary">add_circle</span>
+<span>New Project</span>
+</button>
+<!-- Primary Navigation Tabs (9 Tabs mapped from JSON) -->
+<nav aria-label="Main Navigation" class="flex flex-col gap-1 overflow-y-auto custom-scrollbar pr-0.5">
+<!-- 1. Overview -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-body-md font-body-md">Overview</span>
+</a>
+<!-- 2. My Projects -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">folder_open</span>
+<span class="text-body-md font-body-md">My Projects</span>
+</a>
+<!-- 3. My Tasks -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">check_circle</span>
+<span class="text-body-md font-body-md">My Tasks</span>
+<span class="ml-auto text-label-sm font-label-sm px-1.5 py-0.5 rounded-full bg-surface-container-highest text-on-surface-variant">3</span>
+</a>
+<!-- 4. Milestones (ACTIVE TAB) -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm bg-primary-container text-on-primary rounded-lg font-headline-sm text-body-md active:scale-[0.98] shadow-sm" href="#">
+<span class="material-symbols-outlined" data-weight="fill" style="font-variation-settings: 'FILL' 1;">flag</span>
+<span class="text-body-md font-headline-sm text-on-primary">Milestones</span>
+<span class="ml-auto w-2 h-2 rounded-full bg-secondary-fixed animate-pulse"></span>
+</a>
+<!-- 5. Calendar -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-body-md font-body-md">Calendar</span>
+</a>
+<!-- 6. Documents -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="text-body-md font-body-md">Documents</span>
+</a>
+<!-- 7. Reviews -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">rate_review</span>
+<span class="text-body-md font-body-md">Reviews</span>
+<span class="ml-auto text-label-sm font-label-sm px-1.5 py-0.5 rounded-full bg-error-container text-error">1</span>
+</a>
+<!-- 8. Analytics -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">bar_chart</span>
+<span class="text-body-md font-body-md">Analytics</span>
+</a>
+<!-- 9. Settings -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors active:scale-[0.98]" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="text-body-md font-body-md">Settings</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Footer Units -->
+<div class="flex flex-col gap-2 pt-space-sm border-t border-outline-variant/30">
+<div class="px-space-sm py-2 rounded-lg bg-surface-container border border-outline-variant/20 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2.5 h-2.5 rounded-full bg-tertiary"></div>
+<span class="text-label-sm font-label-sm text-on-surface-variant">Defense Window: Active</span>
+</div>
+<span class="text-code-sm font-code-sm text-tertiary font-mono">ABET-Ready</span>
+</div>
+<a class="flex items-center gap-space-md px-space-md py-space-xs text-on-surface-variant hover:bg-surface-container-high rounded-lg text-body-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">manage_accounts</span>
+<span class="text-body-sm font-body-sm">Profile &amp; Switcher</span>
+</a>
+<a class="flex items-center gap-space-md px-space-md py-space-xs text-on-surface-variant hover:bg-surface-container-high rounded-lg text-body-sm transition-colors" href="#">
+<span class="material-symbols-outlined text-[18px]">help</span>
+<span class="text-body-sm font-body-sm">Help &amp; Docs</span>
+</a>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- MAIN WORKSPACE CANVAS                                                     -->
+<!-- ========================================================================= -->
+<div class="pl-64 flex flex-col flex-1 min-w-0">
+<!-- ======================================================================= -->
+<!-- SHARED COMPONENT 2: TopNavBar                                           -->
+<!-- ======================================================================= -->
+<header class="docked full-width top sticky top-0 z-30 flex items-center justify-between h-14 px-space-lg w-full bg-surface-container/80 dark:bg-surface-container-low/80 backdrop-blur-md border-b border-outline-variant/30 dark:border-outline-variant/20">
+<!-- Left: Breadcrumbs & Quick Search -->
+<div class="flex items-center gap-space-lg flex-1 max-w-2xl">
+<!-- Breadcrumb trails -->
+<nav aria-label="Breadcrumbs" class="hidden md:flex items-center gap-1.5 text-body-sm">
+<span class="text-on-surface-variant dark:text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">account_tree</span>
+            Computer Science Dept
+          </span>
+<span class="text-outline text-[12px]">/</span>
+<span class="text-on-surface-variant hover:text-on-surface transition-colors">
+            Autonomous Drone Fleet
+          </span>
+<span class="text-outline text-[12px]">/</span>
+<span class="text-on-surface dark:text-on-surface font-headline-sm flex items-center gap-space-xs">
+            Milestones &amp; Defense Rubric
+          </span>
+</nav>
+<!-- Command Palette Trigger (Search on Left) -->
+<div class="relative w-64 hidden xl:block">
+<span class="material-symbols-outlined absolute left-2.5 top-1/2 -translate-y-1/2 text-outline text-[16px]">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant/40 rounded-lg pl-8 pr-10 py-1 text-body-sm text-on-surface placeholder:text-outline focus:outline-none cursor-pointer" placeholder="Search milestones, rubrics..." readonly="" type="text">
+<kbd class="absolute right-2 top-1/2 -translate-y-1/2 text-code-sm font-code-sm bg-surface-container px-1.5 py-0.5 rounded text-outline border border-outline-variant/40">⌘K</kbd>
+</div>
+</div>
+<!-- Right: Role Switcher, Quick Actions & Profile -->
+<div class="flex items-center gap-space-md">
+<!-- Active Role Toggle (Student View / Advisor View) -->
+<div class="flex items-center bg-surface-container-lowest p-0.5 rounded-lg border border-outline-variant/40">
+<button class="px-space-sm py-1 rounded bg-primary-container text-on-primary text-label-sm font-label-sm transition-all duration-150" id="roleStudent">
+            Student View
+          </button>
+<button class="px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface text-label-sm font-label-sm transition-all duration-150 flex items-center gap-1" id="roleAdvisor">
+<span>Advisor View</span>
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+</button>
+</div>
+<!-- Trailing Icon Actions -->
+<div class="flex items-center gap-1 text-on-surface-variant">
+<button class="p-1.5 rounded-lg hover:bg-surface-variant/40 hover:text-on-surface transition-colors relative" title="Notifications">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full"></span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-variant/40 hover:text-on-surface transition-colors" id="themeToggleBtn" title="Toggle Theme">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-variant/40 hover:text-on-surface transition-colors" title="Workspace Filters">
+<span class="material-symbols-outlined">tune</span>
+</button>
+</div>
+<div class="h-4 w-px bg-outline-variant/40"></div>
+<!-- Trailing Primary Action -->
+<button class="flex items-center gap-1.5 px-space-md py-1.5 bg-primary-container hover:bg-primary-container/90 text-on-primary rounded-lg text-label-md font-label-md transition-all duration-150 active:scale-[0.98] shadow-sm">
+<span class="material-symbols-outlined text-[16px]">upload_file</span>
+<span>Submit Milestone Deliverable</span>
+</button>
+<!-- User Profile Avatar with Online indicator -->
+<div class="relative cursor-pointer pl-1">
+<img class="w-8 h-8 rounded-full border border-outline-variant/60 object-cover" data-alt="Close up realistic portrait avatar of a collegiate female engineering student in tech laboratory setting with subtle blue ambient lighting and focused determined expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD94UCWbxpc4stkUeSxXJj7XmNOHXu4ysAUynKij9gvhO_HCJGX4E4CvDFK-7G8yyVb4YPo7Sq3N6cxhknMXmRLq8wnjK3IpBw2BA7gQl76W1gIkQh6NAqB0YF1e4YRQ6neuKWaQHb64ynE3nkAeogk7kuOCvaYdTQ84SgSwHEldy9bejsdoabZS6UqmPj84w53UBAtKJYhhfV6NSlx-ILICwmTSk33ESXNxMxGlKAhmvroGek7rHhjkQ">
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-tertiary border-2 border-surface-container rounded-full"></span>
+</div>
+</div>
+</header>
+<!-- ======================================================================= -->
+<!-- MAIN CONTENT VIEW CANVAS                                                -->
+<!-- ======================================================================= -->
+<main class="flex-1 p-space-xl max-w-[1440px] w-full mx-auto space-y-space-xl">
+<!-- SECTION 1: PROJECT HERO OVERVIEW (BENTO HEADER CARD) -->
+<section class="bg-surface-container rounded-xl border border-outline-variant/30 p-space-xl relative overflow-hidden">
+<!-- Subtle technical grid ambient background glow -->
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary-container/15 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute right-1/3 bottom-0 w-60 h-60 bg-secondary-container/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-xl">
+<div class="space-y-space-sm max-w-3xl">
+<!-- Badges Bar -->
+<div class="flex flex-wrap items-center gap-space-xs text-label-sm font-label-sm">
+<span class="px-2 py-0.5 rounded bg-surface-container-highest text-secondary font-code-sm border border-outline-variant/40">
+                CS-492 / Senior Capstone
+              </span>
+<span class="px-2 py-0.5 rounded bg-primary-container/30 text-primary-fixed border border-primary/30 flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">school</span>
+                ABET EAC Accredited Course
+              </span>
+<span class="px-2 py-0.5 rounded bg-surface-container-lowest text-outline border border-outline-variant/30">
+                Cohort: Spring 2025
+              </span>
+<span class="px-2 py-0.5 rounded bg-error-container/30 text-error border border-error/20 flex items-center gap-1 animate-pulse">
+<span class="material-symbols-outlined text-[14px]">alarm</span>
+                4 Days to Faculty Defense Gate
+              </span>
+</div>
+<!-- Project Title -->
+<h1 class="text-headline-xl font-headline-xl text-on-surface tracking-tight">
+              Autonomous Drone Fleet for Search &amp; Rescue
+            </h1>
+<!-- Meta details & Advisor credentials -->
+<div class="flex flex-wrap items-center gap-y-2 gap-x-6 text-body-sm text-on-surface-variant pt-1">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]">psychology</span>
+<span>Faculty Advisor: <strong class="text-on-surface font-medium">Dr. Eleanor Vance</strong> (Robotics &amp; Perception Lab)</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]">group</span>
+<span>Team Alpha: 4 Candidates</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-outline text-[18px]">history</span>
+<span>Last Synchronized: 22 mins ago</span>
+</div>
+</div>
+</div>
+<!-- Hero Progress Quick Card -->
+<div class="bg-surface-container-lowest/80 backdrop-blur-sm border border-outline-variant/40 rounded-lg p-space-md min-w-[280px] lg:w-80 flex flex-col justify-between gap-space-md shadow-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="text-label-md font-label-md text-on-surface-variant">Gate Status</span>
+<span class="px-1.5 py-0.5 rounded text-[10px] uppercase font-bold tracking-wider bg-secondary/15 text-secondary border border-secondary/30">M3 Active</span>
+</div>
+<span class="text-headline-md font-headline-md text-primary font-mono font-semibold">78%</span>
+</div>
+<!-- Segmented Progress Bar -->
+<div class="space-y-1.5">
+<div class="w-full bg-surface-container-high h-2.5 rounded-full overflow-hidden flex p-0.5 gap-0.5">
+<div class="bg-tertiary h-full rounded-l-full" style="width: 33%" title="M1 Passed (100%)"></div>
+<div class="bg-tertiary h-full" style="width: 33%" title="M2 Passed (100%)"></div>
+<div class="bg-primary-container h-full relative" style="width: 25%" title="M3 In Progress (78%)">
+<div class="absolute right-0 top-0 bottom-0 w-1.5 bg-secondary animate-ping"></div>
+</div>
+<div class="bg-surface-variant h-full rounded-r-full" style="width: 9%"></div>
+</div>
+<div class="flex justify-between text-label-sm font-label-sm text-outline">
+<span>Phase 3 of 6</span>
+<span>Defense Gate: May 18</span>
+</div>
+</div>
+<!-- Action buttons in hero card -->
+<div class="flex items-center gap-2 pt-1 border-t border-outline-variant/20">
+<button class="flex-1 py-1.5 px-2 bg-surface-container hover:bg-surface-container-high rounded text-label-sm font-label-sm text-on-surface border border-outline-variant/30 flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[15px]">print</span>
+                Export Syllabus
+              </button>
+<button class="flex-1 py-1.5 px-2 bg-primary-container hover:bg-primary-container/90 rounded text-label-sm font-label-sm text-on-primary flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[15px]">event</span>
+                Defense Schedule
+              </button>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: INTERACTIVE MULTI-GATE MILESTONE STEPPER / ROADMAP -->
+<section class="space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">alt_route</span>
+<h2 class="text-headline-md font-headline-md text-on-surface tracking-tight">
+              Capstone Engineering Progression Gates
+            </h2>
+</div>
+<div class="flex items-center gap-space-sm text-label-sm font-label-sm">
+<span class="flex items-center gap-1.5 text-on-surface-variant">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Sign-Off Complete
+            </span>
+<span class="flex items-center gap-1.5 text-on-surface-variant ml-2">
+<span class="w-2 h-2 rounded-full bg-primary-container"></span> Gate In Evaluation
+            </span>
+<span class="flex items-center gap-1.5 text-outline ml-2">
+<span class="w-2 h-2 rounded-full bg-surface-variant"></span> Upcoming Gate
+            </span>
+</div>
+</div>
+<!-- Horizontal Gate Stepper (Scrollable on small screens) -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-space-md">
+<!-- M1: Passed -->
+<div class="bg-surface-container-low border border-tertiary/30 rounded-xl p-space-md flex flex-col justify-between relative group hover:border-tertiary transition-all duration-150">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-tertiary/15 text-tertiary font-code-sm font-semibold">
+                  M1 • SIGNED
+                </span>
+<span class="w-5 h-5 rounded-full bg-tertiary/20 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface line-clamp-1 mt-1">
+                Project Proposal &amp; IRB/Ethics Sign-Off
+              </h3>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">
+                Ethical boundary protocol, FAA compliance clearance, and hardware inventory grant approved.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/20 flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-tertiary font-mono font-bold">Grade: A (4.0)</span>
+<span class="text-outline">Oct 12, 2024</span>
+</div>
+</div>
+<!-- M2: Passed -->
+<div class="bg-surface-container-low border border-tertiary/30 rounded-xl p-space-md flex flex-col justify-between relative group hover:border-tertiary transition-all duration-150">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-tertiary/15 text-tertiary font-code-sm font-semibold">
+                  M2 • SIGNED
+                </span>
+<span class="w-5 h-5 rounded-full bg-tertiary/20 text-tertiary flex items-center justify-center">
+<span class="material-symbols-outlined text-[14px]">check</span>
+</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface line-clamp-1 mt-1">
+                Hardware Architecture &amp; PCB Fabrication
+              </h3>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">
+                Custom power distribution board assembly, motor telemetry, and stress verification tests.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/20 flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-tertiary font-mono font-bold">Grade: A- (3.7)</span>
+<span class="text-outline">Dec 04, 2024</span>
+</div>
+</div>
+<!-- M3: ACTIVE GATE (Elevated & Glowing) -->
+<div class="bg-surface-container border-2 border-primary rounded-xl p-space-md flex flex-col justify-between relative shadow-lg gate-glow ring-2 ring-primary/20">
+<div class="absolute -top-2.5 left-4 px-2 py-0.2 bg-primary text-on-primary rounded text-[10px] font-bold uppercase tracking-wider">
+              Current Gate
+            </div>
+<div class="space-y-space-xs mt-1">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-primary-container text-on-primary font-code-sm font-semibold">
+                  M3 • 78% ACTIVE
+                </span>
+<span class="w-2.5 h-2.5 rounded-full bg-secondary animate-ping"></span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface font-bold line-clamp-1 mt-1">
+                Autonomous Flight &amp; Telemetry Validation
+              </h3>
+<p class="text-body-sm text-on-surface-variant line-clamp-2">
+                Closed-loop optical flow navigation, EKF state estimation, and live ROS 2 ground station feeds.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/30 flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-secondary font-mono font-semibold">Gate: In Review</span>
+<span class="text-error font-medium">Due May 18</span>
+</div>
+</div>
+<!-- M4: Upcoming -->
+<div class="bg-surface-container-low/60 border border-outline-variant/20 rounded-xl p-space-md flex flex-col justify-between opacity-85 hover:opacity-100 transition-opacity">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-surface-container text-outline font-code-sm">
+                  M4 • QUEUED
+                </span>
+<span class="material-symbols-outlined text-outline text-[16px]">lock_clock</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface-variant line-clamp-1 mt-1">
+                Field Search Grid Triangulation
+              </h3>
+<p class="text-body-sm text-outline line-clamp-2">
+                Simultaneous localization and thermal tag mapping over a 500-meter mock wilderness grid.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/20 flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-outline">Sprint Gate</span>
+<span class="text-outline">Due May 29</span>
+</div>
+</div>
+<!-- M5: Upcoming -->
+<div class="bg-surface-container-low/60 border border-outline-variant/20 rounded-xl p-space-md flex flex-col justify-between opacity-85 hover:opacity-100 transition-opacity">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-surface-container text-outline font-code-sm">
+                  M5 • QUEUED
+                </span>
+<span class="material-symbols-outlined text-outline text-[16px]">lock_clock</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface-variant line-clamp-1 mt-1">
+                Thesis Paper Final Draft &amp; Audit
+              </h3>
+<p class="text-body-sm text-outline line-clamp-2">
+                40-page technical compendium, Turnitin plagiarism audit under 5%, and IEEE template formatting.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/20 flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-outline">Draft Review</span>
+<span class="text-outline">Due Jun 05</span>
+</div>
+</div>
+<!-- M6: Capstone Defense -->
+<div class="bg-surface-container-low/60 border border-outline-variant/20 rounded-xl p-space-md flex flex-col justify-between opacity-85 hover:opacity-100 transition-opacity">
+<div class="space-y-space-xs">
+<div class="flex items-center justify-between">
+<span class="text-label-sm font-label-sm px-1.5 py-0.5 rounded bg-primary-container/20 text-primary-fixed font-code-sm font-semibold">
+                  M6 • FINALE
+                </span>
+<span class="material-symbols-outlined text-primary-fixed text-[16px]">military_tech</span>
+</div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface-variant line-clamp-1 mt-1">
+                Final ABET Oral Jury Defense
+              </h3>
+<p class="text-body-sm text-outline line-clamp-2">
+                45-minute jury interrogation by 3 faculty members and external industry robotics evaluator.
+              </p>
+</div>
+<div class="mt-space-md pt-space-xs border-t border-outline-variant/20 flex items-center justify-between text-label-sm font-label-sm">
+<span class="text-primary font-medium">Jury Assigned</span>
+<span class="text-outline">Jun 12, 2025</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: MILESTONE 3 DETAILED EVALUATION & SUBMISSION PANEL (SPLIT VIEW) -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+<!-- LEFT COLUMN: Required Deliverables Checklist (5 cols) -->
+<div class="lg:col-span-5 bg-surface-container rounded-xl border border-outline-variant/30 p-space-xl space-y-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">fact_check</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Deliverables Checklist</h3>
+</div>
+<p class="text-body-sm text-on-surface-variant">Mandatory artifacts required for Gate 3 clearance</p>
+</div>
+<span class="text-label-sm font-label-sm px-2 py-0.5 bg-surface-container-highest rounded text-on-surface border border-outline-variant/30 font-mono">
+              3/4 Complete
+            </span>
+</div>
+<!-- Deliverables List -->
+<div class="space-y-space-md">
+<!-- Deliverable 1: Uploaded -->
+<div class="p-space-md bg-surface-container-low rounded-lg border border-outline-variant/30 flex items-start justify-between gap-3 group hover:border-outline-variant transition-colors">
+<div class="flex items-start gap-3">
+<div class="mt-0.5 text-tertiary">
+<span class="material-symbols-outlined text-[20px]">check_box</span>
+</div>
+<div class="space-y-1">
+<div class="text-headline-sm font-headline-sm text-on-surface text-sm flex items-center gap-2">
+<span>Telemetry Validation Report</span>
+<span class="px-1.5 py-0.2 rounded bg-tertiary/15 text-tertiary text-[10px] font-mono">PDF v1.4</span>
+</div>
+<p class="text-body-sm text-on-surface-variant text-xs">
+                    Autonomous loiter logs, GPS dilution of precision (DOP) metrics, and altitude stability charts.
+                  </p>
+<div class="flex items-center gap-3 text-label-sm font-label-sm text-outline pt-1">
+<span class="flex items-center gap-1 font-mono">
+<span class="material-symbols-outlined text-[14px]">attachment</span> 14.8 MB
+                    </span>
+<span>Uploaded May 12, 14:32</span>
+</div>
+</div>
+</div>
+<button class="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container transition-colors" title="Download File">
+<span class="material-symbols-outlined text-[18px]">download</span>
+</button>
+</div>
+<!-- Deliverable 2: Synced -->
+<div class="p-space-md bg-surface-container-low rounded-lg border border-outline-variant/30 flex items-start justify-between gap-3 group hover:border-outline-variant transition-colors">
+<div class="flex items-start gap-3">
+<div class="mt-0.5 text-tertiary">
+<span class="material-symbols-outlined text-[20px]">check_box</span>
+</div>
+<div class="space-y-1">
+<div class="text-headline-sm font-headline-sm text-on-surface text-sm flex items-center gap-2">
+<span>Flight Log Telemetry Stream</span>
+<span class="px-1.5 py-0.2 rounded bg-secondary/15 text-secondary text-[10px] font-mono">CSV / ULOG</span>
+</div>
+<p class="text-body-sm text-on-surface-variant text-xs">
+                    Continuous 100Hz IMU sensor fusion recording across 12 field test sorties.
+                  </p>
+<div class="flex items-center gap-3 text-label-sm font-label-sm text-outline pt-1">
+<span class="flex items-center gap-1 font-mono">
+<span class="material-symbols-outlined text-[14px]">cloud_sync</span> Synced via PX4
+                    </span>
+<span>Verified by Advisor</span>
+</div>
+</div>
+</div>
+<button class="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container transition-colors" title="View Telemetry">
+<span class="material-symbols-outlined text-[18px]">open_in_new</span>
+</button>
+</div>
+<!-- Deliverable 3: Schematic Approved -->
+<div class="p-space-md bg-surface-container-low rounded-lg border border-outline-variant/30 flex items-start justify-between gap-3 group hover:border-outline-variant transition-colors">
+<div class="flex items-start gap-3">
+<div class="mt-0.5 text-tertiary">
+<span class="material-symbols-outlined text-[20px]">check_box</span>
+</div>
+<div class="space-y-1">
+<div class="text-headline-sm font-headline-sm text-on-surface text-sm flex items-center gap-2">
+<span>Companion Computer Schematic</span>
+<span class="px-1.5 py-0.2 rounded bg-tertiary/15 text-tertiary text-[10px] font-mono">KiCAD v8</span>
+</div>
+<p class="text-body-sm text-on-surface-variant text-xs">
+                    Raspberry Pi Compute Module 4 carrier integration schematic and optocoupled PWM lines.
+                  </p>
+<div class="flex items-center gap-3 text-label-sm font-label-sm text-outline pt-1">
+<span class="flex items-center gap-1 text-tertiary">
+<span class="material-symbols-outlined text-[14px]">verified</span> Approved by Lab Tech
+                    </span>
+</div>
+</div>
+</div>
+<button class="p-1 rounded text-outline hover:text-on-surface hover:bg-surface-container transition-colors" title="Inspect Schematic">
+<span class="material-symbols-outlined text-[18px]">schema</span>
+</button>
+</div>
+<!-- Deliverable 4: Incomplete / Action Required -->
+<div class="p-space-md bg-surface-container-low rounded-lg border-2 border-primary/40 flex items-start justify-between gap-3 bg-primary-container/5">
+<div class="flex items-start gap-3">
+<div class="mt-0.5 text-primary">
+<span class="material-symbols-outlined text-[20px]">check_box_outline_blank</span>
+</div>
+<div class="space-y-1">
+<div class="text-headline-sm font-headline-sm text-on-surface text-sm flex items-center gap-2">
+<span>Drone Field Demonstration Video</span>
+<span class="px-1.5 py-0.2 rounded bg-error-container/40 text-error text-[10px] font-mono">Pending Gate</span>
+</div>
+<p class="text-body-sm text-on-surface-variant text-xs">
+                    3-minute uncut video illustrating 40-knot gust rejection and autonomous return-to-launch (RTL).
+                  </p>
+<div class="flex items-center gap-2 pt-2">
+<button class="px-2.5 py-1 bg-primary text-on-primary rounded text-label-sm font-label-sm flex items-center gap-1 hover:bg-primary-fixed transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[14px]">video_call</span>
+                      Upload MP4 Video
+                    </button>
+<span class="text-label-sm font-label-sm text-error font-medium">Overdue in 96 hrs</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Quick Dropzone Utility -->
+<div class="border-2 border-dashed border-outline-variant/50 rounded-lg p-space-md flex flex-col items-center justify-center text-center gap-1 bg-surface-container-lowest/50 hover:bg-surface-container-lowest transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-outline text-[28px]">cloud_upload</span>
+<span class="text-headline-sm font-headline-sm text-body-md text-on-surface">Drag supplementary engineering logs</span>
+<span class="text-label-sm font-label-sm text-outline">Accepts .tar.gz, .csv, .pdf up to 500MB</span>
+</div>
+</div>
+<!-- RIGHT COLUMN: Official ABET/IEEE Accreditation Grading Rubric (7 cols) -->
+<div class="lg:col-span-7 bg-surface-container rounded-xl border border-outline-variant/30 p-space-xl space-y-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+<div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">assignment_turned_in</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Official ABET/IEEE Defense Rubric</h3>
+</div>
+<p class="text-body-sm text-on-surface-variant">Faculty Committee Milestone 3 Weighted Assessment Standard</p>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm text-outline block">Calculated Grade</span>
+<span class="text-headline-md font-headline-md text-tertiary font-mono font-bold">52 / 100</span>
+<span class="text-label-sm font-label-sm text-outline block">(45 pts pending)</span>
+</div>
+</div>
+<!-- Rubric Criteria Interactive Cards -->
+<div class="space-y-space-md">
+<!-- Criterion 1 -->
+<div class="p-space-md bg-surface-container-low rounded-lg border border-outline-variant/30 space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-primary-container/20 text-primary-fixed flex items-center justify-center text-label-sm font-code-sm">01</span>
+<span class="text-headline-sm font-headline-sm text-on-surface text-sm">Algorithmic Correctness &amp; Sensor Fusion</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-outline">Weight: 30%</span>
+</div>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-headline-sm font-headline-sm text-tertiary font-bold">28</span>
+<span class="text-outline text-body-sm">/ 30</span>
+</div>
+</div>
+<!-- Score Indicator bar -->
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 93.3%"></div>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest/80 text-body-sm text-on-surface-variant text-xs border border-outline-variant/20 flex items-start gap-2">
+<span class="material-symbols-outlined text-tertiary text-[16px] shrink-0 mt-0.5">verified_user</span>
+<div>
+<strong class="text-on-surface font-medium">Evaluator Note (Dr. Vance):</strong> "EKF filter divergence was successfully dampened with the dual-magnetometer redundancy script. Excellent mathematical rigour."
+                </div>
+</div>
+</div>
+<!-- Criterion 2 -->
+<div class="p-space-md bg-surface-container-low rounded-lg border border-outline-variant/30 space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-primary-container/20 text-primary-fixed flex items-center justify-center text-label-sm font-code-sm">02</span>
+<span class="text-headline-sm font-headline-sm text-on-surface text-sm">Hardware Reliability &amp; Fail-safe Implementation</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-outline">Weight: 25%</span>
+</div>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-headline-sm font-headline-sm text-tertiary font-bold">24</span>
+<span class="text-outline text-body-sm">/ 25</span>
+</div>
+</div>
+<!-- Score Indicator bar -->
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-tertiary h-full rounded-full" style="width: 96%"></div>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest/80 text-body-sm text-on-surface-variant text-xs border border-outline-variant/20 flex items-start gap-2">
+<span class="material-symbols-outlined text-secondary text-[16px] shrink-0 mt-0.5">info</span>
+<div>
+<strong class="text-on-surface font-medium">Evaluator Note (Prof. Morales):</strong> "Battery low voltage RTL trigger works within 1.2% delta. Please secure redundant umbilical harness before live flight."
+                </div>
+</div>
+</div>
+<!-- Criterion 3: Needs Revision -->
+<div class="p-space-md bg-surface-container-low rounded-lg border-2 border-error/30 space-y-2 bg-error-container/5">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-error-container/30 text-error flex items-center justify-center text-label-sm font-code-sm">03</span>
+<span class="text-headline-sm font-headline-sm text-on-surface text-sm">Documentation &amp; Citation Standards</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-error-container/30 text-error font-medium">Needs Revision</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-outline">Weight: 20%</span>
+</div>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-headline-sm font-headline-sm text-error font-bold">--</span>
+<span class="text-outline text-body-sm">/ 20</span>
+</div>
+</div>
+<!-- Score Indicator bar -->
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 40%"></div>
+</div>
+<div class="p-2 rounded bg-surface-container-lowest/80 text-body-sm text-on-surface-variant text-xs border border-error/20 flex items-start gap-2">
+<span class="material-symbols-outlined text-error text-[16px] shrink-0 mt-0.5">warning</span>
+<div>
+<strong class="text-error font-medium">Action Required:</strong> IEEE Reference citations 14-22 lack digital object identifiers (DOIs). LaTeX source compilation generated 4 bibtex warnings. Resubmit prior to defense gate.
+                </div>
+</div>
+</div>
+<!-- Criterion 4: Scheduled -->
+<div class="p-space-md bg-surface-container-low rounded-lg border border-outline-variant/30 space-y-2 opacity-90">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-6 h-6 rounded bg-surface-container text-outline flex items-center justify-center text-label-sm font-code-sm">04</span>
+<span class="text-headline-sm font-headline-sm text-on-surface text-sm">Team Presentation &amp; Defense Q&amp;A</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-primary-container/20 text-primary-fixed">Scheduled May 18</span>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-outline">Weight: 25%</span>
+</div>
+<div class="flex items-center gap-1.5 font-mono">
+<span class="text-headline-sm font-headline-sm text-outline">TBD</span>
+<span class="text-outline text-body-sm">/ 25</span>
+</div>
+</div>
+<!-- Score Indicator bar -->
+<div class="w-full bg-surface-container-high h-1.5 rounded-full overflow-hidden">
+<div class="bg-surface-variant h-full rounded-full" style="width: 0%"></div>
+</div>
+<div class="flex items-center justify-between text-body-sm text-outline text-xs pt-1">
+<span>Room: Engineering Hall 304B • 10:30 AM EST</span>
+<span class="flex items-center gap-1 text-primary">
+<span class="material-symbols-outlined text-[14px]">videocam</span> Zoom Hybrid Stream Active
+                </span>
+</div>
+</div>
+</div>
+<!-- Bottom Rubric Actions -->
+<div class="flex items-center justify-between pt-2 border-t border-outline-variant/20">
+<a class="text-label-sm font-label-sm text-primary hover:underline flex items-center gap-1" href="#">
+<span class="material-symbols-outlined text-[16px]">file_open</span>
+              Download Official ABET EC2000 Criterion 3 Rubric (.PDF)
+            </a>
+<button class="px-space-md py-1.5 bg-surface-container-high hover:bg-surface-bright text-on-surface border border-outline-variant/40 rounded-lg text-label-sm font-label-sm transition-colors">
+              Request Faculty Recalculation
+            </button>
+</div>
+</div>
+</section>
+<!-- SECTION 4: ADVISOR REVIEW NOTES & DEFENSE COMMITTEE FEEDBACK TIMELINE -->
+<section class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl">
+<!-- Timeline & Historical Committee Log (8 cols) -->
+<div class="lg:col-span-8 bg-surface-container rounded-xl border border-outline-variant/30 p-space-xl space-y-space-lg">
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[22px]">forum</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Defense Committee Feedback &amp; Version History</h3>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-label-sm font-label-sm text-outline">Filter by:</span>
+<select class="bg-surface-container-low border border-outline-variant/30 rounded text-label-sm font-label-sm text-on-surface py-0.5 px-2">
+<option>All Reviewers</option>
+<option>Dr. Vance (Advisor)</option>
+<option>Prof. Morales (External)</option>
+</select>
+</div>
+</div>
+<!-- Timeline Threads -->
+<div class="relative pl-6 space-y-space-lg before:content-[''] before:absolute before:left-2 before:top-2 before:bottom-2 before:w-0.5 before:bg-outline-variant/30">
+<!-- Thread 1: Dr Vance -->
+<div class="relative group">
+<!-- Timeline node indicator -->
+<div class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-primary-container border-2 border-surface flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md border border-outline-variant/30 space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full border border-outline-variant object-cover" data-alt="Portrait photo of a distinguished senior female robotics professor with glasses and thoughtful academic expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZVCzO6z92ZWK54v59p7Wf2Nx3F9uLXOzzjocLnQDOELSf5pvKs2abMj_WqY56Hs50mw2pv7WsgPlcwtu0Rmeja1OpO2LIcTBAPZmAfajTcYULvXMO9ASahlOcOC5seo9sFRPj-UQcVspm2UFwJqgLrVX5Ti4gdJQZ3SzspOEPP6TC2yvXbtAI0ASQOWB88JFFFk0dczrEWCdgFkraG9rx1f8aXDI1tHcGmDd1M_-plDJp9cOkk7tvkQ">
+<span class="text-headline-sm font-headline-sm text-on-surface text-sm">Dr. Eleanor Vance</span>
+<span class="text-label-sm font-label-sm px-1.5 py-0.2 rounded bg-primary-container/20 text-primary-fixed">Primary Advisor</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline">Yesterday at 18:40</span>
+</div>
+<p class="text-body-sm text-on-surface-variant text-sm leading-relaxed">
+                  "I inspected the Git pull request (#48) for the optical flow sensor driver. The kalman filter variance matrix has converged correctly in simulated crosswinds. However, please ensure that your team uploads the high-res uncut video to the portal before Thursday's committee pre-screening."
+                </p>
+<div class="flex items-center gap-2 pt-1">
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-mono text-[11px]">
+                    Attached: commit-3f82a9d.diff
+                  </span>
+<button class="text-label-sm font-label-sm text-primary hover:underline ml-auto">Reply to Thread</button>
+</div>
+</div>
+</div>
+<!-- Thread 2: Prof Morales -->
+<div class="relative group">
+<!-- Timeline node indicator -->
+<div class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-secondary-container border-2 border-surface flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md border border-outline-variant/30 space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img class="w-6 h-6 rounded-full border border-outline-variant object-cover" data-alt="Portrait photo of an aerospace engineering male professor in dark casual blazer with focused attentive expression." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPPbE8GkixL1qKWsfYAITymbs4MhUD-B-8sGY3W79XeHltjcTt1arJlfn7WYG7FGmEJ_pQN1dsYhJK_V5hzjkpIA3RBYucrze_QGBIBoSrvVwiO4EHpO5W7dp8SUz-dzbJEkj-b_RHWvUQBtgu7hI7R-FE3y4QTlRLZQS8Luedm-bV6bq0yU-9oy6qnVndT0kelksagc3ui-1WEjmAnqtYlsO31kbF1omQKMG5kkpEs7HHb8uSezZ_fA">
+<span class="text-headline-sm font-headline-sm text-on-surface text-sm">Prof. Marcus Morales</span>
+<span class="text-label-sm font-label-sm px-1.5 py-0.2 rounded bg-surface-container-highest text-outline">Defense Committee Chair</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline">May 11 at 11:15</span>
+</div>
+<p class="text-body-sm text-on-surface-variant text-sm leading-relaxed">
+                  "Sign-off for Milestone 2 has been recorded in the faculty ledger. I expect the live physical test flight telemetry data to demonstrate real-time geotagging accuracy of under 20cm RMSE as claimed in your preliminary defense abstract."
+                </p>
+</div>
+</div>
+<!-- Thread 3: Version Release Notification -->
+<div class="relative group">
+<div class="absolute -left-6 top-1 w-4 h-4 rounded-full bg-tertiary-container border-2 border-surface flex items-center justify-center">
+<div class="w-1.5 h-1.5 rounded-full bg-tertiary"></div>
+</div>
+<div class="bg-surface-container-low/60 rounded-lg p-space-md border border-outline-variant/20 flex items-center justify-between text-body-sm">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-tertiary text-[18px]">verified</span>
+<span class="text-on-surface">Milestone 2 Accreditation Certificate formally endorsed and cryptographically sealed.</span>
+</div>
+<span class="text-label-sm font-label-sm text-outline font-mono">HASH: 9e10fa4d</span>
+</div>
+</div>
+</div>
+<!-- Add Quick Feedback Input -->
+<div class="flex items-center gap-2 pt-2 border-t border-outline-variant/20">
+<input class="flex-1 bg-surface-container-lowest border border-outline-variant/40 rounded-lg px-space-md py-2 text-body-sm text-on-surface placeholder:text-outline focus:outline-none focus:border-primary" placeholder="Add comment for defense committee or request clarification..." type="text">
+<button class="px-space-md py-2 bg-primary-container hover:bg-primary-container/90 text-on-primary rounded-lg text-label-md font-label-md transition-colors flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">send</span>
+              Post Note
+            </button>
+</div>
+</div>
+<!-- Downloadable Sign-off Certificate Preview & Committee Roster (4 cols) -->
+<div class="lg:col-span-4 space-y-space-xl">
+<!-- Endorsement Certificate Card -->
+<div class="bg-surface-container rounded-xl border border-outline-variant/30 p-space-xl space-y-space-md relative overflow-hidden">
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/30">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">workspace_premium</span>
+<h4 class="text-headline-sm font-headline-sm text-on-surface">Milestone Sign-Off Seal</h4>
+</div>
+<span class="text-label-sm font-label-sm px-2 py-0.5 bg-tertiary/15 text-tertiary font-mono rounded">M2 Endorsed</span>
+</div>
+<!-- Certificate Visual Representation -->
+<div class="bg-surface-container-lowest border border-outline-variant/40 rounded-lg p-space-md space-y-space-sm relative">
+<div class="flex items-center justify-between text-outline border-b border-outline-variant/20 pb-2">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[16px]">verified</span>
+<span class="text-label-sm font-label-sm uppercase tracking-wider font-semibold text-on-surface">ABET Faculty Council</span>
+</div>
+<span class="text-code-sm font-code-sm text-outline">CERT-2025-098</span>
+</div>
+<div class="space-y-1 text-center py-2">
+<span class="text-label-sm font-label-sm text-outline block">This certifies satisfactory defense of</span>
+<p class="text-headline-sm font-headline-sm text-on-surface text-sm font-bold">Hardware Architecture &amp; PCB Fabrication</p>
+<p class="text-label-sm font-label-sm text-tertiary font-mono">ABET Outcome 1, 2 &amp; 6 Compliant</p>
+</div>
+<div class="flex justify-between items-center pt-2 border-t border-outline-variant/20 text-[11px] text-outline">
+<span>Signatures: 3/3 Affixed</span>
+<span class="font-mono text-primary">SHA-256 Valid</span>
+</div>
+</div>
+<!-- Action buttons -->
+<div class="space-y-2">
+<button class="w-full py-2 bg-surface-container-high hover:bg-surface-bright text-on-surface border border-outline-variant/40 rounded-lg text-label-md font-label-md flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-[16px]">download</span>
+                Download Cryptographic Certificate (.PDF)
+              </button>
+<button class="w-full py-1.5 bg-transparent hover:bg-surface-container-high text-on-surface-variant hover:text-on-surface rounded-lg text-label-sm font-label-sm flex items-center justify-center gap-1 transition-colors">
+<span class="material-symbols-outlined text-[16px]">qr_code_2</span>
+                Verify ABET Public Ledger
+              </button>
+</div>
+</div>
+<!-- Defense Committee Roster Mini-Card -->
+<div class="bg-surface-container rounded-xl border border-outline-variant/30 p-space-md space-y-space-sm">
+<h4 class="text-label-md font-label-md text-on-surface-variant flex items-center justify-between">
+<span>Appointed Defense Jury</span>
+<span class="text-outline text-label-sm font-label-sm">Oral Defense: Jun 12</span>
+</h4>
+<div class="space-y-2">
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/20">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-xs font-bold font-mono">EV</div>
+<div>
+<span class="text-headline-sm font-headline-sm text-on-surface text-xs block">Dr. Eleanor Vance</span>
+<span class="text-label-sm font-label-sm text-outline block">Robotics Lab Chair</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-tertiary text-[18px]" title="Accepted">check_circle</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/20">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-secondary-container text-on-secondary flex items-center justify-center text-xs font-bold font-mono">MM</div>
+<div>
+<span class="text-headline-sm font-headline-sm text-on-surface text-xs block">Prof. Marcus Morales</span>
+<span class="text-label-sm font-label-sm text-outline block">Embedded Systems</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-tertiary text-[18px]" title="Accepted">check_circle</span>
+</div>
+<div class="flex items-center justify-between p-2 rounded bg-surface-container-low border border-outline-variant/20">
+<div class="flex items-center gap-2">
+<div class="w-7 h-7 rounded-full bg-surface-container-highest text-on-surface flex items-center justify-center text-xs font-bold font-mono">DL</div>
+<div>
+<span class="text-headline-sm font-headline-sm text-on-surface text-xs block">Dr. Sarah Lin</span>
+<span class="text-label-sm font-label-sm text-outline block">Industry Fellow (Skydio)</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-secondary text-[18px]" title="Tentative Confirmation">pending</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+</div>
+<!-- Inline Interaction Logic (Theme toggle, Role switcher micro-interactions) -->
+<script>
+    // Role switcher interaction
+    const btnStudent = document.getElementById('roleStudent');
+    const btnAdvisor = document.getElementById('roleAdvisor');
+
+    if (btnStudent && btnAdvisor) {
+      btnStudent.addEventListener('click', () => {
+        btnStudent.className = "px-space-sm py-1 rounded bg-primary-container text-on-primary text-label-sm font-label-sm transition-all duration-150";
+        btnAdvisor.className = "px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface text-label-sm font-label-sm transition-all duration-150 flex items-center gap-1";
+      });
+
+      btnAdvisor.addEventListener('click', () => {
+        btnAdvisor.className = "px-space-sm py-1 rounded bg-primary-container text-on-primary text-label-sm font-label-sm transition-all duration-150 flex items-center gap-1";
+        btnStudent.className = "px-space-sm py-1 rounded text-on-surface-variant hover:text-on-surface text-label-sm font-label-sm transition-all duration-150";
+      });
+    }
+
+    // Theme toggle light / dark
+    const themeBtn = document.getElementById('themeToggleBtn');
+    if (themeBtn) {
+      themeBtn.addEventListener('click', () => {
+        const html = document.documentElement;
+        if (html.classList.contains('dark')) {
+          html.classList.remove('dark');
+          themeBtn.innerHTML = '<span class="material-symbols-outlined">dark_mode</span>';
+        } else {
+          html.classList.add('dark');
+          themeBtn.innerHTML = '<span class="material-symbols-outlined">light_mode</span>';
+        }
+      });
+    }
+  </script>
+</body></html>

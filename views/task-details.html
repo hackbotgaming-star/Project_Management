@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Task Details & Deliverables | ProjectHub</title>
+  <!-- Google Fonts & Tailwind CDN -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
+  <script src="/js/theme.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/js/toast.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            'surface': '#0b0e14',
+            'surface-container-lowest': '#06080c',
+            'surface-container-low': '#11151c',
+            'surface-container': '#181d26',
+            'surface-container-high': '#222834',
+            'surface-container-highest': '#2c3342',
+            'on-surface': '#f3f4f6',
+            'on-surface-variant': '#9ca3af',
+            'outline': '#6b7280',
+            'outline-variant': '#374151',
+            'primary': '#6366f1',
+            'primary-container': '#4f46e5',
+            'on-primary': '#ffffff',
+            'secondary': '#06b6d4',
+            'tertiary': '#10b981',
+            'error': '#ef4444',
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-sans antialiased min-h-screen flex flex-col selection:bg-primary/30">
+
+  <!-- Top Navigation Bar -->
+  <header class="sticky top-0 z-40 bg-surface-container-low/95 backdrop-blur-md border-b border-outline-variant/30 px-6 py-3.5 flex items-center justify-between shadow-lg">
+    <div class="flex items-center gap-4">
+      <button onclick="goBack()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-outline hover:text-on-surface transition-all flex items-center gap-1.5 text-xs font-medium">
+        <span class="material-symbols-outlined text-[18px]">arrow_back</span>
+        <span>Back to Portal</span>
+      </button>
+      <div class="h-4 w-px bg-outline-variant/30"></div>
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center font-bold font-mono text-sm border border-primary/30">
+          <span class="material-symbols-outlined text-[20px]">assignment</span>
+        </div>
+        <div>
+          <h1 class="text-sm font-bold text-on-surface flex items-center gap-2">
+            <span>Task Overview &amp; Cloudinary Documents</span>
+            <span id="headerTaskPriority" class="text-[10px] font-mono px-2 py-0.5 rounded uppercase font-semibold"></span>
+          </h1>
+          <p id="headerProjectSub" class="text-[11px] text-outline font-mono">Loading project context...</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-3">
+      <button onclick="openUploadModal()" class="px-3.5 py-1.5 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold transition-all shadow-md active:scale-95 flex items-center gap-1.5">
+        <span class="material-symbols-outlined text-[18px]">cloud_upload</span>
+        <span>Upload Document (Cloudinary)</span>
+      </button>
+      <button onclick="setTheme(localStorage.getItem('projecthub_theme') === 'light' ? 'dark' : 'light')" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-outline hover:text-on-surface transition-all" title="Toggle Light / Dark Theme">
+        <span class="material-symbols-outlined text-[18px]">routine</span>
+      </button>
+      <div class="h-4 w-px bg-outline-variant/30 hidden sm:block"></div>
+      <div id="userBadge" class="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-xl bg-surface-container border border-outline-variant/20 text-xs">
+        <span id="currentUserRoleBadge" class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-primary/20 text-primary font-semibold">ROLE</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Task Page Container -->
+  <main class="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8 space-y-6">
+
+    <!-- Loading State -->
+    <div id="loadingState" class="py-24 text-center">
+      <span class="material-symbols-outlined animate-spin text-4xl text-primary mb-3">progress_activity</span>
+      <p class="text-sm text-outline">Loading task information, project metadata &amp; Cloudinary files...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="hidden p-6 rounded-2xl bg-error/10 border border-error/30 text-error text-center max-w-lg mx-auto">
+      <span class="material-symbols-outlined text-4xl mb-2">error</span>
+      <h3 class="font-bold text-base mb-1">Could Not Load Task</h3>
+      <p id="errorMessage" class="text-xs text-outline mb-4"></p>
+      <button onclick="goBack()" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface text-xs font-medium border border-outline-variant/30 hover:bg-surface-container-high">
+        Return to Dashboard
+      </button>
+    </div>
+
+    <!-- Task Content Grid -->
+    <div id="taskContent" class="hidden space-y-6">
+
+      <!-- Header Card: Title, Status Selector, and Actions -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-xl relative overflow-hidden">
+        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-primary via-secondary to-tertiary"></div>
+        <div class="flex flex-col lg:flex-row lg:items-start justify-between gap-6">
+          <div class="space-y-3 flex-1">
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <span id="taskProjectCode" class="font-mono font-bold px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30"></span>
+              <span id="taskProjectTitle" class="text-outline font-medium"></span>
+              <span class="text-outline">&bull;</span>
+              <span id="taskProjectDept" class="text-outline"></span>
+            </div>
+            <h2 id="taskTitle" class="font-headline text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight"></h2>
+            <p id="taskDescription" class="text-xs sm:text-sm text-on-surface-variant leading-relaxed max-w-4xl"></p>
+          </div>
+
+          <!-- Status & Metadata Block -->
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col sm:flex-row lg:flex-col gap-4 min-w-[260px]">
+            <div>
+              <label class="block text-[11px] font-mono uppercase tracking-wider text-outline mb-1.5">Lifecycle Status</label>
+              <div class="flex items-center gap-2">
+                <select id="taskStatusSelect" onchange="changeTaskStatus(this.value)" class="w-full text-xs font-semibold font-mono py-2 px-3 bg-surface-container-high rounded-lg border border-outline-variant/30 text-on-surface focus:outline-none focus:border-primary transition-colors cursor-pointer">
+                  <option value="TODO">⚪ TODO</option>
+                  <option value="IN_PROGRESS">🔵 IN PROGRESS</option>
+                  <option value="REVIEW">🟠 REVIEW</option>
+                  <option value="DONE">🟢 COMPLETED (DONE)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-outline-variant/20 grid grid-cols-2 gap-2 text-xs">
+              <div>
+                <span class="text-[10px] text-outline font-mono uppercase block">Priority</span>
+                <span id="taskPriorityBadge" class="font-bold text-xs font-mono"></span>
+              </div>
+              <div>
+                <span class="text-[10px] text-outline font-mono uppercase block">Deadline Due</span>
+                <span id="taskDueDate" class="font-mono text-xs text-on-surface"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Columns: 1. Overview & Personnel, 2. Documents Linked -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Column 1: Detailed Metadata & People (1 col) -->
+        <div class="space-y-6">
+
+          <!-- Personnel Card -->
+          <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-md space-y-4">
+            <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2 pb-3 border-b border-outline-variant/20">
+              <span class="material-symbols-outlined text-primary text-[18px]">group</span>
+              <span>Assigned Personnel</span>
+            </h3>
+
+            <!-- Assignee -->
+            <div>
+              <span class="text-[10px] text-outline font-mono uppercase tracking-wider block mb-2">Direct Assignee:</span>
+              <div id="assigneeCard" class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+                <img id="assigneeAvatar" src="" class="w-10 h-10 rounded-full object-cover border border-outline-variant/30 bg-surface-container-high">
+                <div class="truncate">
+                  <div id="assigneeName" class="font-semibold text-xs text-on-surface truncate"></div>
+                  <div id="assigneeSub" class="text-[10px] text-outline truncate font-mono"></div>
+                  <div id="assigneeEmail" class="text-[10px] text-primary truncate"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Created By -->
+            <div>
+              <span class="text-[10px] text-outline font-mono uppercase tracking-wider block mb-2">Task Created By:</span>
+              <div id="creatorCard" class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+                <img id="creatorAvatar" src="" class="w-8 h-8 rounded-full object-cover border border-outline-variant/30 bg-surface-container-high">
+                <div class="truncate">
+                  <div id="creatorName" class="font-semibold text-xs text-on-surface truncate"></div>
+                  <div id="creatorRole" class="text-[10px] text-secondary truncate font-mono"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Project Mentor / Advisor -->
+            <div>
+              <span class="text-[10px] text-outline font-mono uppercase tracking-wider block mb-2">Faculty Advisor:</span>
+              <div id="mentorCard" class="p-3 rounded-xl bg-surface-container border border-secondary/20 flex items-center gap-3">
+                <div class="w-8 h-8 rounded-full bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary">
+                  <span class="material-symbols-outlined text-[16px]">school</span>
+                </div>
+                <div class="truncate">
+                  <div id="mentorName" class="font-semibold text-xs text-secondary truncate"></div>
+                  <div id="mentorDept" class="text-[10px] text-outline truncate"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Project Context Card -->
+          <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-md space-y-3">
+            <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2 pb-3 border-b border-outline-variant/20">
+              <span class="material-symbols-outlined text-secondary text-[18px]">folder</span>
+              <span>Project Context</span>
+            </h3>
+            <div class="space-y-2 text-xs">
+              <div class="flex items-center justify-between">
+                <span class="text-outline">Project Code:</span>
+                <span id="projCodeVal" class="font-mono text-on-surface font-semibold"></span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-outline">Department:</span>
+                <span id="projDeptVal" class="text-on-surface truncate text-right max-w-[180px]"></span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-outline">Cohort Term:</span>
+                <span id="projCohortVal" class="text-on-surface"></span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-outline">Project Status:</span>
+                <span id="projStatusVal" class="font-mono text-[11px] px-1.5 py-0.5 rounded bg-surface-container text-tertiary"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Column 2: Cloudinary Documents & Deliverables (2 cols) -->
+        <div class="lg:col-span-2 space-y-6">
+
+          <!-- Cloudinary Upload Action Banner -->
+          <div class="p-5 rounded-2xl bg-gradient-to-r from-primary/10 via-surface-container-low to-secondary/10 border border-primary/20 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center shadow-lg">
+                <span class="material-symbols-outlined text-2xl">cloud_sync</span>
+              </div>
+              <div>
+                <h4 class="font-headline font-bold text-sm text-on-surface">Task Document Repository</h4>
+                <p class="text-xs text-outline">Files uploaded here are stored in Cloudinary (<code class="text-primary font-mono text-[11px]">cloud: ta1atd4t</code>) and attached directly to this task.</p>
+              </div>
+            </div>
+            <button onclick="openUploadModal()" class="px-4 py-2 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary font-semibold text-xs transition-all shadow-md active:scale-95 flex items-center justify-center gap-1.5 whitespace-nowrap">
+              <span class="material-symbols-outlined text-[18px]">add_circle</span>
+              <span>Upload Document</span>
+            </button>
+          </div>
+
+          <!-- Documents List Section -->
+          <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-md space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary text-[20px]">description</span>
+                <h3 class="font-headline font-bold text-base text-on-surface">Task Artifacts &amp; Deliverables</h3>
+                <span id="docCountBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-primary font-bold">0 Files</span>
+              </div>
+              <button onclick="loadTaskDetails()" class="p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container transition-colors" title="Refresh Documents">
+                <span class="material-symbols-outlined text-[18px]">refresh</span>
+              </button>
+            </div>
+
+            <!-- Documents Container -->
+            <div id="documentsList" class="space-y-3">
+              <!-- Populated via JavaScript -->
+            </div>
+          </div>
+
+          <!-- Activity / Audit Timeline for this task -->
+          <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-md space-y-3">
+            <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2 pb-2 border-b border-outline-variant/20">
+              <span class="material-symbols-outlined text-outline text-[18px]">history</span>
+              <span>Task Activity &amp; Timestamps</span>
+            </h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/10">
+                <span class="text-[10px] text-outline font-mono uppercase block">Created On</span>
+                <span id="taskCreatedAt" class="font-mono text-on-surface"></span>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/10">
+                <span class="text-[10px] text-outline font-mono uppercase block">Last Modified</span>
+                <span id="taskUpdatedAt" class="font-mono text-on-surface"></span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- ======================================================== -->
+  <!-- MODAL: UPLOAD DOCUMENT TO CLOUDINARY DIRECTLY FOR THIS TASK -->
+  <!-- ======================================================== -->
+  <div id="taskUploadModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/40 rounded-2xl p-6 max-w-md w-full shadow-2xl relative space-y-4">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-primary/20 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">cloud_upload</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Upload to Cloudinary</h3>
+            <p class="text-[10px] font-mono text-tertiary">Cloud: ta1atd4t &bull; Attached to Current Task</p>
+          </div>
+        </div>
+        <button onclick="closeUploadModal()" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="taskUploadDocForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Document Title</label>
+          <input id="modalDocTitle" required placeholder="e.g. Subsystem Integration Report v1" class="w-full p-2.5 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Category</label>
+            <select id="modalDocCategory" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+              <option value="Deliverable">Deliverable</option>
+              <option value="Specification">Specification</option>
+              <option value="Architecture">Architecture</option>
+              <option value="Source Code">Source Code</option>
+              <option value="Report">Report</option>
+              <option value="Evaluation">Evaluation</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Version</label>
+            <input id="modalDocVersion" value="v1.0" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Select File from Computer</label>
+          <input type="file" id="modalDocFileInput" class="w-full text-xs text-on-surface file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary-container file:text-on-primary hover:file:bg-indigo-600 cursor-pointer p-2 bg-surface-container rounded-lg border border-outline-variant/30">
+          <p class="text-[10px] text-outline mt-1">Uploaded securely to Cloudinary. Supports PDF, ZIP, code, Word, spreadsheets, images.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Or Direct Link (Optional Fallback)</label>
+          <input id="modalDocFileUrl" placeholder="https://github.com/... or Google Drive link" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeUploadModal()" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnModalUploadSubmit" class="px-4 py-2 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold flex items-center gap-1.5 shadow-md">
+            <span class="material-symbols-outlined text-[16px]">cloud_upload</span>
+            <span>Upload Document</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Page Logic Script -->
+  <script>
+    let currentTask = null;
+    let currentTaskDocuments = [];
+    let currentUserRole = null;
+
+    // Extract taskId from URL path (e.g. /tasks/66fabc123... or ?id=66fabc123...)
+    function getTaskIdFromUrl() {
+      const pathParts = window.location.pathname.split('/').filter(Boolean);
+      if (pathParts.length >= 2 && pathParts[0] === 'tasks') {
+        return pathParts[1];
+      }
+      const params = new URLSearchParams(window.location.search);
+      return params.get('id') || params.get('taskId');
+    }
+
+    function goBack() {
+      if (document.referrer && document.referrer.includes(window.location.host)) {
+        window.history.back();
+      } else {
+        window.location.href = '/student/dashboard';
+      }
+    }
+
+    function openUploadModal() {
+      document.getElementById('taskUploadModal').classList.remove('hidden');
+    }
+
+    function closeUploadModal() {
+      document.getElementById('taskUploadModal').classList.add('hidden');
+    }
+
+    async function loadTaskDetails() {
+      const taskId = getTaskIdFromUrl();
+      if (!taskId) {
+        showError('No Task ID provided in URL. Please open a task from your dashboard.');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/tasks/${taskId}`);
+        if (res.status === 401) {
+          window.location.href = '/login/student';
+          return;
+        }
+        if (res.status === 403) {
+          showError('Access Denied: You do not have permissions to view this task.');
+          return;
+        }
+
+        const data = await res.json();
+        if (!data.success) {
+          showError(data.message || 'Task could not be found.');
+          return;
+        }
+
+        currentTask = data.task;
+        currentTaskDocuments = data.documents || [];
+        currentUserRole = data.currentUserRole || 'STUDENT';
+
+        renderTaskView(currentTask, currentTaskDocuments, currentUserRole);
+      } catch (err) {
+        showError('Network error connecting to server.');
+      }
+    }
+
+    function showError(msg) {
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('taskContent').classList.add('hidden');
+      document.getElementById('errorMessage').textContent = msg;
+      document.getElementById('errorState').classList.remove('hidden');
+    }
+
+    function renderTaskView(task, documents, role) {
+      document.getElementById('loadingState').classList.add('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+      document.getElementById('taskContent').classList.remove('hidden');
+
+      // Update Header
+      document.getElementById('currentUserRoleBadge').textContent = role;
+      document.getElementById('headerProjectSub').textContent = `${task.project ? task.project.code : 'PROJ'}: ${task.project ? task.project.title : 'Project'}`;
+
+      const priorityBadge = document.getElementById('headerTaskPriority');
+      priorityBadge.textContent = task.priority || 'MEDIUM';
+      if (task.priority === 'CRITICAL') {
+        priorityBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-error/20 text-error font-bold';
+      } else if (task.priority === 'HIGH') {
+        priorityBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 font-bold';
+      } else {
+        priorityBadge.className = 'text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-outline font-semibold';
+      }
+
+      // Title & Main Card
+      document.getElementById('taskTitle').textContent = task.title;
+      document.getElementById('taskDescription').textContent = task.description || 'No detailed description provided for this task.';
+      if (task.project) {
+        document.getElementById('taskProjectCode').innerHTML = `<a href="/projects/${task.project._id}" class="hover:underline font-bold text-primary">${task.project.code}</a>`;
+        document.getElementById('taskProjectTitle').innerHTML = `<a href="/projects/${task.project._id}" class="hover:underline hover:text-primary transition-colors inline-flex items-center gap-1 font-bold text-on-surface"><span>${task.project.title}</span><span class="material-symbols-outlined text-[13px] text-primary">open_in_new</span></a>`;
+      } else {
+        document.getElementById('taskProjectCode').textContent = 'CODE';
+        document.getElementById('taskProjectTitle').textContent = 'Project';
+      }
+      document.getElementById('taskProjectDept').textContent = task.project ? task.project.department : '';
+
+      document.getElementById('taskStatusSelect').value = task.status || 'TODO';
+      document.getElementById('taskPriorityBadge').textContent = task.priority;
+      document.getElementById('taskPriorityBadge').className = task.priority === 'CRITICAL' ? 'text-error' : (task.priority === 'HIGH' ? 'text-amber-400' : 'text-on-surface');
+      document.getElementById('taskDueDate').textContent = task.dueDate ? new Date(task.dueDate).toLocaleDateString() : 'None';
+
+      // Personnel
+      if (task.assignedTo) {
+        document.getElementById('assigneeName').textContent = task.assignedTo.name;
+        document.getElementById('assigneeSub').textContent = task.assignedTo.studentId || task.assignedTo.title || 'Student';
+        document.getElementById('assigneeEmail').textContent = task.assignedTo.email;
+        document.getElementById('assigneeAvatar').src = task.assignedTo.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80';
+      } else {
+        document.getElementById('assigneeName').textContent = 'Unassigned';
+        document.getElementById('assigneeSub').textContent = 'Available for pickup';
+        document.getElementById('assigneeEmail').textContent = '—';
+      }
+
+      if (task.createdBy) {
+        document.getElementById('creatorName').textContent = task.createdBy.name;
+        document.getElementById('creatorRole').textContent = task.createdBy.role;
+        document.getElementById('creatorAvatar').src = task.createdBy.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80';
+      } else {
+        document.getElementById('creatorName').textContent = 'System / Lead';
+        document.getElementById('creatorRole').textContent = 'SYSTEM';
+      }
+
+      if (task.project && task.project.facultyMentor) {
+        document.getElementById('mentorName').textContent = 'Faculty Mentor Assigned';
+        document.getElementById('mentorDept').textContent = task.project.department || 'Academic Affairs';
+      } else {
+        document.getElementById('mentorName').textContent = 'Pending Faculty Assignment';
+        document.getElementById('mentorDept').textContent = 'Advisor pending review';
+      }
+
+      // Project Context
+      document.getElementById('projCodeVal').textContent = task.project ? task.project.code : '—';
+      document.getElementById('projDeptVal').textContent = task.project ? task.project.department : '—';
+      document.getElementById('projCohortVal').textContent = task.project ? (task.project.cohort || 'Capstone 2025') : '—';
+      document.getElementById('projStatusVal').textContent = task.project ? task.project.status : 'ACTIVE';
+
+      // Dates
+      document.getElementById('taskCreatedAt').textContent = task.createdAt ? new Date(task.createdAt).toLocaleString() : '—';
+      document.getElementById('taskUpdatedAt').textContent = task.updatedAt ? new Date(task.updatedAt).toLocaleString() : '—';
+
+      // Render Documents
+      renderDocumentsList(documents);
+    }
+
+    function renderDocumentsList(docs) {
+      const container = document.getElementById('documentsList');
+      const countBadge = document.getElementById('docCountBadge');
+      countBadge.textContent = `${docs.length} File${docs.length === 1 ? '' : 's'}`;
+
+      if (!docs || docs.length === 0) {
+        container.innerHTML = `
+          <div class="p-8 rounded-xl bg-surface-container/40 border border-outline-variant/20 text-center space-y-2">
+            <span class="material-symbols-outlined text-3xl text-outline">cloud_off</span>
+            <div class="text-xs font-semibold text-on-surface">No documents uploaded for this task yet</div>
+            <p class="text-[11px] text-outline max-w-sm mx-auto">Upload reports, architectural diagrams, research slides, or code archives directly to Cloudinary.</p>
+            <button onclick="openUploadModal()" class="mt-2 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-semibold hover:bg-indigo-600 transition-colors inline-flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">cloud_upload</span>
+              <span>Upload First File</span>
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = docs.map(d => {
+        const isTaskSpecific = d.task && d.task.toString() === currentTask._id.toString();
+        const isCloudinary = d.fileUrl && d.fileUrl.includes('cloudinary');
+
+        return `
+          <div class="p-4 rounded-xl bg-surface-container border ${isTaskSpecific ? 'border-primary/40 bg-primary/5' : 'border-outline-variant/20'} flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs transition-all hover:border-outline-variant/40">
+            <div class="flex items-start gap-3">
+              <div class="w-10 h-10 rounded-xl bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-primary flex-shrink-0">
+                <span class="material-symbols-outlined text-[22px]">
+                  ${d.fileType === 'PDF' ? 'picture_as_pdf' : d.fileType === 'ZIP' ? 'folder_zip' : 'description'}
+                </span>
+              </div>
+              <div class="space-y-0.5">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-bold text-on-surface text-sm">${d.title}</span>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high text-primary font-semibold">${d.version || 'v1.0'}</span>
+                  ${isTaskSpecific ? '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-semibold">Attached to this task</span>' : '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-container-high text-outline">Project artifact</span>'}
+                  ${isCloudinary ? '<span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-secondary/15 text-secondary flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>Cloudinary Storage</span>' : ''}
+                </div>
+                <div class="text-[11px] text-outline flex flex-wrap items-center gap-2">
+                  <span>${d.category || 'Specification'}</span>
+                  <span>&bull;</span>
+                  <span class="font-mono">${d.fileType || 'FILE'}</span>
+                  <span>&bull;</span>
+                  <span class="font-mono">${d.fileSize || '1.2 MB'}</span>
+                  <span>&bull;</span>
+                  <span>Uploaded by <strong class="text-on-surface">${d.uploadedBy ? d.uploadedBy.name : 'Team Member'}</strong></span>
+                </div>
+                <div class="text-[10px] text-outline/80 font-mono">
+                  ${new Date(d.createdAt).toLocaleString()}
+                </div>
+              </div>
+            </div>
+
+            <!-- Download Button -->
+            <div class="flex items-center gap-2 self-end sm:self-center">
+              <a href="${d.fileUrl || '#'}" target="_blank" rel="noopener noreferrer" class="px-3.5 py-1.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/30 text-primary font-semibold text-xs transition-all flex items-center gap-1.5 shadow-sm active:scale-95">
+                <span class="material-symbols-outlined text-[16px]">open_in_new</span>
+                <span>Open / View File</span>
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Status change handler
+    async function changeTaskStatus(newStatus) {
+      if (!currentTask) return;
+      try {
+        const res = await fetch(`/api/tasks/${currentTask._id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        if (data.success) {
+          currentTask.status = newStatus;
+          alert(`Task status updated to ${newStatus}`);
+        } else {
+          alert(data.message || 'Failed to update task status.');
+          document.getElementById('taskStatusSelect').value = currentTask.status;
+        }
+      } catch (err) {
+        alert('Network error updating task status.');
+        document.getElementById('taskStatusSelect').value = currentTask.status;
+      }
+    }
+
+    // Modal Document Upload Handler
+    document.getElementById('taskUploadDocForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentTask) return;
+
+      const title = document.getElementById('modalDocTitle').value;
+      const category = document.getElementById('modalDocCategory').value;
+      const version = document.getElementById('modalDocVersion').value;
+      const fileUrl = document.getElementById('modalDocFileUrl').value;
+      const fileInput = document.getElementById('modalDocFileInput');
+      const submitBtn = document.getElementById('btnModalUploadSubmit');
+
+      const originalBtnHtml = submitBtn.innerHTML;
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Uploading to Cloudinary...';
+
+      try {
+        let res;
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          const formData = new FormData();
+          formData.append('projectId', currentTask.project._id);
+          formData.append('taskId', currentTask._id);
+          formData.append('title', title);
+          formData.append('category', category);
+          formData.append('version', version);
+          if (fileUrl) formData.append('fileUrl', fileUrl);
+          formData.append('file', fileInput.files[0]);
+
+          res = await fetch('/api/documents', {
+            method: 'POST',
+            body: formData,
+          });
+        } else {
+          res = await fetch('/api/documents', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              projectId: currentTask.project._id,
+              taskId: currentTask._id,
+              title,
+              category,
+              version,
+              fileUrl,
+            }),
+          });
+        }
+
+        const data = await res.json();
+        if (data.success) {
+          closeUploadModal();
+          document.getElementById('taskUploadDocForm').reset();
+          alert('Document uploaded and saved to Cloudinary successfully!');
+          loadTaskDetails(); // Reload with new doc
+        } else {
+          alert(data.message || 'Failed to upload document.');
+        }
+      } catch (err) {
+        alert('Upload request failed.');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalBtnHtml;
+      }
+    });
+
+    // Auto load on page load
+    window.addEventListener('DOMContentLoaded', loadTaskDetails);
+  </script>
+</body>
+</html>

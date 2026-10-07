@@ -1,0 +1,1189 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>ProjectHub - Academic Research &amp; Capstone Management</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Inter & Geist Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary-fixed": "#e2dfff",
+            "on-tertiary-fixed-variant": "#005236",
+            "surface-bright": "#353943",
+            "primary": "#c3c0ff",
+            "outline": "#918fa1",
+            "surface-tint": "#c3c0ff",
+            "on-tertiary-container": "#67f4b7",
+            "error-container": "#93000a",
+            "on-primary-fixed": "#0f0069",
+            "on-tertiary-fixed": "#002113",
+            "outline-variant": "#464555",
+            "on-error": "#690005",
+            "secondary-fixed-dim": "#4cd7f6",
+            "on-secondary-container": "#00424e",
+            "on-secondary": "#003640",
+            "primary-container": "#4f46e5",
+            "error": "#ffb4ab",
+            "tertiary-container": "#006e4b",
+            "tertiary": "#4edea3",
+            "tertiary-fixed": "#6ffbbe",
+            "surface-variant": "#31353f",
+            "on-error-container": "#ffdad6",
+            "inverse-primary": "#4d44e3",
+            "tertiary-fixed-dim": "#4edea3",
+            "secondary": "#4cd7f6",
+            "on-tertiary": "#003824",
+            "surface-container-high": "#262a34",
+            "surface-container-low": "#181b25",
+            "secondary-container": "#03b5d3",
+            "surface-container-highest": "#31353f",
+            "on-surface-variant": "#c7c4d8",
+            "on-secondary-fixed": "#001f26",
+            "inverse-on-surface": "#2c303a",
+            "on-primary": "#1d00a5",
+            "on-primary-container": "#dad7ff",
+            "surface-container": "#1c1f29",
+            "on-background": "#dfe2ef",
+            "on-surface": "#dfe2ef",
+            "surface-dim": "#0f131c",
+            "surface": "#0f131c",
+            "on-primary-fixed-variant": "#3323cc",
+            "secondary-fixed": "#acedff",
+            "surface-container-lowest": "#0a0e17",
+            "primary-fixed-dim": "#c3c0ff",
+            "inverse-surface": "#dfe2ef",
+            "on-secondary-fixed-variant": "#004e5c",
+            "background": "#0f131c"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "margin-lg": "2rem",
+            "margin-md": "1.5rem",
+            "space-xl": "1.5rem",
+            "space-xs": "0.25rem",
+            "margin": "1rem",
+            "space-lg": "1rem",
+            "space-md": "0.75rem",
+            "gutter-lg": "1.5rem",
+            "gutter": "1rem",
+            "space-2xl": "2rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "code-sm": ["Geist"],
+            "headline-sm": ["Geist"],
+            "label-md": ["Geist"],
+            "headline-xl-mobile": ["Geist"],
+            "body-md": ["Inter"],
+            "body-sm": ["Inter"],
+            "headline-xl": ["Geist"],
+            "headline-lg": ["Geist"],
+            "label-sm": ["Geist"],
+            "headline-md": ["Geist"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "400" }],
+            "code-sm": ["12px", { "lineHeight": "16px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.01em", "fontWeight": "500" }],
+            "headline-xl-mobile": ["28px", { "lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "body-md": ["14px", { "lineHeight": "20px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0em", "fontWeight": "400" }],
+            "headline-xl": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.025em", "fontWeight": "600" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.02em", "fontWeight": "500" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.015em", "fontWeight": "500" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    /* Custom scrollbar and subtle polish */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(145, 143, 161, 0.2);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(145, 143, 161, 0.4);
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+    }
+    .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased min-h-screen selection:bg-primary-container selection:text-on-primary-container">
+<!-- ========================================== -->
+<!-- SIDEBAR NAVIGATION (Shared Component Spec) -->
+<!-- ========================================== -->
+<aside class="fixed top-0 left-0 h-screen w-64 border-r border-outline-variant/30 dark:border-outline-variant/20 bg-surface-container-low dark:bg-surface-container-lowest z-40 hidden md:block">
+<div class="flex flex-col justify-between h-full p-space-md w-64 z-40">
+<!-- Top Rail Header & Workspace -->
+<div class="flex flex-col gap-space-md">
+<!-- Logo Branding (Strict casing & tokens) -->
+<div class="flex items-center justify-between pb-space-sm border-b border-outline-variant/20">
+<div class="text-headline-md font-headline-md text-on-surface dark:text-on-surface tracking-tight flex items-center gap-space-sm">
+<div class="h-8 w-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">terminal</span>
+</div>
+<div>
+<span class="font-bold tracking-tight text-on-surface">ProjectHub</span>
+<span class="block text-label-sm font-label-sm text-outline">Academic Research &amp; Capstone</span>
+</div>
+</div>
+</div>
+<!-- Academic Workspace Switcher Dropdown -->
+<div class="p-space-xs rounded-lg bg-surface-container-high/60 border border-outline-variant/30 flex items-center justify-between cursor-pointer hover:border-outline transition-colors">
+<div class="flex items-center gap-space-sm overflow-hidden">
+<div class="w-6 h-6 rounded bg-secondary-container/20 text-secondary flex items-center justify-center font-code-sm text-code-sm font-bold">
+              AL
+            </div>
+<div class="truncate">
+<div class="text-label-md font-label-md text-on-surface truncate">Apex Lab - Spring 2025</div>
+<div class="text-label-sm font-label-sm text-outline truncate">CS-492 Capstone Cohort</div>
+</div>
+</div>
+<span class="material-symbols-outlined text-outline">unfold_more</span>
+</div>
+<!-- Primary Call to Action Button -->
+<button class="w-full flex items-center justify-center gap-space-xs bg-primary-container text-on-primary font-headline-sm text-body-md py-space-sm px-space-md rounded-lg hover:brightness-105 active:scale-[0.98] transition-all shadow-sm" onclick="openModal('deliverableModal')">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>New Project</span>
+</button>
+<!-- Navigation Rail Links (Tabs matching JSON) -->
+<nav class="flex flex-col gap-space-xs mt-space-xs" id="sidebarNav">
+<!-- Overview (Active) -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm bg-primary-container text-on-primary rounded-lg font-headline-sm text-body-md" href="#">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- My Projects -->
+<a class="flex items-center justify-between px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors" href="#">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-lg">folder_open</span>
+<span>My Projects</span>
+</div>
+<span class="text-label-sm font-label-sm bg-surface-variant px-1.5 py-0.5 rounded text-outline">4</span>
+</a>
+<!-- My Tasks -->
+<a class="flex items-center justify-between px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors" href="#">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-lg">check_circle</span>
+<span>My Tasks</span>
+</div>
+<span class="text-label-sm font-label-sm bg-tertiary-container/30 text-tertiary px-1.5 py-0.5 rounded">7 due</span>
+</a>
+<!-- Milestones -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">flag</span>
+<span>Milestones</span>
+</a>
+<!-- Calendar -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+<span>Calendar</span>
+</a>
+<!-- Documents -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">description</span>
+<span>Documents</span>
+</a>
+<!-- Reviews -->
+<a class="flex items-center justify-between px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors" href="#">
+<div class="flex items-center gap-space-md">
+<span class="material-symbols-outlined text-lg">rate_review</span>
+<span>Reviews</span>
+</div>
+<span class="w-2 h-2 rounded-full bg-error animate-pulse"></span>
+</a>
+<!-- Analytics -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">bar_chart</span>
+<span>Analytics</span>
+</a>
+<!-- Settings -->
+<a class="flex items-center gap-space-md px-space-md py-space-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high rounded-lg text-body-md transition-colors" href="#">
+<span class="material-symbols-outlined text-lg">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</div>
+<!-- Sidebar Footer Modules -->
+<div class="flex flex-col gap-space-sm pt-space-md border-t border-outline-variant/20">
+<!-- Storage / Institutional Quota -->
+<div class="p-space-sm bg-surface-container rounded-lg border border-outline-variant/20">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-outline mb-1.5">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-xs">database</span> Research Cloud</span>
+<span class="text-on-surface font-code-sm">18.4 / 50 GB</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 36%"></div>
+</div>
+<div class="mt-2 flex items-center justify-between">
+<span class="text-[10px] uppercase tracking-wider text-tertiary font-code-sm flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">verified</span> MIT EECS Tier
+            </span>
+<span class="text-[10px] text-outline hover:text-on-surface cursor-pointer">Upgrade</span>
+</div>
+</div>
+<!-- Footer Nav (Help & Profile) -->
+<div class="flex items-center justify-between pt-1">
+<button class="flex items-center gap-space-xs text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-colors py-1">
+<span class="material-symbols-outlined text-lg">help</span>
+<span>Help &amp; Docs</span>
+</button>
+<button class="flex items-center gap-space-xs text-label-md font-label-md text-on-surface-variant hover:text-on-surface transition-colors py-1">
+<span class="material-symbols-outlined text-lg">manage_accounts</span>
+<span>Profile &amp; Switcher</span>
+</button>
+</div>
+</div>
+</div>
+</aside>
+<!-- ========================================== -->
+<!-- MAIN APPLICATION CANVAS WRAPPER -->
+<!-- ========================================== -->
+<div class="md:pl-64 flex flex-col min-h-screen">
+<!-- ========================================== -->
+<!-- TOP NAVIGATION BAR (Shared Component Spec) -->
+<!-- ========================================== -->
+<header class="docked full-width top sticky top-0 z-30 flex items-center justify-between h-14 px-space-lg w-full bg-surface-container/80 dark:bg-surface-container-low/80 backdrop-blur-md">
+<!-- Left Breadcrumb & Context Search Trigger -->
+<div class="flex items-center gap-space-md">
+<!-- Mobile Drawer Toggle -->
+<button class="md:hidden p-1.5 rounded-lg text-on-surface hover:bg-surface-variant/40" onclick="alert('Navigation Drawer Toggle')">
+<span class="material-symbols-outlined text-xl">menu</span>
+</button>
+<!-- Breadcrumb Hierarchy -->
+<div class="hidden sm:flex items-center gap-space-xs text-body-sm font-body-sm text-on-surface-variant">
+<span class="text-on-surface-variant/80 hover:text-on-surface cursor-pointer transition-colors">Computer Science Dept</span>
+<span class="text-outline text-xs">/</span>
+<span class="text-on-surface-variant/80 hover:text-on-surface cursor-pointer transition-colors">Capstone 2025</span>
+<span class="text-outline text-xs">/</span>
+<span class="text-on-surface dark:text-on-surface font-headline-sm flex items-center gap-space-xs">
+<span>Autonomous Drone Fleet</span>
+<span class="px-1.5 py-0.5 rounded text-[11px] font-code-sm bg-primary-container/20 text-primary border border-primary/30">CS-492</span>
+</span>
+</div>
+<!-- Global Search / Command Bar Trigger -->
+<button class="hidden lg:flex items-center justify-between gap-space-md px-space-md py-1.5 bg-surface-container-highest/60 hover:bg-surface-container-highest border border-outline-variant/30 rounded-lg text-body-sm text-outline hover:text-on-surface transition-all w-64 shadow-inner" onclick="toggleCommandPalette()">
+<span class="flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-base">search</span>
+<span>Search or command...</span>
+</span>
+<kbd class="font-code-sm text-[10px] bg-surface-variant px-1.5 py-0.5 rounded border border-outline-variant/40 text-on-surface-variant">⌘K</kbd>
+</button>
+</div>
+<!-- Right Action Cluster & Role Switcher -->
+<div class="flex items-center gap-space-md">
+<!-- Role View Switcher Segment -->
+<div class="hidden md:flex items-center p-0.5 bg-surface-container-highest/70 rounded-lg border border-outline-variant/30">
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded-md bg-primary-container text-on-primary shadow-xs">
+            🎓 Student View
+          </button>
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded-md text-on-surface-variant hover:text-on-surface transition-colors" onclick="switchRole('Faculty')">
+            👨‍🏫 Faculty Advisor
+          </button>
+<button class="px-2.5 py-1 text-label-sm font-label-sm rounded-md text-on-surface-variant hover:text-on-surface transition-colors" onclick="switchRole('Admin')">
+            🏛️ Dept Admin
+          </button>
+</div>
+<!-- Interactive Theme Switcher Dropdown / Segmented Control -->
+<div class="flex items-center p-0.5 bg-surface-container-high rounded-lg border border-outline-variant/30 text-on-surface-variant" title="Theme Selector">
+<button class="p-1 rounded hover:text-on-surface transition-colors" id="themeBtnLight" onclick="setTheme('light')" title="Light Theme">
+<span class="material-symbols-outlined text-sm">light_mode</span>
+</button>
+<button class="p-1 rounded bg-surface-variant text-primary shadow-xs transition-colors" id="themeBtnDark" onclick="setTheme('dark')" title="Dark Theme">
+<span class="material-symbols-outlined text-sm">dark_mode</span>
+</button>
+<button class="p-1 rounded hover:text-on-surface transition-colors" id="themeBtnSystem" onclick="setTheme('system')" title="System Match">
+<span class="material-symbols-outlined text-sm">desktop_windows</span>
+</button>
+</div>
+<!-- Notification Bell with Active Badge -->
+<div class="relative">
+<button class="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-variant/40 rounded-lg transition-colors relative" onclick="toggleNotificationToast()">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-1 right-1 w-2 h-2 bg-error rounded-full ring-2 ring-surface-container"></span>
+</button>
+</div>
+<!-- Primary Action: Create Deliverable -->
+<button class="hidden sm:flex items-center gap-space-xs bg-primary-container text-on-primary font-headline-sm text-body-sm px-space-md py-1.5 rounded-lg hover:brightness-105 active:scale-[0.98] transition-all" onclick="openModal('deliverableModal')">
+<span class="material-symbols-outlined text-base">add</span>
+<span>Create Deliverable</span>
+</button>
+<!-- User Profile Avatar Pill -->
+<div class="flex items-center gap-space-sm pl-space-xs border-l border-outline-variant/30">
+<div class="relative">
+<img class="w-8 h-8 rounded-full object-cover border border-primary/40" data-alt="A clean portrait photo of a senior engineering student Alex Rivera with glasses wearing a dark tech hoodie in a modern academic computer vision lab. Soft cinematic lighting with blue rim light against dark computational screens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7yorrAl4r_TRoUW0TuYJxMoOO63qiYUKiWcFNYVz8RqhHc2Ibg78ciw_BfhQyvM5QVZyZpQIQZqSrYRS_9KnsNQTKoBFD68a2345cB0aAGIIzDvZMbMU5Km0vWKgKLcuyaZhPPySf_GMapyj-pSlG-JcmuB3dj6730ZUM8UI7a-4gPRHsHMw2JrBIskgey-q6ti4fH4ADs_inczoh_Ojc8KFDLLWfNIvoWOg9DLwZiIGrQ0uyUqXJ_Q">
+<span class="absolute bottom-0 right-0 w-2.5 h-2.5 bg-tertiary rounded-full ring-2 ring-surface"></span>
+</div>
+<div class="hidden xl:block text-left leading-tight">
+<div class="text-label-md font-label-md text-on-surface">Alex Rivera</div>
+<div class="text-[11px] font-label-sm text-outline">Lead Engineer (Senior)</div>
+</div>
+</div>
+</div>
+</header>
+<!-- ========================================== -->
+<!-- MAIN WORKSPACE CONTENT CONTAINER -->
+<!-- ========================================== -->
+<main class="flex-1 p-space-lg lg:p-space-2xl max-w-[1520px] w-full mx-auto space-y-space-xl">
+<!-- 1. HERO CONTEXT BANNER -->
+<section class="p-space-xl rounded-xl bg-surface-container-high/60 border border-outline-variant/30 relative overflow-hidden backdrop-blur-sm">
+<div class="absolute -right-20 -top-20 w-80 h-80 bg-primary-container/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="absolute right-40 bottom-[-50px] w-64 h-64 bg-secondary-container/10 rounded-full blur-2xl pointer-events-none"></div>
+<div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-space-lg">
+<div>
+<div class="flex items-center gap-space-sm mb-space-xs">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-tertiary-container/30 text-tertiary border border-tertiary/20">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary animate-pulse"></span>
+                Sprint 4 Active: Flight Validation
+              </span>
+<span class="text-outline text-label-sm">•</span>
+<span class="text-label-sm font-label-sm text-on-surface-variant flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">event</span>
+                Milestone 3 Defense: May 18 (4 days left)
+              </span>
+</div>
+<h1 class="text-headline-lg lg:text-headline-xl font-headline-xl text-on-surface tracking-tight">
+              Good morning, Alex 👋
+            </h1>
+<p class="text-body-md font-body-md text-on-surface-variant mt-1 max-w-2xl">
+              Chapter 3 flight telemetry report requires advisor revision. 2 peer evaluations are awaiting signature before Thursday's milestone defense.
+            </p>
+</div>
+<!-- Quick Metric Highlights / CTA Buttons -->
+<div class="flex flex-wrap items-center gap-space-sm">
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-surface-container-highest text-on-surface border border-outline-variant/40 hover:bg-surface-variant transition-colors text-body-sm font-headline-sm" onclick="openModal('reviewModal')">
+<span class="material-symbols-outlined text-amber-400 text-base">priority_high</span>
+<span>View Faculty Review (1)</span>
+</button>
+<button class="flex items-center gap-space-xs px-space-md py-2 rounded-lg bg-primary text-on-primary font-headline-sm text-body-sm hover:brightness-105 transition-all shadow-sm">
+<span class="material-symbols-outlined text-base">upload_file</span>
+<span>Submit Chapter 3 Draft</span>
+</button>
+</div>
+</div>
+</section>
+<!-- 2. KPI METRIC CARDS (4-Column Bento Layout) -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
+<!-- Metric 1: Active Projects -->
+<div class="p-space-lg rounded-xl bg-surface-container border border-outline-variant/30 hover:border-outline-variant/60 transition-all">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="text-label-md font-label-md">Active Capstones</span>
+<span class="p-1 rounded bg-primary-container/10 text-primary">
+<span class="material-symbols-outlined text-lg">folder_shared</span>
+</span>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<div class="text-headline-xl font-headline-xl text-on-surface">4</div>
+<span class="text-label-sm font-label-sm text-tertiary flex items-center font-code-sm">
+<span class="material-symbols-outlined text-xs">trending_up</span> +12% velocity
+            </span>
+</div>
+<div class="mt-space-xs text-body-sm font-body-sm text-outline flex items-center justify-between">
+<span>2 On Track</span>
+<span>1 In Review</span>
+<span class="text-error">1 Close Due</span>
+</div>
+</div>
+<!-- Metric 2: Tasks Due This Week -->
+<div class="p-space-lg rounded-xl bg-surface-container border border-outline-variant/30 hover:border-outline-variant/60 transition-all">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="text-label-md font-label-md">Sprint Tasks Due</span>
+<span class="p-1 rounded bg-secondary-container/10 text-secondary">
+<span class="material-symbols-outlined text-lg">task_alt</span>
+</span>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<div class="text-headline-xl font-headline-xl text-on-surface">7 <span class="text-headline-sm text-outline font-normal">/ 18</span></div>
+<span class="text-label-sm font-label-sm px-2 py-0.5 rounded-full bg-error-container/30 text-error font-code-sm">
+              3 High Priority
+            </span>
+</div>
+<div class="mt-space-xs text-body-sm font-body-sm text-outline">
+            5 ready for sprint closeout Friday
+          </div>
+</div>
+<!-- Metric 3: Milestone Progress -->
+<div class="p-space-lg rounded-xl bg-surface-container border border-outline-variant/30 hover:border-outline-variant/60 transition-all">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="text-label-md font-label-md">Milestone 3 Flight v2</span>
+<span class="p-1 rounded bg-tertiary-container/10 text-tertiary">
+<span class="material-symbols-outlined text-lg">flight_takeoff</span>
+</span>
+</div>
+<div class="mt-space-sm flex items-baseline justify-between">
+<div class="text-headline-xl font-headline-xl text-on-surface">78%</div>
+<span class="text-label-sm font-label-sm text-tertiary font-code-sm flex items-center gap-0.5">
+<span class="material-symbols-outlined text-xs">check</span> Gate 2 Approved
+            </span>
+</div>
+<div class="mt-space-xs w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-tertiary h-1.5 rounded-full" style="width: 78%"></div>
+</div>
+</div>
+<!-- Metric 4: Faculty Advisory Status -->
+<div class="p-space-lg rounded-xl bg-surface-container border border-outline-variant/30 hover:border-outline-variant/60 transition-all">
+<div class="flex items-center justify-between text-on-surface-variant">
+<span class="text-label-md font-label-md">Faculty Feedback</span>
+<span class="p-1 rounded bg-error-container/20 text-error">
+<span class="material-symbols-outlined text-lg">forum</span>
+</span>
+</div>
+<div class="mt-space-sm">
+<div class="text-headline-sm font-headline-sm text-on-surface truncate">Changes Requested</div>
+<div class="text-label-sm font-label-sm text-outline mt-0.5">Dr. Eleanor Vance (Robotics)</div>
+</div>
+<div class="mt-space-xs flex items-center justify-between">
+<span class="text-label-sm font-code-sm text-error">Telemetry Ch.3</span>
+<button class="text-label-sm text-primary hover:underline font-code-sm" onclick="openModal('reviewModal')">Review (3 comments) ›</button>
+</div>
+</div>
+</section>
+<!-- 3. PROJECT WORKSPACE TABS & METADATA BAR -->
+<section class="space-y-space-md">
+<!-- Interactive Workspace Sub-Nav Tab Group -->
+<div class="flex items-center justify-between border-b border-outline-variant/30 pb-0 overflow-x-auto">
+<div class="flex items-center gap-space-lg min-w-max">
+<button class="pb-3 border-b-2 border-primary text-on-surface font-headline-sm text-body-md flex items-center gap-space-xs">
+<span class="material-symbols-outlined text-base text-primary">space_dashboard</span>
+<span>Overview &amp; Health</span>
+</button>
+<button class="pb-3 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-headline-sm text-body-md flex items-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-base">view_kanban</span>
+<span>Kanban Board</span>
+<span class="text-label-sm bg-surface-container-high px-1.5 py-0.2 rounded text-outline">18</span>
+</button>
+<button class="pb-3 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-headline-sm text-body-md flex items-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-base">timeline</span>
+<span>Milestones Roadmap</span>
+</button>
+<button class="pb-3 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-headline-sm text-body-md flex items-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-base">fact_check</span>
+<span>Faculty Review Queue</span>
+<span class="w-2 h-2 rounded-full bg-error"></span>
+</button>
+<button class="pb-3 border-b-2 border-transparent text-on-surface-variant hover:text-on-surface font-headline-sm text-body-md flex items-center gap-space-xs transition-colors">
+<span class="material-symbols-outlined text-base">folder_open</span>
+<span>Documents &amp; Submissions</span>
+</button>
+</div>
+<div class="hidden lg:flex items-center gap-space-sm pb-2">
+<span class="text-label-sm font-label-sm text-outline">Project Health:</span>
+<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-label-sm font-label-sm bg-tertiary-container/30 text-tertiary border border-tertiary/20">
+<span class="material-symbols-outlined text-xs">check_circle</span> On Track
+            </span>
+</div>
+</div>
+<!-- Capstone Detailed Meta Header Card -->
+<div class="p-space-lg rounded-xl bg-surface-container border border-outline-variant/30 flex flex-col md:flex-row md:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<div class="p-3 rounded-lg bg-surface-container-high text-primary border border-outline-variant/30">
+<span class="material-symbols-outlined text-2xl">precision_manufacturing</span>
+</div>
+<div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<h2 class="text-headline-md font-headline-md text-on-surface">Autonomous Drone Fleet for Search &amp; Rescue</h2>
+<span class="px-2 py-0.5 rounded bg-surface-variant text-on-surface text-label-sm font-code-sm">CS-492 / SENIOR CAPSTONE</span>
+<span class="px-2 py-0.5 rounded bg-secondary-container/20 text-secondary text-label-sm font-code-sm">ROS 2 • PX4 • PyTorch</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant mt-1">
+                Distributed multi-agent path finding and decentralized thermal imaging sensor fusion for real-time mountain survivor triangulation.
+              </p>
+</div>
+</div>
+<div class="flex items-center gap-space-lg border-t md:border-t-0 md:border-l border-outline-variant/30 pt-space-sm md:pt-0 md:pl-space-lg">
+<div>
+<div class="text-label-sm font-label-sm text-outline">Lead Faculty Advisor</div>
+<div class="text-body-sm font-body-sm text-on-surface font-medium flex items-center gap-1.5 mt-0.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span>Dr. Eleanor Vance</span>
+</div>
+<div class="text-label-sm text-outline">Robotics &amp; Perception Lab</div>
+</div>
+<div>
+<div class="text-label-sm font-label-sm text-outline">Repository Sync</div>
+<div class="text-body-sm font-body-sm text-on-surface font-code-sm flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-sm text-outline">commit</span>
+<span>main: <span class="text-secondary">b4e892c</span></span>
+</div>
+<div class="text-label-sm text-outline">Synced 14m ago</div>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. MILESTONES STEPPER & TIMELINE -->
+<section class="p-space-lg rounded-xl bg-surface-container border border-outline-variant/30">
+<div class="flex items-center justify-between mb-space-lg">
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Capstone Milestone Roadmap (Academic Year 2024-2025)</h3>
+<p class="text-body-sm font-body-sm text-outline">Accredited ABET Milestones with Faculty Sign-Off Gates</p>
+</div>
+<button class="text-body-sm font-label-md text-primary hover:underline flex items-center gap-1">
+<span>View Full Rubric</span>
+<span class="material-symbols-outlined text-sm">open_in_new</span>
+</button>
+</div>
+<!-- Multi-node Stepper -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-space-sm relative">
+<!-- Node 1: Completed -->
+<div class="p-space-md rounded-lg bg-surface-container-high/40 border border-outline-variant/30 relative">
+<div class="flex items-center justify-between mb-1.5">
+<span class="w-6 h-6 rounded-full bg-tertiary-container/40 text-tertiary flex items-center justify-center text-xs font-bold">
+<span class="material-symbols-outlined text-sm">check</span>
+</span>
+<span class="text-label-sm font-code-sm text-tertiary">Grade: A (96)</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface">M1: Proposal &amp; Ethics</div>
+<div class="text-label-sm font-label-sm text-outline mt-0.5">Approved Oct 12</div>
+</div>
+<!-- Node 2: Completed -->
+<div class="p-space-md rounded-lg bg-surface-container-high/40 border border-outline-variant/30 relative">
+<div class="flex items-center justify-between mb-1.5">
+<span class="w-6 h-6 rounded-full bg-tertiary-container/40 text-tertiary flex items-center justify-center text-xs font-bold">
+<span class="material-symbols-outlined text-sm">check</span>
+</span>
+<span class="text-label-sm font-code-sm text-tertiary">Grade: A- (91)</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface">M2: Hardware Arch v1</div>
+<div class="text-label-sm font-label-sm text-outline mt-0.5">Approved Dec 04</div>
+</div>
+<!-- Node 3: In Progress (Active) -->
+<div class="p-space-md rounded-lg bg-primary-container/10 border-2 border-primary/50 relative shadow-sm">
+<div class="flex items-center justify-between mb-1.5">
+<span class="w-6 h-6 rounded-full bg-primary-container text-on-primary flex items-center justify-center text-xs font-bold">
+                3
+              </span>
+<span class="text-label-sm font-code-sm text-primary animate-pulse">In Progress (78%)</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface">M3: Autonomous Flight</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant mt-0.5 font-medium">Due May 18 (4d)</div>
+</div>
+<!-- Node 4: Next -->
+<div class="p-space-md rounded-lg bg-surface-container-high/20 border border-outline-variant/20 opacity-80">
+<div class="flex items-center justify-between mb-1.5">
+<span class="w-6 h-6 rounded-full bg-surface-variant text-outline flex items-center justify-center text-xs font-bold">
+                4
+              </span>
+<span class="text-label-sm font-code-sm text-outline">Upcoming</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface-variant">M4: Field Triangulation</div>
+<div class="text-label-sm font-label-sm text-outline mt-0.5">Target: May 29</div>
+</div>
+<!-- Node 5: Upcoming -->
+<div class="p-space-md rounded-lg bg-surface-container-high/20 border border-outline-variant/20 opacity-80">
+<div class="flex items-center justify-between mb-1.5">
+<span class="w-6 h-6 rounded-full bg-surface-variant text-outline flex items-center justify-center text-xs font-bold">
+                5
+              </span>
+<span class="text-label-sm font-code-sm text-outline">Upcoming</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface-variant">M5: Thesis Paper Draft</div>
+<div class="text-label-sm font-label-sm text-outline mt-0.5">Target: June 05</div>
+</div>
+<!-- Node 6: Final Defense -->
+<div class="p-space-md rounded-lg bg-surface-container-high/20 border border-outline-variant/20 opacity-80">
+<div class="flex items-center justify-between mb-1.5">
+<span class="w-6 h-6 rounded-full bg-surface-variant text-outline flex items-center justify-center text-xs font-bold">
+<span class="material-symbols-outlined text-xs">school</span>
+</span>
+<span class="text-label-sm font-code-sm text-outline">Defense</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface-variant">Final ABET Defense</div>
+<div class="text-label-sm font-label-sm text-outline mt-0.5">Oral Jury: June 12</div>
+</div>
+</div>
+</section>
+<!-- 5. TWO-COLUMN BENTO: SPRINT KANBAN + FACULTY REVIEW ACTION PANE -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg">
+<!-- Left 8 Cols: Interactive Kanban Board Preview -->
+<section class="lg:col-span-8 space-y-space-md">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<h3 class="text-headline-sm font-headline-sm text-on-surface">Sprint 4 Kanban Board</h3>
+<span class="text-label-sm bg-surface-variant text-outline px-2 py-0.5 rounded font-code-sm">18 Tasks</span>
+</div>
+<div class="flex items-center gap-space-sm">
+<button class="p-1 rounded bg-surface-container-high text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-base">filter_list</span>
+</button>
+<button class="p-1 rounded bg-surface-container-high text-outline hover:text-on-surface">
+<span class="material-symbols-outlined text-base">group</span>
+</button>
+<button class="text-label-sm font-label-md text-primary bg-primary-container/20 px-2 py-1 rounded hover:bg-primary-container/30 transition-colors" onclick="openModal('deliverableModal')">
+                + Add Task
+              </button>
+</div>
+</div>
+<!-- Kanban Columns Grid -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md">
+<!-- Column 1: In Progress -->
+<div class="p-space-sm rounded-xl bg-surface-container-low/70 border border-outline-variant/30 flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-1 py-1">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span>
+<span class="text-label-md font-label-md text-on-surface">In Progress</span>
+</div>
+<span class="text-label-sm font-code-sm text-outline">3</span>
+</div>
+<!-- Task Card 1 -->
+<div class="p-space-md rounded-lg bg-surface-container border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer shadow-xs space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-[10px] uppercase tracking-wider font-code-sm px-1.5 py-0.5 rounded bg-error-container/30 text-error">High Priority</span>
+<span class="material-symbols-outlined text-outline text-sm">more_horiz</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface">
+                  Calibrate LiDAR point-cloud drift compensation
+                </div>
+<div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 text-label-sm text-outline">
+<span class="flex items-center gap-1 font-code-sm">
+<span class="material-symbols-outlined text-xs">checklist</span> 3/4
+                  </span>
+<div class="flex items-center gap-1">
+<span class="w-5 h-5 rounded-full bg-primary-container text-on-primary text-[10px] flex items-center justify-center font-bold">AR</span>
+<span class="text-[11px] font-code-sm text-on-surface-variant">Alex</span>
+</div>
+</div>
+</div>
+<!-- Task Card 2 -->
+<div class="p-space-md rounded-lg bg-surface-container border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer shadow-xs space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-[10px] uppercase tracking-wider font-code-sm px-1.5 py-0.5 rounded bg-secondary-container/20 text-secondary">Firmware</span>
+<span class="text-[11px] font-code-sm text-outline">Due Tomorrow</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface">
+                  PX4 Companion Computer UART Bridge stress test
+                </div>
+<div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 text-label-sm text-outline">
+<span class="flex items-center gap-1 font-code-sm">
+<span class="material-symbols-outlined text-xs">attachment</span> 2 files
+                  </span>
+<div class="flex items-center gap-1">
+<span class="w-5 h-5 rounded-full bg-secondary-container text-on-secondary text-[10px] flex items-center justify-center font-bold">MC</span>
+<span class="text-[11px] font-code-sm text-on-surface-variant">Marcus</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 2: Faculty / Peer Review -->
+<div class="p-space-sm rounded-xl bg-surface-container-low/70 border border-outline-variant/30 flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-1 py-1">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-amber-400"></span>
+<span class="text-label-md font-label-md text-on-surface">Review Ready</span>
+</div>
+<span class="text-label-sm font-code-sm text-outline">2</span>
+</div>
+<!-- Task Card 3 (Action Required) -->
+<div class="p-space-md rounded-lg bg-surface-container border-2 border-amber-500/40 hover:border-amber-400 transition-all cursor-pointer shadow-xs space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-[10px] uppercase tracking-wider font-code-sm px-1.5 py-0.5 rounded bg-error-container/40 text-error">Revisions Needed</span>
+<span class="material-symbols-outlined text-amber-400 text-sm">chat_bubble</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface">
+                  Telemetry Validation Report (Chapter 3)
+                </div>
+<div class="text-label-sm text-on-surface-variant bg-surface-container-high p-1.5 rounded">
+                  "Need GPS denial simulation test runs plotted in Fig 3.2" - Dr. Vance
+                </div>
+<div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 text-label-sm text-outline">
+<span class="text-[11px] font-code-sm text-amber-400">Feedback Attached</span>
+<div class="flex items-center gap-1">
+<span class="w-5 h-5 rounded-full bg-tertiary-container text-tertiary text-[10px] flex items-center justify-center font-bold">PP</span>
+<span class="text-[11px] font-code-sm text-on-surface-variant">Priya</span>
+</div>
+</div>
+</div>
+<!-- Task Card 4 -->
+<div class="p-space-md rounded-lg bg-surface-container border border-outline-variant/30 hover:border-primary/50 transition-all cursor-pointer shadow-xs space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-[10px] uppercase tracking-wider font-code-sm px-1.5 py-0.5 rounded bg-surface-variant text-outline">Ethics</span>
+<span class="text-[11px] font-code-sm text-outline">Pending Co-Advisor</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface">
+                  FAA Part 107 Waiver &amp; Search Grid Protocol
+                </div>
+<div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 text-label-sm text-outline">
+<span class="flex items-center gap-1 font-code-sm">
+<span class="material-symbols-outlined text-xs">verified_user</span> Dr. Sato
+                  </span>
+<div class="flex items-center gap-1">
+<span class="w-5 h-5 rounded-full bg-outline-variant text-on-surface text-[10px] flex items-center justify-center font-bold">SG</span>
+<span class="text-[11px] font-code-sm text-on-surface-variant">Sofia</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Column 3: Completed / Approved -->
+<div class="p-space-sm rounded-xl bg-surface-container-low/70 border border-outline-variant/30 flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-1 py-1">
+<div class="flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span>
+<span class="text-label-md font-label-md text-on-surface">Signed Off</span>
+</div>
+<span class="text-label-sm font-code-sm text-outline">13</span>
+</div>
+<!-- Completed Card -->
+<div class="p-space-md rounded-lg bg-surface-container/60 border border-outline-variant/20 opacity-80 space-y-space-sm">
+<div class="flex items-center justify-between">
+<span class="text-[10px] uppercase tracking-wider font-code-sm px-1.5 py-0.5 rounded bg-tertiary-container/30 text-tertiary">Gate Passed</span>
+<span class="material-symbols-outlined text-tertiary text-sm">done_all</span>
+</div>
+<div class="text-body-sm font-headline-sm text-on-surface line-through text-outline">
+                  Thermal Sensor Payload PCB Gerber Fabrication
+                </div>
+<div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 text-label-sm text-outline font-code-sm text-[11px]">
+<span>Signed by Vance (May 08)</span>
+<span class="text-tertiary">100%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Right 4 Cols: Faculty Review Note & Team Contribution -->
+<section class="lg:col-span-4 space-y-space-md">
+<!-- Faculty Advisory Feedback Box -->
+<div class="p-space-lg rounded-xl bg-surface-container border border-outline-variant/30 relative">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="p-1 rounded bg-amber-400/10 text-amber-400">
+<span class="material-symbols-outlined text-base">rate_review</span>
+</span>
+<span class="text-headline-sm font-headline-sm text-on-surface">Faculty Feedback</span>
+</div>
+<span class="text-label-sm font-code-sm text-error bg-error-container/20 px-2 py-0.5 rounded">Action Due</span>
+</div>
+<!-- Reviewer Bio -->
+<div class="flex items-center gap-space-sm pb-space-sm border-b border-outline-variant/20">
+<img class="w-10 h-10 rounded-full object-cover border border-outline-variant" data-alt="Professional academic headshot of Dr. Eleanor Vance, senior woman robotics faculty professor with silver hair and smart blazer in front of university laboratory bookshelf." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA-gJyg9cTva_ILJ2B766rG_q6UkdfIp2jaZObf2U0VCuWQA_ksODzK6wW6wJGsRr7-jhmyvhV2yNSE-S17fgFOXxmLkJ1ZVUfazsWeKP4L8nCjFl3z5EC1JPIN61W7Nsfsuop2nAZmFTQgKtNQTOZTzybRc8G3hEMfHF6cJ1wXGSf4xgPXF8DqdOvYDPwRKXuMFG3JJrqajJQeiFEgHGQZ8Eb-2Cpxds9kRccwsM3MaDKZCEJ2mzZSHg">
+<div>
+<div class="text-label-md font-label-md text-on-surface">Dr. Eleanor Vance</div>
+<div class="text-label-sm font-label-sm text-outline">Primary Capstone Advisor • Robotics</div>
+</div>
+</div>
+<!-- Feedback Details -->
+<div class="py-space-sm space-y-space-xs">
+<div class="text-label-md font-label-md text-on-surface font-semibold">
+                Revision Note on Deliverable: "Telemetry Validation (Ch. 3)"
+              </div>
+<p class="text-body-sm font-body-sm text-on-surface-variant bg-surface-container-high/70 p-space-sm rounded-lg border border-outline-variant/20 italic">
+                "Alex and team: Section 3.4 lacks empirical comparison between EKF and UKF state estimates under simulated magnetic interference. Update figure 3.2 and re-upload before Thursday's defense meeting."
+              </p>
+</div>
+<!-- Action Buttons -->
+<div class="grid grid-cols-2 gap-space-xs pt-space-xs">
+<button class="py-2 px-space-xs text-center rounded-lg bg-surface-variant text-on-surface font-label-md text-label-md hover:bg-surface-container-highest transition-colors" onclick="openModal('reviewModal')">
+                Annotated PDF (8)
+              </button>
+<button class="py-2 px-space-xs text-center rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:brightness-105 transition-colors" onclick="openModal('deliverableModal')">
+                Submit Revised Draft
+              </button>
+</div>
+</div>
+<!-- Team Contribution & Workload Distribution Matrix -->
+<div class="p-space-lg rounded-xl bg-surface-container border border-outline-variant/30">
+<div class="flex items-center justify-between mb-space-sm">
+<div class="flex items-center gap-space-xs">
+<span class="p-1 rounded bg-secondary-container/10 text-secondary">
+<span class="material-symbols-outlined text-base">diversity_3</span>
+</span>
+<span class="text-headline-sm font-headline-sm text-on-surface">Sprint Contribution</span>
+</div>
+<span class="text-label-sm font-code-sm text-outline">4 Engineers</span>
+</div>
+<div class="space-y-space-sm pt-space-xs">
+<!-- Alex -->
+<div>
+<div class="flex items-center justify-between text-body-sm font-body-sm mb-1">
+<span class="font-medium text-on-surface flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-primary"></span> Alex Rivera (Lead)
+                  </span>
+<span class="font-code-sm text-on-surface">38% • 42 commits</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 38%"></div>
+</div>
+</div>
+<!-- Priya -->
+<div>
+<div class="flex items-center justify-between text-body-sm font-body-sm mb-1">
+<span class="font-medium text-on-surface flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Priya Patel (Thermal AI)
+                  </span>
+<span class="font-code-sm text-on-surface">27% • 29 commits</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-tertiary h-1.5 rounded-full" style="width: 27%"></div>
+</div>
+</div>
+<!-- Marcus -->
+<div>
+<div class="flex items-center justify-between text-body-sm font-body-sm mb-1">
+<span class="font-medium text-on-surface flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary"></span> Marcus Chen (Embedded)
+                  </span>
+<span class="font-code-sm text-on-surface">20% • 21 commits</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 20%"></div>
+</div>
+</div>
+<!-- Sofia -->
+<div>
+<div class="flex items-center justify-between text-body-sm font-body-sm mb-1">
+<span class="font-medium text-on-surface flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-outline"></span> Sofia Gomez (Telemetry)
+                  </span>
+<span class="font-code-sm text-on-surface">15% • 14 commits</span>
+</div>
+<div class="w-full bg-surface-container-highest rounded-full h-1.5 overflow-hidden">
+<div class="bg-outline h-1.5 rounded-full" style="width: 15%"></div>
+</div>
+</div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-outline-variant/20 flex items-center justify-between text-label-sm text-outline">
+<span>Sprint Velocity: <strong>48 pts</strong></span>
+<a class="text-primary hover:underline" href="#">View Git Analytics ›</a>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Global App Footer -->
+<footer class="mt-auto px-space-lg py-space-md border-t border-outline-variant/30 text-label-sm text-outline flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-md">
+<span>© 2025 ProjectHub Academic Systems</span>
+<span>•</span>
+<span>ABET &amp; IEEE Compliant Project Management</span>
+</div>
+<div class="flex items-center gap-space-md font-code-sm">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-tertiary"></span> System Online (Cluster us-east-1)</span>
+<span>v2.8.4-academic</span>
+</div>
+</footer>
+</div>
+<!-- ========================================== -->
+<!-- MODAL 1: COMMAND PALETTE (⌘K Overlay) -->
+<!-- ========================================== -->
+<div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-start justify-center pt-24 px-4" id="commandPalette">
+<div class="bg-surface-container-high border border-outline-variant/40 rounded-xl w-full max-w-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+<!-- Search Input Header -->
+<div class="p-space-md border-b border-outline-variant/30 flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline text-xl">search</span>
+<input class="w-full bg-transparent border-0 text-on-surface placeholder:text-outline focus:ring-0 text-body-md font-body-md" id="cmdInput" placeholder="Type a command or search projects, tasks, citations..." type="text">
+<kbd class="font-code-sm text-[11px] bg-surface-variant px-1.5 py-0.5 rounded text-outline border border-outline-variant/40">ESC</kbd>
+</div>
+<!-- Quick Results List -->
+<div class="p-space-sm max-h-96 overflow-y-auto space-y-space-xs">
+<div class="px-space-md py-1 text-label-sm font-label-sm text-outline uppercase tracking-wider">Quick Actions</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg hover:bg-surface-variant cursor-pointer text-on-surface" onclick="openModal('deliverableModal'); toggleCommandPalette();">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-primary text-lg">add_circle</span>
+<span class="text-body-sm font-headline-sm">Create New Deliverable or Task</span>
+</div>
+<span class="font-code-sm text-label-sm text-outline">N D</span>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg hover:bg-surface-variant cursor-pointer text-on-surface" onclick="openModal('reviewModal'); toggleCommandPalette();">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-amber-400 text-lg">rate_review</span>
+<span class="text-body-sm font-headline-sm">Open Faculty Review Annotations</span>
+</div>
+<span class="font-code-sm text-label-sm text-outline">G R</span>
+</div>
+<div class="px-space-md py-1 text-label-sm font-label-sm text-outline uppercase tracking-wider mt-2">Projects in Apex Lab</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg bg-surface-variant/40 hover:bg-surface-variant cursor-pointer text-on-surface">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-lg">precision_manufacturing</span>
+<div>
+<div class="text-body-sm font-headline-sm">Autonomous Drone Fleet for Search &amp; Rescue</div>
+<div class="text-label-sm text-outline">CS-492 • Active Milestone 3</div>
+</div>
+</div>
+<span class="text-tertiary text-label-sm font-code-sm">Current Active</span>
+</div>
+<div class="flex items-center justify-between p-space-sm rounded-lg hover:bg-surface-variant cursor-pointer text-on-surface">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-outline text-lg">monitor_heart</span>
+<div>
+<div class="text-body-sm font-headline-sm">Neural ECG Realtime Arrhythmia Diagnostics</div>
+<div class="text-label-sm text-outline">BME-501 • Dr. K. Sato</div>
+</div>
+</div>
+<span class="text-outline text-label-sm font-code-sm">Switch Project</span>
+</div>
+</div>
+<div class="p-space-xs bg-surface-container-highest/60 border-t border-outline-variant/30 flex items-center justify-between text-[11px] text-outline px-space-md">
+<span>Navigation: <kbd class="font-code-sm">↑</kbd> <kbd class="font-code-sm">↓</kbd> to select</span>
+<span>Press <kbd class="font-code-sm">Enter</kbd> to run</span>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- MODAL 2: CREATE DELIVERABLE / TASK MODAL -->
+<!-- ========================================== -->
+<div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4" id="deliverableModal">
+<div class="bg-surface-container rounded-xl border border-outline-variant/40 w-full max-w-xl shadow-2xl overflow-hidden">
+<!-- Modal Header -->
+<div class="p-space-lg border-b border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-space-sm">
+<div class="p-1.5 rounded-lg bg-primary-container text-on-primary">
+<span class="material-symbols-outlined text-lg">upload_file</span>
+</div>
+<div>
+<h3 class="text-headline-sm font-headline-sm text-on-surface">New Milestone Deliverable</h3>
+<p class="text-body-sm font-body-sm text-outline">CS-492 Autonomous Drone Fleet • Milestone 3</p>
+</div>
+</div>
+<button class="text-outline hover:text-on-surface p-1 rounded" onclick="closeModal('deliverableModal')">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<!-- Form Body -->
+<form class="p-space-lg space-y-space-md" onsubmit="handleDeliverableSubmit(event)">
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-1">Deliverable Title *</label>
+<input class="w-full rounded-lg bg-surface-container-high border border-outline-variant/40 text-on-surface text-body-sm p-space-sm focus:border-primary focus:ring-1 focus:ring-primary" required="" type="text" value="Telemetry Validation Chapter 3 (Revised Draft)">
+</div>
+<div class="grid grid-cols-2 gap-space-md">
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-1">Target Milestone</label>
+<select class="w-full rounded-lg bg-surface-container-high border border-outline-variant/40 text-on-surface text-body-sm p-space-sm">
+<option selected="">Milestone 3: Autonomous Flight (May 18)</option>
+<option>Milestone 4: Field Triangulation (May 29)</option>
+<option>Milestone 5: Thesis Final (June 05)</option>
+</select>
+</div>
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-1">Assigned Lead</label>
+<select class="w-full rounded-lg bg-surface-container-high border border-outline-variant/40 text-on-surface text-body-sm p-space-sm">
+<option selected="">Alex Rivera (Lead)</option>
+<option>Priya Patel</option>
+<option>Marcus Chen</option>
+<option>Sofia Gomez</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block text-label-md font-label-md text-on-surface mb-1">Submission Notes &amp; Defense Commit Hash</label>
+<textarea class="w-full rounded-lg bg-surface-container-high border border-outline-variant/40 text-on-surface text-body-sm p-space-sm focus:border-primary focus:ring-1 focus:ring-primary" placeholder="Reference commits or explain changes requested by Dr. Vance..." rows="3">Includes updated Extended Kalman Filter covariance curves against magnetic anomalies (Section 3.4.2 revision).</textarea>
+</div>
+<!-- File Upload Drag Zone -->
+<div class="border-2 border-dashed border-outline-variant/40 rounded-lg p-space-md text-center hover:border-primary/50 transition-colors cursor-pointer bg-surface-container-low/40">
+<span class="material-symbols-outlined text-2xl text-outline mb-1">cloud_upload</span>
+<div class="text-body-sm text-on-surface font-medium">Click to attach PDF / CAD / Notebook files</div>
+<div class="text-label-sm text-outline">IEEE format accepted up to 50MB</div>
+</div>
+<!-- Actions -->
+<div class="flex items-center justify-end gap-space-sm pt-space-xs border-t border-outline-variant/30">
+<button class="px-space-md py-2 rounded-lg bg-surface-variant text-on-surface text-body-sm font-label-md hover:bg-surface-container-highest" onclick="closeModal('deliverableModal')" type="button">
+            Cancel
+          </button>
+<button class="px-space-md py-2 rounded-lg bg-primary-container text-on-primary text-body-sm font-headline-sm hover:brightness-105 shadow-sm" type="submit">
+            Upload &amp; Notify Advisor
+          </button>
+</div>
+</form>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- MODAL 3: FACULTY ANNOTATED REVIEW VIEWER -->
+<!-- ========================================== -->
+<div class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4" id="reviewModal">
+<div class="bg-surface-container rounded-xl border border-outline-variant/40 w-full max-w-3xl shadow-2xl overflow-hidden flex flex-col max-h-[921px]">
+<div class="p-space-lg border-b border-outline-variant/30 flex items-center justify-between">
+<div>
+<span class="text-label-sm font-code-sm text-error bg-error-container/30 px-2 py-0.5 rounded">Action Required</span>
+<h3 class="text-headline-sm font-headline-sm text-on-surface mt-1">Advisor Review: Telemetry Validation (Ch. 3)</h3>
+<p class="text-body-sm font-body-sm text-outline">Reviewer: Dr. Eleanor Vance • Submitted May 10, 2025</p>
+</div>
+<button class="text-outline hover:text-on-surface p-1 rounded" onclick="closeModal('reviewModal')">
+<span class="material-symbols-outlined text-lg">close</span>
+</button>
+</div>
+<!-- Body / Comments -->
+<div class="p-space-lg overflow-y-auto space-y-space-md flex-1">
+<div class="p-space-md rounded-lg bg-surface-container-high border-l-4 border-amber-400 space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-label-md font-headline-sm text-on-surface">Annotation #1: Page 14, Fig 3.2</span>
+<span class="text-label-sm font-code-sm text-outline">Dr. Vance (11:42 AM)</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+            "Your magnetic sensor drift simulation assumes uniform noise. In field drone tests over iron-ore mountain ridges, the perturbation is non-Gaussian. Plot the UKF residual error."
+          </p>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-high border-l-4 border-tertiary space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-label-md font-headline-sm text-on-surface">Annotation #2: Page 22, Section 3.8</span>
+<span class="text-label-sm font-code-sm text-outline">Dr. Vance (11:58 AM)</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+            "Excellent latency numbers on the Jetson Orin Nano edge inference pipeline. 18.2ms per thermal frame is well within our 30fps budget."
+          </p>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-high border-l-4 border-amber-400 space-y-1">
+<div class="flex items-center justify-between">
+<span class="text-label-md font-headline-sm text-on-surface">Annotation #3: Safety Fail-Safe Rubric</span>
+<span class="text-label-sm font-code-sm text-outline">Dr. Kenji Sato (Co-Supervisor)</span>
+</div>
+<p class="text-body-sm font-body-sm text-on-surface-variant">
+            "Confirm that the geofence return-to-launch (RTL) trigger operates independently of the ROS 2 node tree in case of Linux kernel panic."
+          </p>
+</div>
+</div>
+<div class="p-space-md border-t border-outline-variant/30 bg-surface-container-low flex items-center justify-between">
+<span class="text-body-sm text-outline font-code-sm">Status: 2 comments unaddressed</span>
+<div class="flex items-center gap-space-sm">
+<button class="px-space-md py-1.5 rounded-lg bg-surface-variant text-on-surface text-body-sm font-label-md" onclick="closeModal('reviewModal')">Close</button>
+<button class="px-space-md py-1.5 rounded-lg bg-primary-container text-on-primary text-body-sm font-headline-sm" onclick="closeModal('reviewModal'); openModal('deliverableModal');">Upload Revision Draft</button>
+</div>
+</div>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- TOAST NOTIFICATION CONTAINER -->
+<!-- ========================================== -->
+<div class="fixed bottom-6 right-6 z-50 hidden transition-all" id="toastNotification">
+<div class="p-space-md rounded-xl bg-surface-container-highest border border-outline-variant/50 shadow-2xl text-on-surface flex items-center gap-space-sm max-w-md">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-base">notifications_active</span>
+</div>
+<div class="flex-1">
+<div class="text-label-md font-headline-sm text-on-surface">Milestone 3 Gate Sync</div>
+<div class="text-label-sm text-outline">Dr. Vance opened your revision draft. Defense scheduled for Thursday 2:00 PM.</div>
+</div>
+<button class="text-outline hover:text-on-surface" onclick="toggleNotificationToast()">
+<span class="material-symbols-outlined text-base">close</span>
+</button>
+</div>
+</div>
+<!-- ========================================== -->
+<!-- INLINE JAVASCRIPT CONTROLLERS -->
+<!-- ========================================== -->
+<script>
+    // 1. Live Dual Theme Switcher (Light / Dark / System)
+    function setTheme(theme) {
+      const html = document.documentElement;
+      const btnLight = document.getElementById('themeBtnLight');
+      const btnDark = document.getElementById('themeBtnDark');
+      const btnSystem = document.getElementById('themeBtnSystem');
+
+      // Reset active button styling
+      [btnLight, btnDark, btnSystem].forEach(b => {
+        if(b) {
+          b.classList.remove('bg-surface-variant', 'text-primary', 'shadow-xs');
+          b.classList.add('text-on-surface-variant');
+        }
+      });
+
+      if (theme === 'light') {
+        html.classList.remove('dark');
+        btnLight.classList.add('bg-surface-variant', 'text-primary', 'shadow-xs');
+        localStorage.setItem('projecthub-theme', 'light');
+      } else if (theme === 'dark') {
+        html.classList.add('dark');
+        btnDark.classList.add('bg-surface-variant', 'text-primary', 'shadow-xs');
+        localStorage.setItem('projecthub-theme', 'dark');
+      } else {
+        // System preference match
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) {
+          html.classList.add('dark');
+        } else {
+          html.classList.remove('dark');
+        }
+        btnSystem.classList.add('bg-surface-variant', 'text-primary', 'shadow-xs');
+        localStorage.setItem('projecthub-theme', 'system');
+      }
+    }
+
+    // Initialize Theme
+    (function initTheme() {
+      const saved = localStorage.getItem('projecthub-theme') || 'dark';
+      setTheme(saved);
+    })();
+
+    // 2. Command Palette Toggle (⌘K and Modal)
+    function toggleCommandPalette() {
+      const modal = document.getElementById('commandPalette');
+      const isHidden = modal.classList.contains('hidden');
+      if (isHidden) {
+        modal.classList.remove('hidden');
+        setTimeout(() => document.getElementById('cmdInput').focus(), 50);
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    // Keyboard shortcut handler for ⌘K and Escape
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        toggleCommandPalette();
+      }
+      if (e.key === 'Escape') {
+        document.getElementById('commandPalette').classList.add('hidden');
+        document.getElementById('deliverableModal').classList.add('hidden');
+        document.getElementById('reviewModal').classList.add('hidden');
+      }
+    });
+
+    // 3. General Modal Management
+    function openModal(modalId) {
+      document.getElementById(modalId).classList.remove('hidden');
+    }
+    function closeModal(modalId) {
+      document.getElementById(modalId).classList.add('hidden');
+    }
+
+    // 4. Role Perspective Switcher Simulation
+    function switchRole(roleName) {
+      alert('Switched to ' + roleName + ' perspective. Project views, gradebooks, and permissions reloaded.');
+    }
+
+    // 5. Toast Notification Toggle
+    function toggleNotificationToast() {
+      const toast = document.getElementById('toastNotification');
+      toast.classList.toggle('hidden');
+      if (!toast.classList.contains('hidden')) {
+        setTimeout(() => {
+          toast.classList.add('hidden');
+        }, 5000);
+      }
+    }
+
+    // 6. Deliverable Form Handler
+    function handleDeliverableSubmit(e) {
+      e.preventDefault();
+      closeModal('deliverableModal');
+      toggleNotificationToast();
+    }
+  </script>
+</body></html>

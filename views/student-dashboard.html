@@ -1,0 +1,1803 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Student Workspace - ProjectHub</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
+  <script src="/js/theme.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/js/toast.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#0f131c",
+            "surface-container-lowest": "#0a0e17",
+            "surface-container-low": "#181b25",
+            "surface-container": "#1c1f29",
+            "surface-container-high": "#262a34",
+            "surface-container-highest": "#31353f",
+            "on-surface": "#dfe2ef",
+            "on-surface-variant": "#c7c4d8",
+            "outline": "#918fa1",
+            "outline-variant": "#464555",
+            "primary": "#c3c0ff",
+            "on-primary": "#1d00a5",
+            "primary-container": "#4f46e5",
+            "on-primary-container": "#dad7ff",
+            "secondary": "#4cd7f6",
+            "secondary-container": "#03b5d3",
+            "tertiary": "#4edea3",
+            "error": "#ffb4ab",
+            "background": "#0f131c",
+            "on-background": "#dfe2ef"
+          },
+          fontFamily: {
+            headline: ["Geist", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(145, 143, 161, 0.2); border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen selection:bg-primary-container selection:text-on-primary">
+
+  <!-- ========================================== -->
+  <!-- SIDEBAR NAVIGATION (Strict Student Nav)   -->
+  <!-- ========================================== -->
+  <aside class="fixed top-0 left-0 h-screen w-64 border-r border-outline-variant/30 bg-surface-container-low hidden md:flex flex-col justify-between p-4 z-40">
+    <div class="flex flex-col gap-4">
+      <!-- Logo Branding -->
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2.5">
+          <div class="h-8 w-8 rounded-lg bg-primary-container flex items-center justify-center text-on-primary shadow-sm">
+            <span class="material-symbols-outlined text-lg filled">terminal</span>
+          </div>
+          <div>
+            <span class="font-headline font-bold tracking-tight text-on-surface">ProjectHub</span>
+            <span class="block text-[10px] text-outline uppercase tracking-wider">Student Workspace</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cohort Switcher / Active Workspace Badge -->
+      <div class="p-2.5 rounded-lg bg-surface-container-high/60 border border-outline-variant/30 flex items-center justify-between">
+        <div class="flex items-center gap-2 overflow-hidden">
+          <div class="w-6 h-6 rounded bg-primary-container/20 text-primary flex items-center justify-center text-xs font-mono font-bold">
+            ST
+          </div>
+          <div class="truncate">
+            <div id="sideCohortTitle" class="text-xs font-medium text-on-surface truncate">Apex Lab - Capstone</div>
+            <div id="sideDeptTitle" class="text-[10px] text-outline truncate">CS-492 Capstone 2025</div>
+          </div>
+        </div>
+        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary/10 text-primary border border-primary/20">STUDENT</span>
+      </div>
+
+      <!-- Primary Action Buttons: Create Project & Create Task -->
+      <div class="flex flex-col gap-2">
+        <button onclick="openModal('studentNewProjectModal')" class="w-full flex items-center justify-center gap-2 bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold py-2 px-3 rounded-lg transition-all shadow-sm">
+          <span class="material-symbols-outlined text-base">add_circle</span>
+          <span>New Project</span>
+        </button>
+        <button onclick="openModal('newTaskModal')" class="w-full flex items-center justify-center gap-2 bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/30 text-on-surface text-xs font-medium py-1.5 px-3 rounded-lg transition-all">
+          <span class="material-symbols-outlined text-base">add_task</span>
+          <span>Create Task</span>
+        </button>
+      </div>
+
+      <!-- Student Navigation Items:
+           Overview, My Projects, My Tasks, Milestones, Calendar, Documents, Team, Notifications, Profile, Settings, Logout -->
+      <nav class="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-360px)] pr-1">
+        <button onclick="switchTab('overview')" id="nav-overview" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-primary bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">dashboard</span>
+          <span>Overview</span>
+        </button>
+        <button onclick="switchTab('projects')" id="nav-projects" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">folder_open</span>
+          <span>My Projects</span>
+        </button>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          <span>My Tasks</span>
+        </button>
+        <button onclick="switchTab('milestones')" id="nav-milestones" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">flag</span>
+          <span>Milestones</span>
+        </button>
+        <button onclick="switchTab('calendar')" id="nav-calendar" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">calendar_today</span>
+          <span>Calendar</span>
+        </button>
+        <button onclick="switchTab('documents')" id="nav-documents" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">description</span>
+          <span>Documents</span>
+        </button>
+        <button onclick="switchTab('team')" id="nav-team" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">group</span>
+          <span>Team</span>
+        </button>
+        <button onclick="switchTab('notifications')" id="nav-notifications" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">notifications</span>
+          <span class="flex-1 text-left">Notifications</span>
+          <span id="notifBadge" class="w-2 h-2 rounded-full bg-primary hidden"></span>
+        </button>
+        <button onclick="switchTab('profile')" id="nav-profile" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">person</span>
+          <span>Profile</span>
+        </button>
+        <button onclick="switchTab('settings')" id="nav-settings" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">settings</span>
+          <span>Settings</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Student User Profile Strip & Logout -->
+    <div class="pt-3 border-t border-outline-variant/20 flex items-center justify-between">
+      <div class="flex items-center gap-2.5 overflow-hidden">
+        <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="w-8 h-8 rounded-full border border-primary/40 object-cover" alt="Avatar">
+        <div class="truncate">
+          <div id="userName" class="text-xs font-medium text-on-surface truncate">Alex Chen</div>
+          <div id="userRoleBadge" class="text-[10px] text-primary truncate">STUDENT</div>
+        </div>
+      </div>
+      <button onclick="handleLogout()" title="Logout" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-surface-container-high transition-colors">
+        <span class="material-symbols-outlined text-lg">logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- ========================================== -->
+  <!-- MAIN CONTENT AREA                          -->
+  <!-- ========================================== -->
+  <main class="md:ml-64 p-4 md:p-8 min-h-screen">
+    
+    <!-- Top Header Bar -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-outline-variant/20">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono text-outline">STUDENT WORKSPACE</span>
+          <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+          <span class="text-xs text-tertiary">MongoDB Atlas Active</span>
+        </div>
+        <h1 id="pageTitle" class="font-headline text-2xl font-bold text-on-surface tracking-tight mt-0.5">Overview</h1>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <button onclick="openModal('studentNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary font-medium text-xs hover:bg-indigo-600 transition-colors flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">add</span>
+          <span>New Project</span>
+        </button>
+        <!-- Faculty Mentor Direct Link -->
+        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs">
+          <span class="text-outline">Assigned Mentor:</span>
+          <span id="headerMentorName" class="font-medium text-secondary">Dr. Aris Thorne</span>
+        </div>
+        <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface hover:bg-surface-container transition-colors">
+          Logout
+        </button>
+      </div>
+    </header>
+
+    <!-- Alert / Status Banner -->
+    <div id="dashboardAlert" class="hidden mb-6 p-4 rounded-xl border flex items-center justify-between">
+      <div class="flex items-center gap-3 text-xs">
+        <span id="alertIcon" class="material-symbols-outlined text-base">info</span>
+        <span id="alertMessage">Notice message</span>
+      </div>
+      <button onclick="document.getElementById('dashboardAlert').classList.add('hidden')" class="text-outline hover:text-on-surface">
+        <span class="material-symbols-outlined text-sm">close</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: OVERVIEW -->
+    <section id="tab-overview" class="tab-pane space-y-6">
+      
+      <!-- Metrics Overview Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Active Projects</div>
+          <div id="statProjects" class="text-2xl font-bold font-headline text-on-surface">1</div>
+          <div class="text-[11px] text-primary mt-1">Assigned Team Membership</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Tasks Due</div>
+          <div id="statTasksDue" class="text-2xl font-bold font-headline text-secondary">3</div>
+          <div class="text-[11px] text-outline mt-1">Pending Execution</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Completed Tasks</div>
+          <div id="statTasksDone" class="text-2xl font-bold font-headline text-tertiary">2</div>
+          <div class="text-[11px] text-tertiary mt-1">Passed Code Review</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Upcoming Milestones</div>
+          <div id="statMilestones" class="text-2xl font-bold font-headline text-primary">2</div>
+          <div class="text-[11px] text-outline mt-1">Next: Mid-Term Defense</div>
+        </div>
+      </div>
+
+      <!-- Project Hero Card -->
+      <div id="primaryProjectCard" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/40 shadow-sm relative overflow-hidden">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+          <div>
+            <div class="flex items-center gap-2 mb-1">
+              <span id="projCode" class="font-mono text-xs px-2 py-0.5 rounded bg-primary-container/20 text-primary border border-primary/30">CAP-2025-01</span>
+              <span id="projHealth" class="text-xs px-2 py-0.5 rounded bg-tertiary/20 text-tertiary">ON_TRACK</span>
+              <span id="projStatus" class="text-xs px-2 py-0.5 rounded bg-surface-container-high text-outline">IN_PROGRESS</span>
+            </div>
+            <h2 id="projTitle" class="font-headline text-xl font-bold text-on-surface">Apex Lab: Autonomous Quadrotor SLAM &amp; Swarm Navigation</h2>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="text-right">
+              <div class="text-xs text-outline">Overall Completion</div>
+              <div id="projProgressText" class="font-headline text-2xl font-bold text-primary">68%</div>
+            </div>
+            <a id="overviewOpenProjBtn" href="#" class="px-3 py-1.5 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm">
+              <span class="material-symbols-outlined text-sm">folder_special</span>
+              <span>Open Project Workspace</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-surface-container-high h-2 rounded-full overflow-hidden mb-6">
+          <div id="projProgressBar" class="bg-gradient-to-r from-primary to-secondary h-full rounded-full transition-all duration-500" style="width: 68%;"></div>
+        </div>
+
+        <p id="projAbstract" class="text-xs text-on-surface-variant mb-6 line-clamp-2">
+          Development of an edge-accelerated simultaneous localization and mapping algorithm for GPS-denied indoor multi-agent quadrotor flight.
+        </p>
+
+        <!-- Team & Mentor Quick View -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-outline-variant/20">
+          <div>
+            <div class="text-[11px] text-outline font-mono uppercase mb-2">Faculty Mentor</div>
+            <div class="flex items-center gap-3">
+              <img id="mentorAvatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100" class="w-8 h-8 rounded-full border border-secondary/40 object-cover" alt="Mentor">
+              <div>
+                <div id="mentorName" class="text-xs font-medium text-on-surface">Dr. Aris Thorne</div>
+                <div id="mentorTitle" class="text-[10px] text-outline">Associate Professor &amp; Advisor</div>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-[11px] text-outline font-mono uppercase">Assigned Team Members</span>
+              <button onclick="openAddMemberModal()" class="text-[11px] text-primary hover:underline flex items-center gap-0.5">
+                <span class="material-symbols-outlined text-xs">person_add</span>
+                <span>Add Member</span>
+              </button>
+            </div>
+            <div id="teamMemberList" class="flex flex-wrap items-center gap-2">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Two-Column Grid: Milestones for Review & Deadlines -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Deliverables Submission Queue -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-headline text-sm font-bold text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-base">upload_file</span>
+              Milestone Deliverables for Review
+            </h3>
+            <span class="text-[11px] text-outline">Submit for Faculty Evaluation</span>
+          </div>
+          <div id="milestoneSubmitList" class="space-y-3"></div>
+        </div>
+
+        <!-- Deadlines Timeline -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-headline text-sm font-bold text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-base">schedule</span>
+              Upcoming Deadlines
+            </h3>
+            <span class="text-[11px] text-outline">Milestones &amp; Tasks</span>
+          </div>
+          <div id="deadlinesList" class="space-y-3"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- TAB 2: MY PROJECTS -->
+    <section id="tab-projects" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">My Assigned Projects</h2>
+          <p class="text-xs text-outline">Projects where you are registered as a team member. You can propose new projects and assemble teammates.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="openModal('studentNewProjectModal')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-semibold hover:bg-indigo-600 transition-colors">
+            <span class="material-symbols-outlined text-sm">add_circle</span>
+            <span>Create New Project</span>
+          </button>
+          <button onclick="openAddMemberModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 text-on-surface text-xs font-medium hover:bg-surface-container-high transition-colors">
+            <span class="material-symbols-outlined text-sm">group_add</span>
+            <span>Add Team Member</span>
+          </button>
+        </div>
+      </div>
+      <div id="projectsFullList" class="grid grid-cols-1 gap-4"></div>
+    </section>
+
+    <!-- TAB 3: MY TASKS -->
+    <section id="tab-tasks" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">My Tasks</h2>
+          <p class="text-xs text-outline">Manage tasks, update progress status, and collaborate strictly within the selected project scope.</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <!-- Project Filter Selector -->
+          <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs">
+            <span class="material-symbols-outlined text-sm text-outline">filter_list</span>
+            <select id="taskProjectFilterSelect" onchange="filterTasksByProject(this.value)" class="bg-transparent text-xs text-on-surface focus:outline-none cursor-pointer">
+              <option value="ALL">All My Projects</option>
+            </select>
+          </div>
+
+          <button onclick="openModal('newTaskModal')" class="flex items-center gap-2 bg-primary-container text-on-primary text-xs font-medium py-2 px-3 rounded-lg hover:bg-indigo-600 transition-colors shadow-sm">
+            <span class="material-symbols-outlined text-base">add</span>
+            <span>New Task</span>
+          </button>
+        </div>
+      </div>
+      <div id="tasksFullList" class="space-y-3"></div>
+    </section>
+
+    <!-- TAB 4: MILESTONES -->
+    <section id="tab-milestones" class="tab-pane hidden space-y-6">
+      <div>
+        <h2 class="font-headline text-xl font-bold text-on-surface">Official Milestones &amp; Submissions</h2>
+        <p class="text-xs text-outline">Official milestones are authored and evaluated by faculty advisors.</p>
+      </div>
+      <div id="milestonesFullList" class="space-y-4"></div>
+    </section>
+
+    <!-- TAB 5: CALENDAR (FULL INTERACTIVE CALENDAR) -->
+    <section id="tab-calendar" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Interactive Capstone Schedule &amp; Defense Calendar</h2>
+          <p class="text-xs text-outline">Monthly visualization of milestones, task deadlines, and defense schedules.</p>
+        </div>
+        <!-- Calendar Month Navigation Controls -->
+        <div class="flex items-center gap-2 bg-surface-container px-3 py-1.5 rounded-xl border border-outline-variant/30">
+          <button onclick="prevCalMonth()" class="p-1 rounded hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors">
+            <span class="material-symbols-outlined text-base">chevron_left</span>
+          </button>
+          <span id="calMonthTitle" class="text-xs font-headline font-bold text-on-surface px-2 min-w-[120px] text-center">October 2026</span>
+          <button onclick="nextCalMonth()" class="p-1 rounded hover:bg-surface-container-high text-outline hover:text-on-surface transition-colors">
+            <span class="material-symbols-outlined text-base">chevron_right</span>
+          </button>
+          <button onclick="resetCalToday()" class="ml-2 px-2 py-0.5 rounded text-[10px] bg-primary-container text-on-primary font-medium">Today</button>
+        </div>
+      </div>
+
+      <!-- Calendar Legend & Container Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        
+        <!-- Interactive Month Grid (2 cols) -->
+        <div class="lg:col-span-2 p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30">
+          <!-- Days of Week Header -->
+          <div class="grid grid-cols-7 gap-1 text-center font-mono text-[11px] text-outline uppercase pb-2 mb-2 border-b border-outline-variant/20">
+            <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+          </div>
+          <!-- Days Cells Grid -->
+          <div id="calendarDaysGrid" class="grid grid-cols-7 gap-1"></div>
+          
+          <!-- Color Legend -->
+          <div class="flex flex-wrap items-center gap-4 mt-6 pt-4 border-t border-outline-variant/20 text-xs">
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-primary"></span><span>Milestone Due</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-secondary"></span><span>Task Deadline</span></div>
+            <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-tertiary"></span><span>Defense Presentation</span></div>
+          </div>
+        </div>
+
+        <!-- Selected Day Agenda / Details (1 col) -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20 mb-4">
+              <h3 id="calAgendaTitle" class="font-headline font-bold text-sm text-on-surface">Scheduled Events</h3>
+              <span id="calAgendaCount" class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-primary">0 Events</span>
+            </div>
+            <div id="calAgendaList" class="space-y-3 max-h-[380px] overflow-y-auto pr-1"></div>
+          </div>
+          <div class="text-[11px] text-outline pt-4 border-t border-outline-variant/20">
+            Click any highlighted date on the calendar grid to view scheduled project items.
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- TAB 6: DOCUMENTS (FULL DOCUMENT MANAGEMENT) -->
+    <section id="tab-documents" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Project Documents &amp; Specifications</h2>
+          <p class="text-xs text-outline">Upload and access architectural ICDs, code deliverables, and project documentation.</p>
+        </div>
+        <button onclick="openModal('uploadDocModal')" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-semibold hover:bg-indigo-600 transition-colors shadow-sm">
+          <span class="material-symbols-outlined text-sm">upload_file</span>
+          <span>Upload Document</span>
+        </button>
+      </div>
+
+      <div id="documentsContainer" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3">
+        <!-- Populated via loadDocuments() -->
+      </div>
+    </section>
+
+    <!-- TAB 7: TEAM -->
+    <section id="tab-team" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Team Roster &amp; Advisors</h2>
+          <p class="text-xs text-outline">Collaborate with fellow student researchers and your faculty mentor.</p>
+        </div>
+        <button onclick="openAddMemberModal()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-medium hover:bg-indigo-600 transition-colors">
+          <span class="material-symbols-outlined text-sm">person_add</span>
+          <span>Add Teammate</span>
+        </button>
+      </div>
+      <div id="teamFullRoster" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- TAB 8: NOTIFICATIONS -->
+    <section id="tab-notifications" class="tab-pane hidden space-y-6">
+      <h2 class="font-headline text-xl font-bold text-on-surface">Notifications</h2>
+      <div id="notificationsFullList" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3"></div>
+    </section>
+
+    <!-- TAB 9: PROFILE -->
+    <section id="tab-profile" class="tab-pane hidden space-y-6">
+      <h2 class="font-headline text-xl font-bold text-on-surface">Student Profile</h2>
+      <div id="profileContainer" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 max-w-xl"></div>
+    </section>
+
+    <!-- TAB 10: SETTINGS -->
+    <section id="tab-settings" class="tab-pane hidden space-y-6">
+      <h2 class="font-headline text-xl font-bold text-on-surface">Account Settings</h2>
+      
+      <!-- Account Credentials Strip -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 max-w-xl text-xs space-y-4">
+        <div>
+          <label class="block text-outline mb-1">Assigned Academic Role (Immutable by Student)</label>
+          <input disabled value="STUDENT" class="w-full p-2 bg-surface-container border border-outline-variant/20 rounded text-primary font-mono">
+        </div>
+        <div>
+          <label class="block text-outline mb-1">University Email</label>
+          <input id="settingsEmail" disabled class="w-full p-2 bg-surface-container border border-outline-variant/20 rounded text-on-surface">
+        </div>
+      </div>
+
+      <!-- Theme Preference Card -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 max-w-xl space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+          <div class="flex items-center gap-2.5">
+            <span class="material-symbols-outlined text-primary">palette</span>
+            <div>
+              <h3 class="font-headline font-bold text-sm text-on-surface">Appearance &amp; Theme</h3>
+              <p class="text-[11px] text-outline">Select interface appearance preference for your workspace.</p>
+            </div>
+          </div>
+          <span id="currentThemeDisplay" class="font-mono text-xs px-2.5 py-1 rounded bg-surface-container-high text-primary font-bold">Dark Mode</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1">
+          <!-- Dark Theme Option -->
+          <label class="relative flex items-center gap-3.5 p-3.5 rounded-xl border border-outline-variant/30 bg-surface-container hover:border-primary/60 transition-all cursor-pointer group">
+            <input type="radio" name="themeChoice" value="dark" onchange="setTheme('dark')" class="text-primary focus:ring-primary">
+            <div class="w-8 h-8 rounded-lg bg-[#0f131c] border border-slate-700 flex items-center justify-center text-slate-200 shrink-0">
+              <span class="material-symbols-outlined text-base">dark_mode</span>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">Dark Theme</div>
+              <div class="text-[10px] text-outline">High contrast dark surface (Default)</div>
+            </div>
+          </label>
+
+          <!-- Light Theme Option -->
+          <label class="relative flex items-center gap-3.5 p-3.5 rounded-xl border border-outline-variant/30 bg-surface-container hover:border-primary/60 transition-all cursor-pointer group">
+            <input type="radio" name="themeChoice" value="light" onchange="setTheme('light')" class="text-primary focus:ring-primary">
+            <div class="w-8 h-8 rounded-lg bg-white border border-slate-300 flex items-center justify-center text-amber-500 shrink-0">
+              <span class="material-symbols-outlined text-base">light_mode</span>
+            </div>
+            <div>
+              <div class="text-xs font-bold text-on-surface group-hover:text-primary transition-colors">Light Theme</div>
+              <div class="text-[10px] text-outline">Clean, bright workspace aesthetic</div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: CREATE NEW PROJECT (Student Flow)   -->
+  <!-- ========================================== -->
+  <div id="studentNewProjectModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">folder_special</span>
+          Create New Capstone Project
+        </h3>
+        <button onclick="closeModal('studentNewProjectModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="studentCreateProjectForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Project Title</label>
+          <input id="stuNewProjTitle" required placeholder="e.g. Distributed Consensus Engine for Robotics" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Project Code</label>
+            <input id="stuNewProjCode" placeholder="CAP-2025-09" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Department</label>
+            <input id="stuNewProjDept" value="Computer Science & Engineering" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Project Abstract / Problem Statement</label>
+          <textarea id="stuNewProjAbstract" rows="3" placeholder="Outline the research scope, subsystems, and expected deliverables..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none"></textarea>
+        </div>
+
+        <!-- Team Members Selection Checklist -->
+        <div>
+          <label class="block text-xs text-outline mb-1.5 font-medium flex items-center justify-between">
+            <span>Select Team Members to Add</span>
+            <span class="text-[10px] text-primary">You are automatically included</span>
+          </label>
+          <div class="relative mb-2">
+            <span class="material-symbols-outlined absolute left-2.5 top-2 text-outline text-[16px]">search</span>
+            <input type="text" id="newProjMemberSearchInput" oninput="filterNewProjectStudents(this.value)" placeholder="Search students by name, email, or ID..." class="w-full pl-8 pr-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+          </div>
+          <div id="availableStudentsChecklist" class="max-h-40 overflow-y-auto space-y-2 p-2 rounded-lg bg-surface-container border border-outline-variant/20 text-xs">
+            <!-- Populated via loadAvailableStudents() -->
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('studentNewProjectModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold">Create Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD TEAM MEMBER TO EXISTING PROJECT -->
+  <!-- ========================================== -->
+  <div id="addMemberModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">group_add</span>
+          Add Teammates to Project
+        </h3>
+        <button onclick="closeModal('addMemberModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="addMemberForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-outline mb-1">Target Project</label>
+          <select id="addMemberProjSelect" required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none"></select>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Search &amp; Choose Student to Add</label>
+          <div class="relative mb-2">
+            <span class="material-symbols-outlined absolute left-2.5 top-2 text-outline text-[16px]">search</span>
+            <input type="text" id="addMemberSearchInput" oninput="filterAddMemberStudents(this.value)" placeholder="Search by student name, email, or ID..." class="w-full pl-8 pr-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+          </div>
+          <div id="addMemberStudentList" class="max-h-44 overflow-y-auto space-y-2 p-2 bg-surface-container rounded-lg border border-outline-variant/20 text-xs"></div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('addMemberModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold">Add Selected Students</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: UPLOAD DOCUMENT (CLOUDINARY STORAGE)-->
+  <!-- ========================================== -->
+  <div id="uploadDocModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <div>
+          <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary">cloud_upload</span>
+            Upload Document to Cloudinary
+          </h3>
+          <span class="text-[10px] font-mono text-tertiary">Cloud: ta1atd4t &bull; Secure Storage</span>
+        </div>
+        <button onclick="closeModal('uploadDocModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="uploadDocForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-outline mb-1">Project</label>
+          <select id="docProjSelect" required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none"></select>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Document Title</label>
+          <input id="docTitle" required placeholder="e.g. Hardware Interface Control Document (ICD)" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-outline mb-1">Category</label>
+            <select id="docCategory" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+              <option value="Specification">Specification</option>
+              <option value="Architecture">Architecture</option>
+              <option value="Source Code">Source Code</option>
+              <option value="Presentation">Presentation</option>
+              <option value="Report">Report</option>
+              <option value="Deliverable">Deliverable</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-outline mb-1">Version</label>
+            <input id="docVersion" value="v1.0" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Select File to Upload</label>
+          <input type="file" id="docFileInput" class="w-full text-xs text-on-surface file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary-container file:text-on-primary hover:file:bg-indigo-600 cursor-pointer p-1.5 bg-surface-container rounded border border-outline-variant/30">
+          <p class="text-[10px] text-outline mt-1">Uploaded directly to Cloudinary cloud (ta1atd4t). Supports PDF, code, docs, images.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1">Or External Storage Link (Optional)</label>
+          <input id="docFileUrl" placeholder="https://github.com/... or Google Drive link" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('uploadDocModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnUploadDocSubmit" class="px-4 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">cloud_upload</span>
+            <span>Upload to Cloudinary</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: SUBMIT DELIVERABLE                  -->
+  <!-- ========================================== -->
+  <div id="submitModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface">Submit Milestone Deliverable</h3>
+        <button onclick="closeModal('submitModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="submitMilestoneForm" class="space-y-4">
+        <input type="hidden" id="modalMilestoneId">
+        <div>
+          <label class="block text-xs text-outline mb-1">Milestone</label>
+          <input id="modalMilestoneTitle" disabled class="w-full p-2 bg-surface-container rounded border border-outline-variant/20 text-xs text-on-surface">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Deliverable Title / Artifact Name</label>
+          <input id="deliverableTitle" required placeholder="e.g. Phase 2 Simulation SITL Test Logs" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Deliverable URL / Repository Link</label>
+          <input id="deliverableUrl" type="url" placeholder="https://github.com/... or https://drive.google.com/..." class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Submission Notes for Advisor</label>
+          <textarea id="submissionNotes" rows="3" placeholder="Explain benchmarks reached, design decisions or questions for the advisor..." class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('submitModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold">Submit for Review</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: CREATE NEW TASK                    -->
+  <!-- ========================================== -->
+  <div id="newTaskModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl">
+      <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface">Create New Task</h3>
+        <button onclick="closeModal('newTaskModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="createTaskForm" class="space-y-4">
+        <div>
+          <label class="block text-xs text-outline mb-1">Project</label>
+          <select id="taskProjectId" required class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none"></select>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Task Title</label>
+          <input id="taskTitle" required placeholder="e.g. Implement trajectory re-planning node" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1">Description</label>
+          <textarea id="taskDesc" rows="2" placeholder="Task technical details..." class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none"></textarea>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-outline mb-1">Priority</label>
+            <select id="taskPriority" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM" selected>MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+              <option value="CRITICAL">CRITICAL</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-outline mb-1">Due Date</label>
+            <input id="taskDueDate" type="date" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('newTaskModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold">Create Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- APPLICATION SCRIPTS -->
+  <script>
+    let dashboardData = null;
+    let availableStudents = [];
+    let calendarEvents = [];
+    let calDate = new Date(); // controls month/year view
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.student-nav-item').forEach(el => {
+        el.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high';
+      });
+
+      const pane = document.getElementById(`tab-${tabId}`);
+      if (pane) pane.classList.remove('hidden');
+      const navBtn = document.getElementById(`nav-${tabId}`);
+      if (navBtn) navBtn.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-primary bg-surface-container-high';
+      document.getElementById('pageTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1);
+
+      if (tabId === 'calendar') loadCalendar();
+      if (tabId === 'documents') loadDocuments();
+    }
+
+    async function loadStudentDashboard() {
+      try {
+        const res = await fetch('/api/dashboard/student');
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = '/login/student';
+          return;
+        }
+        const json = await res.json();
+        if (!json.success) return;
+
+        dashboardData = json.data;
+        renderDashboard(dashboardData);
+        loadAvailableStudents();
+      } catch (err) {
+        console.error('Failed to load dashboard:', err);
+      }
+    }
+
+    // Track checked IDs across live filtering
+    let checkedNewProjMembers = new Set();
+    let checkedAddMembers = new Set();
+
+    async function loadAvailableStudents() {
+      try {
+        const res = await fetch('/api/projects/students/available');
+        const json = await res.json();
+        if (!json.success) return;
+
+        availableStudents = json.students;
+        renderAvailableStudentsChecklist();
+        renderAddMemberList();
+      } catch (err) {
+        console.error('loadAvailableStudents error:', err);
+      }
+    }
+
+    function renderAvailableStudentsChecklist(query = '') {
+      const container = document.getElementById('availableStudentsChecklist');
+      const currentUserId = dashboardData ? dashboardData.studentProfile.id : null;
+      const q = query.toLowerCase().trim();
+
+      const filtered = availableStudents.filter(s => {
+        if (s._id === currentUserId) return false;
+        if (!q) return true;
+        const nameMatch = s.name && s.name.toLowerCase().includes(q);
+        const emailMatch = s.email && s.email.toLowerCase().includes(q);
+        const idMatch = s.studentId && s.studentId.toLowerCase().includes(q);
+        return nameMatch || emailMatch || idMatch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="text-[11px] text-outline p-2 text-center">No matching students found.</div>';
+        return;
+      }
+
+      container.innerHTML = filtered.map(s => {
+        const isChecked = checkedNewProjMembers.has(s._id) ? 'checked' : '';
+        return `
+          <label class="flex items-center gap-2 p-1.5 rounded hover:bg-surface-container-high cursor-pointer transition-colors">
+            <input type="checkbox" name="selectedTeamMembers" value="${s._id}" ${isChecked} onchange="toggleNewProjMember('${s._id}', this.checked)" class="rounded border-outline-variant/40 text-primary focus:ring-0">
+            <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-5 h-5 rounded-full object-cover border border-outline-variant/30">
+            <div class="flex-1 truncate">
+              <span class="text-on-surface font-medium">${s.name}</span>
+              <span class="text-outline text-[10px] ml-1">(${s.studentId || s.email})</span>
+            </div>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function toggleNewProjMember(id, isChecked) {
+      if (isChecked) checkedNewProjMembers.add(id);
+      else checkedNewProjMembers.delete(id);
+    }
+
+    function filterNewProjectStudents(query) {
+      // Record currently checked before filtering
+      document.querySelectorAll('#availableStudentsChecklist input[name="selectedTeamMembers"]:checked').forEach(cb => {
+        checkedNewProjMembers.add(cb.value);
+      });
+      renderAvailableStudentsChecklist(query);
+    }
+
+    function renderAddMemberList(query = '') {
+      const addList = document.getElementById('addMemberStudentList');
+      const currentUserId = dashboardData ? dashboardData.studentProfile.id : null;
+      const q = query.toLowerCase().trim();
+
+      const filtered = availableStudents.filter(s => {
+        if (s._id === currentUserId) return false;
+        if (!q) return true;
+        const nameMatch = s.name && s.name.toLowerCase().includes(q);
+        const emailMatch = s.email && s.email.toLowerCase().includes(q);
+        const idMatch = s.studentId && s.studentId.toLowerCase().includes(q);
+        return nameMatch || emailMatch || idMatch;
+      });
+
+      if (filtered.length === 0) {
+        addList.innerHTML = '<div class="text-[11px] text-outline p-2 text-center">No matching students found.</div>';
+        return;
+      }
+
+      addList.innerHTML = filtered.map(s => {
+        const isChecked = checkedAddMembers.has(s._id) ? 'checked' : '';
+        return `
+          <label class="flex items-center gap-2 p-1.5 rounded hover:bg-surface-container-high cursor-pointer transition-colors">
+            <input type="checkbox" name="membersToAdd" value="${s._id}" ${isChecked} onchange="toggleAddMember('${s._id}', this.checked)" class="rounded border-outline-variant/40 text-primary focus:ring-0">
+            <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-5 h-5 rounded-full object-cover border border-outline-variant/30">
+            <div class="flex-1 truncate">
+              <span class="text-on-surface font-medium">${s.name}</span>
+              <span class="text-outline text-[10px] ml-1">${s.email}</span>
+            </div>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function toggleAddMember(id, isChecked) {
+      if (isChecked) checkedAddMembers.add(id);
+      else checkedAddMembers.delete(id);
+    }
+
+    function filterAddMemberStudents(query) {
+      document.querySelectorAll('#addMemberStudentList input[name="membersToAdd"]:checked').forEach(cb => {
+        checkedAddMembers.add(cb.value);
+      });
+      renderAddMemberList(query);
+    }
+
+    function renderDashboard(data) {
+      const p = data.studentProfile;
+      document.getElementById('userName').textContent = p.name;
+      document.getElementById('settingsEmail').value = p.email;
+      if (p.avatar) document.getElementById('userAvatar').src = p.avatar;
+      if (p.cohort) document.getElementById('sideCohortTitle').textContent = p.cohort;
+      if (p.department) document.getElementById('sideDeptTitle').textContent = p.department;
+
+      // Stats
+      document.getElementById('statProjects').textContent = data.activeProjects.length;
+      document.getElementById('statTasksDue').textContent = data.taskCounts.total - data.taskCounts.completed;
+      document.getElementById('statTasksDone').textContent = data.taskCounts.completed;
+      document.getElementById('statMilestones').textContent = data.upcomingMilestones.length;
+
+      // Project Dropdowns
+      const taskProjSelect = document.getElementById('taskProjectId');
+      const docProjSelect = document.getElementById('docProjSelect');
+      const addMemProjSelect = document.getElementById('addMemberProjSelect');
+      const taskFilterSelect = document.getElementById('taskProjectFilterSelect');
+      
+      taskProjSelect.innerHTML = '';
+      docProjSelect.innerHTML = '';
+      addMemProjSelect.innerHTML = '';
+      if (taskFilterSelect) {
+        taskFilterSelect.innerHTML = '<option value="ALL">All My Projects</option>';
+      }
+
+      data.activeProjects.forEach(proj => {
+        const opt1 = document.createElement('option');
+        opt1.value = proj._id; opt1.textContent = `${proj.code}: ${proj.title}`;
+        taskProjSelect.appendChild(opt1);
+
+        const opt2 = document.createElement('option');
+        opt2.value = proj._id; opt2.textContent = `${proj.code}: ${proj.title}`;
+        docProjSelect.appendChild(opt2);
+
+        const opt3 = document.createElement('option');
+        opt3.value = proj._id; opt3.textContent = `${proj.code}: ${proj.title}`;
+        addMemProjSelect.appendChild(opt3);
+
+        if (taskFilterSelect) {
+          const optFilter = document.createElement('option');
+          optFilter.value = proj._id;
+          optFilter.textContent = `${proj.code}: ${proj.title}`;
+          taskFilterSelect.appendChild(optFilter);
+        }
+      });
+
+      // Primary Project
+      const primary = data.activeProjects[0];
+      if (primary) {
+        document.getElementById('projTitle').innerHTML = `<a href="/projects/${primary._id}" class="hover:text-primary transition-colors inline-flex items-center gap-1.5">${primary.title} <span class="material-symbols-outlined text-sm text-primary">open_in_new</span></a>`;
+        document.getElementById('projCode').textContent = primary.code;
+        const ovBtn = document.getElementById('overviewOpenProjBtn');
+        if (ovBtn) ovBtn.href = `/projects/${primary._id}`;
+        document.getElementById('projStatus').textContent = primary.status;
+        document.getElementById('projHealth').textContent = primary.health;
+        document.getElementById('projAbstract').textContent = primary.abstract || 'No abstract provided.';
+        document.getElementById('projProgressText').textContent = primary.progressPercentage + '%';
+        document.getElementById('projProgressBar').style.width = primary.progressPercentage + '%';
+
+        if (primary.facultyMentor) {
+          document.getElementById('headerMentorName').textContent = primary.facultyMentor.name;
+          document.getElementById('mentorName').textContent = primary.facultyMentor.name;
+          document.getElementById('mentorTitle').textContent = primary.facultyMentor.title || 'Faculty Advisor';
+          if (primary.facultyMentor.avatar) document.getElementById('mentorAvatar').src = primary.facultyMentor.avatar;
+        } else {
+          document.getElementById('headerMentorName').textContent = 'Pending Faculty Assignment';
+          document.getElementById('mentorName').textContent = 'Pending Assignment';
+          document.getElementById('mentorTitle').textContent = 'Advisor pending from Academic Affairs';
+        }
+
+        // Team members
+        const teamContainer = document.getElementById('teamMemberList');
+        teamContainer.innerHTML = primary.teamMembers.map(m => `
+          <div class="flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container border border-outline-variant/20 text-xs">
+            <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-4 h-4 rounded-full object-cover">
+            <span class="text-on-surface font-medium">${m.name}</span>
+          </div>
+        `).join('');
+      }
+
+      // Milestones Submission Queue
+      const submitList = document.getElementById('milestoneSubmitList');
+      if (data.upcomingMilestones.length === 0) {
+        submitList.innerHTML = '<div class="text-xs text-outline py-2">No pending milestones to submit.</div>';
+      } else {
+        submitList.innerHTML = data.upcomingMilestones.map(m => `
+          <div class="p-3 rounded-lg bg-surface-container border border-outline-variant/20 flex items-center justify-between">
+            <div>
+              <div class="text-xs font-medium text-on-surface">${m.title}</div>
+              <div class="text-[10px] text-outline">Due: ${new Date(m.dueDate).toLocaleDateString()} &bull; Status: <span class="font-mono text-primary">${m.status}</span></div>
+              ${m.facultyFeedback ? `<div class="mt-1 text-[11px] text-secondary">Advisor Feedback: "${m.facultyFeedback}"</div>` : ''}
+            </div>
+            <div>
+              <button onclick="promptSubmitMilestone('${m._id}', '${m.title.replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded bg-primary-container hover:bg-indigo-600 text-on-primary text-[11px] font-medium transition-colors">
+                ${m.status === 'CHANGES_REQUESTED' ? 'Resubmit' : 'Submit Deliverable'}
+              </button>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Deadlines
+      const deadlinesList = document.getElementById('deadlinesList');
+      if (data.deadlines.length === 0) {
+        deadlinesList.innerHTML = '<div class="text-xs text-outline py-2">No upcoming deadlines.</div>';
+      } else {
+        deadlinesList.innerHTML = data.deadlines.slice(0, 5).map(d => `
+          <div class="flex items-center justify-between p-2.5 rounded-lg bg-surface-container border border-outline-variant/20 text-xs">
+            <div class="flex items-center gap-2">
+              <span class="w-1.5 h-1.5 rounded-full ${d.type === 'MILESTONE' ? 'bg-primary' : 'bg-secondary'}"></span>
+              <div>
+                <div class="font-medium text-on-surface">${d.title}</div>
+                <div class="text-[10px] text-outline">${d.type} &bull; ${d.project}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xs font-mono text-on-surface-variant">${new Date(d.dueDate).toLocaleDateString()}</div>
+              <div class="text-[10px] uppercase font-mono ${d.status === 'DONE' ? 'text-tertiary' : 'text-outline'}">${d.status}</div>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Populate Tab 2: Projects
+      const projContainer = document.getElementById('projectsFullList');
+      projContainer.innerHTML = data.activeProjects.map(proj => `
+        <div class="p-5 rounded-xl bg-surface-container-low border border-outline-variant/30 hover:border-outline-variant/50 transition-all">
+          <div class="flex items-center justify-between mb-2">
+            <span class="font-mono text-xs text-primary font-bold">${proj.code}</span>
+            <span class="text-xs font-mono px-2 py-0.5 rounded bg-surface-container-high">${proj.status}</span>
+          </div>
+          <div class="mb-2">
+            <a href="/projects/${proj._id}" class="font-headline font-bold text-base text-on-surface hover:text-primary transition-colors flex items-center justify-between group">
+              <span>${proj.title}</span>
+              <span class="material-symbols-outlined text-base text-primary opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</span>
+            </a>
+          </div>
+          <p class="text-xs text-outline mb-4">${proj.abstract || 'No abstract'}</p>
+          
+          <div class="mb-4">
+            <div class="text-[11px] text-outline font-mono mb-1.5">Team Members (${proj.teamMembers.length}):</div>
+            <div class="flex flex-wrap items-center gap-2">
+              ${proj.teamMembers.map(m => `
+                <span class="inline-flex items-center gap-1.5 px-2 py-1 rounded bg-surface-container border border-outline-variant/20 text-xs">
+                  <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=40'}" class="w-4 h-4 rounded-full object-cover">
+                  ${m.name}
+                </span>
+              `).join('')}
+            </div>
+          </div>
+
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-3 border-t border-outline-variant/20 text-xs">
+            <div class="flex items-center gap-4">
+              <div class="text-outline">Advisor: <span class="text-secondary font-medium">${proj.facultyMentor ? proj.facultyMentor.name : 'Unassigned'}</span></div>
+              <div class="text-primary font-bold">${proj.progressPercentage}% Complete</div>
+            </div>
+            <a href="/projects/${proj._id}" class="px-3.5 py-1.5 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm self-start sm:self-auto">
+              <span class="material-symbols-outlined text-[16px]">folder_special</span>
+              <span>Open Project Workspace &rarr;</span>
+            </a>
+          </div>
+        </div>
+      `).join('');
+
+      // Populate Tab 7: Team
+      const rosterContainer = document.getElementById('teamFullRoster');
+      if (primary) {
+        const membersHtml = primary.teamMembers.map(m => `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20">
+            <div class="flex items-center gap-3 mb-2">
+              <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-10 h-10 rounded-full object-cover">
+              <div>
+                <div class="font-medium text-xs text-on-surface">${m.name}</div>
+                <div class="text-[10px] text-outline">${m.title || 'Student Researcher'}</div>
+              </div>
+            </div>
+            <div class="text-[11px] text-outline font-mono">${m.studentId || 'STUDENT'} &bull; ${m.email}</div>
+          </div>
+        `).join('');
+
+        const mentorHtml = primary.facultyMentor ? `
+          <div class="p-4 rounded-xl bg-surface-container border border-secondary/30">
+            <div class="flex items-center gap-3 mb-2">
+              <img src="${primary.facultyMentor.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=60'}" class="w-10 h-10 rounded-full object-cover border border-secondary">
+              <div>
+                <div class="font-medium text-xs text-secondary">${primary.facultyMentor.name}</div>
+                <div class="text-[10px] text-outline">${primary.facultyMentor.title || 'Faculty Advisor'}</div>
+              </div>
+            </div>
+            <div class="text-[11px] text-outline font-mono">Assigned Capstone Mentor</div>
+          </div>
+        ` : '';
+
+        rosterContainer.innerHTML = membersHtml + mentorHtml;
+      }
+
+      // Populate Tab 8: Notifications
+      const notifContainer = document.getElementById('notificationsFullList');
+      if (notifContainer) {
+        if (!data.notifications || data.notifications.length === 0) {
+          notifContainer.innerHTML = '<div class="text-xs text-outline py-4 text-center">No notifications yet. You are all caught up!</div>';
+        } else {
+          notifContainer.innerHTML = data.notifications.map(n => `
+            <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 flex items-start gap-3 text-xs ${n.read ? 'opacity-70' : 'border-primary/40 bg-primary/5'}">
+              <span class="material-symbols-outlined text-base ${n.type === 'SUCCESS' ? 'text-tertiary' : n.type === 'WARNING' ? 'text-secondary' : 'text-primary'} mt-0.5">
+                ${n.type === 'SUCCESS' ? 'check_circle' : n.type === 'WARNING' ? 'warning' : 'notifications'}
+              </span>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <div class="font-semibold text-on-surface">${n.title}</div>
+                  <span class="text-[10px] text-outline font-mono">${new Date(n.createdAt).toLocaleDateString()}</span>
+                </div>
+                <p class="text-outline mt-0.5">${n.message}</p>
+                ${n.link ? `<a href="${n.link}" class="inline-block mt-1 text-[11px] text-primary hover:underline">View details &rarr;</a>` : ''}
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Populate Tab 9: Profile
+      const formattedDob = p.dateOfBirth ? new Date(p.dateOfBirth).toISOString().split('T')[0] : '';
+      const displayDob = p.dateOfBirth ? new Date(p.dateOfBirth).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : 'Not provided';
+
+      document.getElementById('profileContainer').innerHTML = `
+        <div class="space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center gap-5 pb-6 border-b border-outline-variant/20">
+            <div class="relative group w-20 h-20 shrink-0">
+              <img id="profileAvatarPreview" src="${p.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'}" class="w-20 h-20 rounded-2xl object-cover border-2 border-primary shadow-lg">
+              <label for="profileAvatarFileInput" class="absolute inset-0 bg-black/60 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center cursor-pointer text-white text-[10px] gap-1">
+                <span class="material-symbols-outlined text-base">photo_camera</span>
+                <span>Change</span>
+              </label>
+              <input type="file" id="profileAvatarFileInput" accept="image/*" class="hidden" onchange="previewAndUploadAvatar(this)">
+            </div>
+            <div class="space-y-1">
+              <h3 class="font-headline text-xl font-bold text-on-surface">${p.name}</h3>
+              <div class="text-xs text-outline font-mono">${p.email}</div>
+              <div class="flex flex-wrap items-center gap-2 pt-1">
+                <span class="font-mono text-[10px] px-2.5 py-0.5 rounded bg-primary/20 text-primary font-bold uppercase tracking-wider">STUDENT</span>
+                <span class="text-xs text-on-surface-variant font-medium">${p.department}</span>
+              </div>
+            </div>
+          </div>
+
+          <form id="studentUpdateProfileForm" onsubmit="handleProfileUpdate(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-outline uppercase font-mono mb-1.5">Full Name</label>
+                <input id="editProfileName" type="text" value="${p.name || ''}" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface text-xs focus:outline-none focus:border-primary">
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-outline uppercase font-mono mb-1.5">Date of Birth (DOB)</label>
+                <input id="editProfileDob" type="date" value="${formattedDob}" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface text-xs focus:outline-none focus:border-primary">
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-outline uppercase font-mono mb-1.5">Profile Picture URL (Optional or upload photo above)</label>
+              <div class="flex gap-2">
+                <input id="editProfileAvatarUrl" type="url" placeholder="https://..." value="${p.avatar || ''}" class="flex-1 p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-on-surface text-xs focus:outline-none focus:border-primary">
+                <label for="profileAvatarFileInput" class="px-3 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container border border-outline-variant/30 text-xs font-medium text-on-surface flex items-center gap-1.5 cursor-pointer">
+                  <span class="material-symbols-outlined text-sm">cloud_upload</span>
+                  <span>Upload</span>
+                </label>
+              </div>
+              <p class="text-[10px] text-outline mt-1">Direct file upload automatically optimizes & stores your photo in Cloudinary.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 rounded-xl bg-surface-container-lowest border border-outline-variant/20 text-xs font-mono">
+              <div>
+                <div class="text-[10px] text-outline uppercase">Student ID</div>
+                <div class="text-on-surface font-semibold mt-0.5">${p.studentId || 'STU-2025-084'}</div>
+              </div>
+              <div>
+                <div class="text-[10px] text-outline uppercase">Cohort</div>
+                <div class="text-on-surface font-semibold mt-0.5 truncate">${p.cohort || 'Senior Capstone'}</div>
+              </div>
+              <div>
+                <div class="text-[10px] text-outline uppercase">Current DOB</div>
+                <div class="text-on-surface font-semibold mt-0.5">${displayDob}</div>
+              </div>
+            </div>
+
+            <div class="pt-2 flex justify-end">
+              <button id="saveProfileBtn" type="submit" class="px-5 py-2.5 rounded-xl bg-primary text-black font-semibold text-xs hover:bg-indigo-300 transition-colors flex items-center gap-1.5 shadow-md">
+                <span class="material-symbols-outlined text-sm">save</span>
+                <span>Save Profile Changes</span>
+              </button>
+            </div>
+          </form>
+        </div>
+      `;
+
+      loadTasks();
+      loadMilestonesTab();
+    }
+
+    // CREATE PROJECT WITH TEAM MEMBERS
+    document.getElementById('studentCreateProjectForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('stuNewProjTitle').value;
+      const code = document.getElementById('stuNewProjCode').value;
+      const department = document.getElementById('stuNewProjDept').value;
+      const abstract = document.getElementById('stuNewProjAbstract').value;
+
+      // Collect checked students
+      const checkboxes = document.querySelectorAll('input[name="selectedTeamMembers"]:checked');
+      const teamMembers = Array.from(checkboxes).map(cb => cb.value);
+
+      try {
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, code, department, abstract, teamMembers })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('studentNewProjectModal');
+          alert('Project created successfully with your selected teammates!');
+          loadStudentDashboard();
+        } else {
+          alert(json.message);
+        }
+      } catch (err) {
+        alert('Failed to create project.');
+      }
+    });
+
+    // ADD TEAM MEMBERS TO EXISTING PROJECT
+    function openAddMemberModal() {
+      openModal('addMemberModal');
+    }
+
+    document.getElementById('addMemberForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const projectId = document.getElementById('addMemberProjSelect').value;
+      const checkboxes = document.querySelectorAll('input[name="membersToAdd"]:checked');
+      const studentIds = Array.from(checkboxes).map(cb => cb.value);
+
+      if (studentIds.length === 0) {
+        alert('Please check at least one student to add.');
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/projects/${projectId}/members`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ studentIds })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('addMemberModal');
+          alert('Teammates added to project successfully!');
+          loadStudentDashboard();
+        } else {
+          alert(json.message);
+        }
+      } catch (err) {
+        alert('Failed to add members.');
+      }
+    });
+
+    // LOAD & UPLOAD DOCUMENTS
+    async function loadDocuments() {
+      try {
+        const res = await fetch('/api/documents');
+        const json = await res.json();
+        if (!json.success) return;
+
+        const container = document.getElementById('documentsContainer');
+        if (json.documents.length === 0) {
+          container.innerHTML = '<div class="text-xs text-outline py-4 text-center">No documents uploaded yet. Click "Upload Document" above.</div>';
+          return;
+        }
+
+        container.innerHTML = json.documents.map(d => `
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 gap-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+                <span class="material-symbols-outlined text-[22px]">description</span>
+              </div>
+              <div>
+                <div class="text-xs font-semibold text-on-surface">${d.title}</div>
+                <div class="text-[11px] text-outline">
+                  ${d.category} &bull; ${d.fileType} &bull; ${d.fileSize} &bull; <span class="font-mono text-primary">${d.version}</span>
+                </div>
+                <div class="text-[10px] text-outline mt-0.5">Uploaded by ${d.uploadedBy ? d.uploadedBy.name : 'Team'} on ${new Date(d.createdAt).toLocaleDateString()}</div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2">
+              <a href="${d.fileUrl || '#'}" target="_blank" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-primary text-xs font-medium transition-colors flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">download</span>
+                <span>View / Download</span>
+              </a>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('loadDocuments error:', err);
+      }
+    }
+
+    document.getElementById('uploadDocForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const projectId = document.getElementById('docProjSelect').value;
+      const title = document.getElementById('docTitle').value;
+      const category = document.getElementById('docCategory').value;
+      const version = document.getElementById('docVersion').value;
+      const fileUrl = document.getElementById('docFileUrl').value;
+      const fileInput = document.getElementById('docFileInput');
+      const submitBtn = document.getElementById('btnUploadDocSubmit');
+
+      const originalBtnHtml = submitBtn ? submitBtn.innerHTML : 'Upload Document';
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Uploading to Cloudinary...';
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('projectId', projectId);
+        formData.append('title', title);
+        formData.append('category', category);
+        formData.append('version', version);
+
+        if (fileInput && fileInput.files && fileInput.files[0]) {
+          formData.append('file', fileInput.files[0]);
+        } else if (fileUrl) {
+          formData.append('fileUrl', fileUrl);
+        }
+
+        const res = await fetch('/api/documents', {
+          method: 'POST',
+          body: formData
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('uploadDocModal');
+          document.getElementById('uploadDocForm').reset();
+          alert('Document uploaded and stored in Cloudinary successfully!');
+          loadDocuments();
+        } else {
+          alert(json.message);
+        }
+      } catch (err) {
+        alert('Failed to upload document to Cloudinary.');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnHtml;
+        }
+      }
+    });
+
+    // FULL INTERACTIVE CALENDAR
+    async function loadCalendar() {
+      try {
+        const res = await fetch('/api/dashboard/calendar-events');
+        const json = await res.json();
+        if (json.success) calendarEvents = json.events;
+        renderCalendarGrid();
+      } catch (err) {
+        console.error('loadCalendar error:', err);
+      }
+    }
+
+    function prevCalMonth() {
+      calDate.setMonth(calDate.getMonth() - 1);
+      renderCalendarGrid();
+    }
+    function nextCalMonth() {
+      calDate.setMonth(calDate.getMonth() + 1);
+      renderCalendarGrid();
+    }
+    function resetCalToday() {
+      calDate = new Date();
+      renderCalendarGrid();
+    }
+
+    function renderCalendarGrid(selectedDayNum = null) {
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      document.getElementById('calMonthTitle').textContent = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1).getDay(); // 0 is Sunday
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const prevMonthDays = new Date(year, month, 0).getDate();
+
+      const grid = document.getElementById('calendarDaysGrid');
+      grid.innerHTML = '';
+
+      // Trailing days from previous month
+      for (let i = firstDay - 1; i >= 0; i--) {
+        const dayNum = prevMonthDays - i;
+        grid.innerHTML += `<div class="p-2 min-h-[64px] rounded-lg bg-surface-container/20 text-outline/30 text-xs font-mono text-right">${dayNum}</div>`;
+      }
+
+      // Current month days
+      const today = new Date();
+      for (let day = 1; day <= totalDays; day++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        
+        // Find events on this day
+        const dayEvents = calendarEvents.filter(ev => {
+          const evDate = new Date(ev.date);
+          return evDate.getFullYear() === year && evDate.getMonth() === month && evDate.getDate() === day;
+        });
+
+        const isToday = today.getFullYear() === year && today.getMonth() === month && today.getDate() === day;
+        const isSelected = selectedDayNum === day;
+
+        const dotsHtml = dayEvents.slice(0, 3).map(ev => {
+          let dotColor = 'bg-primary';
+          if (ev.type === 'TASK') dotColor = 'bg-secondary';
+          if (ev.type === 'DEFENSE') dotColor = 'bg-tertiary';
+          const clickAction = ev.type === 'TASK' ? `onclick="event.stopPropagation(); window.location.href='/tasks/${ev.id}';"` : '';
+          return `<span ${clickAction} class="w-2.5 h-2.5 rounded-full ${dotColor} ${ev.type === 'TASK' ? 'cursor-pointer hover:scale-125 transition-transform' : ''}" title="${ev.type}: ${ev.title}${ev.type === 'TASK' ? ' (Click to open task page)' : ''}"></span>`;
+        }).join('');
+
+        grid.innerHTML += `
+          <div onclick="selectCalendarDay(${day})" class="p-2 min-h-[64px] rounded-lg cursor-pointer transition-all border ${isSelected ? 'border-primary bg-primary/10' : isToday ? 'border-primary/50 bg-surface-container-high' : 'border-outline-variant/10 bg-surface-container hover:bg-surface-container-high'} flex flex-col justify-between">
+            <div class="flex items-center justify-between text-xs font-mono">
+              <span class="${isToday ? 'px-1.5 py-0.5 rounded bg-primary text-black font-bold' : 'text-on-surface'}">${day}</span>
+              ${dayEvents.length > 3 ? `<span class="text-[9px] text-outline">+${dayEvents.length - 3}</span>` : ''}
+            </div>
+            <div class="flex flex-wrap gap-1 mt-1">
+              ${dotsHtml}
+            </div>
+          </div>
+        `;
+      }
+
+      // Render agenda for month or selected day
+      renderCalendarAgenda(selectedDayNum);
+    }
+
+    function selectCalendarDay(dayNum) {
+      renderCalendarGrid(dayNum);
+    }
+
+    function renderCalendarAgenda(dayNum = null) {
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const list = document.getElementById('calAgendaList');
+      const title = document.getElementById('calAgendaTitle');
+      const count = document.getElementById('calAgendaCount');
+
+      let filtered = [];
+      if (dayNum) {
+        title.textContent = `Events on Day ${dayNum}`;
+        filtered = calendarEvents.filter(ev => {
+          const evDate = new Date(ev.date);
+          return evDate.getFullYear() === year && evDate.getMonth() === month && evDate.getDate() === dayNum;
+        });
+      } else {
+        title.textContent = `All Events for this Month`;
+        filtered = calendarEvents.filter(ev => {
+          const evDate = new Date(ev.date);
+          return evDate.getFullYear() === year && evDate.getMonth() === month;
+        });
+      }
+
+      count.textContent = `${filtered.length} Events`;
+
+      if (filtered.length === 0) {
+        list.innerHTML = '<div class="text-xs text-outline py-4 text-center">No events scheduled for this timeframe.</div>';
+        return;
+      }
+
+      list.innerHTML = filtered.map(ev => {
+        let tagColor = 'bg-primary/20 text-primary';
+        if (ev.type === 'TASK') tagColor = 'bg-secondary/20 text-secondary';
+        if (ev.type === 'DEFENSE') tagColor = 'bg-tertiary/20 text-tertiary';
+
+        if (ev.type === 'TASK') {
+          return `
+            <a href="/tasks/${ev.id}" class="block p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-secondary/60 hover:bg-surface-container-high transition-all text-xs group cursor-pointer">
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded ${tagColor} font-bold">${ev.type}</span>
+                <span class="text-outline font-mono text-[11px]">${new Date(ev.date).toLocaleDateString()}</span>
+              </div>
+              <div class="font-semibold text-on-surface group-hover:text-secondary transition-colors flex items-center justify-between gap-2 mb-1.5">
+                <span class="truncate">${ev.title}</span>
+                <span class="material-symbols-outlined text-sm text-secondary shrink-0">open_in_new</span>
+              </div>
+              <div class="text-[10px] text-outline flex items-center justify-between pt-1.5 border-t border-outline-variant/10">
+                <span>${ev.projectCode} &bull; Status: <span class="text-on-surface font-mono font-medium">${ev.status || 'Active'}</span></span>
+                <span class="text-secondary font-semibold flex items-center gap-0.5 group-hover:underline"><span>Open Task Page</span> &rarr;</span>
+              </div>
+            </a>
+          `;
+        }
+
+        return `
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 text-xs">
+            <div class="flex items-center justify-between mb-1.5">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded ${tagColor} font-bold">${ev.type}</span>
+              <span class="text-outline font-mono text-[11px]">${new Date(ev.date).toLocaleDateString()}</span>
+            </div>
+            <div class="font-semibold text-on-surface mb-1">${ev.title}</div>
+            <div class="text-[10px] text-outline">${ev.projectCode} &bull; Status: <span class="text-on-surface font-mono font-medium">${ev.status || 'Active'}</span></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Tasks and Milestones helper functions with project-level scoping
+    let currentTaskProjectId = 'ALL';
+
+    function filterTasksByProject(projectId) {
+      currentTaskProjectId = projectId;
+      loadTasks(projectId);
+    }
+
+    async function loadTasks(projectId = currentTaskProjectId) {
+      try {
+        const url = (projectId && projectId !== 'ALL') ? `/api/tasks?projectId=${projectId}` : '/api/tasks';
+        const res = await fetch(url);
+        const json = await res.json();
+        if (!json.success) return;
+
+        const container = document.getElementById('tasksFullList');
+        if (json.tasks.length === 0) {
+          container.innerHTML = '<div class="text-xs text-outline py-4 text-center">No tasks found for the selected project scope. Click "New Task" above to add one.</div>';
+          return;
+        }
+
+        container.innerHTML = json.tasks.map(t => `
+          <div class="p-3.5 rounded-xl bg-surface-container-low border border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${t.priority === 'CRITICAL' ? 'bg-error/20 text-error' : 'bg-surface-container-high text-outline'}">${t.priority}</span>
+                <span class="text-xs font-medium text-on-surface">${t.title}</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-primary/20 text-primary">${t.project ? t.project.code : 'Project'}</span>
+              </div>
+              <p class="text-xs text-outline mb-1">${t.description || ''}</p>
+              <div class="text-[10px] text-outline">Assigned: ${t.assignedTo ? t.assignedTo.name : 'Unassigned'} &bull; Due: ${new Date(t.dueDate).toLocaleDateString()}</div>
+            </div>
+            <div class="flex items-center gap-2">
+              <a href="/tasks/${t._id}" class="px-2.5 py-1.5 rounded-lg bg-primary-container/20 hover:bg-primary-container text-primary hover:text-on-primary text-xs font-semibold border border-primary/30 transition-all flex items-center gap-1">
+                <span class="material-symbols-outlined text-[15px]">open_in_new</span>
+                <span>Open Task Page</span>
+              </a>
+              <select onchange="updateTaskStatus('${t._id}', this.value)" class="text-xs p-1.5 bg-surface-container border border-outline-variant/30 rounded text-on-surface">
+                <option value="TODO" ${t.status === 'TODO' ? 'selected' : ''}>TODO</option>
+                <option value="IN_PROGRESS" ${t.status === 'IN_PROGRESS' ? 'selected' : ''}>IN_PROGRESS</option>
+                <option value="REVIEW" ${t.status === 'REVIEW' ? 'selected' : ''}>REVIEW</option>
+                <option value="DONE" ${t.status === 'DONE' ? 'selected' : ''}>DONE</option>
+              </select>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        console.error('loadTasks error:', err);
+      }
+    }
+
+    async function updateTaskStatus(taskId, newStatus) {
+      try {
+        const res = await fetch(`/api/tasks/${taskId}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const json = await res.json();
+        if (json.success) loadStudentDashboard();
+        else alert(json.message);
+      } catch (err) {
+        alert('Failed to update task status.');
+      }
+    }
+
+    async function loadMilestonesTab() {
+      try {
+        const res = await fetch('/api/milestones');
+        const json = await res.json();
+        if (!json.success) return;
+
+        const container = document.getElementById('milestonesFullList');
+        container.innerHTML = json.milestones.map(m => `
+          <div class="p-5 rounded-xl bg-surface-container-low border border-outline-variant/30">
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="font-headline font-bold text-sm text-on-surface">${m.title}</h3>
+              <span class="text-xs font-mono px-2 py-0.5 rounded ${m.status === 'APPROVED' ? 'bg-tertiary/20 text-tertiary' : m.status === 'CHANGES_REQUESTED' ? 'bg-error/20 text-error' : 'bg-primary/20 text-primary'}">${m.status}</span>
+            </div>
+            <p class="text-xs text-outline mb-3">${m.description || ''}</p>
+            <div class="text-[11px] text-on-surface-variant space-y-1 mb-3">
+              <div><span class="text-outline">Due Date:</span> ${new Date(m.dueDate).toLocaleDateString()}</div>
+              ${m.submittedDeliverable ? `<div><span class="text-outline">Submitted Deliverable:</span> ${m.submittedDeliverable}</div>` : ''}
+              ${m.facultyFeedback ? `<div class="p-2 rounded bg-surface-container border border-outline-variant/20 text-secondary"><span class="font-semibold">Advisor Feedback:</span> "${m.facultyFeedback}" ${m.grade ? `(${m.grade})` : ''}</div>` : ''}
+            </div>
+            <div class="pt-2 border-t border-outline-variant/20 flex items-center justify-between">
+              <div class="text-[10px] text-outline">${m.evaluatedBy ? `Evaluated by ${m.evaluatedBy.name}` : 'Awaiting Faculty Review'}</div>
+              ${m.status !== 'APPROVED' ? `
+                <button onclick="promptSubmitMilestone('${m._id}', '${m.title.replace(/'/g, "\\'")}')" class="px-3 py-1 bg-primary-container text-on-primary text-xs rounded hover:bg-indigo-600 transition-colors">
+                  Submit Deliverable
+                </button>
+              ` : '<span class="text-tertiary text-xs font-medium flex items-center gap-1"><span class="material-symbols-outlined text-sm">verified</span> Approved by Faculty</span>'}
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {}
+    }
+
+    function promptSubmitMilestone(id, title) {
+      document.getElementById('modalMilestoneId').value = id;
+      document.getElementById('modalMilestoneTitle').value = title;
+      openModal('submitModal');
+    }
+
+    document.getElementById('submitMilestoneForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('modalMilestoneId').value;
+      const submittedDeliverable = document.getElementById('deliverableTitle').value;
+      const deliverableUrl = document.getElementById('deliverableUrl').value;
+      const submissionNotes = document.getElementById('submissionNotes').value;
+
+      try {
+        const res = await fetch(`/api/milestones/${id}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ submittedDeliverable, deliverableUrl, submissionNotes })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('submitModal');
+          alert('Deliverable submitted successfully for faculty review!');
+          loadStudentDashboard();
+        } else alert(json.message);
+      } catch (err) {
+        alert('Submission error.');
+      }
+    });
+
+    document.getElementById('createTaskForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const projectId = document.getElementById('taskProjectId').value;
+      const title = document.getElementById('taskTitle').value;
+      const description = document.getElementById('taskDesc').value;
+      const priority = document.getElementById('taskPriority').value;
+      const dueDate = document.getElementById('taskDueDate').value;
+
+      try {
+        const res = await fetch('/api/tasks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ projectId, title, description, priority, dueDate })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('newTaskModal');
+          loadStudentDashboard();
+        } else alert(json.message);
+      } catch (err) {
+        alert('Failed to create task.');
+      }
+    });
+
+    async function handleLogout() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+        window.location.href = '/login/student';
+      } catch (err) {
+        window.location.href = '/login/student';
+      }
+    }
+
+    // PROFILE AVATAR PREVIEW & DIRECT CLOUDINARY UPLOAD
+    async function previewAndUploadAvatar(input) {
+      if (!input.files || !input.files[0]) return;
+      const file = input.files[0];
+
+      // Instant local preview
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const preview = document.getElementById('profileAvatarPreview');
+        if (preview) preview.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+
+      // Upload to Cloudinary via PUT /api/auth/profile
+      const formData = new FormData();
+      formData.append('avatarFile', file);
+
+      try {
+        if (window.showToast) window.showToast('Uploading profile picture to Cloudinary...', 'info', 'Uploading');
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          body: formData,
+        });
+        const json = await res.json();
+        if (json.success) {
+          if (json.user && json.user.avatar) {
+            const preview = document.getElementById('profileAvatarPreview');
+            if (preview) preview.src = json.user.avatar;
+            const stuAvatar = document.getElementById('studentAvatar');
+            if (stuAvatar) stuAvatar.src = json.user.avatar;
+            const avatarUrlInput = document.getElementById('editProfileAvatarUrl');
+            if (avatarUrlInput) avatarUrlInput.value = json.user.avatar;
+          }
+          alert('Profile picture uploaded to Cloudinary successfully!');
+          loadStudentDashboard();
+        } else {
+          alert(json.message || 'Failed to upload photo.');
+        }
+      } catch (err) {
+        alert('Failed to upload profile picture: ' + err.message);
+      }
+    }
+
+    async function handleProfileUpdate(e) {
+      e.preventDefault();
+      const name = document.getElementById('editProfileName').value;
+      const dateOfBirth = document.getElementById('editProfileDob').value;
+      const avatarUrl = document.getElementById('editProfileAvatarUrl').value;
+      const btn = document.getElementById('saveProfileBtn');
+      if (btn) btn.disabled = true;
+
+      try {
+        const res = await fetch('/api/auth/profile', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, dateOfBirth, avatarUrl })
+        });
+        const json = await res.json();
+        if (json.success) {
+          alert('Profile details & Date of Birth updated successfully!');
+          loadStudentDashboard();
+        } else {
+          alert(json.message || 'Failed to update profile.');
+        }
+      } catch (err) {
+        alert('Failed to update profile.');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    loadStudentDashboard();
+  </script>
+</body>
+</html>

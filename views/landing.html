@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>ProjectHub - Academic Project Management Platform</title>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#0f131c",
+            "surface-dim": "#0f131c",
+            "surface-bright": "#353943",
+            "surface-container-lowest": "#0a0e17",
+            "surface-container-low": "#181b25",
+            "surface-container": "#1c1f29",
+            "surface-container-high": "#262a34",
+            "surface-container-highest": "#31353f",
+            "on-surface": "#dfe2ef",
+            "on-surface-variant": "#c7c4d8",
+            "outline": "#918fa1",
+            "outline-variant": "#464555",
+            "primary": "#c3c0ff",
+            "on-primary": "#1d00a5",
+            "primary-container": "#4f46e5",
+            "on-primary-container": "#dad7ff",
+            "secondary": "#4cd7f6",
+            "tertiary": "#4edea3",
+            "error": "#ffb4ab",
+            "background": "#0f131c",
+            "on-background": "#dfe2ef"
+          },
+          fontFamily: {
+            headline: ["Geist", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen selection:bg-primary-container selection:text-on-primary">
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-50 w-full bg-surface-container/80 backdrop-blur-md border-b border-outline-variant/30">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary shadow-sm">
+          <span class="material-symbols-outlined text-[24px]">school</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-headline text-xl text-on-surface tracking-tight font-bold">ProjectHub</span>
+            <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary-container/20 text-primary border border-primary/30">Role-Based System</span>
+          </div>
+          <span class="text-xs text-outline tracking-wider hidden sm:block">Academic Capstone &amp; Research Workspace</span>
+        </div>
+      </div>
+
+      <nav class="hidden md:flex items-center gap-6">
+        <a href="#roles" class="text-on-surface-variant hover:text-on-surface text-sm transition-colors">Role Portals</a>
+        <a href="#security" class="text-on-surface-variant hover:text-on-surface text-sm transition-colors">Security Architecture</a>
+        <a href="#matrix" class="text-on-surface-variant hover:text-on-surface text-sm transition-colors">Permission Matrix</a>
+      </nav>
+
+      <div class="flex items-center gap-3">
+        <a href="/login/student" class="text-xs sm:text-sm px-3 py-1.5 rounded-lg border border-outline-variant/50 text-on-surface hover:bg-surface-container-high transition-colors">
+          Student Portal
+        </a>
+        <a href="/login/faculty" class="text-xs sm:text-sm px-3 py-1.5 rounded-lg border border-outline-variant/50 text-secondary hover:bg-surface-container-high transition-colors">
+          Faculty Portal
+        </a>
+        <a href="/login/admin" class="text-xs sm:text-sm px-3.5 py-1.5 rounded-lg bg-primary-container text-on-primary font-medium hover:bg-indigo-600 transition-colors shadow-sm">
+          Admin Portal
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <main class="relative z-10">
+    <div class="max-w-7xl mx-auto px-6 pt-16 pb-20 text-center">
+      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-high border border-outline-variant/50 text-xs mb-8 shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
+        <span class="text-on-surface font-medium">Three Dedicated Roles &bull; MongoDB-Verified Authorization</span>
+      </div>
+
+      <h1 class="font-headline text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-on-surface max-w-4xl mx-auto mb-6">
+        Unified Academic Platform.
+        <span class="block mt-2 bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">
+          Strict Role-Based Integrity.
+        </span>
+      </h1>
+
+      <p class="text-base sm:text-lg text-on-surface-variant max-w-2xl mx-auto mb-12">
+        ProjectHub enforces dedicated authentication entry points, specialized dashboards, and server-side MongoDB role verification for Students, Faculty Advisors, and Institutional Deans.
+      </p>
+
+      <!-- ROLE ACCESS CARDS -->
+      <div id="roles" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto text-left mb-16">
+        
+        <!-- CARD 1: STUDENT -->
+        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-6 flex flex-col justify-between hover:border-primary/50 transition-all hover:shadow-lg group">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary mb-4 group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-[26px]">terminal</span>
+            </div>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="font-headline text-xl font-bold text-on-surface">1. STUDENT</h3>
+              <span class="text-[11px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-primary">/login/student</span>
+            </div>
+            <p class="text-xs text-outline mb-4">Workspace &amp; Deliverables Execution</p>
+            
+            <div class="space-y-2 mb-6">
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>View assigned projects &amp; team members</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Submit deliverables &amp; milestones for review</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Manage permitted tasks &amp; view advisor feedback</span>
+              </div>
+              <div class="text-xs text-error flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">block</span>
+                <span>Cannot approve milestones or change role</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
+            <a href="/login/student" class="w-full py-2.5 px-4 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary font-medium text-center text-sm transition-colors flex items-center justify-center gap-2">
+              <span>Enter Student Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <div class="text-[11px] text-outline text-center">Demo: student@university.edu / student123</div>
+          </div>
+        </div>
+
+        <!-- CARD 2: FACULTY -->
+        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-6 flex flex-col justify-between hover:border-secondary/50 transition-all hover:shadow-lg group">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary mb-4 group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-[26px]">rate_review</span>
+            </div>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="font-headline text-xl font-bold text-on-surface">2. FACULTY</h3>
+              <span class="text-[11px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-secondary">/login/faculty</span>
+            </div>
+            <p class="text-xs text-outline mb-4">Advisory, Reviews &amp; Defense Evaluations</p>
+            
+            <div class="space-y-2 mb-6">
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Auto-filtered to supervised teams &amp; projects</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Review submissions, approve &amp; request revisions</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Schedule defenses &amp; monitor project health</span>
+              </div>
+              <div class="text-xs text-error flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">block</span>
+                <span>Cannot view unassigned projects or admin controls</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
+            <a href="/login/faculty" class="w-full py-2.5 px-4 rounded-lg bg-surface-container-high hover:bg-secondary hover:text-black border border-secondary/40 text-secondary font-medium text-center text-sm transition-all flex items-center justify-center gap-2">
+              <span>Enter Faculty Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <div class="text-[11px] text-outline text-center">Demo: faculty@university.edu / faculty123</div>
+          </div>
+        </div>
+
+        <!-- CARD 3: ADMIN -->
+        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-6 flex flex-col justify-between hover:border-tertiary/50 transition-all hover:shadow-lg group">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-tertiary/10 border border-tertiary/30 flex items-center justify-center text-tertiary mb-4 group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-[26px]">admin_panel_settings</span>
+            </div>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="font-headline text-xl font-bold text-on-surface">3. ADMIN</h3>
+              <span class="text-[11px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-tertiary">/login/admin</span>
+            </div>
+            <p class="text-xs text-outline mb-4">Institutional Governance &amp; Accreditation</p>
+            
+            <div class="space-y-2 mb-6">
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Create projects, assign students &amp; faculty mentors</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Manage departments, cohorts, and user accounts</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Institution-wide analytics &amp; faculty workload balance</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Full tamper-evident audit trail &amp; compliance logs</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
+            <a href="/login/admin" class="w-full py-2.5 px-4 rounded-lg bg-surface-container-high hover:bg-tertiary hover:text-black border border-tertiary/40 text-tertiary font-medium text-center text-sm transition-all flex items-center justify-center gap-2">
+              <span>Enter Admin Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <div class="text-[11px] text-outline text-center">Demo: admin@university.edu / admin123</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ARCHITECTURAL INTEGRITY SECTION -->
+      <div id="security" class="rounded-2xl bg-surface-container border border-outline-variant/30 p-8 text-left max-w-5xl mx-auto mb-16">
+        <h3 class="font-headline text-2xl font-bold text-on-surface mb-2 flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">security</span>
+          Role Enforcement in Express Middleware
+        </h3>
+        <p class="text-sm text-on-surface-variant mb-6">
+          The system never trusts client-supplied roles. Authentication reads HTTP-Only cookies, decrypts cryptographic JWT tokens, and executes a database lookup against MongoDB Atlas to query the user's verified role before routing.
+        </p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono bg-surface-container-lowest p-4 rounded-lg border border-outline-variant/20">
+          <div class="p-3 bg-surface-container-low rounded border border-outline-variant/20">
+            <div class="text-primary font-bold mb-1">STUDENT ATTEMPTS /faculty/*</div>
+            <div class="text-error font-semibold">&bull; 403 Forbidden</div>
+            <div class="text-outline mt-1">Express middleware rejects and redirects to /student/dashboard</div>
+          </div>
+          <div class="p-3 bg-surface-container-low rounded border border-outline-variant/20">
+            <div class="text-secondary font-bold mb-1">FACULTY ATTEMPTS /admin/*</div>
+            <div class="text-error font-semibold">&bull; 403 Access Denied</div>
+            <div class="text-outline mt-1">Express middleware denies access and enforces advisor boundary</div>
+          </div>
+          <div class="p-3 bg-surface-container-low rounded border border-outline-variant/20">
+            <div class="text-tertiary font-bold mb-1">DATABASE FILTERING</div>
+            <div class="text-on-surface font-semibold">&bull; Backend Query Scoping</div>
+            <div class="text-outline mt-1">APIs strictly return only assigned records; never filtered in React</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="border-t border-outline-variant/30 py-8 bg-surface-container-lowest text-center text-xs text-outline">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div>ProjectHub Academic Workspace &bull; ABET AY24-25 Compliance Architecture</div>
+      <div class="flex items-center gap-6">
+        <a href="/login/student" class="hover:text-primary transition-colors">Student Login</a>
+        <a href="/login/faculty" class="hover:text-secondary transition-colors">Faculty Login</a>
+        <a href="/login/admin" class="hover:text-tertiary transition-colors">Admin Login</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>
