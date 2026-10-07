@@ -80,7 +80,7 @@ exports.loginStudent = async (req, res) => {
     });
   } catch (err) {
     console.error('loginStudent error:', err);
-    return res.status(500).json({ success: false, message: 'Internal server error during authentication.' });
+    return res.status(500).json({ success: false, message: 'Authentication error: ' + (err.message || 'Database error') });
   }
 };
 
@@ -138,7 +138,7 @@ exports.loginFaculty = async (req, res) => {
     });
   } catch (err) {
     console.error('loginFaculty error:', err);
-    return res.status(500).json({ success: false, message: 'Internal server error during authentication.' });
+    return res.status(500).json({ success: false, message: 'Authentication error: ' + (err.message || 'Database error') });
   }
 };
 
@@ -197,7 +197,7 @@ exports.loginAdmin = async (req, res) => {
     });
   } catch (err) {
     console.error('loginAdmin error:', err);
-    return res.status(500).json({ success: false, message: 'Internal server error during authentication.' });
+    return res.status(500).json({ success: false, message: 'Authentication error: ' + (err.message || 'Database error') });
   }
 };
 

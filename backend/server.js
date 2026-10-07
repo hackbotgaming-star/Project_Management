@@ -125,9 +125,9 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
   console.error('Unhandled server error:', err);
   if (req.originalUrl.startsWith('/api/')) {
-    return res.status(500).json({ success: false, message: 'Internal server error.' });
+    return res.status(500).json({ success: false, message: 'Server error: ' + (err.message || 'Unknown error') });
   }
-  res.status(500).send('ProjectHub encountered an internal server error.');
+  res.status(500).send('ProjectHub encountered an internal server error: ' + err.message);
 });
 
 // Start Server
