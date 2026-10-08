@@ -75,6 +75,64 @@ exports.createUser = async (req, res) => {
   }
 };
 
+// DELETE /api/admin/users/:id (Delete user account with cascade cleanup)
+exports.deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (req.user._id.toString() === id) {
+      return res.status(400).json({ success: false, message: 'You cannot delete your own administrator account.' });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found.' });
+    }
+
+    if (user.role === 'ADMIN') {
+      const adminCount = await User.countDocuments({ role: 'ADMIN' });
+      if (adminCount <= 1) {
+        return res.status(400).json({ success: false, message: 'Cannot delete the only remaining administrator account.' });
+      }
+    }
+
+    // Remove user from any project teams
+    await Project.updateMany(
+      { teamMembers: user._id },
+      { $pull: { teamMembers: user._id } }
+    );
+
+    // Unassign user if they were a faculty mentor
+    await Project.updateMany(
+      { facultyMentor: user._id },
+      { $set: { facultyMentor: null } }
+    );
+
+    // Delete user's notifications
+    await Notification.deleteMany({ user: user._id });
+
+    // Delete the user
+    await User.findByIdAndDelete(id);
+
+    // Record audit trail
+    await AuditTrail.create({
+      user: req.user._id,
+      userName: req.user.name,
+      role: 'ADMIN',
+      action: 'DELETE_USER',
+      targetType: 'USER',
+      targetId: id,
+      details: `Permanently deleted user account "${user.name}" (${user.email}, ${user.role}).`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    return res.json({ success: true, message: `User "${user.name}" (${user.email}) deleted successfully.` });
+  } catch (err) {
+    console.error('deleteUser error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to delete user: ' + err.message });
+  }
+};
+
 // PUT /api/admin/projects/:id/faculty (Assign or Change Faculty Mentor)
 exports.assignFacultyMentor = async (req, res) => {
   try {
