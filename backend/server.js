@@ -67,26 +67,31 @@ app.get('/login', (req, res) => {
 
 // Student Protected Dashboard & Subroutes
 app.get(/^\/student\/.*/, authenticateToken, requireStudent, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.sendFile(path.join(__dirname, '../frontend/views/student-dashboard.html'));
 });
 
 // Faculty Protected Dashboard & Subroutes
 app.get(/^\/faculty\/.*/, authenticateToken, requireFaculty, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.sendFile(path.join(__dirname, '../frontend/views/faculty-dashboard.html'));
 });
 
 // Admin Protected Dashboard & Subroutes
 app.get(/^\/admin\/.*/, authenticateToken, requireAdmin, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.sendFile(path.join(__dirname, '../frontend/views/admin-dashboard.html'));
 });
 
 // Dedicated Working Task Details Page (accessible by Student, Faculty, Admin)
 app.get(['/tasks/:id', '/task/:id', '/tasks'], authenticateToken, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.sendFile(path.join(__dirname, '../frontend/views/task-details.html'));
 });
 
 // Dedicated Working Project Details Page (accessible by Student, Faculty, Admin)
 app.get(['/projects/:id', '/project/:id', '/projects'], authenticateToken, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.sendFile(path.join(__dirname, '../frontend/views/project-details.html'));
 });
 
