@@ -227,7 +227,10 @@ exports.createProject = async (req, res) => {
     return res.status(201).json({ success: true, message: 'Project created successfully.', project: populatedProject });
   } catch (err) {
     console.error('createProject error:', err);
-    return res.status(500).json({ success: false, message: 'Error creating project.' });
+    if (err.code === 11000) {
+      return res.status(400).json({ success: false, message: 'A project with this project code already exists. Please choose a different code.' });
+    }
+    return res.status(500).json({ success: false, message: err.message || 'Error creating project.' });
   }
 };
 

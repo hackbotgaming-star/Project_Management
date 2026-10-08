@@ -57,10 +57,10 @@
     const title = customTitle || parsed.title;
     const text = (customTitle ? message : parsed.text) || '';
 
-    // Prevent immediate duplicate toasts (debouncing within 500ms)
+    // Prevent immediate duplicate toasts (debouncing within 600ms)
     const key = `${type}:${title}:${text}`;
     const now = Date.now();
-    if (key === lastToastKey && (now - lastToastTime) < 500) {
+    if (key === lastToastKey && (now - lastToastTime) < 600) {
       return;
     }
     lastToastKey = key;
@@ -70,46 +70,53 @@
     const isLight = document.documentElement.classList.contains('light');
 
     let icon = 'check_circle';
-    let borderClass = isLight 
-      ? 'border-emerald-500/40 bg-white/95 text-emerald-700 shadow-emerald-950/10' 
-      : 'border-emerald-500/30 bg-[#0e1615]/95 text-emerald-400';
-    let titleClass = isLight ? 'text-emerald-700 font-bold' : 'text-emerald-400 font-semibold';
-    let iconColor = isLight ? 'text-emerald-600' : 'text-emerald-400';
-    let textClass = isLight ? 'text-slate-700 font-medium' : 'text-slate-300 font-medium';
+    let iconBg = isLight ? 'bg-emerald-100 text-emerald-600' : 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/30';
+    let cardClasses = isLight 
+      ? 'bg-white/95 text-slate-800 border-emerald-500/40 shadow-xl shadow-slate-200/50' 
+      : 'bg-[#111622]/95 text-slate-100 border-emerald-500/40 shadow-2xl shadow-black/60';
+    let titleClass = isLight ? 'text-emerald-700' : 'text-emerald-400';
+    let textClass = isLight ? 'text-slate-600' : 'text-slate-300';
 
     if (type === 'error') {
       icon = 'error';
-      borderClass = isLight 
-        ? 'border-rose-500/40 bg-white/95 text-rose-700 shadow-rose-950/10' 
-        : 'border-rose-500/30 bg-[#1a0e12]/95 text-rose-400';
-      titleClass = isLight ? 'text-rose-700 font-bold' : 'text-rose-400 font-semibold';
-      iconColor = isLight ? 'text-rose-600' : 'text-rose-400';
+      iconBg = isLight ? 'bg-rose-100 text-rose-600' : 'bg-rose-950/80 text-rose-400 border border-rose-500/30';
+      cardClasses = isLight 
+        ? 'bg-white/95 text-slate-800 border-rose-500/40 shadow-xl shadow-slate-200/50' 
+        : 'bg-[#1a1118]/95 text-slate-100 border-rose-500/40 shadow-2xl shadow-black/60';
+      titleClass = isLight ? 'text-rose-700' : 'text-rose-400';
+      textClass = isLight ? 'text-slate-600' : 'text-slate-300';
     } else if (type === 'warning') {
       icon = 'warning';
-      borderClass = isLight 
-        ? 'border-amber-500/40 bg-white/95 text-amber-800 shadow-amber-950/10' 
-        : 'border-amber-500/30 bg-[#19150a]/95 text-amber-400';
-      titleClass = isLight ? 'text-amber-800 font-bold' : 'text-amber-400 font-semibold';
-      iconColor = isLight ? 'text-amber-600' : 'text-amber-400';
+      iconBg = isLight ? 'bg-amber-100 text-amber-600' : 'bg-amber-950/80 text-amber-400 border border-amber-500/30';
+      cardClasses = isLight 
+        ? 'bg-white/95 text-slate-800 border-amber-500/40 shadow-xl shadow-slate-200/50' 
+        : 'bg-[#1c1810]/95 text-slate-100 border-amber-500/40 shadow-2xl shadow-black/60';
+      titleClass = isLight ? 'text-amber-700' : 'text-amber-400';
+      textClass = isLight ? 'text-slate-600' : 'text-slate-300';
     } else if (type === 'info') {
       icon = 'info';
-      borderClass = isLight 
-        ? 'border-indigo-500/40 bg-white/95 text-indigo-700 shadow-indigo-950/10' 
-        : 'border-blue-500/30 bg-[#0d141e]/95 text-blue-400';
-      titleClass = isLight ? 'text-indigo-700 font-bold' : 'text-blue-400 font-semibold';
-      iconColor = isLight ? 'text-indigo-600' : 'text-blue-400';
+      iconBg = isLight ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-950/80 text-indigo-400 border border-indigo-500/30';
+      cardClasses = isLight 
+        ? 'bg-white/95 text-slate-800 border-indigo-500/40 shadow-xl shadow-slate-200/50' 
+        : 'bg-[#101426]/95 text-slate-100 border-indigo-500/40 shadow-2xl shadow-black/60';
+      titleClass = isLight ? 'text-indigo-700' : 'text-indigo-400';
+      textClass = isLight ? 'text-slate-600' : 'text-slate-300';
     }
 
-    toast.className += ` ${borderClass}`;
+    toast.className = `projecthub-toast pointer-events-auto flex items-start gap-3.5 p-3.5 sm:p-4 rounded-xl border backdrop-blur-xl transition-all duration-300 ease-out transform -translate-y-3 opacity-0 w-full ${cardClasses}`;
+    toast.style.backdropFilter = 'blur(16px)';
+    toast.style.webkitBackdropFilter = 'blur(16px)';
 
     toast.innerHTML = `
-      <span class="material-symbols-outlined ${iconColor} text-2xl shrink-0 mt-0.5">${icon}</span>
-      <div class="flex-1 min-w-0 pr-2">
-        <h4 class="${titleClass} text-xs tracking-wider uppercase">${title}</h4>
-        <p class="${textClass} text-xs mt-0.5 break-words leading-relaxed">${text}</p>
+      <div class="flex items-center justify-center w-8 h-8 rounded-lg shrink-0 ${iconBg}">
+        <span class="material-symbols-outlined text-[20px] select-none">${icon}</span>
       </div>
-      <button class="shrink-0 text-slate-400 hover:text-slate-700 dark:hover:text-white transition-colors p-1" onclick="this.parentElement.remove()">
-        <span class="material-symbols-outlined text-base">close</span>
+      <div class="flex-1 min-w-0 pt-0.5">
+        <h4 class="${titleClass} font-bold text-xs uppercase tracking-wider leading-none mb-1">${title}</h4>
+        <p class="${textClass} text-xs leading-relaxed break-words font-medium">${text}</p>
+      </div>
+      <button type="button" aria-label="Dismiss notification" class="shrink-0 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10" onclick="this.closest('.projecthub-toast').remove()">
+        <span class="material-symbols-outlined text-base block select-none">close</span>
       </button>
     `;
 
@@ -117,18 +124,19 @@
 
     // Trigger enter animation
     requestAnimationFrame(() => {
-      toast.classList.remove('translate-y-[-10px]', 'opacity-0');
+      toast.classList.remove('-translate-y-3', 'opacity-0');
       toast.classList.add('translate-y-0', 'opacity-100');
     });
 
     // Auto dismiss
-    setTimeout(() => {
+    const dismissTimer = setTimeout(() => {
+      if (!toast.parentElement) return;
       toast.classList.remove('translate-y-0', 'opacity-100');
-      toast.classList.add('translate-y-[-10px]', 'opacity-0');
+      toast.classList.add('-translate-y-2', 'opacity-0');
       setTimeout(() => {
         if (toast.parentElement) toast.remove();
       }, 300);
-    }, 3800);
+    }, 4000);
   };
 
   // Completely override window.alert so no "localhost:5000 says" modal ever shows

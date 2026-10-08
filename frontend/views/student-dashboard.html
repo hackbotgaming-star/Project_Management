@@ -574,7 +574,21 @@
           </div>
           <div>
             <label class="block text-xs text-outline mb-1 font-medium">Department</label>
-            <input id="stuNewProjDept" value="Computer Science & Engineering" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+            <select id="stuNewProjDept" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+              <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+              <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science (AI&DS)</option>
+              <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning (AI&ML)</option>
+              <option value="Computer Science & Engineering (Cyber Security)">Computer Science & Engineering - Cyber Security (CSE-CS)</option>
+              <option value="Computer Science & Design">Computer Science & Design (CSD)</option>
+              <option value="Information Technology">Information Technology (IT)</option>
+              <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
+              <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
+              <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
+              <option value="Automobile Engineering">Automobile Engineering (AUTO)</option>
+              <option value="Robotics & Automation Engineering">Robotics & Automation Engineering (ROB)</option>
+              <option value="Biomedical Engineering">Biomedical Engineering (BME)</option>
+              <option value="Civil Engineering">Civil Engineering (CIVIL)</option>
+            </select>
           </div>
         </div>
 
@@ -959,7 +973,11 @@
       document.getElementById('settingsEmail').value = p.email;
       if (p.avatar) document.getElementById('userAvatar').src = p.avatar;
       if (p.cohort) document.getElementById('sideCohortTitle').textContent = p.cohort;
-      if (p.department) document.getElementById('sideDeptTitle').textContent = p.department;
+      if (p.department) {
+        document.getElementById('sideDeptTitle').textContent = p.department;
+        const deptSelect = document.getElementById('stuNewProjDept');
+        if (deptSelect) deptSelect.value = p.department;
+      }
 
       // Stats
       document.getElementById('statProjects').textContent = data.activeProjects.length;
@@ -1263,10 +1281,19 @@
     // CREATE PROJECT WITH TEAM MEMBERS
     document.getElementById('studentCreateProjectForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const title = document.getElementById('stuNewProjTitle').value;
-      const code = document.getElementById('stuNewProjCode').value;
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn && submitBtn.disabled) return;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.dataset.origText = submitBtn.innerText;
+        submitBtn.innerText = 'Creating...';
+      }
+
+      const title = document.getElementById('stuNewProjTitle').value.trim();
+      const code = document.getElementById('stuNewProjCode').value.trim();
       const department = document.getElementById('stuNewProjDept').value;
-      const abstract = document.getElementById('stuNewProjAbstract').value;
+      const abstract = document.getElementById('stuNewProjAbstract').value.trim();
 
       // Collect checked students
       const checkboxes = document.querySelectorAll('input[name="selectedTeamMembers"]:checked');
@@ -1281,13 +1308,22 @@
         const json = await res.json();
         if (json.success) {
           closeModal('studentNewProjectModal');
-          alert('Project created successfully with your selected teammates!');
+          form.reset();
+          if (dashboardData && dashboardData.studentProfile && dashboardData.studentProfile.department) {
+            document.getElementById('stuNewProjDept').value = dashboardData.studentProfile.department;
+          }
+          showToast('Project created successfully with your selected teammates!', 'success', 'CREATED');
           loadStudentDashboard();
         } else {
-          alert(json.message);
+          showToast(json.message || 'Error creating project.', 'error', 'ERROR');
         }
       } catch (err) {
-        alert('Failed to create project.');
+        showToast('Failed to create project: ' + err.message, 'error', 'ERROR');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = submitBtn.dataset.origText || 'Create Project';
+        }
       }
     });
 
@@ -1298,13 +1334,22 @@
 
     document.getElementById('addMemberForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn && submitBtn.disabled) return;
+
       const projectId = document.getElementById('addMemberProjSelect').value;
       const checkboxes = document.querySelectorAll('input[name="membersToAdd"]:checked');
       const studentIds = Array.from(checkboxes).map(cb => cb.value);
 
       if (studentIds.length === 0) {
-        alert('Please check at least one student to add.');
+        showToast('Please check at least one student to add.', 'warning', 'WARNING');
         return;
+      }
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Adding...';
       }
 
       try {
@@ -1316,13 +1361,19 @@
         const json = await res.json();
         if (json.success) {
           closeModal('addMemberModal');
-          alert('Teammates added to project successfully!');
+          form.reset();
+          showToast('Teammates added to project successfully!', 'success', 'ADDED');
           loadStudentDashboard();
         } else {
-          alert(json.message);
+          showToast(json.message || 'Failed to add teammates.', 'error', 'ERROR');
         }
       } catch (err) {
-        alert('Failed to add members.');
+        showToast('Failed to add teammates: ' + err.message, 'error', 'ERROR');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Add Members';
+        }
       }
     });
 
