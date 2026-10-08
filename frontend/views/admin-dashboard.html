@@ -58,12 +58,15 @@
 </head>
 <body class="bg-background text-on-background font-body antialiased min-h-screen selection:bg-tertiary selection:text-black">
 
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+
   <!-- ========================================== -->
   <!-- SIDEBAR NAVIGATION (Admin Nav)             -->
   <!-- ========================================== -->
-  <aside class="fixed top-0 left-0 h-screen w-64 border-r border-outline-variant/30 bg-surface-container-low hidden md:flex flex-col justify-between p-4 z-40">
+  <aside id="mainSidebar" class="fixed top-0 left-0 h-screen w-72 md:w-64 border-r border-outline-variant/30 bg-surface-container-low flex flex-col justify-between p-4 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none">
     <div class="flex flex-col gap-4">
-      <!-- Logo Branding -->
+      <!-- Logo Branding & Mobile Close Button -->
       <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
         <div class="flex items-center gap-2.5">
           <div class="h-8 w-8 rounded-lg bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-tertiary shadow-sm">
@@ -74,6 +77,9 @@
             <span class="block text-[10px] text-outline uppercase tracking-wider">Institutional Admin</span>
           </div>
         </div>
+        <button type="button" onclick="toggleMobileSidebar()" aria-label="Close navigation" class="md:hidden p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
       </div>
 
       <!-- Institutional Scope Badge -->
@@ -165,6 +171,28 @@
   <!-- ========================================== -->
   <main class="md:ml-64 p-4 md:p-8 min-h-screen">
     
+    <!-- Mobile Sticky Navigation Bar -->
+    <div class="md:hidden sticky top-0 z-30 flex items-center justify-between p-3 bg-surface-container-low/95 backdrop-blur-md border-b border-outline-variant/25 -mx-4 -mt-4 mb-4 shadow-sm">
+      <div class="flex items-center gap-2.5">
+        <button type="button" onclick="toggleMobileSidebar()" aria-label="Toggle navigation menu" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-on-surface transition-colors flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">menu</span>
+        </button>
+        <div class="flex items-center gap-2">
+          <div class="h-6 w-6 rounded bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+          </div>
+          <span class="font-headline font-bold text-sm text-on-surface tracking-tight">ProjectHub</span>
+          <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-tertiary/10 text-tertiary border border-tertiary/20 font-semibold">ADMIN</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="openModal('adminNewProjectModal')" class="p-1.5 px-2.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black text-xs font-semibold flex items-center gap-1 shadow-sm">
+          <span class="material-symbols-outlined text-sm">add_circle</span>
+          <span>New Project</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Top Header Bar -->
     <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-outline-variant/20">
       <div>
@@ -176,12 +204,12 @@
         <h1 id="pageTitle" class="font-headline text-2xl font-bold text-on-surface tracking-tight mt-0.5">Institutional Overview</h1>
       </div>
 
-      <div class="flex items-center gap-3">
-        <button onclick="openModal('createUserModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-on-surface hover:bg-surface-container transition-colors flex items-center gap-1.5">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button onclick="openModal('createUserModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-on-surface hover:bg-surface-container transition-colors flex items-center gap-1.5 shadow-sm">
           <span class="material-symbols-outlined text-sm">person_add</span>
           <span>Add User</span>
         </button>
-        <button onclick="openModal('adminNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold text-xs hover:bg-emerald-400 transition-colors flex items-center gap-1.5">
+        <button onclick="openModal('adminNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold text-xs hover:bg-emerald-400 transition-colors flex items-center gap-1.5 shadow-sm">
           <span class="material-symbols-outlined text-sm">add_circle</span>
           <span>New Project</span>
         </button>
@@ -854,7 +882,7 @@
   <!-- MODAL: ADMIN UPLOAD DOCUMENT               -->
   <!-- ========================================== -->
   <div id="adminUploadDocModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
         <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
           <span class="material-symbols-outlined text-tertiary">upload_file</span>
@@ -912,7 +940,7 @@
   <!-- MODAL: ASSIGN / CHANGE FACULTY MENTOR      -->
   <!-- ========================================== -->
   <div id="reassignModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
         <h3 class="font-headline font-bold text-base text-on-surface">Change Faculty Mentor</h3>
         <button onclick="closeModal('reassignModal')" class="text-outline hover:text-on-surface">
@@ -944,7 +972,7 @@
   <!-- MODAL: CREATE PROJECT (Admin Privilege)    -->
   <!-- ========================================== -->
   <div id="adminNewProjectModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
         <h3 class="font-headline font-bold text-base text-on-surface">Create Institutional Project</h3>
         <button onclick="closeModal('adminNewProjectModal')" class="text-outline hover:text-on-surface">
@@ -1002,7 +1030,7 @@
   <!-- MODAL: ADD USER (Student or Faculty)      -->
   <!-- ========================================== -->
   <div id="createUserModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
         <h3 class="font-headline font-bold text-base text-on-surface">Provision User Account</h3>
         <button onclick="closeModal('createUserModal')" class="text-outline hover:text-on-surface">
@@ -1098,7 +1126,7 @@
   <!-- MODAL: EDIT HEAD OF DEPARTMENT (HOD)      -->
   <!-- ========================================== -->
   <div id="editDeptHeadModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between mb-4 pb-3 border-b border-outline-variant/20">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-tertiary text-xl">supervisor_account</span>
@@ -1150,6 +1178,22 @@
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (!sidebar || !backdrop) return;
+      const isClosed = sidebar.classList.contains('-translate-x-full');
+      if (isClosed) {
+        sidebar.classList.remove('-translate-x-full');
+        backdrop.classList.remove('hidden');
+        document.body.classList.add('overflow-hidden', 'md:overflow-auto');
+      } else {
+        sidebar.classList.add('-translate-x-full');
+        backdrop.classList.add('hidden');
+        document.body.classList.remove('overflow-hidden', 'md:overflow-auto');
+      }
+    }
+
     function switchTab(tabId) {
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.adm-nav-item').forEach(el => {
@@ -1161,6 +1205,17 @@
       const navBtn = document.getElementById(`nav-${tabId}`);
       if (navBtn) navBtn.className = 'adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-tertiary bg-surface-container-high';
       document.getElementById('pageTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1).replace('-', ' ');
+
+      // On mobile/tablet, auto close sidebar when a tab is selected
+      if (window.innerWidth < 768) {
+        const sidebar = document.getElementById('mainSidebar');
+        const backdrop = document.getElementById('sidebarBackdrop');
+        if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
+          sidebar.classList.add('-translate-x-full');
+          if (backdrop) backdrop.classList.add('hidden');
+          document.body.classList.remove('overflow-hidden', 'md:overflow-auto');
+        }
+      }
 
       if (tabId === 'calendar') loadCalendar();
       if (tabId === 'documents') loadAdminDocuments();

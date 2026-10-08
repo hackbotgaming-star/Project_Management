@@ -47,36 +47,39 @@
 <body class="bg-surface text-on-surface font-sans antialiased min-h-screen flex flex-col selection:bg-primary/30">
 
   <!-- Top Navigation Bar -->
-  <header class="sticky top-0 z-40 bg-surface-container-low/95 backdrop-blur-md border-b border-outline-variant/30 px-6 py-3.5 flex items-center justify-between shadow-lg">
-    <div class="flex items-center gap-4">
-      <button onclick="goBack()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-outline hover:text-on-surface transition-all flex items-center gap-1.5 text-xs font-medium">
+  <header class="sticky top-0 z-40 bg-surface-container-low/95 backdrop-blur-md border-b border-outline-variant/30 px-3 sm:px-6 py-2.5 sm:py-3.5 flex items-center justify-between shadow-lg gap-2">
+    <div class="flex items-center gap-2 sm:gap-4 min-w-0">
+      <button onclick="goBack()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-outline hover:text-on-surface transition-all flex items-center gap-1.5 text-xs font-medium shrink-0">
         <span class="material-symbols-outlined text-[18px]">arrow_back</span>
-        <span>Back to Portal</span>
+        <span class="hidden sm:inline">Back to Portal</span>
+        <span class="sm:hidden">Back</span>
       </button>
-      <div class="h-4 w-px bg-outline-variant/30"></div>
-      <div class="flex items-center gap-2.5">
-        <div class="w-8 h-8 rounded-lg bg-secondary/20 text-secondary flex items-center justify-center font-bold font-mono text-sm border border-secondary/30">
+      <div class="h-4 w-px bg-outline-variant/30 hidden sm:block"></div>
+      <div class="flex items-center gap-2 sm:gap-2.5 min-w-0">
+        <div class="w-8 h-8 rounded-lg bg-secondary/20 text-secondary flex items-center justify-center font-bold font-mono text-sm border border-secondary/30 shrink-0">
           <span class="material-symbols-outlined text-[20px]">folder_special</span>
         </div>
-        <div>
-          <h1 class="text-sm font-bold text-on-surface flex items-center gap-2">
-            <span id="navProjectTitle">Project Working Workspace</span>
-            <span id="navProjectCodeBadge" class="text-[10px] font-mono px-2 py-0.5 rounded uppercase font-semibold bg-primary/20 text-primary">CODE</span>
+        <div class="min-w-0">
+          <h1 class="text-sm font-bold text-on-surface flex items-center gap-1.5 sm:gap-2 truncate">
+            <span id="navProjectTitle" class="truncate max-w-[110px] sm:max-w-xs md:max-w-md">Project Workspace</span>
+            <span id="navProjectCodeBadge" class="text-[10px] font-mono px-1.5 sm:px-2 py-0.5 rounded uppercase font-semibold bg-primary/20 text-primary shrink-0">CODE</span>
           </h1>
-          <p id="navDepartmentSubtitle" class="text-[11px] text-outline font-mono">Loading project parameters...</p>
+          <p id="navDepartmentSubtitle" class="text-[10px] sm:text-[11px] text-outline font-mono truncate">Loading project parameters...</p>
         </div>
       </div>
     </div>
 
     <!-- Right Controls -->
-    <div class="flex items-center gap-2.5">
-      <button onclick="openCreateTaskModal()" class="px-3.5 py-1.5 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold transition-all shadow-md active:scale-95 flex items-center gap-1.5">
+    <div class="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+      <button onclick="openCreateTaskModal()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold transition-all shadow-md active:scale-95 flex items-center gap-1 sm:gap-1.5">
         <span class="material-symbols-outlined text-[18px]">add_task</span>
-        <span>Create Task</span>
+        <span class="hidden sm:inline">Create Task</span>
+        <span class="sm:hidden">Task</span>
       </button>
-      <button onclick="openUploadDocModal()" class="px-3 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-xs text-on-surface font-medium transition-all flex items-center gap-1.5">
+      <button onclick="openUploadDocModal()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-xs text-on-surface font-medium transition-all flex items-center gap-1 sm:gap-1.5">
         <span class="material-symbols-outlined text-[18px] text-secondary">cloud_upload</span>
-        <span>Upload Doc</span>
+        <span class="hidden sm:inline">Upload Doc</span>
+        <span class="sm:hidden">Doc</span>
       </button>
       <button onclick="setTheme(localStorage.getItem('projecthub_theme') === 'light' ? 'dark' : 'light')" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-outline hover:text-on-surface transition-all" title="Toggle Light / Dark Theme">
         <span class="material-symbols-outlined text-[18px]">routine</span>
@@ -343,7 +346,7 @@
 
   <!-- 1. CREATE TASK MODAL -->
   <div id="createTaskModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-xl">add_task</span>
@@ -402,7 +405,7 @@
 
   <!-- 2. ADD TEAM MEMBER MODAL -->
   <div id="addMemberModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-secondary text-xl">person_add</span>
@@ -431,7 +434,7 @@
 
   <!-- 3. UPLOAD CLOUDINARY DOCUMENT MODAL -->
   <div id="uploadDocModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-secondary text-xl">cloud_upload</span>
@@ -493,7 +496,7 @@
 
   <!-- 4. EDIT PROJECT MODAL -->
   <div id="editProjectModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl">
+    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-lg w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto">
       <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
         <div class="flex items-center gap-2">
           <span class="material-symbols-outlined text-primary text-xl">settings</span>
