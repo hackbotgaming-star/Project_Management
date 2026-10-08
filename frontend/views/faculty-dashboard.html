@@ -60,12 +60,12 @@
 <body class="bg-background text-on-background font-body antialiased min-h-screen selection:bg-secondary selection:text-black">
 
   <!-- Mobile Sidebar Backdrop Overlay -->
-  <div id="sidebarBackdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-black/75 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+  <div id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
 
   <!-- ========================================== -->
   <!-- SIDEBAR NAVIGATION (Faculty Advisor Nav)  -->
   <!-- ========================================== -->
-  <aside id="mainSidebar" class="fixed top-0 left-0 h-screen w-72 md:w-64 border-r border-outline-variant/30 bg-surface-container-low flex flex-col justify-between p-4 z-50 transform -translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none">
+  <aside id="mainSidebar" class="fixed top-0 left-0 h-screen w-72 md:w-64 border-r border-outline-variant/30 bg-surface-container-low flex flex-col justify-between p-4 z-50 md:shadow-none">
     <div class="flex flex-col gap-4">
       <!-- Logo Branding & Mobile Close Button -->
       <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
@@ -78,7 +78,7 @@
             <span class="block text-[10px] text-outline uppercase tracking-wider">Faculty Advisor</span>
           </div>
         </div>
-        <button type="button" onclick="toggleMobileSidebar()" aria-label="Close navigation" class="md:hidden p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors">
+        <button type="button" onclick="closeMobileSidebar()" aria-label="Close navigation" class="md:hidden p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors">
           <span class="material-symbols-outlined text-xl">close</span>
         </button>
       </div>
@@ -703,6 +703,24 @@
 
   <!-- APPLICATION SCRIPTS -->
   <script>
+    // Auto-attach JWT auth header for mobile and desktop fetch requests
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options = {}) {
+      options = options || {};
+      const token = localStorage.getItem('projecthub_token');
+      if (token && typeof url === 'string' && url.startsWith('/api/')) {
+        options.headers = options.headers || {};
+        if (options.headers instanceof Headers) {
+          if (!options.headers.has('Authorization')) options.headers.set('Authorization', 'Bearer ' + token);
+        } else if (Array.isArray(options.headers)) {
+          options.headers.push(['Authorization', 'Bearer ' + token]);
+        } else {
+          if (!options.headers['Authorization']) options.headers['Authorization'] = 'Bearer ' + token;
+        }
+      }
+      return originalFetch(url, options);
+    };
+
     let facultyData = null;
     let calendarEvents = [];
     let calDate = new Date();
@@ -710,19 +728,29 @@
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-    function toggleMobileSidebar() {
+    function openMobileSidebar() {
       const sidebar = document.getElementById('mainSidebar');
       const backdrop = document.getElementById('sidebarBackdrop');
-      if (!sidebar || !backdrop) return;
-      const isClosed = sidebar.classList.contains('-translate-x-full');
-      if (isClosed) {
-        sidebar.classList.remove('-translate-x-full');
-        backdrop.classList.remove('hidden');
-        document.body.classList.add('overflow-hidden', 'md:overflow-auto');
+      if (sidebar) sidebar.classList.add('sidebar-open');
+      if (backdrop) backdrop.classList.add('backdrop-open');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (sidebar) sidebar.classList.remove('sidebar-open');
+      if (backdrop) backdrop.classList.remove('backdrop-open');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      if (!sidebar) return;
+      if (sidebar.classList.contains('sidebar-open')) {
+        closeMobileSidebar();
       } else {
-        sidebar.classList.add('-translate-x-full');
-        backdrop.classList.add('hidden');
-        document.body.classList.remove('overflow-hidden', 'md:overflow-auto');
+        openMobileSidebar();
       }
     }
 
@@ -738,16 +766,7 @@
       if (navBtn) navBtn.className = 'fac-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-secondary bg-surface-container-high';
       document.getElementById('pageTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1);
 
-      // On mobile/tablet, auto close sidebar when a tab is selected
-      if (window.innerWidth < 768) {
-        const sidebar = document.getElementById('mainSidebar');
-        const backdrop = document.getElementById('sidebarBackdrop');
-        if (sidebar && !sidebar.classList.contains('-translate-x-full')) {
-          sidebar.classList.add('-translate-x-full');
-          if (backdrop) backdrop.classList.add('hidden');
-          document.body.classList.remove('overflow-hidden', 'md:overflow-auto');
-        }
-      }
+      closeMobileSidebar();
 
       if (tabId === 'calendar') loadCalendar();
       if (tabId === 'documents') loadFacultyDocuments();
@@ -1494,10 +1513,9 @@
     async function handleLogout() {
       try {
         await fetch('/api/auth/logout', { method: 'POST' });
-        window.location.href = '/login/faculty';
-      } catch (err) {
-        window.location.href = '/login/faculty';
-      }
+      } catch (err) {}
+      localStorage.removeItem('projecthub_token');
+      window.location.href = '/login/faculty';
     }
 
     // FACULTY PROFILE AVATAR PREVIEW & DIRECT CLOUDINARY UPLOAD

@@ -284,6 +284,7 @@
         });
         const data = await res.json();
         if (data.success) {
+          if (data.token) localStorage.setItem('projecthub_token', data.token);
           showAlert('Faculty authenticated. Redirecting to Advisor Review Center...', false);
           setTimeout(() => {
             window.location.href = data.redirectUrl || '/faculty/dashboard';

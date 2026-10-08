@@ -437,3 +437,60 @@ html.light .projecthub-toast-close:hover {
   color: #0f172a !important;
   background: rgba(0, 0, 0, 0.06) !important;
 }
+
+/* ========================================================= */
+/* 8. MOBILE & TABLET DRAWER NAVIGATION                      */
+/* ========================================================= */
+@media (max-width: 767px) {
+  #mainSidebar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    width: 288px !important;
+    max-width: 84vw !important;
+    z-index: 60 !important;
+    transform: translateX(-100%) !important;
+    transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1) !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  #mainSidebar.sidebar-open {
+    transform: translateX(0) !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7) !important;
+  }
+
+  #sidebarBackdrop {
+    position: fixed !important;
+    inset: 0 !important;
+    background-color: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(4px) !important;
+    -webkit-backdrop-filter: blur(4px) !important;
+    z-index: 55 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.28s ease !important;
+    display: block !important;
+  }
+
+  #sidebarBackdrop.backdrop-open {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+  }
+}
+
+@media (min-width: 768px) {
+  #sidebarBackdrop {
+    display: none !important;
+  }
+  #mainSidebar {
+    transform: translateX(0) !important;
+  }
+}

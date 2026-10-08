@@ -284,6 +284,7 @@
         });
         const data = await res.json();
         if (data.success) {
+          if (data.token) localStorage.setItem('projecthub_token', data.token);
           showAlert('Administrator authenticated. Loading Institutional Dashboard...', false);
           setTimeout(() => {
             window.location.href = data.redirectUrl || '/admin/dashboard';

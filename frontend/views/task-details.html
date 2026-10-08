@@ -366,6 +366,24 @@
 
   <!-- Page Logic Script -->
   <script>
+    // Auto-attach JWT auth header for mobile and desktop fetch requests
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options = {}) {
+      options = options || {};
+      const token = localStorage.getItem('projecthub_token');
+      if (token && typeof url === 'string' && url.startsWith('/api/')) {
+        options.headers = options.headers || {};
+        if (options.headers instanceof Headers) {
+          if (!options.headers.has('Authorization')) options.headers.set('Authorization', 'Bearer ' + token);
+        } else if (Array.isArray(options.headers)) {
+          options.headers.push(['Authorization', 'Bearer ' + token]);
+        } else {
+          if (!options.headers['Authorization']) options.headers['Authorization'] = 'Bearer ' + token;
+        }
+      }
+      return originalFetch(url, options);
+    };
+
     let currentTask = null;
     let currentTaskDocuments = [];
     let currentUserRole = null;
