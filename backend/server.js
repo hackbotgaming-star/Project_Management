@@ -29,6 +29,19 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors({ origin: true, credentials: true }));
 
+// PWA endpoints with optimal caching and service-worker scope headers
+app.get('/sw.js', (req, res) => {
+  res.setHeader('Service-Worker-Allowed', '/');
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Content-Type', 'application/javascript');
+  res.sendFile(path.join(__dirname, '../frontend/public/sw.js'));
+});
+
+app.get('/manifest.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/manifest+json');
+  res.sendFile(path.join(__dirname, '../frontend/public/manifest.json'));
+});
+
 // Serve static assets from public folder and extracted workspace
 app.use(express.static(path.join(__dirname, '../frontend/public')));
 app.use('/stitch', express.static(path.join(__dirname, '../stitch_projecthub_academic_workspace')));
