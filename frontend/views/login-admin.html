@@ -54,37 +54,39 @@
 <body class="bg-surface-container-lowest text-on-surface font-body antialiased min-h-screen flex flex-col justify-between selection:bg-tertiary selection:text-black">
   
   <!-- Header -->
-  <header class="p-6 flex items-center justify-between border-b border-outline-variant/20 bg-surface-container-low">
-    <a href="/" class="flex items-center gap-3">
-      <div class="w-9 h-9 rounded-lg bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-tertiary font-bold shadow-sm">
+  <header class="px-4 py-3 sm:px-6 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 border-b border-outline-variant/20 bg-surface-container-low">
+    <a href="/" class="flex items-center gap-2.5 sm:gap-3">
+      <div class="w-9 h-9 rounded-lg bg-surface-container-high border border-tertiary/40 flex items-center justify-center text-tertiary font-bold shadow-sm shrink-0">
         <span class="material-symbols-outlined text-[20px]">school</span>
       </div>
       <div>
-        <span class="font-headline font-bold text-lg text-on-surface">ProjectHub</span>
-        <span class="block text-[11px] text-outline">Institutional Administration &amp; ABET Oversight</span>
+        <span class="font-headline font-bold text-base sm:text-lg text-on-surface">ProjectHub</span>
+        <span class="block text-[10px] sm:text-[11px] text-outline">Institutional Administration &amp; ABET Oversight</span>
       </div>
     </a>
-    <div class="text-xs text-outline">
-      Switch Portal:
-      <a href="/login/student" class="text-primary hover:underline ml-2">Student</a>
-      <span class="mx-1">&bull;</span>
+    <div class="text-[11px] sm:text-xs text-outline flex items-center gap-1.5 flex-wrap">
+      <span>Switch Portal:</span>
+      <a href="/login/student" class="text-primary hover:underline">Student</a>
+      <span>&bull;</span>
       <a href="/login/faculty" class="text-secondary hover:underline">Faculty</a>
+      <span>&bull;</span>
+      <a href="/" class="text-on-surface hover:underline">Home</a>
     </div>
   </header>
 
   <!-- Login Card Container -->
-  <main class="flex items-center justify-center p-6 flex-1">
-    <div class="w-full max-w-md bg-surface-container-low border border-outline-variant/30 rounded-2xl p-8 shadow-2xl relative overflow-hidden">
+  <main class="flex items-center justify-center p-3 sm:p-6 flex-1">
+    <div class="w-full max-w-md bg-surface-container-low border border-outline-variant/30 rounded-2xl p-5 sm:p-8 shadow-2xl relative overflow-hidden">
       
       <!-- Top Accent Bar -->
       <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-tertiary to-secondary"></div>
 
       <!-- Icon & Title -->
-      <div class="text-center mb-6">
-        <div class="w-14 h-14 rounded-2xl bg-tertiary/15 border border-tertiary/40 text-tertiary mx-auto flex items-center justify-center mb-3">
-          <span class="material-symbols-outlined text-[32px]">admin_panel_settings</span>
+      <div class="text-center mb-5 sm:mb-6">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-tertiary/15 border border-tertiary/40 text-tertiary mx-auto flex items-center justify-center mb-2.5 sm:mb-3">
+          <span class="material-symbols-outlined text-[28px] sm:text-[32px]">admin_panel_settings</span>
         </div>
-        <h1 class="font-headline text-2xl font-bold text-on-surface">Institutional Admin Portal</h1>
+        <h1 class="font-headline text-xl sm:text-2xl font-bold text-on-surface">Institutional Admin Portal</h1>
         <p class="text-xs text-on-surface-variant mt-1">Campus project governance, faculty allocation &amp; audit trails</p>
       </div>
 
@@ -97,7 +99,7 @@
           <label class="block text-xs font-medium text-on-surface-variant mb-1">Administrator University Email</label>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">verified_user</span>
-            <input id="email" type="email" required placeholder="admin@university.edu" class="w-full pl-10 pr-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-tertiary transition-colors">
+            <input id="email" type="email" required autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="admin@university.edu" class="w-full pl-10 pr-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-tertiary transition-colors">
           </div>
         </div>
 
@@ -108,13 +110,18 @@
           </div>
           <div class="relative">
             <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">key</span>
-            <input id="password" type="password" required placeholder="••••••••" class="w-full pl-10 pr-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-tertiary transition-colors">
+            <input id="password" type="password" required autocomplete="current-password" placeholder="••••••••" class="w-full pl-10 pr-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-tertiary transition-colors">
           </div>
         </div>
 
         <button id="btnSubmit" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-tertiary hover:bg-emerald-400 text-black font-semibold text-sm transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2">
           <span>Authenticate as Administrator</span>
           <span class="material-symbols-outlined text-sm">login</span>
+        </button>
+
+        <button type="button" onclick="fillDemoAdmin()" class="w-full py-2 px-3 rounded-lg border border-tertiary/30 hover:bg-tertiary/10 text-tertiary text-xs font-medium transition-colors flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-[15px]">bolt</span>
+          <span>⚡ Tap to Fill Demo Credentials</span>
         </button>
       </form>
 
@@ -299,6 +306,32 @@
         btn.disabled = false;
         btn.innerHTML = '<span>Authenticate as Administrator</span><span class="material-symbols-outlined text-sm">login</span>';
       }
+    });
+
+    function fillDemoAdmin() {
+      document.getElementById('email').value = 'admin@university.edu';
+      document.getElementById('password').value = 'Password123!';
+    }
+
+    // Check if already authenticated
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const token = localStorage.getItem('projecthub_token');
+        const headers = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        const res = await fetch('/api/auth/me', { headers, credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && data.user) {
+            if (data.user.role === 'admin') {
+              showAlert(`Already logged in as ${data.user.name}. Redirecting to Institutional Admin Dashboard...`, false);
+              setTimeout(() => {
+                window.location.href = '/admin/dashboard';
+              }, 800);
+            }
+          }
+        }
+      } catch (e) {}
     });
   </script>
 </body>

@@ -74,19 +74,18 @@
       <nav class="hidden md:flex items-center gap-6">
         <a href="#roles" class="text-on-surface-variant hover:text-on-surface text-sm transition-colors">Role Portals</a>
         <a href="#security" class="text-on-surface-variant hover:text-on-surface text-sm transition-colors">Security Architecture</a>
-        <a href="#matrix" class="text-on-surface-variant hover:text-on-surface text-sm transition-colors">Permission Matrix</a>
       </nav>
 
-      <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        <a href="/login/student" class="text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 rounded-lg border border-outline-variant/50 text-on-surface hover:bg-surface-container-high transition-colors">
+      <div id="headerNavActions" class="flex items-center gap-1 sm:gap-2 shrink-0">
+        <a href="/login/student" class="text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-lg border border-outline-variant/50 text-on-surface hover:bg-surface-container-high transition-colors">
           <span class="hidden sm:inline">Student Portal</span>
           <span class="sm:hidden">Student</span>
         </a>
-        <a href="/login/faculty" class="text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 rounded-lg border border-outline-variant/50 text-secondary hover:bg-surface-container-high transition-colors">
+        <a href="/login/faculty" class="text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-lg border border-outline-variant/50 text-secondary hover:bg-surface-container-high transition-colors">
           <span class="hidden sm:inline">Faculty Portal</span>
           <span class="sm:hidden">Faculty</span>
         </a>
-        <a href="/login/admin" class="text-xs sm:text-sm px-2.5 sm:px-3.5 py-1.5 rounded-lg bg-primary-container text-on-primary font-medium hover:bg-indigo-600 transition-colors shadow-sm">
+        <a href="/login/admin" class="text-xs sm:text-sm px-2 sm:px-3.5 py-1.5 rounded-lg bg-primary-container text-on-primary font-medium hover:bg-indigo-600 transition-colors shadow-sm">
           <span class="hidden sm:inline">Admin Portal</span>
           <span class="sm:hidden">Admin</span>
         </a>
@@ -96,20 +95,48 @@
 
   <!-- HERO SECTION -->
   <main class="relative z-10">
-    <div class="max-w-7xl mx-auto px-6 pt-16 pb-20 text-center">
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-surface-container-high border border-outline-variant/50 text-xs mb-8 shadow-sm">
-        <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse"></span>
-        <span class="text-on-surface font-medium">Three Dedicated Roles &bull; MongoDB-Verified Authorization</span>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-16 text-center">
+      
+      <!-- ACTIVE SESSION BANNER (Displayed if already logged in) -->
+      <div id="activeSessionBanner" class="hidden max-w-xl mx-auto mb-8 p-4 sm:p-5 rounded-2xl bg-surface-container-high/90 border border-primary/40 shadow-xl backdrop-blur-md text-left">
+        <div class="flex items-center justify-between gap-3 mb-3">
+          <div class="flex items-center gap-3 min-w-0">
+            <div class="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary shrink-0">
+              <span class="material-symbols-outlined text-[22px]">account_circle</span>
+            </div>
+            <div class="min-w-0">
+              <div class="text-[10px] text-primary font-mono uppercase tracking-wider font-semibold">Logged-In Session Active</div>
+              <div class="text-sm font-bold text-on-surface truncate" id="sessionUserName">Active User</div>
+              <div class="text-xs text-on-surface-variant truncate" id="sessionUserEmail">user@university.edu</div>
+            </div>
+          </div>
+          <span id="sessionRoleBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30 uppercase font-bold shrink-0">STUDENT</span>
+        </div>
+        <div class="flex items-center gap-2 pt-2 border-t border-outline-variant/20">
+          <a id="sessionDashboardBtn" href="/student/dashboard" class="flex-1 py-2.5 px-4 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary font-semibold text-xs sm:text-sm text-center transition-all shadow-md flex items-center justify-center gap-1.5">
+            <span>Open Workspace Dashboard</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </a>
+          <button type="button" onclick="handleLandingLogout()" class="py-2.5 px-3 rounded-xl border border-outline-variant/40 hover:border-error/50 hover:bg-error/10 hover:text-error text-on-surface-variant text-xs transition-colors shrink-0 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">logout</span>
+            <span class="hidden sm:inline">Sign Out</span>
+          </button>
+        </div>
       </div>
 
-      <h1 class="font-headline text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight text-on-surface max-w-4xl mx-auto mb-6">
+      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high border border-outline-variant/50 text-xs mb-6 sm:mb-8 shadow-sm max-w-full">
+        <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse shrink-0"></span>
+        <span class="text-on-surface font-medium truncate">Three Dedicated Roles &bull; MongoDB-Verified Authorization</span>
+      </div>
+
+      <h1 class="font-headline text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-on-surface max-w-4xl mx-auto mb-4 sm:mb-6 leading-tight">
         Unified Academic Platform.
-        <span class="block mt-2 bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">
+        <span class="block mt-1 sm:mt-2 bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">
           Strict Role-Based Integrity.
         </span>
       </h1>
 
-      <p class="text-base sm:text-lg text-on-surface-variant max-w-2xl mx-auto mb-12">
+      <p class="text-sm sm:text-base md:text-lg text-on-surface-variant max-w-2xl mx-auto mb-8 sm:mb-12">
         ProjectHub enforces dedicated authentication entry points, specialized dashboards, and server-side MongoDB role verification for Students, Faculty Advisors, and Institutional Deans.
       </p>
 
@@ -153,12 +180,12 @@
               <span>Enter Student Portal</span>
               <span class="material-symbols-outlined text-sm">arrow_forward</span>
             </a>
-            <div class="text-[11px] text-outline text-center">Demo: student@university.edu / student123</div>
+            <div class="text-[11px] text-outline text-center">Demo: student@university.edu / Password123!</div>
           </div>
         </div>
 
         <!-- CARD 2: FACULTY -->
-        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-6 flex flex-col justify-between hover:border-secondary/50 transition-all hover:shadow-lg group">
+        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 sm:p-6 flex flex-col justify-between hover:border-secondary/50 transition-all hover:shadow-lg group">
           <div>
             <div class="w-12 h-12 rounded-lg bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary mb-4 group-hover:scale-105 transition-transform">
               <span class="material-symbols-outlined text-[26px]">rate_review</span>
@@ -194,12 +221,12 @@
               <span>Enter Faculty Portal</span>
               <span class="material-symbols-outlined text-sm">arrow_forward</span>
             </a>
-            <div class="text-[11px] text-outline text-center">Demo: faculty@university.edu / faculty123</div>
+            <div class="text-[11px] text-outline text-center">Demo: faculty@university.edu / Password123!</div>
           </div>
         </div>
 
         <!-- CARD 3: ADMIN -->
-        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-6 flex flex-col justify-between hover:border-tertiary/50 transition-all hover:shadow-lg group">
+        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 sm:p-6 flex flex-col justify-between hover:border-tertiary/50 transition-all hover:shadow-lg group">
           <div>
             <div class="w-12 h-12 rounded-lg bg-tertiary/10 border border-tertiary/30 flex items-center justify-center text-tertiary mb-4 group-hover:scale-105 transition-transform">
               <span class="material-symbols-outlined text-[26px]">admin_panel_settings</span>
@@ -235,23 +262,23 @@
               <span>Enter Admin Portal</span>
               <span class="material-symbols-outlined text-sm">arrow_forward</span>
             </a>
-            <div class="text-[11px] text-outline text-center">Demo: admin@university.edu / admin123</div>
+            <div class="text-[11px] text-outline text-center">Demo: admin@university.edu / Password123!</div>
           </div>
         </div>
 
       </div>
 
       <!-- ARCHITECTURAL INTEGRITY SECTION -->
-      <div id="security" class="rounded-2xl bg-surface-container border border-outline-variant/30 p-8 text-left max-w-5xl mx-auto mb-16">
-        <h3 class="font-headline text-2xl font-bold text-on-surface mb-2 flex items-center gap-2">
+      <div id="security" class="rounded-2xl bg-surface-container border border-outline-variant/30 p-5 sm:p-8 text-left max-w-5xl mx-auto mb-12 sm:mb-16">
+        <h3 class="font-headline text-xl sm:text-2xl font-bold text-on-surface mb-2 flex items-center gap-2">
           <span class="material-symbols-outlined text-primary">security</span>
           Role Enforcement in Express Middleware
         </h3>
-        <p class="text-sm text-on-surface-variant mb-6">
+        <p class="text-xs sm:text-sm text-on-surface-variant mb-6">
           The system never trusts client-supplied roles. Authentication reads HTTP-Only cookies, decrypts cryptographic JWT tokens, and executes a database lookup against MongoDB Atlas to query the user's verified role before routing.
         </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono bg-surface-container-lowest p-4 rounded-lg border border-outline-variant/20">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 text-xs font-mono bg-surface-container-lowest p-3 sm:p-4 rounded-lg border border-outline-variant/20">
           <div class="p-3 bg-surface-container-low rounded border border-outline-variant/20">
             <div class="text-primary font-bold mb-1">STUDENT ATTEMPTS /faculty/*</div>
             <div class="text-error font-semibold">&bull; 403 Forbidden</div>
@@ -273,15 +300,91 @@
     </div>
   </main>
 
-  <footer class="border-t border-outline-variant/30 py-8 bg-surface-container-lowest text-center text-xs text-outline">
-    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+  <footer class="border-t border-outline-variant/30 py-6 sm:py-8 bg-surface-container-lowest text-center text-xs text-outline">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
       <div>ProjectHub Academic Workspace &bull; ABET AY24-25 Compliance Architecture</div>
-      <div class="flex items-center gap-6">
+      <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
         <a href="/login/student" class="hover:text-primary transition-colors">Student Login</a>
         <a href="/login/faculty" class="hover:text-secondary transition-colors">Faculty Login</a>
         <a href="/login/admin" class="hover:text-tertiary transition-colors">Admin Login</a>
       </div>
     </div>
   </footer>
+
+  <script>
+    // Client-side active session detection
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const token = localStorage.getItem('projecthub_token');
+        const headers = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+
+        const res = await fetch('/api/auth/me', {
+          headers,
+          credentials: 'include'
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && data.user) {
+            applyActiveSession(data.user);
+          }
+        }
+      } catch (e) {
+        // Silently ignore network errors on landing check
+      }
+    });
+
+    function applyActiveSession(user) {
+      const banner = document.getElementById('activeSessionBanner');
+      const nameEl = document.getElementById('sessionUserName');
+      const emailEl = document.getElementById('sessionUserEmail');
+      const roleBadge = document.getElementById('sessionRoleBadge');
+      const dashBtn = document.getElementById('sessionDashboardBtn');
+      const headerNav = document.getElementById('headerNavActions');
+
+      const role = (user.role || 'student').toLowerCase();
+      const roleUpper = role.toUpperCase();
+      let dashboardUrl = '/student/dashboard';
+      if (role === 'faculty') dashboardUrl = '/faculty/dashboard';
+      if (role === 'admin') dashboardUrl = '/admin/dashboard';
+
+      if (banner && nameEl && emailEl && roleBadge && dashBtn) {
+        nameEl.textContent = user.name || 'User';
+        emailEl.textContent = user.email || '';
+        roleBadge.textContent = roleUpper;
+        dashBtn.href = dashboardUrl;
+        banner.classList.remove('hidden');
+      }
+
+      if (headerNav) {
+        headerNav.innerHTML = `
+          <a href="${dashboardUrl}" class="text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-primary-container text-on-primary font-semibold hover:bg-indigo-600 transition-colors shadow-sm flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[16px]">dashboard</span>
+            <span>Dashboard</span>
+          </a>
+          <button type="button" onclick="handleLandingLogout()" class="text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 rounded-lg border border-outline-variant/50 text-on-surface-variant hover:text-error hover:border-error/40 transition-colors flex items-center gap-1">
+            <span class="material-symbols-outlined text-[16px]">logout</span>
+            <span class="hidden sm:inline">Sign Out</span>
+          </button>
+        `;
+      }
+    }
+
+    async function handleLandingLogout() {
+      try {
+        const token = localStorage.getItem('projecthub_token');
+        const headers = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        await fetch('/api/auth/logout', {
+          method: 'POST',
+          headers,
+          credentials: 'include'
+        });
+      } catch (e) {}
+      localStorage.removeItem('projecthub_token');
+      window.location.reload();
+    }
+  </script>
 </body>
 </html>

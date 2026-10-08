@@ -1,16 +1,16 @@
 require('dotenv').config();
-const { connectDB } = require('../src/config/db');
-const { seedDatabase } = require('../src/seed/seedData');
-const User = require('../src/models/User');
-const Project = require('../src/models/Project');
-const Milestone = require('../src/models/Milestone');
+const { connectDB } = require('../backend/config/db');
+const { seedDatabase } = require('../backend/seed/seedData');
+const User = require('../backend/models/User');
+const Project = require('../backend/models/Project');
+const Milestone = require('../backend/models/Milestone');
 const request = require('http');
 
 async function runTests() {
   console.log('🧪 Starting Role-Based Architecture Automated Verification...');
 
   // Start app
-  const app = require('../src/server');
+  const app = require('../backend/server');
 
   // Wait 2 seconds for DB and server to settle
   await new Promise((r) => setTimeout(r, 2000));
