@@ -18,30 +18,62 @@
     let str = String(msg).trim();
     let lower = str.toLowerCase();
     
-    // Check type
+    const errorKeywords = [
+      'failed', 'fail', 'error', 'invalid', 'denied', 'not found', 
+      'already exists', 'exists', 'exist', 'cannot', 'can not', "can't", 
+      'could not', 'conflict', 'required', 'wrong', 'expired', 'rejected', 
+      'unable', 'forbidden', 'duplicate', 'unauthorized', 'incorrect', 
+      'missing', 'exceeded', 'reject', 'mismatch', 'disabled', 'limit'
+    ];
+
+    const warningKeywords = [
+      'warning', 'caution', 'please fill', 'please select', 'please check',
+      'attention', 'incomplete'
+    ];
+
     let type = 'success';
-    if (lower.includes('failed') || lower.includes('error') || lower.includes('invalid') || lower.includes('denied') || lower.includes('not found')) {
+    if (errorKeywords.some(kw => lower.includes(kw))) {
       type = 'error';
-    } else if (lower.includes('warning') || lower.includes('caution') || lower.includes('please fill')) {
+    } else if (warningKeywords.some(kw => lower.includes(kw))) {
       type = 'warning';
     }
 
     // Determine concise title
     let title = 'Successful';
-    if (lower.includes('upload')) {
-      title = type === 'success' ? 'Uploaded' : 'Upload Failed';
-    } else if (lower.includes('submit')) {
-      title = type === 'success' ? 'Submitted' : 'Submission Failed';
-    } else if (lower.includes('created') || lower.includes('create')) {
-      title = type === 'success' ? 'Created' : 'Creation Failed';
-    } else if (lower.includes('updated') || lower.includes('update') || lower.includes('saved')) {
-      title = type === 'success' ? 'Updated' : 'Update Failed';
-    } else if (lower.includes('delete') || lower.includes('removed')) {
-      title = type === 'success' ? 'Removed' : 'Failed to Remove';
-    } else if (lower.includes('approved') || lower.includes('reviewed')) {
-      title = type === 'success' ? 'Approved' : 'Action Failed';
-    } else if (type === 'error') {
-      title = 'Error';
+    if (type === 'error') {
+      if (lower.includes('exist') || lower.includes('duplicate')) {
+        title = 'Duplicate Entry';
+      } else if (lower.includes('upload')) {
+        title = 'Upload Failed';
+      } else if (lower.includes('submit')) {
+        title = 'Submission Failed';
+      } else if (lower.includes('created') || lower.includes('create')) {
+        title = 'Creation Failed';
+      } else if (lower.includes('updated') || lower.includes('update') || lower.includes('save')) {
+        title = 'Update Failed';
+      } else if (lower.includes('delete') || lower.includes('remove')) {
+        title = 'Failed to Remove';
+      } else if (lower.includes('password') || lower.includes('login') || lower.includes('auth')) {
+        title = 'Authentication Error';
+      } else {
+        title = 'Action Failed';
+      }
+    } else if (type === 'warning') {
+      title = 'Warning';
+    } else {
+      if (lower.includes('upload')) {
+        title = 'Uploaded';
+      } else if (lower.includes('submit')) {
+        title = 'Submitted';
+      } else if (lower.includes('created') || lower.includes('create')) {
+        title = 'Created';
+      } else if (lower.includes('updated') || lower.includes('update') || lower.includes('saved')) {
+        title = 'Updated';
+      } else if (lower.includes('delete') || lower.includes('removed')) {
+        title = 'Removed';
+      } else if (lower.includes('approved') || lower.includes('reviewed')) {
+        title = 'Approved';
+      }
     }
 
     return { title, text: str, type };
@@ -66,57 +98,30 @@
     lastToastKey = key;
     lastToastTime = now;
 
-    const toast = document.createElement('div');
-    const isLight = document.documentElement.classList.contains('light');
-
     let icon = 'check_circle';
-    let iconBg = isLight ? 'bg-emerald-100 text-emerald-600' : 'bg-emerald-950/80 text-emerald-400 border border-emerald-500/30';
-    let cardClasses = isLight 
-      ? 'bg-white/95 text-slate-800 border-emerald-500/40 shadow-xl shadow-slate-200/50' 
-      : 'bg-[#111622]/95 text-slate-100 border-emerald-500/40 shadow-2xl shadow-black/60';
-    let titleClass = isLight ? 'text-emerald-700' : 'text-emerald-400';
-    let textClass = isLight ? 'text-slate-600' : 'text-slate-300';
-
     if (type === 'error') {
       icon = 'error';
-      iconBg = isLight ? 'bg-rose-100 text-rose-600' : 'bg-rose-950/80 text-rose-400 border border-rose-500/30';
-      cardClasses = isLight 
-        ? 'bg-white/95 text-slate-800 border-rose-500/40 shadow-xl shadow-slate-200/50' 
-        : 'bg-[#1a1118]/95 text-slate-100 border-rose-500/40 shadow-2xl shadow-black/60';
-      titleClass = isLight ? 'text-rose-700' : 'text-rose-400';
-      textClass = isLight ? 'text-slate-600' : 'text-slate-300';
     } else if (type === 'warning') {
       icon = 'warning';
-      iconBg = isLight ? 'bg-amber-100 text-amber-600' : 'bg-amber-950/80 text-amber-400 border border-amber-500/30';
-      cardClasses = isLight 
-        ? 'bg-white/95 text-slate-800 border-amber-500/40 shadow-xl shadow-slate-200/50' 
-        : 'bg-[#1c1810]/95 text-slate-100 border-amber-500/40 shadow-2xl shadow-black/60';
-      titleClass = isLight ? 'text-amber-700' : 'text-amber-400';
-      textClass = isLight ? 'text-slate-600' : 'text-slate-300';
     } else if (type === 'info') {
       icon = 'info';
-      iconBg = isLight ? 'bg-indigo-100 text-indigo-600' : 'bg-indigo-950/80 text-indigo-400 border border-indigo-500/30';
-      cardClasses = isLight 
-        ? 'bg-white/95 text-slate-800 border-indigo-500/40 shadow-xl shadow-slate-200/50' 
-        : 'bg-[#101426]/95 text-slate-100 border-indigo-500/40 shadow-2xl shadow-black/60';
-      titleClass = isLight ? 'text-indigo-700' : 'text-indigo-400';
-      textClass = isLight ? 'text-slate-600' : 'text-slate-300';
     }
 
-    toast.className = `projecthub-toast pointer-events-auto flex items-start gap-3.5 p-3.5 sm:p-4 rounded-xl border backdrop-blur-xl transition-all duration-300 ease-out transform -translate-y-3 opacity-0 w-full ${cardClasses}`;
-    toast.style.backdropFilter = 'blur(16px)';
-    toast.style.webkitBackdropFilter = 'blur(16px)';
+    const toast = document.createElement('div');
+    toast.className = `projecthub-toast toast-${type}`;
+    toast.style.transform = 'translateY(-12px)';
+    toast.style.opacity = '0';
 
     toast.innerHTML = `
-      <div class="flex items-center justify-center w-8 h-8 rounded-lg shrink-0 ${iconBg}">
-        <span class="material-symbols-outlined text-[20px] select-none">${icon}</span>
+      <div class="projecthub-toast-icon-wrap">
+        <span class="material-symbols-outlined" style="font-size: 20px; line-height: 1; user-select: none;">${icon}</span>
       </div>
-      <div class="flex-1 min-w-0 pt-0.5">
-        <h4 class="${titleClass} font-bold text-xs uppercase tracking-wider leading-none mb-1">${title}</h4>
-        <p class="${textClass} text-xs leading-relaxed break-words font-medium">${text}</p>
+      <div class="projecthub-toast-content">
+        <h4 class="projecthub-toast-title">${title}</h4>
+        <p class="projecthub-toast-message">${text}</p>
       </div>
-      <button type="button" aria-label="Dismiss notification" class="shrink-0 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors p-1 rounded-md hover:bg-black/5 dark:hover:bg-white/10" onclick="this.closest('.projecthub-toast').remove()">
-        <span class="material-symbols-outlined text-base block select-none">close</span>
+      <button type="button" aria-label="Dismiss notification" class="projecthub-toast-close" onclick="this.closest('.projecthub-toast').remove()">
+        <span class="material-symbols-outlined" style="font-size: 18px; line-height: 1; user-select: none;">close</span>
       </button>
     `;
 
@@ -124,19 +129,19 @@
 
     // Trigger enter animation
     requestAnimationFrame(() => {
-      toast.classList.remove('-translate-y-3', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
+      toast.style.transform = 'translateY(0)';
+      toast.style.opacity = '1';
     });
 
     // Auto dismiss
     const dismissTimer = setTimeout(() => {
       if (!toast.parentElement) return;
-      toast.classList.remove('translate-y-0', 'opacity-100');
-      toast.classList.add('-translate-y-2', 'opacity-0');
+      toast.style.transform = 'translateY(-10px)';
+      toast.style.opacity = '0';
       setTimeout(() => {
         if (toast.parentElement) toast.remove();
       }, 300);
-    }, 4000);
+    }, 4200);
   };
 
   // Completely override window.alert so no "localhost:5000 says" modal ever shows

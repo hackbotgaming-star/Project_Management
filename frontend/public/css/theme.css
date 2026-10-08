@@ -252,3 +252,188 @@ html.light .shadow-2xl,
 html.light .shadow-xl {
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04) !important;
 }
+
+/* --------------------------------------------------------- */
+/* 9. PROJECTHUB NOTIFICATION TOASTS                         */
+/* --------------------------------------------------------- */
+#projecthub-toast-container {
+  position: fixed !important;
+  top: 20px !important;
+  right: 20px !important;
+  z-index: 999999 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+  width: min(420px, calc(100vw - 32px)) !important;
+  pointer-events: none !important;
+}
+
+.projecthub-toast {
+  pointer-events: auto !important;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  gap: 12px !important;
+  padding: 14px 16px !important;
+  border-radius: 14px !important;
+  border-width: 1px !important;
+  border-style: solid !important;
+  backdrop-filter: blur(16px) !important;
+  -webkit-backdrop-filter: blur(16px) !important;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Toast types in Dark Mode (Default) */
+.projecthub-toast.toast-success {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(16, 185, 129, 0.45) !important;
+  color: #f1f5f9 !important;
+}
+.projecthub-toast.toast-error {
+  background: rgba(26, 16, 22, 0.96) !important;
+  border-color: rgba(244, 63, 94, 0.5) !important;
+  color: #f1f5f9 !important;
+}
+.projecthub-toast.toast-warning {
+  background: rgba(26, 21, 10, 0.96) !important;
+  border-color: rgba(245, 158, 11, 0.45) !important;
+  color: #f1f5f9 !important;
+}
+.projecthub-toast.toast-info {
+  background: rgba(15, 23, 42, 0.95) !important;
+  border-color: rgba(99, 102, 241, 0.45) !important;
+  color: #f1f5f9 !important;
+}
+
+/* Toast types in Light Mode */
+html.light .projecthub-toast {
+  box-shadow: 0 12px 24px -4px rgba(15, 23, 42, 0.12), 0 4px 6px -2px rgba(15, 23, 42, 0.05) !important;
+}
+html.light .projecthub-toast.toast-success {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(16, 185, 129, 0.4) !important;
+  color: #0f172a !important;
+}
+html.light .projecthub-toast.toast-error {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(244, 63, 94, 0.4) !important;
+  color: #0f172a !important;
+}
+html.light .projecthub-toast.toast-warning {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(245, 158, 11, 0.4) !important;
+  color: #0f172a !important;
+}
+html.light .projecthub-toast.toast-info {
+  background: rgba(255, 255, 255, 0.98) !important;
+  border-color: rgba(99, 102, 241, 0.4) !important;
+  color: #0f172a !important;
+}
+
+/* Toast Elements */
+.projecthub-toast-icon-wrap {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 8px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex-shrink: 0 !important;
+}
+.toast-success .projecthub-toast-icon-wrap {
+  background: rgba(16, 185, 129, 0.18) !important;
+  color: #34d399 !important;
+}
+html.light .toast-success .projecthub-toast-icon-wrap {
+  background: #d1fae5 !important;
+  color: #059669 !important;
+}
+
+.toast-error .projecthub-toast-icon-wrap {
+  background: rgba(244, 63, 94, 0.18) !important;
+  color: #fb7185 !important;
+}
+html.light .toast-error .projecthub-toast-icon-wrap {
+  background: #ffe4e6 !important;
+  color: #e11d48 !important;
+}
+
+.toast-warning .projecthub-toast-icon-wrap {
+  background: rgba(245, 158, 11, 0.18) !important;
+  color: #fbbf24 !important;
+}
+html.light .toast-warning .projecthub-toast-icon-wrap {
+  background: #fef3c7 !important;
+  color: #d97706 !important;
+}
+
+.toast-info .projecthub-toast-icon-wrap {
+  background: rgba(99, 102, 241, 0.18) !important;
+  color: #818cf8 !important;
+}
+html.light .toast-info .projecthub-toast-icon-wrap {
+  background: #e0e7ff !important;
+  color: #4f46e5 !important;
+}
+
+.projecthub-toast-content {
+  flex: 1 1 0% !important;
+  min-width: 0 !important;
+  padding-top: 1px !important;
+}
+.projecthub-toast-title {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  line-height: 1.2 !important;
+  margin: 0 0 3px 0 !important;
+}
+.toast-success .projecthub-toast-title { color: #34d399 !important; }
+html.light .toast-success .projecthub-toast-title { color: #059669 !important; }
+
+.toast-error .projecthub-toast-title { color: #fb7185 !important; }
+html.light .toast-error .projecthub-toast-title { color: #e11d48 !important; }
+
+.toast-warning .projecthub-toast-title { color: #fbbf24 !important; }
+html.light .toast-warning .projecthub-toast-title { color: #d97706 !important; }
+
+.toast-info .projecthub-toast-title { color: #818cf8 !important; }
+html.light .toast-info .projecthub-toast-title { color: #4f46e5 !important; }
+
+.projecthub-toast-message {
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  line-height: 1.45 !important;
+  margin: 0 !important;
+  word-break: break-word !important;
+  color: #cbd5e1 !important;
+}
+html.light .projecthub-toast-message {
+  color: #334155 !important;
+}
+
+.projecthub-toast-close {
+  flex-shrink: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  color: #94a3b8 !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  border-radius: 6px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: color 0.15s, background-color 0.15s !important;
+}
+.projecthub-toast-close:hover {
+  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+html.light .projecthub-toast-close:hover {
+  color: #0f172a !important;
+  background: rgba(0, 0, 0, 0.06) !important;
+}

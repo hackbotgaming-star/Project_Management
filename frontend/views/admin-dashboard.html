@@ -2272,8 +2272,17 @@
 
     document.getElementById('createUserForm').addEventListener('submit', async (e) => {
       e.preventDefault();
-      const name = document.getElementById('newUserName').value;
-      const email = document.getElementById('newUserEmail').value;
+      const form = e.target;
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn && submitBtn.disabled) return;
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.dataset.origText = submitBtn.innerText;
+        submitBtn.innerText = 'Creating...';
+      }
+
+      const name = document.getElementById('newUserName').value.trim();
+      const email = document.getElementById('newUserEmail').value.trim();
       const password = document.getElementById('newUserPassword').value;
       const role = document.getElementById('newUserRole').value;
       const department = document.getElementById('newUserDept').value;
@@ -2287,11 +2296,19 @@
         const json = await res.json();
         if (json.success) {
           closeModal('createUserModal');
-          alert(`Account created for ${name} as ${role}!`);
+          form.reset();
+          showToast(`Account created for ${name} as ${role}!`, 'success', 'ACCOUNT CREATED');
           loadAdminDashboard();
-        } else alert(json.message);
+        } else {
+          showToast(json.message || 'Failed to create user account.', 'error', 'ERROR');
+        }
       } catch (err) {
-        alert('Failed to create user account.');
+        showToast('Failed to create user account: ' + err.message, 'error', 'ERROR');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = submitBtn.dataset.origText || 'Create Account';
+        }
       }
     });
 
