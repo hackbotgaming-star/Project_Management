@@ -42,10 +42,21 @@ exports.createUser = async (req, res) => {
       role: role.toUpperCase(),
       department: department || 'Computer Science & Engineering',
       cohort: cohort || 'CS-492 Capstone Cohort 2025',
-      title: title || (role === 'FACULTY' ? 'Assistant Professor' : 'Capstone Student'),
-      studentId: studentId || (role === 'STUDENT' ? `STU-${Date.now().toString().slice(-4)}` : null),
-      facultyId: facultyId || (role === 'FACULTY' ? `FAC-${Date.now().toString().slice(-4)}` : null),
+      title: title || (role.toUpperCase() === 'HOD' ? 'Head of Department' : role.toUpperCase() === 'FACULTY' ? 'Assistant Professor' : 'Capstone Student'),
+      studentId: studentId || (role.toUpperCase() === 'STUDENT' ? `STU-${Date.now().toString().slice(-4)}` : null),
+      facultyId: facultyId || (role.toUpperCase() === 'FACULTY' || role.toUpperCase() === 'HOD' ? `FAC-${Date.now().toString().slice(-4)}` : null),
     });
+
+    if (role.toUpperCase() === 'HOD' && department) {
+      try {
+        await Department.findOneAndUpdate(
+          { name: department },
+          { head: name }
+        );
+      } catch (deptErr) {
+        console.error('Auto-sync department head error:', deptErr);
+      }
+    }
 
     await AuditTrail.create({
       user: req.user._id,

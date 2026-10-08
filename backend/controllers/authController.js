@@ -103,10 +103,10 @@ exports.loginFaculty = async (req, res) => {
     }
 
     // MANDATORY BACKEND ROLE VERIFICATION FROM MONGODB
-    if (user.role !== 'FACULTY') {
+    if (user.role !== 'FACULTY' && user.role !== 'HOD') {
       return res.status(403).json({
         success: false,
-        message: `Account verification failed: This account is registered as '${user.role}', not as FACULTY. Please use the appropriate login portal.`,
+        message: `Account verification failed: This account is registered as '${user.role}', not as FACULTY or HOD. Please use the appropriate login portal.`,
       });
     }
 
@@ -115,9 +115,9 @@ exports.loginFaculty = async (req, res) => {
     await AuditTrail.create({
       user: user._id,
       userName: user.name,
-      role: 'FACULTY',
+      role: user.role,
       action: 'LOGIN_FACULTY',
-      details: 'Faculty advisor authenticated successfully.',
+      details: `${user.role === 'HOD' ? 'Head of Department' : 'Faculty advisor'} authenticated successfully.`,
       ipAddress: req.ip || '127.0.0.1',
     });
 
