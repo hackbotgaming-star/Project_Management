@@ -31,6 +31,11 @@ const SuperDreamSchema = new mongoose.Schema(
       type: String,
       default: 'Super Dream Track 2025-2026',
     },
+    category: {
+      type: String,
+      enum: ['SUPER_DREAM', 'DREAM'],
+      default: 'SUPER_DREAM',
+    },
     createdBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',

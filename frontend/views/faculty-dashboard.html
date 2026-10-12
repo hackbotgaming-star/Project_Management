@@ -1705,19 +1705,25 @@
 
         // Build Mentees Cards HTML
         const menteesHtml = (group.mentees && group.mentees.length > 0)
-          ? group.mentees.map(m => `
+          ? group.mentees.map(m => {
+              const catBadge = m.studentCategory === 'SUPER_DREAM' ? '<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">⭐ SUPER DREAM</span>' :
+                m.studentCategory === 'DREAM' ? '<span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">🚀 DREAM</span>' :
+                '<span class="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-500/10 text-amber-300 uppercase">MENTEE</span>';
+
+              return `
               <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/30 flex items-center gap-3 hover:border-amber-500/40 transition-all">
                 <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}" class="w-10 h-10 rounded-full object-cover border border-amber-500/30 shrink-0" alt="${m.name}">
                 <div class="min-w-0 flex-1">
                   <div class="flex items-center justify-between gap-1">
                     <h4 class="text-xs font-bold text-on-surface truncate">${m.name}</h4>
-                    <span class="text-[9px] font-mono px-1 py-0.2 rounded bg-amber-500/10 text-amber-300 uppercase">MENTEE</span>
+                    ${catBadge}
                   </div>
                   <div class="text-[11px] text-outline truncate">${m.email}</div>
                   <div class="text-[10px] text-on-surface-variant truncate mt-0.5">${m.studentId ? `ID: ${m.studentId} &bull; ` : ''}${m.department || 'Engineering'}</div>
                 </div>
               </div>
-            `).join('')
+            `;
+          }).join('')
           : `<div class="text-xs text-outline col-span-full py-4 text-center">No students currently enrolled in this Super Dream track.</div>`;
 
         // Build Messages HTML

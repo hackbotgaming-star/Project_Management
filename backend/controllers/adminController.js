@@ -24,7 +24,7 @@ exports.getUsers = async (req, res) => {
 // POST /api/admin/users (Create student / faculty)
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, password, role, department, cohort, title, studentId, facultyId } = req.body;
+    const { name, email, password, role, department, cohort, title, studentId, facultyId, studentCategory } = req.body;
     if (!name || !email || !password || !role) {
       return res.status(400).json({ success: false, message: 'Name, email, password, and role are required.' });
     }
@@ -32,6 +32,15 @@ exports.createUser = async (req, res) => {
     const existing = await User.findOne({ email: email.toLowerCase().trim() });
     if (existing) {
       return res.status(400).json({ success: false, message: 'User with this email already exists.' });
+    }
+
+    // Normalize student placement category
+    let normalizedCategory = 'REGULAR';
+    if (role.toUpperCase() === 'STUDENT' && studentCategory) {
+      const c = studentCategory.toUpperCase().replace(/\s+/g, '_');
+      if (['SUPER_DREAM', 'SUPERDREAM'].includes(c)) normalizedCategory = 'SUPER_DREAM';
+      else if (['DREAM'].includes(c)) normalizedCategory = 'DREAM';
+      else normalizedCategory = 'REGULAR';
     }
 
     const hashedPassword = await User.hashPassword(password);
@@ -42,9 +51,10 @@ exports.createUser = async (req, res) => {
       role: role.toUpperCase(),
       department: department || 'Computer Science & Engineering',
       cohort: cohort || 'CS-492 Capstone Cohort 2025',
-      title: title || (role.toUpperCase() === 'HOD' ? 'Head of Department' : role.toUpperCase() === 'FACULTY' ? 'Assistant Professor' : 'Capstone Student'),
+      title: title || (role.toUpperCase() === 'HOD' ? 'Head of Department' : role.toUpperCase() === 'FACULTY' ? 'Assistant Professor' : (normalizedCategory === 'SUPER_DREAM' ? 'Super Dream Scholar' : normalizedCategory === 'DREAM' ? 'Dream Scholar' : 'Capstone Student')),
       studentId: studentId || (role.toUpperCase() === 'STUDENT' ? `STU-${Date.now().toString().slice(-4)}` : null),
       facultyId: facultyId || (role.toUpperCase() === 'FACULTY' || role.toUpperCase() === 'HOD' ? `FAC-${Date.now().toString().slice(-4)}` : null),
+      studentCategory: role.toUpperCase() === 'STUDENT' ? normalizedCategory : 'REGULAR',
     });
 
     if (role.toUpperCase() === 'HOD' && department) {
@@ -65,7 +75,7 @@ exports.createUser = async (req, res) => {
       action: 'CREATE_USER',
       targetType: 'USER',
       targetId: user._id.toString(),
-      details: `Created new user ${user.name} (${user.email}) with role ${user.role}.`,
+      details: `Created new user ${user.name} (${user.email}) with role ${user.role}${role.toUpperCase() === 'STUDENT' ? ` and category ${user.studentCategory}` : ''}.`,
       ipAddress: req.ip || '127.0.0.1',
     });
 
@@ -78,11 +88,53 @@ exports.createUser = async (req, res) => {
         email: user.email,
         role: user.role,
         department: user.department,
+        studentCategory: user.studentCategory,
       },
     });
   } catch (err) {
     console.error('createUser error:', err);
     return res.status(500).json({ success: false, message: 'Failed to create user.' });
+  }
+};
+
+// PUT /api/admin/users/:id (Update user info, e.g. studentCategory, role, department)
+exports.updateUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, department, role, status, studentCategory, cohort, title } = req.body;
+    const user = await User.findById(id);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
+
+    if (name) user.name = name.trim();
+    if (department) user.department = department;
+    if (role) user.role = role.toUpperCase();
+    if (status) user.status = status;
+    if (cohort) user.cohort = cohort;
+    if (title) user.title = title;
+    if (studentCategory) {
+      const c = studentCategory.toUpperCase().replace(/\s+/g, '_');
+      if (['SUPER_DREAM', 'SUPERDREAM'].includes(c)) user.studentCategory = 'SUPER_DREAM';
+      else if (['DREAM'].includes(c)) user.studentCategory = 'DREAM';
+      else user.studentCategory = 'REGULAR';
+    }
+
+    await user.save();
+
+    await AuditTrail.create({
+      user: req.user._id,
+      userName: req.user.name,
+      role: 'ADMIN',
+      action: 'UPDATE_USER',
+      targetType: 'USER',
+      targetId: user._id.toString(),
+      details: `Updated user ${user.name} (${user.email}) profile/category.`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    return res.json({ success: true, message: 'User updated successfully.', user });
+  } catch (err) {
+    console.error('updateUser error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to update user.' });
   }
 };
 

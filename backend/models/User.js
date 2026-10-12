@@ -36,6 +36,11 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: null,
     },
+    studentCategory: {
+      type: String,
+      enum: ['SUPER_DREAM', 'DREAM', 'REGULAR'],
+      default: 'REGULAR',
+    },
     facultyId: {
       type: String,
       default: null,

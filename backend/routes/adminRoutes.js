@@ -8,6 +8,7 @@ router.use(authenticateToken, requireAdmin);
 
 router.get('/users', adminController.getUsers);
 router.post('/users', adminController.createUser);
+router.put('/users/:id', adminController.updateUser);
 router.delete('/users/:id', adminController.deleteUser);
 router.put('/projects/:id/faculty', adminController.assignFacultyMentor);
 router.put('/projects/:id/status', adminController.updateProjectStatus);

@@ -2065,13 +2065,23 @@
 
         // Build Peer Mentees chips
         const peerMenteesHtml = (group.mentees && group.mentees.length > 0)
-          ? group.mentees.map(m => `
-              <div class="inline-flex items-center gap-2 p-1.5 pr-3 rounded-full bg-surface-container border border-outline-variant/30 text-xs">
-                <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-6 h-6 rounded-full object-cover shrink-0" alt="${m.name}">
-                <span class="font-medium text-on-surface">${m.name}</span>
-                <span class="text-[10px] text-outline font-mono">${m.department ? m.department.split(' ')[0] : 'Eng'}</span>
-              </div>
-            `).join('')
+          ? group.mentees.map(m => {
+              const isSd = m.studentCategory === 'SUPER_DREAM';
+              const isDream = m.studentCategory === 'DREAM';
+              const tierBadge = isSd
+                ? '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">⭐ SUPER DREAM</span>'
+                : (isDream
+                    ? '<span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-mono">🚀 DREAM</span>'
+                    : '');
+              return `
+                <div class="inline-flex items-center gap-2 p-1.5 pr-3 rounded-full bg-surface-container border border-outline-variant/30 text-xs">
+                  <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-6 h-6 rounded-full object-cover shrink-0" alt="${m.name}">
+                  <span class="font-medium text-on-surface">${m.name}</span>
+                  ${tierBadge}
+                  <span class="text-[10px] text-outline font-mono">${m.department ? m.department.split(' ')[0] : 'Eng'}</span>
+                </div>
+              `;
+            }).join('')
           : '<span class="text-xs text-outline">You are the primary mentee in this cohort.</span>';
 
         // Build Messages HTML
@@ -2204,16 +2214,21 @@
             <div class="lg:col-span-2 p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 shadow-sm flex flex-col justify-between space-y-4">
               <div>
                 <div class="flex items-center justify-between gap-2 mb-2">
-                  <span class="text-xs font-mono font-bold text-amber-300 uppercase">${group.cohort || 'Super Dream Track 2025'}</span>
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-xs font-mono font-bold ${group.category === 'DREAM' ? 'text-cyan-300' : 'text-amber-300'} uppercase">${group.cohort || (group.category === 'DREAM' ? 'Dream Track 2025' : 'Super Dream Track 2025')}</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded font-bold ${group.category === 'DREAM' ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'}">
+                      ${group.category === 'DREAM' ? '🚀 DREAM TRACK' : '⭐ SUPER DREAM TRACK'}
+                    </span>
+                  </div>
                   <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold uppercase">ACTIVE ENROLLMENT</span>
                 </div>
                 <h3 class="font-headline text-lg font-bold text-on-surface mb-1">${group.title}</h3>
-                <p class="text-xs text-on-surface-variant leading-relaxed mb-4">${group.description || 'Dedicated mentorship program for tier-1 placement, research publication, and advanced capstone development.'}</p>
+                <p class="text-xs text-on-surface-variant leading-relaxed mb-4">${group.description || (group.category === 'DREAM' ? 'Dedicated mentorship program for tier-2 and dream placement, technical skills, and capstone excellence.' : 'Dedicated mentorship program for tier-1 placement, research publication, and advanced capstone development.')}</p>
                 
                 <div class="space-y-2 pt-3 border-t border-outline-variant/20">
                   <div class="text-xs text-outline font-medium flex items-center gap-1.5">
-                    <span class="material-symbols-outlined text-sm text-amber-400">group</span>
-                    <span>Fellow Super Dream Mentees (${group.mentees ? group.mentees.length : 0}):</span>
+                    <span class="material-symbols-outlined text-sm ${group.category === 'DREAM' ? 'text-cyan-400' : 'text-amber-400'}">group</span>
+                    <span>Fellow ${group.category === 'DREAM' ? 'Dream' : 'Super Dream'} Mentees (${group.mentees ? group.mentees.length : 0}):</span>
                   </div>
                   <div class="flex flex-wrap gap-2 pt-1">
                     ${peerMenteesHtml}
