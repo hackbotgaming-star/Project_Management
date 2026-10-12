@@ -1445,7 +1445,7 @@
         </div>
         <div>
           <label class="block text-xs text-outline mb-1">Assigned Role</label>
-          <select id="newUserRole" required onchange="toggleNewUserCategory(this.value)" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          <select id="newUserRole" required onchange="toggleNewUserCategory()" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
             <option value="STUDENT" selected>STUDENT (Capstone Researcher)</option>
             <option value="FACULTY">FACULTY (Capstone Advisor)</option>
             <option value="HOD">HOD (Head of Department)</option>
@@ -1453,29 +1453,11 @@
           </select>
         </div>
 
-        <!-- Student Placement Track / Category Option (Marquee, Super Dream, Dream) -->
-        <div id="studentCategoryWrapper" class="p-3 rounded-xl bg-surface-container-high/40 border border-outline-variant/20 space-y-1.5">
-          <div class="flex items-center justify-between">
-            <label class="block text-xs text-on-surface font-semibold flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-sm text-purple-400">workspace_premium</span>
-              <span>Placement &amp; Mentorship Tier</span>
-            </label>
-            <span class="text-[10px] text-outline font-mono uppercase">STUDENT TRACK</span>
-          </div>
-          <select id="newUserStudentCategory" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
-            <option value="MARQUEE">🌟 Marquee (Elite High-CTC &amp; Deep Tech Track)</option>
-            <option value="SUPER_DREAM" selected>⭐ Super Dream (Tier-1 Elite Career &amp; Placement Track)</option>
-            <option value="DREAM">🚀 Dream (High-Tier Advanced Career Track)</option>
-            <option value="REGULAR">Standard / Core Academic Track</option>
-          </select>
-          <p class="text-[11px] text-outline leading-tight">In 3rd Year, categorize students into Marquee, Super Dream, or Dream for dedicated mentor pairing and intensive incubation.</p>
-        </div>
-
         <!-- Academic Year & Section Selection -->
         <div id="studentYearSectionWrapper" class="grid grid-cols-2 gap-3">
           <div>
             <label class="block text-xs text-outline mb-1 font-medium">Academic Year</label>
-            <select id="newUserYear" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+            <select id="newUserYear" onchange="toggleNewUserCategory()" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
               <option value="1st Year">1st Year</option>
               <option value="2nd Year">2nd Year</option>
               <option value="3rd Year" selected>3rd Year</option>
@@ -1489,6 +1471,24 @@
               <option value="B">Section B</option>
             </select>
           </div>
+        </div>
+
+        <!-- Student Placement Track / Category Option (Marquee, Super Dream, Dream) - STRICTLY 3RD YEAR ONLY -->
+        <div id="studentCategoryWrapper" class="p-3 rounded-xl bg-surface-container-high/40 border border-outline-variant/20 space-y-1.5">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs text-on-surface font-semibold flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-purple-400">workspace_premium</span>
+              <span>Placement &amp; Mentorship Tier</span>
+            </label>
+            <span class="text-[10px] text-amber-300 font-mono font-bold uppercase bg-amber-500/20 px-1.5 py-0.5 rounded border border-amber-500/30">3RD YEAR ONLY</span>
+          </div>
+          <select id="newUserStudentCategory" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+            <option value="MARQUEE">🌟 Marquee (Elite High-CTC &amp; Deep Tech Track)</option>
+            <option value="SUPER_DREAM" selected>⭐ Super Dream (Tier-1 Elite Career &amp; Placement Track)</option>
+            <option value="DREAM">🚀 Dream (High-Tier Advanced Career Track)</option>
+            <option value="REGULAR">Standard / Core Academic Track</option>
+          </select>
+          <p class="text-[11px] text-outline leading-tight">In 3rd Year, categorize students into Marquee, Super Dream, or Dream for dedicated mentor pairing and intensive incubation.</p>
         </div>
 
         <div>
@@ -1611,7 +1611,10 @@
     let calendarEvents = [];
     let calDate = new Date();
 
-    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+      if (id === 'createUserModal') toggleNewUserCategory();
+    }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function openMobileSidebar() {
@@ -2903,9 +2906,11 @@
       const password = document.getElementById('newUserPassword').value;
       const role = document.getElementById('newUserRole').value;
       const department = document.getElementById('newUserDept').value;
-      const studentCategory = document.getElementById('newUserStudentCategory')?.value || 'REGULAR';
       const academicYear = document.getElementById('newUserYear')?.value || '3rd Year';
       const section = document.getElementById('newUserSection')?.value || 'A';
+      const rawCategory = document.getElementById('newUserStudentCategory')?.value || 'REGULAR';
+      // Placement Tier only applies to 3rd Year students; 1st, 2nd, and 4th years default to REGULAR
+      const studentCategory = (academicYear === '3rd Year') ? rawCategory : 'REGULAR';
 
       try {
         const res = await fetch('/api/admin/users', {
@@ -2917,7 +2922,7 @@
         if (json.success) {
           closeModal('createUserModal');
           form.reset();
-          showToast(`Account created for ${name} as ${role}${role === 'STUDENT' ? ` (${academicYear} Sec ${section} - ${studentCategory})` : ''}!`, 'success', 'ACCOUNT CREATED');
+          showToast(`Account created for ${name} as ${role}${role === 'STUDENT' ? ` (${academicYear} Sec ${section}${academicYear === '3rd Year' ? ' - ' + studentCategory : ''})` : ''}!`, 'success', 'ACCOUNT CREATED');
           loadAdminDashboard();
         } else {
           showToast(json.message || 'Failed to create user account.', 'error', 'ERROR');
@@ -2932,17 +2937,28 @@
       }
     });
 
-    function toggleNewUserCategory(role) {
+    function toggleNewUserCategory() {
+      const role = document.getElementById('newUserRole')?.value || 'STUDENT';
+      const year = document.getElementById('newUserYear')?.value || '3rd Year';
       const catWrapper = document.getElementById('studentCategoryWrapper');
       const yrWrapper = document.getElementById('studentYearSectionWrapper');
       const isStudent = (role === 'STUDENT');
-      if (catWrapper) {
-        if (isStudent) catWrapper.classList.remove('hidden');
-        else catWrapper.classList.add('hidden');
-      }
+
       if (yrWrapper) {
         if (isStudent) yrWrapper.classList.remove('hidden');
         else yrWrapper.classList.add('hidden');
+      }
+
+      // Mentorship Tier (Marquee / Super Dream / Dream) STRICTLY ONLY FOR 3RD YEAR STUDENTS!
+      // Must NOT be visible for 1st, 2nd, and 4th years!
+      if (catWrapper) {
+        if (isStudent && year === '3rd Year') {
+          catWrapper.classList.remove('hidden');
+        } else {
+          catWrapper.classList.add('hidden');
+          const catSelect = document.getElementById('newUserStudentCategory');
+          if (catSelect) catSelect.value = 'REGULAR';
+        }
       }
     }
 

@@ -126,6 +126,13 @@
       <!-- Student Navigation Items:
            Overview, My Projects, My Tasks, Milestones, Calendar, Documents, Team, Notifications, Profile, Settings, Logout -->
       <nav class="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-360px)] pr-1">
+        <!-- Mentorship Tracks (3rd Year Only - Placed right on top of navigation) -->
+        <button onclick="switchTab('super-dream')" id="nav-super-dream" class="student-nav-item hidden flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-400 hover:bg-surface-container-high border border-amber-500/30 bg-amber-500/10 shadow-sm transition-all mb-1">
+          <span class="material-symbols-outlined text-base text-amber-400">stars</span>
+          <span class="font-bold text-amber-300">Mentorship Tracks</span>
+          <span class="ml-auto text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">3rd YR</span>
+        </button>
+
         <button onclick="switchTab('overview')" id="nav-overview" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-primary bg-surface-container-high">
           <span class="material-symbols-outlined text-base">dashboard</span>
           <span>Overview</span>
@@ -153,11 +160,6 @@
         <button onclick="switchTab('team')" id="nav-team" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
           <span class="material-symbols-outlined text-base">group</span>
           <span>Team</span>
-        </button>
-        <button onclick="switchTab('super-dream')" id="nav-super-dream" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-400 hover:bg-surface-container-high border border-amber-500/20 bg-amber-500/5">
-          <span class="material-symbols-outlined text-base text-amber-400">stars</span>
-          <span class="font-semibold text-amber-300">Mentorship Tracks</span>
-          <span class="ml-auto text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">3rd YR</span>
         </button>
         <button onclick="switchTab('notifications')" id="nav-notifications" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
           <span class="material-symbols-outlined text-base">notifications</span>
@@ -238,6 +240,12 @@
           <span class="text-outline">Assigned Mentor:</span>
           <span id="headerMentorName" class="font-medium text-secondary truncate max-w-[140px]">Dr. Aris Thorne</span>
         </div>
+        <!-- Mentorship Track Quick Pill (Top of Page - 3rd Year Only) -->
+        <button id="topNavMentorshipBtn" onclick="switchTab('super-dream')" class="hidden px-3 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500 hover:text-black border border-amber-500/40 text-amber-300 font-semibold text-xs flex items-center gap-1.5 transition-all shadow-sm">
+          <span class="material-symbols-outlined text-sm">stars</span>
+          <span>Mentorship Tracks</span>
+          <span class="text-[9px] px-1 py-0.2 rounded bg-amber-500/30 text-amber-200 font-mono font-bold">3rd YR</span>
+        </button>
         <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface hover:bg-surface-container transition-colors">
           Logout
         </button>
@@ -257,6 +265,27 @@
 
     <!-- TAB 1: OVERVIEW -->
     <section id="tab-overview" class="tab-pane space-y-6">
+      
+      <!-- 3rd Year Mentorship Track Quick-Access Hub Banner (Top of page - strictly only visible for 3rd Year) -->
+      <div id="topMentorshipTrackCard" class="hidden p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-amber-500/15 via-surface-container-low to-surface-container-low border-2 border-amber-500/40 shadow-md flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div class="flex items-center gap-3.5">
+          <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 shrink-0 shadow-sm">
+            <span class="material-symbols-outlined text-[28px]">stars</span>
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span id="topTrackTierBadge" class="text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase">3RD YEAR MENTORSHIP TRACK</span>
+              <span id="topTrackCohort" class="text-xs text-outline font-mono">AIML 3rd Year</span>
+            </div>
+            <h3 id="topTrackTitle" class="font-headline text-base font-bold text-on-surface mt-0.5">Placement &amp; Mentorship Hub</h3>
+            <p id="topTrackDesc" class="text-xs text-on-surface-variant line-clamp-1">Direct communication with your dedicated faculty mentor, roadmap broadcasts &amp; review queries.</p>
+          </div>
+        </div>
+        <button onclick="switchTab('super-dream')" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-all shadow-md flex items-center gap-1.5 shrink-0 self-start sm:self-center">
+          <span>Open Mentorship Stream</span>
+          <span class="material-symbols-outlined text-sm font-bold">arrow_forward</span>
+        </button>
+      </div>
       
       <!-- Metrics Overview Cards -->
       <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -938,16 +967,35 @@
     }
 
     function switchTab(tabId) {
+      // STRICT RULE: Mentorship tracks tab is strictly restricted to 3rd Year students
+      if (tabId === 'super-dream') {
+        const yr = dashboardData?.studentProfile?.academicYear;
+        if (yr && yr !== '3rd Year') {
+          switchTab('overview');
+          return;
+        }
+      }
+
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
       document.querySelectorAll('.student-nav-item').forEach(el => {
-        el.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high';
+        if (el.id === 'nav-super-dream') {
+          el.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-400 hover:bg-surface-container-high border border-amber-500/30 bg-amber-500/10 shadow-sm transition-all mb-1';
+        } else {
+          el.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high';
+        }
       });
 
       const pane = document.getElementById(`tab-${tabId}`);
       if (pane) pane.classList.remove('hidden');
       const navBtn = document.getElementById(`nav-${tabId}`);
-      if (navBtn) navBtn.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-primary bg-surface-container-high';
-      document.getElementById('pageTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1);
+      if (navBtn) {
+        if (tabId === 'super-dream') {
+          navBtn.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-semibold rounded-lg text-black bg-amber-400 shadow-md transition-all mb-1';
+        } else {
+          navBtn.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-primary bg-surface-container-high';
+        }
+      }
+      document.getElementById('pageTitle').textContent = tabId === 'super-dream' ? '3rd Year Mentorship Tracks' : (tabId.charAt(0).toUpperCase() + tabId.slice(1));
 
       closeMobileSidebar();
 
@@ -1095,6 +1143,47 @@
         document.getElementById('sideDeptTitle').textContent = p.department;
         const deptSelect = document.getElementById('stuNewProjDept');
         if (deptSelect) deptSelect.value = p.department;
+      }
+
+      // Mentorship Tracks Visibility Control:
+      // STRICT RULE: This option MUST NOT be visible for 1st, 2nd, and 4th years! ONLY 3rd Year!
+      const is3rdYear = (p.academicYear === '3rd Year');
+      const sdNavBtn = document.getElementById('nav-super-dream');
+      const topSdCard = document.getElementById('topMentorshipTrackCard');
+      const topNavBtn = document.getElementById('topNavMentorshipBtn');
+
+      if (sdNavBtn) {
+        if (is3rdYear) sdNavBtn.classList.remove('hidden');
+        else sdNavBtn.classList.add('hidden');
+      }
+
+      if (topNavBtn) {
+        if (is3rdYear) topNavBtn.classList.remove('hidden');
+        else topNavBtn.classList.add('hidden');
+      }
+
+      if (topSdCard) {
+        if (is3rdYear) {
+          topSdCard.classList.remove('hidden');
+          const cat = p.studentCategory || 'SUPER_DREAM';
+          const tierBadgeEl = document.getElementById('topTrackTierBadge');
+          const titleEl = document.getElementById('topTrackTitle');
+          const cohortEl = document.getElementById('topTrackCohort');
+          if (cohortEl) cohortEl.textContent = `AIML 3rd Year • Sec ${p.section || 'A'}`;
+          if (tierBadgeEl) {
+            tierBadgeEl.textContent = cat === 'MARQUEE' ? '🌟 MARQUEE TRACK (3RD YEAR)' :
+              cat === 'DREAM' ? '🚀 DREAM TRACK (3RD YEAR)' : '⭐ SUPER DREAM TRACK (3RD YEAR)';
+            tierBadgeEl.className = cat === 'MARQUEE' ? 'text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30 uppercase' :
+              cat === 'DREAM' ? 'text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 uppercase' :
+              'text-[10px] font-mono font-bold px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase';
+          }
+          if (titleEl) {
+            titleEl.textContent = cat === 'MARQUEE' ? '🌟 Marquee Elite Incubation & Mentorship Hub' :
+              cat === 'DREAM' ? '🚀 Dream Advanced Placement Mentorship Hub' : '⭐ Super Dream Tier-1 Placement Mentorship Hub';
+          }
+        } else {
+          topSdCard.classList.add('hidden');
+        }
       }
 
       // Stats
