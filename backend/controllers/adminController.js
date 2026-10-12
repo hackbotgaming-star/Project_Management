@@ -24,7 +24,7 @@ exports.getUsers = async (req, res) => {
 // POST /api/admin/users (Create student / faculty)
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, password, role, department, cohort, title, studentId, facultyId, studentCategory } = req.body;
+    const { name, email, password, role, department, cohort, title, studentId, facultyId, studentCategory, academicYear, section } = req.body;
     if (!name || !email || !password || !role) {
       return res.status(400).json({ success: false, message: 'Name, email, password, and role are required.' });
     }
@@ -34,14 +34,19 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User with this email already exists.' });
     }
 
-    // Normalize student placement category
+    // Normalize student placement category (Marquee, Super Dream, Dream, Regular)
     let normalizedCategory = 'REGULAR';
     if (role.toUpperCase() === 'STUDENT' && studentCategory) {
       const c = studentCategory.toUpperCase().replace(/\s+/g, '_');
-      if (['SUPER_DREAM', 'SUPERDREAM'].includes(c)) normalizedCategory = 'SUPER_DREAM';
+      if (['MARQUEE', 'MARQUE'].includes(c)) normalizedCategory = 'MARQUEE';
+      else if (['SUPER_DREAM', 'SUPERDREAM'].includes(c)) normalizedCategory = 'SUPER_DREAM';
       else if (['DREAM'].includes(c)) normalizedCategory = 'DREAM';
       else normalizedCategory = 'REGULAR';
     }
+
+    const yr = academicYear || '3rd Year';
+    const sec = (section ? section.toUpperCase().trim() : 'A') === 'B' ? 'B' : 'A';
+    const defaultCohort = `AI&ML - ${yr} (Section ${sec})`;
 
     const hashedPassword = await User.hashPassword(password);
     const user = await User.create({
@@ -49,9 +54,18 @@ exports.createUser = async (req, res) => {
       email: email.toLowerCase().trim(),
       password: hashedPassword,
       role: role.toUpperCase(),
-      department: department || 'Computer Science & Engineering',
-      cohort: cohort || 'CS-492 Capstone Cohort 2025',
-      title: title || (role.toUpperCase() === 'HOD' ? 'Head of Department' : role.toUpperCase() === 'FACULTY' ? 'Assistant Professor' : (normalizedCategory === 'SUPER_DREAM' ? 'Super Dream Scholar' : normalizedCategory === 'DREAM' ? 'Dream Scholar' : 'Capstone Student')),
+      department: department || 'Artificial Intelligence & Machine Learning',
+      academicYear: yr,
+      section: sec,
+      cohort: cohort || defaultCohort,
+      title: title || (
+        role.toUpperCase() === 'HOD' ? 'Head of Department (AI&ML)' :
+        role.toUpperCase() === 'FACULTY' ? 'Assistant Professor' :
+        normalizedCategory === 'MARQUEE' ? 'Marquee Scholar (AI&ML)' :
+        normalizedCategory === 'SUPER_DREAM' ? 'Super Dream Scholar (AI&ML)' :
+        normalizedCategory === 'DREAM' ? 'Dream Scholar (AI&ML)' :
+        `AI&ML Student (${yr} - Sec ${sec})`
+      ),
       studentId: studentId || (role.toUpperCase() === 'STUDENT' ? `STU-${Date.now().toString().slice(-4)}` : null),
       facultyId: facultyId || (role.toUpperCase() === 'FACULTY' || role.toUpperCase() === 'HOD' ? `FAC-${Date.now().toString().slice(-4)}` : null),
       studentCategory: role.toUpperCase() === 'STUDENT' ? normalizedCategory : 'REGULAR',
@@ -75,7 +89,7 @@ exports.createUser = async (req, res) => {
       action: 'CREATE_USER',
       targetType: 'USER',
       targetId: user._id.toString(),
-      details: `Created new user ${user.name} (${user.email}) with role ${user.role}${role.toUpperCase() === 'STUDENT' ? ` and category ${user.studentCategory}` : ''}.`,
+      details: `Created new user ${user.name} (${user.email}) in ${user.department} as ${user.role} (${user.academicYear || ''} Sec ${user.section || ''})${role.toUpperCase() === 'STUDENT' ? ` [${user.studentCategory}]` : ''}.`,
       ipAddress: req.ip || '127.0.0.1',
     });
 
@@ -88,6 +102,8 @@ exports.createUser = async (req, res) => {
         email: user.email,
         role: user.role,
         department: user.department,
+        academicYear: user.academicYear,
+        section: user.section,
         studentCategory: user.studentCategory,
       },
     });
@@ -97,11 +113,11 @@ exports.createUser = async (req, res) => {
   }
 };
 
-// PUT /api/admin/users/:id (Update user info, e.g. studentCategory, role, department)
+// PUT /api/admin/users/:id (Update user info, e.g. studentCategory, role, department, year, section)
 exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, department, role, status, studentCategory, cohort, title } = req.body;
+    const { name, department, role, status, studentCategory, cohort, title, academicYear, section } = req.body;
     const user = await User.findById(id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
 
@@ -109,11 +125,18 @@ exports.updateUser = async (req, res) => {
     if (department) user.department = department;
     if (role) user.role = role.toUpperCase();
     if (status) user.status = status;
-    if (cohort) user.cohort = cohort;
+    if (academicYear) user.academicYear = academicYear;
+    if (section) user.section = section.toUpperCase().trim();
+    if (cohort) {
+      user.cohort = cohort;
+    } else if (academicYear || section) {
+      user.cohort = `AI&ML - ${user.academicYear || '3rd Year'} (Section ${user.section || 'A'})`;
+    }
     if (title) user.title = title;
     if (studentCategory) {
       const c = studentCategory.toUpperCase().replace(/\s+/g, '_');
-      if (['SUPER_DREAM', 'SUPERDREAM'].includes(c)) user.studentCategory = 'SUPER_DREAM';
+      if (['MARQUEE', 'MARQUE'].includes(c)) user.studentCategory = 'MARQUEE';
+      else if (['SUPER_DREAM', 'SUPERDREAM'].includes(c)) user.studentCategory = 'SUPER_DREAM';
       else if (['DREAM'].includes(c)) user.studentCategory = 'DREAM';
       else user.studentCategory = 'REGULAR';
     }

@@ -12,7 +12,7 @@ exports.getAdminOverview = async (req, res) => {
   try {
     const groups = await SuperDream.find()
       .populate('mentor', 'name email department avatar title')
-      .populate('mentees', 'name email studentId department avatar cohort studentCategory')
+      .populate('mentees', 'name email studentId department avatar cohort studentCategory academicYear section')
       .sort({ createdAt: -1 });
 
     const facultyList = await User.find({ role: { $in: ['FACULTY', 'HOD'] } })
@@ -20,7 +20,7 @@ exports.getAdminOverview = async (req, res) => {
       .sort({ name: 1 });
 
     const studentList = await User.find({ role: 'STUDENT' })
-      .select('name email studentId department avatar cohort studentCategory')
+      .select('name email studentId department avatar cohort studentCategory academicYear section')
       .sort({ name: 1 });
 
     // Map each mentee to their assigned mentor for instant allocation lookup
@@ -55,7 +55,7 @@ exports.getAdminOverview = async (req, res) => {
   }
 };
 
-// Admin creates a Super Dream mentorship allocation
+// Admin creates a Super Dream / Marquee / Dream mentorship allocation
 exports.createGroup = async (req, res) => {
   try {
     const { title, description, mentorId, menteeIds, cohort, category = 'SUPER_DREAM', reassignMentees = true } = req.body;
@@ -70,11 +70,21 @@ exports.createGroup = async (req, res) => {
     }
 
     const validMentees = Array.isArray(menteeIds) ? menteeIds : [];
-    const trackLabel = category === 'DREAM' ? 'Dream Mentorship' : 'Super Dream Mentorship';
+    const normCategory = (category && ['MARQUEE', 'MARQUE'].includes(category.toUpperCase()))
+      ? 'MARQUEE'
+      : (category && category.toUpperCase() === 'DREAM')
+      ? 'DREAM'
+      : 'SUPER_DREAM';
+
+    const trackLabels = {
+      'MARQUEE': '🌟 Marquee Mentorship (3rd Year)',
+      'SUPER_DREAM': '⭐ Super Dream Mentorship (3rd Year)',
+      'DREAM': '🚀 Dream Mentorship (3rd Year)',
+    };
+    const trackLabel = trackLabels[normCategory];
     const groupTitle = title && title.trim() ? title.trim() : `${trackLabel} - ${mentor.name}`;
 
-    // If reassignMentees is enabled, remove these students from any other existing Super Dream group
-    // so each mentee has their own separate designated mentor
+    // If reassignMentees is enabled, remove these students from any other existing group
     if (reassignMentees && validMentees.length > 0) {
       await SuperDream.updateMany(
         { mentees: { $in: validMentees } },
@@ -82,21 +92,28 @@ exports.createGroup = async (req, res) => {
       );
     }
 
-    // Also update students' studentCategory if assigned to Super Dream or Dream
+    // Also update students' studentCategory if assigned to Marquee, Super Dream, or Dream
     if (validMentees.length > 0) {
       await User.updateMany(
         { _id: { $in: validMentees }, role: 'STUDENT' },
-        { studentCategory: category === 'DREAM' ? 'DREAM' : 'SUPER_DREAM' }
+        { studentCategory: normCategory }
       );
     }
+
+    const defaultCohort = normCategory === 'MARQUEE'
+      ? 'Marquee Track (3rd Year)'
+      : normCategory === 'DREAM'
+      ? 'Dream Track (3rd Year)'
+      : 'Super Dream Track (3rd Year)';
 
     const newGroup = await SuperDream.create({
       title: groupTitle,
       description: description || '',
       mentor: mentorId,
       mentees: validMentees,
-      cohort: cohort || (category === 'DREAM' ? 'Dream Track 2025-2026' : 'Super Dream Track 2025-2026'),
-      category: category === 'DREAM' ? 'DREAM' : 'SUPER_DREAM',
+      cohort: cohort || defaultCohort,
+      category: normCategory,
+      academicYear: '3rd Year',
       createdBy: req.user._id,
     });
 
@@ -216,24 +233,42 @@ exports.assignMentorDirect = async (req, res) => {
       );
     }
 
+    const normCategory = (category && ['MARQUEE', 'MARQUE'].includes(category.toUpperCase()))
+      ? 'MARQUEE'
+      : (category && category.toUpperCase() === 'DREAM')
+      ? 'DREAM'
+      : 'SUPER_DREAM';
+
+    const trackLabels = {
+      'MARQUEE': '🌟 Marquee Mentorship (3rd Year)',
+      'SUPER_DREAM': '⭐ Super Dream Mentorship (3rd Year)',
+      'DREAM': '🚀 Dream Mentorship (3rd Year)',
+    };
+    const trackLabel = trackLabels[normCategory];
+
     // Sync studentCategory on assigned students
     await User.updateMany(
       { _id: { $in: targetMentees }, role: 'STUDENT' },
-      { studentCategory: category === 'DREAM' ? 'DREAM' : 'SUPER_DREAM' }
+      { studentCategory: normCategory }
     );
 
-    const trackLabel = category === 'DREAM' ? 'Dream Mentorship' : 'Super Dream Mentorship';
+    const defaultCohort = normCategory === 'MARQUEE'
+      ? 'Marquee Track (3rd Year)'
+      : normCategory === 'DREAM'
+      ? 'Dream Track (3rd Year)'
+      : 'Super Dream Track (3rd Year)';
 
     // Find an existing active group for this mentor and category or create a new one
-    let group = await SuperDream.findOne({ mentor: mentorId, category: category === 'DREAM' ? 'DREAM' : 'SUPER_DREAM', status: 'ACTIVE' });
+    let group = await SuperDream.findOne({ mentor: mentorId, category: normCategory, status: 'ACTIVE' });
     if (!group) {
       group = await SuperDream.create({
         title: groupTitle || `${trackLabel} - ${mentor.name}`,
-        description: `Direct mentorship track supervised by ${mentor.name}.`,
+        description: `Direct 3rd-year mentorship track supervised by ${mentor.name}.`,
         mentor: mentorId,
         mentees: targetMentees,
-        category: category === 'DREAM' ? 'DREAM' : 'SUPER_DREAM',
-        cohort: cohort || (category === 'DREAM' ? 'Dream Track 2025-2026' : 'Super Dream Track 2025-2026'),
+        category: normCategory,
+        academicYear: '3rd Year',
+        cohort: cohort || defaultCohort,
         createdBy: req.user._id,
       });
     } else {
@@ -265,7 +300,7 @@ exports.assignMentorDirect = async (req, res) => {
 
     const populated = await SuperDream.findById(group._id)
       .populate('mentor', 'name email department avatar title')
-      .populate('mentees', 'name email studentId department avatar cohort studentCategory');
+      .populate('mentees', 'name email studentId department avatar cohort studentCategory academicYear section');
 
     res.json({
       success: true,
@@ -306,7 +341,7 @@ exports.getFacultySuperDream = async (req, res) => {
   try {
     const groups = await SuperDream.find({ mentor: req.user._id })
       .populate('mentor', 'name email department avatar title')
-      .populate('mentees', 'name email studentId department avatar cohort studentCategory')
+      .populate('mentees', 'name email studentId department avatar cohort studentCategory academicYear section')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, groups });
@@ -321,7 +356,7 @@ exports.getStudentSuperDream = async (req, res) => {
   try {
     const groups = await SuperDream.find({ mentees: req.user._id })
       .populate('mentor', 'name email department avatar title')
-      .populate('mentees', 'name email studentId department avatar cohort studentCategory')
+      .populate('mentees', 'name email studentId department avatar cohort studentCategory academicYear section')
       .sort({ createdAt: -1 });
 
     res.json({ success: true, groups });

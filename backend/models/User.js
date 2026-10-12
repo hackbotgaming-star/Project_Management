@@ -26,11 +26,21 @@ const UserSchema = new mongoose.Schema(
     },
     department: {
       type: String,
-      default: 'Computer Science & Engineering',
+      default: 'Artificial Intelligence & Machine Learning',
+    },
+    academicYear: {
+      type: String,
+      enum: ['1st Year', '2nd Year', '3rd Year', '4th Year'],
+      default: '3rd Year',
+    },
+    section: {
+      type: String,
+      enum: ['A', 'B'],
+      default: 'A',
     },
     cohort: {
       type: String,
-      default: 'CS-492 Capstone Cohort 2025',
+      default: 'AI&ML - 3rd Year (Section A)',
     },
     studentId: {
       type: String,
@@ -38,7 +48,7 @@ const UserSchema = new mongoose.Schema(
     },
     studentCategory: {
       type: String,
-      enum: ['SUPER_DREAM', 'DREAM', 'REGULAR'],
+      enum: ['MARQUEE', 'SUPER_DREAM', 'DREAM', 'REGULAR'],
       default: 'REGULAR',
     },
     facultyId: {

@@ -421,6 +421,166 @@
               <div class="text-[11px] text-outline font-medium mt-0.5">Active Projects</div>
             </div>
           </div>
+        <!-- Section: Academic Years & Sections Structure (4 Years, Sections A & B, with 3rd Year Mentorship Hub) -->
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-5">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-outline-variant/20">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-400">account_tree</span>
+                <h3 class="font-headline font-bold text-base text-on-surface">Academic Years &amp; Sections Structure</h3>
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold uppercase">4 Years &bull; Sections A &amp; B</span>
+              </div>
+              <p class="text-xs text-outline mt-0.5">Explore each academic year, section rosters, and 3rd-year specialized placement &amp; mentorship tracks.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button onclick="switchTab('super-dream'); switchSdView('directory');" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm">
+                <span class="material-symbols-outlined text-sm">stars</span>
+                <span>Manage 3rd Year Mentors</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- 4 Years Grid Cards -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- 1st Year -->
+            <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-bold text-on-surface font-headline">1st Year</span>
+                  <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-container-high text-outline">Foundation</span>
+                </div>
+                <p class="text-[11px] text-outline">Engineering foundation, programming fundamentals, mathematics.</p>
+              </div>
+              <div class="space-y-1.5 pt-2 border-t border-outline-variant/20">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-outline">Section A:</span>
+                  <span class="font-mono font-semibold text-on-surface">AIML-1A</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-outline">Section B:</span>
+                  <span class="font-mono font-semibold text-on-surface">AIML-1B</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 2nd Year -->
+            <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-bold text-on-surface font-headline">2nd Year</span>
+                  <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-container-high text-outline">Core Skills</span>
+                </div>
+                <p class="text-[11px] text-outline">Data structures, algorithms, AI &amp; ML mathematical foundations.</p>
+              </div>
+              <div class="space-y-1.5 pt-2 border-t border-outline-variant/20">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-outline">Section A:</span>
+                  <span class="font-mono font-semibold text-on-surface">AIML-2A</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-outline">Section B:</span>
+                  <span class="font-mono font-semibold text-on-surface">AIML-2B</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 3rd Year (Specialized Working Track Hub) -->
+            <div class="p-4 rounded-xl bg-gradient-to-b from-amber-500/10 to-surface-container border-2 border-amber-500/40 flex flex-col justify-between space-y-3 shadow-md relative">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <div class="flex items-center gap-1.5">
+                    <span class="text-xs font-bold text-amber-300 font-headline">3rd Year</span>
+                    <span class="material-symbols-outlined text-xs text-amber-400">verified</span>
+                  </div>
+                  <span class="text-[9px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold uppercase">Mentorship Hub</span>
+                </div>
+                <p class="text-[11px] text-on-surface-variant leading-tight">Sections A &amp; B with dedicated Marquee, Super Dream &amp; Dream tracks.</p>
+              </div>
+              <div class="space-y-1 pt-2 border-t border-amber-500/20 text-[11px]">
+                <div class="flex items-center justify-between">
+                  <span class="text-purple-300 font-medium">🌟 Marquee Track</span>
+                  <span class="font-mono text-purple-300 font-bold">Active</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-amber-300 font-medium">⭐ Super Dream Track</span>
+                  <span class="font-mono text-amber-300 font-bold">Active</span>
+                </div>
+                <div class="flex items-center justify-between">
+                  <span class="text-cyan-300 font-medium">🚀 Dream Track</span>
+                  <span class="font-mono text-cyan-300 font-bold">Active</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- 4th Year -->
+            <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col justify-between space-y-3">
+              <div>
+                <div class="flex items-center justify-between mb-1.5">
+                  <span class="text-xs font-bold text-on-surface font-headline">4th Year</span>
+                  <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-container-high text-outline">Capstone</span>
+                </div>
+                <p class="text-[11px] text-outline">Final capstone engineering defense, industry internships.</p>
+              </div>
+              <div class="space-y-1.5 pt-2 border-t border-outline-variant/20">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-outline">Section A:</span>
+                  <span class="font-mono font-semibold text-on-surface">AIML-4A</span>
+                </div>
+                <div class="flex items-center justify-between text-xs">
+                  <span class="text-outline">Section B:</span>
+                  <span class="font-mono font-semibold text-on-surface">AIML-4B</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 3rd Year Dedicated Working Track Actions -->
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-on-surface flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm text-amber-400">stars</span>
+                <span>3rd Year Placement &amp; Mentorship Portals (Sec A &amp; B)</span>
+              </span>
+              <span class="text-[10px] text-outline">Direct Track Access</span>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div class="p-3 rounded-lg bg-surface-container-high/60 border border-purple-500/30 flex items-center justify-between gap-2">
+                <div>
+                  <div class="font-bold text-xs text-purple-300 flex items-center gap-1">
+                    <span>🌟 Marquee Track</span>
+                  </div>
+                  <div class="text-[10px] text-outline">Elite CTC &amp; Research Track</div>
+                </div>
+                <button onclick="switchTab('super-dream'); switchSdView('mentors'); setSdFilter('MARQUEE');" class="px-2.5 py-1 rounded bg-purple-500/20 hover:bg-purple-500 text-purple-300 hover:text-black font-semibold text-[11px] transition-colors">
+                  Open Track
+                </button>
+              </div>
+
+              <div class="p-3 rounded-lg bg-surface-container-high/60 border border-amber-500/30 flex items-center justify-between gap-2">
+                <div>
+                  <div class="font-bold text-xs text-amber-300 flex items-center gap-1">
+                    <span>⭐ Super Dream Track</span>
+                  </div>
+                  <div class="text-[10px] text-outline">Tier-1 Mentorship &amp; Placement</div>
+                </div>
+                <button onclick="switchTab('super-dream'); switchSdView('mentors'); setSdFilter('SUPER_DREAM');" class="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500 text-amber-300 hover:text-black font-semibold text-[11px] transition-colors">
+                  Open Track
+                </button>
+              </div>
+
+              <div class="p-3 rounded-lg bg-surface-container-high/60 border border-cyan-500/30 flex items-center justify-between gap-2">
+                <div>
+                  <div class="font-bold text-xs text-cyan-300 flex items-center gap-1">
+                    <span>🚀 Dream Track</span>
+                  </div>
+                  <div class="text-[10px] text-outline">Advanced Placement Track</div>
+                </div>
+                <button onclick="switchTab('super-dream'); switchSdView('mentors'); setSdFilter('DREAM');" class="px-2.5 py-1 rounded bg-cyan-500/20 hover:bg-cyan-500 text-cyan-300 hover:text-black font-semibold text-[11px] transition-colors">
+                  Open Track
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
 
         <!-- Section 1: Faculty of this Department -->
@@ -438,13 +598,26 @@
 
         <!-- Section 2: Students of this Department -->
         <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
-          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/20">
             <div class="flex items-center gap-2">
               <span class="material-symbols-outlined text-primary">school</span>
               <h3 class="font-headline font-bold text-base text-on-surface">Enrolled Students</h3>
               <span id="detailDeptStuBadge" class="text-[11px] font-mono px-2 py-0.5 rounded bg-primary/20 text-primary">0 Students</span>
             </div>
-            <span class="text-xs text-outline">Capstone Researchers</span>
+            <div class="flex flex-wrap items-center gap-2 text-xs">
+              <select id="detailDeptYearFilter" onchange="filterDeptStudentsList()" class="px-2.5 py-1 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface focus:outline-none">
+                <option value="ALL">All Academic Years</option>
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year" selected>3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+              <select id="detailDeptSecFilter" onchange="filterDeptStudentsList()" class="px-2.5 py-1 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface focus:outline-none">
+                <option value="ALL">All Sections</option>
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+              </select>
+            </div>
           </div>
           <div id="detailDeptStudentsGrid" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
         </div>
@@ -1044,8 +1217,9 @@
           <div>
             <label class="block text-xs text-outline mb-1 font-medium">Program Track Tier</label>
             <select id="sdSelectCategory" onchange="onSdCategoryChanged()" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
-              <option value="SUPER_DREAM" selected>⭐ Super Dream Track</option>
-              <option value="DREAM">🚀 Dream Track</option>
+              <option value="MARQUEE">🌟 Marquee Track (3rd Year)</option>
+              <option value="SUPER_DREAM" selected>⭐ Super Dream Track (3rd Year)</option>
+              <option value="DREAM">🚀 Dream Track (3rd Year)</option>
             </select>
           </div>
           <div>
@@ -1054,7 +1228,7 @@
           </div>
           <div>
             <label class="block text-xs text-outline mb-1 font-medium">Cohort / Batch</label>
-            <input type="text" id="sdInputCohort" required value="Super Dream 2025-2026" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+            <input type="text" id="sdInputCohort" required value="Super Dream Track (3rd Year)" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
           </div>
         </div>
 
@@ -1074,8 +1248,11 @@
           <div class="flex flex-wrap items-center justify-between gap-2 mb-2">
             <div class="flex flex-wrap items-center bg-surface-container-high rounded-lg p-0.5 text-[11px]">
               <button type="button" onclick="setSdMenteeModalFilter('all')" id="sdModalFilterAll" class="px-2 py-0.5 rounded text-on-surface font-semibold bg-surface-container-lowest">All</button>
+              <button type="button" onclick="setSdMenteeModalFilter('marquee')" id="sdModalFilterMarquee" class="px-2 py-0.5 rounded text-purple-300 hover:text-purple-200">🌟 Marquee</button>
               <button type="button" onclick="setSdMenteeModalFilter('super_dream')" id="sdModalFilterSuperDream" class="px-2 py-0.5 rounded text-amber-300 hover:text-amber-200">⭐ Super Dream</button>
               <button type="button" onclick="setSdMenteeModalFilter('dream')" id="sdModalFilterDream" class="px-2 py-0.5 rounded text-cyan-300 hover:text-cyan-200">🚀 Dream</button>
+              <button type="button" onclick="setSdMenteeModalFilter('sec_a')" id="sdModalFilterSecA" class="px-2 py-0.5 rounded text-outline hover:text-on-surface">Sec A</button>
+              <button type="button" onclick="setSdMenteeModalFilter('sec_b')" id="sdModalFilterSecB" class="px-2 py-0.5 rounded text-outline hover:text-on-surface">Sec B</button>
               <button type="button" onclick="setSdMenteeModalFilter('unassigned')" id="sdModalFilterUnassigned" class="px-2 py-0.5 rounded text-outline hover:text-on-surface">Unassigned</button>
               <button type="button" onclick="setSdMenteeModalFilter('assigned')" id="sdModalFilterAssigned" class="px-2 py-0.5 rounded text-outline hover:text-on-surface">Assigned</button>
             </div>
@@ -1220,19 +1397,7 @@
           <div>
             <label class="block text-xs text-outline mb-1 font-medium">Department</label>
             <select id="newProjDept" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
-              <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
-              <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science (AI&DS)</option>
-              <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning (AI&ML)</option>
-              <option value="Computer Science & Engineering (Cyber Security)">Computer Science & Engineering - Cyber Security (CSE-CS)</option>
-              <option value="Computer Science & Design">Computer Science & Design (CSD)</option>
-              <option value="Information Technology">Information Technology (IT)</option>
-              <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
-              <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
-              <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
-              <option value="Automobile Engineering">Automobile Engineering (AUTO)</option>
-              <option value="Robotics & Automation Engineering">Robotics & Automation Engineering (ROB)</option>
-              <option value="Biomedical Engineering">Biomedical Engineering (BME)</option>
-              <option value="Civil Engineering">Civil Engineering (CIVIL)</option>
+              <option value="Artificial Intelligence & Machine Learning" selected>Artificial Intelligence & Machine Learning (AI&ML)</option>
             </select>
           </div>
         </div>
@@ -1288,39 +1453,48 @@
           </select>
         </div>
 
-        <!-- Student Placement Track / Category Option -->
+        <!-- Student Placement Track / Category Option (Marquee, Super Dream, Dream) -->
         <div id="studentCategoryWrapper" class="p-3 rounded-xl bg-surface-container-high/40 border border-outline-variant/20 space-y-1.5">
           <div class="flex items-center justify-between">
             <label class="block text-xs text-on-surface font-semibold flex items-center gap-1.5">
-              <span class="material-symbols-outlined text-sm text-amber-400">workspace_premium</span>
-              <span>Student Placement / Incubation Tier</span>
+              <span class="material-symbols-outlined text-sm text-purple-400">workspace_premium</span>
+              <span>Placement &amp; Mentorship Tier</span>
             </label>
             <span class="text-[10px] text-outline font-mono uppercase">STUDENT TRACK</span>
           </div>
           <select id="newUserStudentCategory" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
-            <option value="SUPER_DREAM">⭐ Super Dream (Tier-1 Elite Career & Placement Track)</option>
+            <option value="MARQUEE">🌟 Marquee (Elite High-CTC &amp; Deep Tech Track)</option>
+            <option value="SUPER_DREAM" selected>⭐ Super Dream (Tier-1 Elite Career &amp; Placement Track)</option>
             <option value="DREAM">🚀 Dream (High-Tier Advanced Career Track)</option>
-            <option value="REGULAR" selected>Standard / Core Academic Track</option>
+            <option value="REGULAR">Standard / Core Academic Track</option>
           </select>
-          <p class="text-[11px] text-outline leading-tight">Categorize this student into Super Dream or Dream for direct dedicated mentor pairing and elite corporate incubation.</p>
+          <p class="text-[11px] text-outline leading-tight">In 3rd Year, categorize students into Marquee, Super Dream, or Dream for dedicated mentor pairing and intensive incubation.</p>
+        </div>
+
+        <!-- Academic Year & Section Selection -->
+        <div id="studentYearSectionWrapper" class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Academic Year</label>
+            <select id="newUserYear" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+              <option value="1st Year">1st Year</option>
+              <option value="2nd Year">2nd Year</option>
+              <option value="3rd Year" selected>3rd Year</option>
+              <option value="4th Year">4th Year</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Section</label>
+            <select id="newUserSection" class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+              <option value="A" selected>Section A</option>
+              <option value="B">Section B</option>
+            </select>
+          </div>
         </div>
 
         <div>
-          <label class="block text-xs text-outline mb-1">Academic Department</label>
+          <label class="block text-xs text-outline mb-1 font-medium">Academic Department</label>
           <select id="newUserDept" required class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
-            <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
-            <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science (AI&DS)</option>
-            <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning (AI&ML)</option>
-            <option value="Computer Science & Engineering (Cyber Security)">Computer Science & Engineering - Cyber Security (CSE-CS)</option>
-            <option value="Computer Science & Design">Computer Science & Design (CSD)</option>
-            <option value="Information Technology">Information Technology (IT)</option>
-            <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
-            <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
-            <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
-            <option value="Automobile Engineering">Automobile Engineering (AUTO)</option>
-            <option value="Robotics & Automation Engineering">Robotics & Automation Engineering (ROB)</option>
-            <option value="Biomedical Engineering">Biomedical Engineering (BME)</option>
-            <option value="Civil Engineering">Civil Engineering (CIVIL)</option>
+            <option value="Artificial Intelligence & Machine Learning" selected>Artificial Intelligence & Machine Learning (AI&ML)</option>
           </select>
         </div>
 
@@ -1852,32 +2026,61 @@
         return;
       }
       grid.innerHTML = depts.map(d => `
-        <div onclick="openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:border-tertiary/50 transition-all cursor-pointer flex flex-col justify-between group shadow-sm hover:shadow-md">
+        <div onclick="openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:border-tertiary/50 transition-all cursor-pointer flex flex-col justify-between group shadow-sm hover:shadow-md col-span-2">
           <div>
             <div class="flex items-center justify-between mb-2.5">
-              <span class="text-xs font-mono px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold">${d.code}</span>
-              <span class="text-[11px] text-outline flex items-center gap-1">
-                <span class="material-symbols-outlined text-xs text-secondary">supervisor_account</span>
-                <span>${d.head}</span>
+              <span class="text-xs font-mono px-2.5 py-1 rounded bg-tertiary/20 text-tertiary font-bold">${d.code}</span>
+              <span class="text-xs text-outline flex items-center gap-1.5 font-medium">
+                <span class="material-symbols-outlined text-sm text-secondary">supervisor_account</span>
+                <span>HOD: <strong class="text-on-surface">${d.head}</strong></span>
               </span>
             </div>
-            <h4 class="font-headline font-bold text-base text-on-surface group-hover:text-tertiary transition-colors mb-1.5">${d.name}</h4>
-            <p class="text-xs text-outline mb-4 line-clamp-2">${d.description || 'SRM Easwari Engineering Academic Division'}</p>
+            <h4 class="font-headline font-bold text-lg text-on-surface group-hover:text-tertiary transition-colors mb-1.5">${d.name}</h4>
+            <p class="text-xs text-outline mb-4 leading-relaxed">${d.description || 'SRM Easwari Engineering Academic Division'}</p>
+
+            <!-- 4 Academic Years & Sections Strip -->
+            <div class="p-3.5 rounded-xl bg-surface-container/60 border border-outline-variant/20 mb-4 space-y-2.5">
+              <div class="flex items-center justify-between text-xs font-semibold text-on-surface">
+                <span class="flex items-center gap-1.5">
+                  <span class="material-symbols-outlined text-sm text-tertiary">school</span>
+                  <span>Academic Structure (4 Years &bull; Sections A &amp; B)</span>
+                </span>
+                <span class="text-[10px] font-mono text-tertiary">AI&ML Specialization</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div class="p-2 rounded-lg bg-surface-container-high/50 text-center">
+                  <div class="font-bold text-on-surface">1st Year</div>
+                  <div class="text-[10px] text-outline font-mono">Sec A &amp; B</div>
+                </div>
+                <div class="p-2 rounded-lg bg-surface-container-high/50 text-center">
+                  <div class="font-bold text-on-surface">2nd Year</div>
+                  <div class="text-[10px] text-outline font-mono">Sec A &amp; B</div>
+                </div>
+                <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/30 text-center">
+                  <div class="font-bold text-amber-300">3rd Year ⭐</div>
+                  <div class="text-[10px] text-amber-300/80 font-mono">Marquee &bull; SD &bull; Dream</div>
+                </div>
+                <div class="p-2 rounded-lg bg-surface-container-high/50 text-center">
+                  <div class="font-bold text-on-surface">4th Year</div>
+                  <div class="text-[10px] text-outline font-mono">Sec A &amp; B</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div>
             <div class="grid grid-cols-3 gap-2 text-center text-xs pt-3 pb-3 border-t border-outline-variant/20 bg-surface-container/30 rounded-xl px-2">
               <div>
-                <div class="font-bold text-primary font-mono text-sm">${d.studentsCount}</div>
-                <div class="text-[10px] text-outline">Students</div>
+                <div class="font-bold text-primary font-mono text-base">${d.studentsCount}</div>
+                <div class="text-[10px] text-outline">Students Enrolled</div>
               </div>
               <div>
-                <div class="font-bold text-secondary font-mono text-sm">${d.facultyCount}</div>
-                <div class="text-[10px] text-outline">Faculty</div>
+                <div class="font-bold text-secondary font-mono text-base">${d.facultyCount}</div>
+                <div class="text-[10px] text-outline">Faculty Advisors</div>
               </div>
               <div>
-                <div class="font-bold text-tertiary font-mono text-sm">${d.projectsCount}</div>
-                <div class="text-[10px] text-outline">Projects</div>
+                <div class="font-bold text-tertiary font-mono text-base">${d.projectsCount}</div>
+                <div class="text-[10px] text-outline">Capstone Projects</div>
               </div>
             </div>
 
@@ -1886,8 +2089,8 @@
                 <span class="material-symbols-outlined text-sm">edit</span>
                 <span>HOD</span>
               </button>
-              <button type="button" onclick="event.stopPropagation(); openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="flex-1 py-2 px-3 rounded-xl bg-surface-container hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-all flex items-center justify-center gap-1.5 border border-outline-variant/20">
-                <span>Open Portal</span>
+              <button type="button" onclick="event.stopPropagation(); openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="flex-1 py-2 px-3 rounded-xl bg-tertiary/15 hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-all flex items-center justify-center gap-1.5 border border-tertiary/30">
+                <span>Open AI&ML Department Portal</span>
                 <span class="material-symbols-outlined text-sm">arrow_forward</span>
               </button>
             </div>
@@ -1905,6 +2108,60 @@
         (d.head && d.head.toLowerCase().includes(q))
       );
       renderDepartmentsGrid(filtered);
+    }
+
+    let currentDeptStudentsList = [];
+
+    function filterDeptStudentsList() {
+      const yearFilter = document.getElementById('detailDeptYearFilter')?.value || 'ALL';
+      const secFilter = document.getElementById('detailDeptSecFilter')?.value || 'ALL';
+
+      const filtered = currentDeptStudentsList.filter(s => {
+        const matchesYear = yearFilter === 'ALL' || (s.academicYear || '3rd Year') === yearFilter;
+        const matchesSec = secFilter === 'ALL' || (s.section || 'A') === secFilter;
+        return matchesYear && matchesSec;
+      });
+
+      renderDeptStudentsGrid(filtered);
+    }
+
+    function renderDeptStudentsGrid(stuList) {
+      const stuGrid = document.getElementById('detailDeptStudentsGrid');
+      if (!stuGrid) return;
+
+      if (stuList.length === 0) {
+        stuGrid.innerHTML = `
+          <div class="col-span-3 text-xs text-outline py-8 text-center bg-surface-container/30 rounded-xl border border-outline-variant/20">
+            <span class="material-symbols-outlined text-3xl text-outline mb-1 block">school</span>
+            No students found matching the selected Academic Year / Section filter.
+          </div>
+        `;
+        return;
+      }
+
+      stuGrid.innerHTML = stuList.map(s => {
+        const catBadge = s.studentCategory === 'MARQUEE' ? '<span class="px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 text-[10px] font-bold border border-purple-500/30">🌟 MARQUEE</span>' :
+          s.studentCategory === 'SUPER_DREAM' ? '<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30">⭐ SUPER DREAM</span>' :
+          s.studentCategory === 'DREAM' ? '<span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 text-[10px] font-bold border border-cyan-500/30">🚀 DREAM</span>' :
+          `<span class="px-2 py-0.5 rounded bg-surface-container-high text-outline text-[10px] font-mono">Standard</span>`;
+
+        return `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 hover:border-primary/40 transition-all flex flex-col justify-between">
+            <div class="flex items-start gap-3 mb-3">
+              <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-11 h-11 rounded-full object-cover border border-primary/40">
+              <div class="truncate flex-1">
+                <div class="font-bold text-xs text-on-surface truncate">${s.name}</div>
+                <div class="text-[10px] text-primary font-mono truncate">${s.email}</div>
+                <div class="text-[10px] text-outline mt-0.5 font-medium">${s.academicYear || '3rd Year'} &bull; Sec ${s.section || 'A'}</div>
+              </div>
+            </div>
+            <div class="pt-2.5 border-t border-outline-variant/20 flex items-center justify-between text-[11px] font-mono">
+              <span class="text-outline">${s.studentId || 'STUDENT'}</span>
+              ${catBadge}
+            </div>
+          </div>
+        `;
+      }).join('');
     }
 
     function openDepartmentView(deptNameOrCode) {
@@ -1982,33 +2239,13 @@
         }).join('');
       }
 
-      // Render Students Grid
-      const stuGrid = document.getElementById('detailDeptStudentsGrid');
-      if (stuList.length === 0) {
-        stuGrid.innerHTML = `
-          <div class="col-span-3 text-xs text-outline py-8 text-center bg-surface-container/30 rounded-xl border border-outline-variant/20">
-            <span class="material-symbols-outlined text-3xl text-outline mb-1 block">school</span>
-            No students currently enrolled in ${dept.name}. Click "Add Student" above to enroll students.
-          </div>
-        `;
-      } else {
-        stuGrid.innerHTML = stuList.map(s => `
-          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 hover:border-primary/40 transition-all flex flex-col justify-between">
-            <div class="flex items-start gap-3 mb-3">
-              <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-11 h-11 rounded-full object-cover border border-primary/40">
-              <div class="truncate flex-1">
-                <div class="font-bold text-xs text-on-surface truncate">${s.name}</div>
-                <div class="text-[10px] text-primary font-mono truncate">${s.email}</div>
-                <div class="text-[10px] text-outline mt-0.5">${s.cohort || 'Capstone 2025'}</div>
-              </div>
-            </div>
-            <div class="pt-2.5 border-t border-outline-variant/20 flex items-center justify-between text-[11px] font-mono">
-              <span class="text-outline">${s.studentId || 'STUDENT'}</span>
-              <span class="px-2 py-0.5 rounded bg-tertiary/20 text-tertiary text-[10px] font-bold">${s.status || 'Active'}</span>
-            </div>
-          </div>
-        `).join('');
-      }
+      // Render Students Grid with Year & Section filtering
+      currentDeptStudentsList = stuList;
+      const yearFilterEl = document.getElementById('detailDeptYearFilter');
+      if (yearFilterEl) yearFilterEl.value = 'ALL';
+      const secFilterEl = document.getElementById('detailDeptSecFilter');
+      if (secFilterEl) secFilterEl.value = 'ALL';
+      filterDeptStudentsList();
 
       // Render Projects List
       const projListContainer = document.getElementById('detailDeptProjectsList');
@@ -2667,18 +2904,20 @@
       const role = document.getElementById('newUserRole').value;
       const department = document.getElementById('newUserDept').value;
       const studentCategory = document.getElementById('newUserStudentCategory')?.value || 'REGULAR';
+      const academicYear = document.getElementById('newUserYear')?.value || '3rd Year';
+      const section = document.getElementById('newUserSection')?.value || 'A';
 
       try {
         const res = await fetch('/api/admin/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, role, department, studentCategory })
+          body: JSON.stringify({ name, email, password, role, department, studentCategory, academicYear, section })
         });
         const json = await res.json();
         if (json.success) {
           closeModal('createUserModal');
           form.reset();
-          showToast(`Account created for ${name} as ${role}${role === 'STUDENT' ? ` (${studentCategory})` : ''}!`, 'success', 'ACCOUNT CREATED');
+          showToast(`Account created for ${name} as ${role}${role === 'STUDENT' ? ` (${academicYear} Sec ${section} - ${studentCategory})` : ''}!`, 'success', 'ACCOUNT CREATED');
           loadAdminDashboard();
         } else {
           showToast(json.message || 'Failed to create user account.', 'error', 'ERROR');
@@ -2694,13 +2933,16 @@
     });
 
     function toggleNewUserCategory(role) {
-      const wrapper = document.getElementById('studentCategoryWrapper');
-      if (wrapper) {
-        if (role === 'STUDENT') {
-          wrapper.classList.remove('hidden');
-        } else {
-          wrapper.classList.add('hidden');
-        }
+      const catWrapper = document.getElementById('studentCategoryWrapper');
+      const yrWrapper = document.getElementById('studentYearSectionWrapper');
+      const isStudent = (role === 'STUDENT');
+      if (catWrapper) {
+        if (isStudent) catWrapper.classList.remove('hidden');
+        else catWrapper.classList.add('hidden');
+      }
+      if (yrWrapper) {
+        if (isStudent) yrWrapper.classList.remove('hidden');
+        else yrWrapper.classList.add('hidden');
       }
     }
 
@@ -2739,10 +2981,12 @@
                 const isSelf = currentAdminId && (u._id === currentAdminId);
                 const isStudent = u.role === 'STUDENT';
                 const catBadge = isStudent ? (
+                  u.studentCategory === 'MARQUEE' ? '<span class="font-mono text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">🌟 MARQUEE</span>' :
                   u.studentCategory === 'SUPER_DREAM' ? '<span class="font-mono text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">⭐ SUPER DREAM</span>' :
                   u.studentCategory === 'DREAM' ? '<span class="font-mono text-[9px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30">🚀 DREAM</span>' :
                   '<span class="font-mono text-[9px] px-1.5 py-0.5 rounded bg-surface-container-high text-outline">Standard</span>'
                 ) : '';
+                const yrBadge = isStudent && u.academicYear ? `<span class="font-mono text-[9px] px-1.5 py-0.5 rounded bg-surface-container-high text-outline font-semibold">${u.academicYear} &bull; Sec ${u.section || 'A'}</span>` : '';
 
                 return `
                   <tr class="hover:bg-surface-container-high/40 transition-colors">
@@ -2756,6 +3000,7 @@
                     <td class="py-3">
                       <div class="flex items-center gap-1.5 flex-wrap">
                         <span class="font-mono text-[10px] px-2 py-0.5 rounded font-bold ${u.role === 'ADMIN' ? 'bg-tertiary/20 text-tertiary' : u.role === 'HOD' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : u.role === 'FACULTY' ? 'bg-secondary/20 text-secondary' : 'bg-primary/20 text-primary'}">${u.role}</span>
+                        ${yrBadge}
                         ${catBadge}
                       </div>
                     </td>
@@ -3028,29 +3273,41 @@
         const mentor = g.mentor || {};
         const mentees = g.mentees || [];
 
+        const isMarquee = g.category === 'MARQUEE';
+        const isDream = g.category === 'DREAM';
+        const trackTitleColor = isMarquee ? 'text-purple-300' : (isDream ? 'text-cyan-300' : 'text-amber-400');
+        const trackBadgeStyle = isMarquee ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : (isDream ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30');
+        const trackBadgeText = isMarquee ? '🌟 MARQUEE' : (isDream ? '🚀 DREAM' : '⭐ SUPER DREAM');
+        const trackBorder = isMarquee ? 'border-purple-500/30 hover:border-purple-500/50' : (isDream ? 'border-cyan-500/30 hover:border-cyan-500/50' : 'border-outline-variant/30 hover:border-amber-500/40');
+
         const menteesBadges = mentees.length > 0
-          ? mentees.map(m => `
-              <div class="inline-flex items-center gap-2 p-1.5 pr-2.5 rounded-full bg-surface-container border border-outline-variant/30 text-[11px] group/m">
-                <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-5 h-5 rounded-full object-cover shrink-0" alt="${m.name}">
-                <span class="font-medium text-on-surface truncate">${m.name}</span>
-                <span class="text-[9px] text-outline font-mono">${m.studentId || ''}</span>
-              </div>
-            `).join('')
+          ? mentees.map(m => {
+              const mCatBadge = m.studentCategory === 'MARQUEE' ? '<span class="text-[9px] px-1 py-0.2 rounded bg-purple-500/20 text-purple-300 font-mono font-bold">🌟 MARQUEE</span>' :
+                m.studentCategory === 'DREAM' ? '<span class="text-[9px] px-1 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-mono font-bold">🚀 DREAM</span>' :
+                '<span class="text-[9px] px-1 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">⭐ SUPER DREAM</span>';
+              return `
+                <div class="inline-flex items-center gap-2 p-1.5 pr-2.5 rounded-full bg-surface-container border border-outline-variant/30 text-[11px] group/m">
+                  <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-5 h-5 rounded-full object-cover shrink-0" alt="${m.name}">
+                  <span class="font-medium text-on-surface truncate">${m.name}</span>
+                  ${mCatBadge}
+                  <span class="text-[9px] text-outline font-mono">${m.academicYear || '3rd Year'} Sec ${m.section || 'A'}</span>
+                </div>
+              `;
+            }).join('')
           : '<span class="text-xs text-outline italic">No mentees allocated yet. Click "+ Add Mentees" to assign students to this mentor.</span>';
 
-        const isDream = g.category === 'DREAM';
         return `
-          <div class="p-5 rounded-2xl bg-surface-container border ${isDream ? 'border-cyan-500/30 hover:border-cyan-500/50' : 'border-outline-variant/30 hover:border-amber-500/40'} shadow-sm space-y-4 transition-all">
+          <div class="p-5 rounded-2xl bg-surface-container border ${trackBorder} shadow-sm space-y-4 transition-all">
             <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/20">
               <div>
-                <div class="flex items-center gap-2 mb-1">
-                  <span class="text-xs font-mono font-bold ${isDream ? 'text-cyan-300' : 'text-amber-400'} uppercase">${g.cohort || (isDream ? 'Dream Track' : 'Super Dream Track')}</span>
-                  <span class="text-[9px] px-1.5 py-0.2 rounded ${isDream ? 'bg-cyan-500/20 text-cyan-300 border border-cyan-500/30' : 'bg-amber-500/20 text-amber-300 border border-amber-500/30'} font-mono font-bold uppercase">${isDream ? '🚀 DREAM' : '⭐ SUPER DREAM'}</span>
+                <div class="flex items-center gap-2 mb-1 flex-wrap">
+                  <span class="text-xs font-mono font-bold ${trackTitleColor} uppercase">${g.cohort || (isMarquee ? 'Marquee Track (3rd Year)' : isDream ? 'Dream Track (3rd Year)' : 'Super Dream Track (3rd Year)')}</span>
+                  <span class="text-[9px] px-1.5 py-0.2 rounded ${trackBadgeStyle} font-mono font-bold uppercase">${trackBadgeText}</span>
                   <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold uppercase">${g.status || 'ACTIVE'}</span>
                   <span class="text-[9px] px-1.5 py-0.2 rounded bg-surface-container-high text-outline font-mono uppercase">${mentees.length} Mentee${mentees.length !== 1 ? 's' : ''}</span>
                 </div>
                 <h4 class="font-headline font-bold text-base text-on-surface">${g.title}</h4>
-                <p class="text-xs text-on-surface-variant mt-0.5 leading-relaxed">${g.description || (isDream ? 'Dedicated Dream capstone & career mentorship track.' : 'Dedicated Super Dream capstone & career mentorship track.')}</p>
+                <p class="text-xs text-on-surface-variant mt-0.5 leading-relaxed">${g.description || (isMarquee ? 'Dedicated 3rd-year Marquee elite incubation, research, and high-CTC mentorship track.' : isDream ? 'Dedicated 3rd-year Dream capstone & career mentorship track.' : 'Dedicated 3rd-year Super Dream capstone & career mentorship track.')}</p>
               </div>
               <div class="flex items-center gap-2 shrink-0">
                 <button onclick="openSuperDreamModal('${g._id}', null, false)" class="px-3 py-1.5 rounded-lg border border-outline-variant/40 hover:border-amber-400 hover:text-amber-300 text-xs text-outline transition-colors flex items-center gap-1.5">
@@ -3066,16 +3323,16 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
               <!-- Mentor Column -->
               <div class="p-3.5 rounded-xl bg-surface-container-high/60 border border-outline-variant/20">
-                <div class="text-[10px] uppercase font-mono ${isDream ? 'text-cyan-300' : 'text-amber-300'} font-bold mb-2 flex items-center gap-1">
+                <div class="text-[10px] uppercase font-mono ${trackTitleColor} font-bold mb-2 flex items-center gap-1">
                   <span class="material-symbols-outlined text-xs">badge</span>
                   <span>Assigned Faculty Mentor</span>
                 </div>
                 <div class="flex items-center gap-3">
-                  <img src="${mentor.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80'}" class="w-10 h-10 rounded-full object-cover border ${isDream ? 'border-cyan-500/30' : 'border-amber-500/30'} shrink-0" alt="Mentor">
+                  <img src="${mentor.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80'}" class="w-10 h-10 rounded-full object-cover border ${isMarquee ? 'border-purple-500/30' : isDream ? 'border-cyan-500/30' : 'border-amber-500/30'} shrink-0" alt="Mentor">
                   <div class="min-w-0">
                     <div class="font-bold text-xs text-on-surface truncate">${mentor.name || 'Unassigned'}</div>
                     <div class="text-[11px] text-outline truncate">${mentor.department || ''}</div>
-                    <div class="text-[10px] ${isDream ? 'text-cyan-300/80' : 'text-amber-300/80'} truncate">${mentor.email || ''}</div>
+                    <div class="text-[10px] ${trackTitleColor} truncate">${mentor.email || ''}</div>
                   </div>
                 </div>
               </div>
@@ -3083,9 +3340,9 @@
               <!-- Dedicated Mentees Column -->
               <div class="md:col-span-2 p-3.5 rounded-xl bg-surface-container-high/60 border border-outline-variant/20 space-y-2">
                 <div class="flex items-center justify-between">
-                  <div class="text-[10px] uppercase font-mono ${isDream ? 'text-cyan-300' : 'text-amber-300'} font-bold flex items-center gap-1">
+                  <div class="text-[10px] uppercase font-mono ${trackTitleColor} font-bold flex items-center gap-1">
                     <span class="material-symbols-outlined text-xs">groups</span>
-                    <span>Dedicated Mentees (${mentees.length})</span>
+                    <span>Dedicated 3rd-Year Mentees (${mentees.length})</span>
                   </div>
                   <button onclick="openSuperDreamModal('${g._id}', null, false)" class="text-[10px] text-secondary hover:underline font-medium flex items-center gap-1">
                     <span class="material-symbols-outlined text-xs">person_add</span>
@@ -3123,7 +3380,7 @@
 
       if (query) {
         filtered = filtered.filter(s => {
-          const txt = `${s.name} ${s.email} ${s.studentId || ''} ${s.department || ''} ${s.studentCategory || ''}`.toLowerCase();
+          const txt = `${s.name} ${s.email} ${s.studentId || ''} ${s.academicYear || ''} ${s.section || ''} ${s.department || ''} ${s.studentCategory || ''}`.toLowerCase();
           return txt.includes(query);
         });
       }
@@ -3136,9 +3393,17 @@
       container.innerHTML = filtered.map(s => {
         const assignment = menteeToMentorMap[s._id];
         const isAssigned = !!assignment;
-        const catBadge = s.studentCategory === 'SUPER_DREAM' ? '<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 font-mono text-[9px]">⭐ SUPER DREAM</span>' :
+        const catBadge = s.studentCategory === 'MARQUEE' ? '<span class="px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30 font-mono text-[9px]">🌟 MARQUEE</span>' :
+          s.studentCategory === 'SUPER_DREAM' ? '<span class="px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 font-mono text-[9px]">⭐ SUPER DREAM</span>' :
           s.studentCategory === 'DREAM' ? '<span class="px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 font-mono text-[9px]">🚀 DREAM</span>' :
           '<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-outline font-mono text-[9px]">Standard</span>';
+        const yrBadge = s.academicYear ? `<span class="px-1.5 py-0.5 rounded bg-surface-container-high text-outline font-mono text-[9px] font-semibold">${s.academicYear} &bull; Sec ${s.section || 'A'}</span>` : '';
+
+        const assignColor = assignment ? (
+          assignment.category === 'MARQUEE' ? 'bg-purple-500/10 border-purple-500/30 text-purple-300' :
+          assignment.category === 'DREAM' ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-300' :
+          'bg-amber-500/10 border-amber-500/30 text-amber-300'
+        ) : '';
 
         return `
           <div class="p-3 sm:px-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 hover:bg-surface-container-high/40 transition-colors">
@@ -3148,16 +3413,17 @@
                 <div class="flex items-center gap-2 flex-wrap">
                   <span class="font-bold text-xs text-on-surface truncate">${s.name}</span>
                   ${s.studentId ? `<span class="text-[10px] font-mono text-outline">[${s.studentId}]</span>` : ''}
+                  ${yrBadge}
                   ${catBadge}
                 </div>
-                <div class="text-[11px] text-outline truncate">${s.email} &bull; ${s.department || 'Department'}</div>
+                <div class="text-[11px] text-outline truncate">${s.email} &bull; ${s.department || 'AI&ML'}</div>
               </div>
             </div>
 
             <div class="flex items-center justify-between sm:justify-end gap-3 shrink-0">
               ${isAssigned ? `
                 <div class="text-right">
-                  <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full ${assignment.category === 'DREAM' ? 'bg-cyan-500/10 border-cyan-500/30 text-cyan-300' : 'bg-amber-500/10 border-amber-500/30 text-amber-300'} border text-[11px] font-medium">
+                  <div class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full ${assignColor} border text-[11px] font-medium">
                     <span class="material-symbols-outlined text-xs">badge</span>
                     <span>${assignment.mentorName}</span>
                   </div>
@@ -3308,15 +3574,18 @@
         const assignment = menteeToMentorMap[s._id.toString()];
         const isAssigned = !!assignment;
         const cat = s.studentCategory || 'REGULAR';
-        const catBadge = cat === 'SUPER_DREAM' ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 font-mono">⭐ SUPER DREAM</span>' :
+        const catBadge = cat === 'MARQUEE' ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30 font-mono">🌟 MARQUEE</span>' :
+          cat === 'SUPER_DREAM' ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30 font-mono">⭐ SUPER DREAM</span>' :
           cat === 'DREAM' ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-cyan-500/20 text-cyan-300 font-bold border border-cyan-500/30 font-mono">🚀 DREAM</span>' :
           '<span class="text-[9px] px-1.5 py-0.5 rounded bg-surface-container text-outline font-mono">Standard</span>';
 
         return `
           <label class="sd-mentee-item flex items-center justify-between p-2 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer text-xs"
-            data-search="${(s.name + ' ' + s.email + ' ' + (s.studentId || '') + ' ' + (s.department || '') + ' ' + cat).toLowerCase()}"
+            data-search="${(s.name + ' ' + s.email + ' ' + (s.studentId || '') + ' ' + (s.department || '') + ' ' + (s.academicYear || '') + ' Sec ' + (s.section || '') + ' ' + cat).toLowerCase()}"
             data-assigned="${isAssigned ? 'true' : 'false'}"
             data-category="${cat}"
+            data-year="${s.academicYear || '3rd Year'}"
+            data-section="${s.section || 'A'}"
             data-id="${s._id}">
             <div class="flex items-center gap-2.5 min-w-0">
               <input type="checkbox" value="${s._id}" ${isChecked ? 'checked' : ''} onchange="updateSdMenteesCount()" class="sd-mentee-cb rounded text-amber-500 focus:ring-amber-400 bg-surface-container-lowest border-outline-variant/40">
@@ -3326,7 +3595,7 @@
                   <span class="font-medium text-on-surface">${s.name}</span>
                   ${s.studentId ? `<span class="text-[10px] text-outline font-mono">[${s.studentId}]</span>` : ''}
                 </div>
-                <div class="text-[10px] text-outline truncate">${s.department ? s.department.split(' ')[0] : 'Eng'}</div>
+                <div class="text-[10px] text-outline truncate">${s.academicYear || '3rd Year'} &bull; Sec ${s.section || 'A'}</div>
               </div>
             </div>
             <div class="shrink-0 flex items-center gap-2">
@@ -3355,19 +3624,26 @@
       const faculty = (adminSuperDreamData.facultyList || []).find(f => f._id === select?.value);
       const mentorName = faculty ? faculty.name : '';
 
-      if (cat === 'DREAM') {
-        if (!titleInput.value || titleInput.value.includes('Mentorship -')) {
-          titleInput.value = mentorName ? `Dream Mentorship - ${mentorName}` : 'Dream Mentorship Track';
+      if (cat === 'MARQUEE') {
+        if (!titleInput.value || titleInput.value.includes('Mentorship -') || titleInput.value.includes('Track')) {
+          titleInput.value = mentorName ? `Marquee Mentorship - ${mentorName}` : 'Marquee Mentorship Track (3rd Year)';
         }
-        if (cohortInput && (!cohortInput.value || cohortInput.value.includes('Super Dream'))) {
-          cohortInput.value = 'Dream Track 2025-2026';
+        if (cohortInput && (!cohortInput.value || cohortInput.value.includes('Track') || cohortInput.value.includes('Super Dream') || cohortInput.value.includes('Dream'))) {
+          cohortInput.value = 'Marquee Track (3rd Year)';
+        }
+      } else if (cat === 'DREAM') {
+        if (!titleInput.value || titleInput.value.includes('Mentorship -') || titleInput.value.includes('Track')) {
+          titleInput.value = mentorName ? `Dream Mentorship - ${mentorName}` : 'Dream Mentorship Track (3rd Year)';
+        }
+        if (cohortInput && (!cohortInput.value || cohortInput.value.includes('Track') || cohortInput.value.includes('Super Dream') || cohortInput.value.includes('Marquee'))) {
+          cohortInput.value = 'Dream Track (3rd Year)';
         }
       } else {
-        if (!titleInput.value || titleInput.value.includes('Mentorship -')) {
-          titleInput.value = mentorName ? `Super Dream Mentorship - ${mentorName}` : 'Super Dream Mentorship Track';
+        if (!titleInput.value || titleInput.value.includes('Mentorship -') || titleInput.value.includes('Track')) {
+          titleInput.value = mentorName ? `Super Dream Mentorship - ${mentorName}` : 'Super Dream Mentorship Track (3rd Year)';
         }
-        if (cohortInput && (!cohortInput.value || cohortInput.value.includes('Dream Track'))) {
-          cohortInput.value = 'Super Dream 2025-2026';
+        if (cohortInput && (!cohortInput.value || cohortInput.value.includes('Track') || cohortInput.value.includes('Dream') || cohortInput.value.includes('Marquee'))) {
+          cohortInput.value = 'Super Dream Track (3rd Year)';
         }
       }
     }
@@ -3386,7 +3662,7 @@
       const faculty = (adminSuperDreamData.facultyList || []).find(f => f._id === mentorId);
       if (!faculty) return;
 
-      const trackPrefix = cat === 'DREAM' ? 'Dream Mentorship' : 'Super Dream Mentorship';
+      const trackPrefix = cat === 'MARQUEE' ? 'Marquee Mentorship' : (cat === 'DREAM' ? 'Dream Mentorship' : 'Super Dream Mentorship');
 
       // Auto-suggest title if empty or default
       if (!titleInput.value || titleInput.value.includes('Mentorship -')) {
@@ -3408,8 +3684,11 @@
       currentSdModalFilter = filter;
       const mapping = {
         'all': 'sdModalFilterAll',
+        'marquee': 'sdModalFilterMarquee',
         'super_dream': 'sdModalFilterSuperDream',
         'dream': 'sdModalFilterDream',
+        'sec_a': 'sdModalFilterSecA',
+        'sec_b': 'sdModalFilterSecB',
         'unassigned': 'sdModalFilterUnassigned',
         'assigned': 'sdModalFilterAssigned'
       };
@@ -3440,12 +3719,16 @@
         const text = item.getAttribute('data-search') || '';
         const isAssigned = item.getAttribute('data-assigned') === 'true';
         const cat = item.getAttribute('data-category') || 'REGULAR';
+        const sec = item.getAttribute('data-section') || 'A';
 
         let matchesFilter = true;
         if (currentSdModalFilter === 'unassigned') matchesFilter = !isAssigned;
         if (currentSdModalFilter === 'assigned') matchesFilter = isAssigned;
+        if (currentSdModalFilter === 'marquee') matchesFilter = cat === 'MARQUEE';
         if (currentSdModalFilter === 'super_dream') matchesFilter = cat === 'SUPER_DREAM';
         if (currentSdModalFilter === 'dream') matchesFilter = cat === 'DREAM';
+        if (currentSdModalFilter === 'sec_a') matchesFilter = sec === 'A';
+        if (currentSdModalFilter === 'sec_b') matchesFilter = sec === 'B';
 
         const matchesQuery = !q || text.includes(q);
 

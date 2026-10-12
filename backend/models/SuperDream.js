@@ -29,11 +29,15 @@ const SuperDreamSchema = new mongoose.Schema(
     },
     cohort: {
       type: String,
-      default: 'Super Dream Track 2025-2026',
+      default: 'Super Dream Track (3rd Year)',
+    },
+    academicYear: {
+      type: String,
+      default: '3rd Year',
     },
     category: {
       type: String,
-      enum: ['SUPER_DREAM', 'DREAM'],
+      enum: ['MARQUEE', 'SUPER_DREAM', 'DREAM'],
       default: 'SUPER_DREAM',
     },
     createdBy: {
