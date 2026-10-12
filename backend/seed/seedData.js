@@ -219,7 +219,42 @@ async function seedDatabase() {
     ipAddress: '127.0.0.1',
   });
 
-  console.log('✅ Database cleaned: All demo projects, tasks, milestones & documents removed.');
+  // Seed default Super Dream mentorship track if none exists
+  const SuperDream = require('../models/SuperDream');
+  const SuperDreamMessage = require('../models/SuperDreamMessage');
+  const existingSuperDream = await SuperDream.findOne({});
+  if (!existingSuperDream && facultyUser && studentUser) {
+    const demoSuperDream = await SuperDream.create({
+      title: 'Super Dream Elite Innovation & Placement Track 2025',
+      description: 'Exclusive mentorship track for high-tier capstone research, competitive architecture, and product engineering.',
+      mentor: facultyUser._id,
+      mentees: [studentUser._id],
+      cohort: 'Super Dream 2025-2026',
+      createdBy: adminUser._id,
+      status: 'ACTIVE',
+    });
+
+    await SuperDreamMessage.create({
+      superDream: demoSuperDream._id,
+      sender: facultyUser._id,
+      senderRole: 'FACULTY',
+      title: '🚀 Welcome to Super Dream Mentorship Track 2025!',
+      content: 'Hello Mentees! Welcome to the Super Dream track. We will conduct bi-weekly sprint reviews, system design deep-dives, and milestone evaluations. Share your project progress, roadblocks, and queries in this stream.',
+      type: 'ANNOUNCEMENT',
+      links: [
+        { title: 'Super Dream Curriculum & Roadmap', url: 'https://university.edu/super-dream' },
+      ],
+      comments: [
+        {
+          sender: studentUser._id,
+          text: 'Thank you Professor! Excited to work on our advanced capstone milestones in this track.',
+          createdAt: new Date(),
+        },
+      ],
+    });
+  }
+
+  console.log('✅ Super Dream track seeded & ready.');
   console.log('Active Credentials:');
   console.log(' - Student: student@university.edu / student123');
   console.log(' - Faculty: faculty@university.edu / faculty123');

@@ -18,6 +18,7 @@ const milestoneRoutes = require('./routes/milestoneRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const documentRoutes = require('./routes/documentRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const superDreamRoutes = require('./routes/superDreamRoutes');
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -120,6 +121,7 @@ app.use('/api/milestones', milestoneRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/documents', documentRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/super-dream', superDreamRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

@@ -130,6 +130,11 @@
           <span class="material-symbols-outlined text-base">assignment_ind</span>
           <span>Faculty Assignment</span>
         </button>
+        <button onclick="switchTab('super-dream')" id="nav-super-dream" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-400 hover:bg-surface-container-high border border-amber-500/20 bg-amber-500/5">
+          <span class="material-symbols-outlined text-base text-amber-400">stars</span>
+          <span class="font-semibold text-amber-300">Super Dream</span>
+          <span class="ml-auto text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">PROGRAM</span>
+        </button>
         <button onclick="switchTab('cohorts')" id="nav-cohorts" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
           <span class="material-symbols-outlined text-base">date_range</span>
           <span>Cohorts</span>
@@ -883,10 +888,130 @@
             </div>
           </label>
         </div>
+    <!-- TAB: SUPER DREAM PROGRAM GOVERNANCE -->
+    <section id="tab-super-dream" class="tab-pane hidden space-y-6">
+      <!-- Portal Banner -->
+      <div class="p-6 rounded-2xl bg-gradient-to-r from-amber-950/40 via-surface-container-low to-surface-container-low border border-amber-500/30 shadow-lg relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 w-44 h-44 rounded-full bg-amber-500/10 blur-3xl pointer-events-none"></div>
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 shadow-md">
+              <span class="material-symbols-outlined text-[28px]">stars</span>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h2 class="font-headline text-xl font-bold text-on-surface">Super Dream Mentorship Program Administration</h2>
+                <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30 uppercase tracking-wider">CAMPUS OVERSIGHT</span>
+              </div>
+              <p class="text-xs text-on-surface-variant mt-0.5">Allocate designated Faculty Mentors and Student Mentees into exclusive tier-1 capstone and career incubation tracks.</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2.5">
+            <button onclick="openSuperDreamModal()" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-all shadow-md flex items-center gap-1.5 active:scale-98">
+              <span class="material-symbols-outlined text-sm">add</span>
+              <span>Create Super Dream Track</span>
+            </button>
+            <button onclick="loadAdminSuperDream()" class="px-3 py-2 rounded-xl border border-outline-variant/30 text-xs text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">refresh</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Statistics Bar -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Active Super Dream Tracks</div>
+          <div id="statSdTotalTracks" class="text-2xl font-bold font-headline text-amber-300">0</div>
+          <div class="text-[11px] text-outline mt-1">Tier-1 Incubation Tracks</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Faculty Mentors Allocated</div>
+          <div id="statSdTotalMentors" class="text-2xl font-bold font-headline text-cyan-300">0</div>
+          <div class="text-[11px] text-outline mt-1">Supervising Faculty</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Enrolled Student Mentees</div>
+          <div id="statSdTotalMentees" class="text-2xl font-bold font-headline text-emerald-300">0</div>
+          <div class="text-[11px] text-outline mt-1">Under Direct Mentorship</div>
+        </div>
+      </div>
+
+      <!-- Super Dream Groups Grid -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-400">workspace_premium</span>
+            <h3 class="font-headline text-base font-bold text-on-surface">Super Dream Mentorship Allocations</h3>
+          </div>
+          <span class="text-xs text-outline font-mono">Real-time Mentor-Mentee Pairings</span>
+        </div>
+        <div id="adminSuperDreamList" class="space-y-4"></div>
       </div>
     </section>
 
   </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: CREATE / EDIT SUPER DREAM TRACK     -->
+  <!-- ========================================== -->
+  <div id="superDreamModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-xl w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center">
+            <span class="material-symbols-outlined text-[20px]">stars</span>
+          </div>
+          <div>
+            <h3 id="sdModalTitle" class="font-headline font-bold text-base text-on-surface">Create Super Dream Track</h3>
+            <p class="text-[11px] text-outline">Pair faculty mentors with qualifying student mentees.</p>
+          </div>
+        </div>
+        <button onclick="closeSuperDreamModal()" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form onsubmit="handleSaveSuperDream(event)" class="space-y-4">
+        <input type="hidden" id="sdGroupId">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Track Title</label>
+            <input type="text" id="sdInputTitle" required placeholder="e.g. Super Dream AI &amp; Placement Track 2025" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Cohort / Batch</label>
+            <input type="text" id="sdInputCohort" required value="Super Dream 2025-2026" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Description &amp; Incubation Goals</label>
+          <textarea id="sdInputDesc" rows="2" placeholder="Outline focus areas: high-impact capstone research, competitive hackathons, top-tier placement..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none leading-relaxed"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Designated Faculty Mentor</label>
+          <select id="sdSelectMentor" required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none"></select>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1.5">
+            <label class="block text-xs text-outline font-medium">Select Student Mentees</label>
+            <span id="sdSelectedMenteesCount" class="text-[11px] font-mono text-amber-300">0 selected</span>
+          </div>
+          <input type="text" id="sdMenteeSearch" placeholder="Search students by name, email or department..." oninput="filterSdMentees(this.value)" class="w-full p-2 mb-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+          <div id="sdMenteesCheckList" class="p-2.5 max-h-48 overflow-y-auto rounded-xl bg-surface-container/60 border border-outline-variant/20 space-y-1.5"></div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeSuperDreamModal()" class="px-4 py-2 rounded-xl border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="sdSaveSubmitBtn" class="px-5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-all shadow-md">Save Super Dream Allocation</button>
+        </div>
+      </form>
+    </div>
+  </div>
 
   <!-- ========================================== -->
   <!-- MODAL: ADMIN UPLOAD DOCUMENT               -->
@@ -1242,13 +1367,15 @@
       if (pane) pane.classList.remove('hidden');
       const navBtn = document.getElementById(`nav-${tabId}`);
       if (navBtn) navBtn.className = 'adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-tertiary bg-surface-container-high';
-      document.getElementById('pageTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1).replace('-', ' ');
+      const pageTitleText = tabId === 'super-dream' ? 'Super Dream Governance' : tabId.charAt(0).toUpperCase() + tabId.slice(1).replace('-', ' ');
+      document.getElementById('pageTitle').textContent = pageTitleText;
 
       closeMobileSidebar();
 
       if (tabId === 'calendar') loadCalendar();
       if (tabId === 'documents') loadAdminDocuments();
       if (tabId === 'analytics') renderAnalyticsTab(adminData);
+      if (tabId === 'super-dream') loadAdminSuperDream();
       if (tabId === 'cohorts' && adminData) {
         if (!currentViewingCohortName) closeCohortView();
       }
@@ -2669,6 +2796,288 @@
         alert('Failed to update profile.');
       } finally {
         if (btn) btn.disabled = false;
+      }
+    }
+
+    // ==========================================
+    // SUPER DREAM ADMIN PROGRAM LOGIC
+    // ==========================================
+    let adminSuperDreamData = { groups: [], facultyList: [], studentList: [] };
+
+    async function loadAdminSuperDream() {
+      const listContainer = document.getElementById('adminSuperDreamList');
+      if (!listContainer) return;
+
+      listContainer.innerHTML = `
+        <div class="text-center py-12 text-outline text-xs">
+          <span class="material-symbols-outlined text-3xl animate-spin text-amber-400 mb-2">progress_activity</span>
+          <div>Loading Super Dream mentorship tracks...</div>
+        </div>
+      `;
+
+      try {
+        const res = await fetch('/api/super-dream/admin/overview');
+        const json = await res.json();
+        if (!json.success) {
+          listContainer.innerHTML = `<div class="p-4 text-xs text-error">Failed to load Super Dream data: ${json.message}</div>`;
+          return;
+        }
+
+        adminSuperDreamData = json;
+        const groups = json.groups || [];
+
+        // Update statistics
+        const totalTracks = groups.length;
+        const mentorIds = new Set(groups.map(g => g.mentor ? (g.mentor._id || g.mentor) : null).filter(Boolean));
+        const totalMentors = mentorIds.size;
+        const totalMentees = groups.reduce((acc, g) => acc + (g.mentees ? g.mentees.length : 0), 0);
+
+        document.getElementById('statSdTotalTracks').textContent = totalTracks;
+        document.getElementById('statSdTotalMentors').textContent = totalMentors;
+        document.getElementById('statSdTotalMentees').textContent = totalMentees;
+
+        if (groups.length === 0) {
+          listContainer.innerHTML = `
+            <div class="p-8 rounded-2xl bg-surface-container border border-outline-variant/30 text-center text-xs text-outline space-y-3">
+              <span class="material-symbols-outlined text-3xl text-amber-400/70">stars</span>
+              <div class="font-bold text-on-surface text-sm">No Super Dream Mentorship Tracks Created</div>
+              <p class="max-w-md mx-auto text-on-surface-variant">
+                Create elite mentorship allocations to connect designated Faculty Mentors with high-performing student mentees for tier-1 placement and capstone development.
+              </p>
+              <button onclick="openSuperDreamModal()" class="mt-2 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-all shadow-md inline-flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">add</span>
+                <span>Create Super Dream Track</span>
+              </button>
+            </div>
+          `;
+          return;
+        }
+
+        listContainer.innerHTML = groups.map(g => {
+          const mentor = g.mentor || {};
+          const mentees = g.mentees || [];
+
+          const menteesBadges = mentees.length > 0
+            ? mentees.map(m => `
+                <div class="inline-flex items-center gap-2 p-1.5 pr-2.5 rounded-full bg-surface-container border border-outline-variant/30 text-[11px]">
+                  <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-5 h-5 rounded-full object-cover shrink-0" alt="${m.name}">
+                  <span class="font-medium text-on-surface truncate">${m.name}</span>
+                  <span class="text-[9px] text-outline font-mono">${m.studentId || ''}</span>
+                </div>
+              `).join('')
+            : '<span class="text-xs text-outline italic">No mentees allocated yet. Click "Edit Track" to add students.</span>';
+
+          return `
+            <div class="p-5 rounded-2xl bg-surface-container border border-outline-variant/30 shadow-sm space-y-4 hover:border-amber-500/40 transition-all">
+              <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/20">
+                <div>
+                  <div class="flex items-center gap-2 mb-1">
+                    <span class="text-xs font-mono font-bold text-amber-400 uppercase">${g.cohort || 'Super Dream'}</span>
+                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-500/20 text-emerald-300 font-mono font-bold uppercase">${g.status || 'ACTIVE'}</span>
+                  </div>
+                  <h4 class="font-headline font-bold text-base text-on-surface">${g.title}</h4>
+                  <p class="text-xs text-on-surface-variant mt-0.5 leading-relaxed">${g.description || 'Exclusive Super Dream capstone & career mentorship track.'}</p>
+                </div>
+                <div class="flex items-center gap-2 shrink-0">
+                  <button onclick="openSuperDreamModal('${g._id}')" class="px-3 py-1.5 rounded-lg border border-outline-variant/40 hover:border-amber-400 hover:text-amber-300 text-xs text-outline transition-colors flex items-center gap-1.5">
+                    <span class="material-symbols-outlined text-sm">edit</span>
+                    <span>Edit Track</span>
+                  </button>
+                  <button onclick="deleteSuperDreamGroup('${g._id}', '${g.title.replace(/'/g, "\\'")}')" class="px-2.5 py-1.5 rounded-lg border border-outline-variant/30 hover:border-error/50 hover:text-error text-xs text-outline transition-colors" title="Delete Track">
+                    <span class="material-symbols-outlined text-sm">delete</span>
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 pt-1">
+                <!-- Mentor Column -->
+                <div class="p-3.5 rounded-xl bg-surface-container-high/60 border border-outline-variant/20">
+                  <div class="text-[10px] uppercase font-mono text-amber-300 font-bold mb-2 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs">badge</span>
+                    <span>Designated Mentor</span>
+                  </div>
+                  <div class="flex items-center gap-3">
+                    <img src="${mentor.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80'}" class="w-10 h-10 rounded-full object-cover border border-amber-500/30 shrink-0" alt="Mentor">
+                    <div class="min-w-0">
+                      <div class="font-bold text-xs text-on-surface truncate">${mentor.name || 'Unassigned'}</div>
+                      <div class="text-[11px] text-outline truncate">${mentor.department || ''}</div>
+                      <div class="text-[10px] text-amber-300/80 truncate">${mentor.email || ''}</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Mentees Column -->
+                <div class="md:col-span-2 p-3.5 rounded-xl bg-surface-container-high/60 border border-outline-variant/20 space-y-2">
+                  <div class="flex items-center justify-between">
+                    <div class="text-[10px] uppercase font-mono text-cyan-300 font-bold flex items-center gap-1">
+                      <span class="material-symbols-outlined text-xs">groups</span>
+                      <span>Allocated Mentees (${mentees.length})</span>
+                    </div>
+                    <button onclick="openSuperDreamModal('${g._id}')" class="text-[10px] text-secondary hover:underline font-medium">+ Add / Remove Mentees</button>
+                  </div>
+                  <div class="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
+                    ${menteesBadges}
+                  </div>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error('loadAdminSuperDream error:', err);
+        listContainer.innerHTML = `<div class="p-4 text-xs text-error">Failed to load Super Dream track data.</div>`;
+      }
+    }
+
+    function openSuperDreamModal(editGroupId = null) {
+      const modal = document.getElementById('superDreamModal');
+      const titleEl = document.getElementById('sdModalTitle');
+      const idInput = document.getElementById('sdGroupId');
+      const titleInput = document.getElementById('sdInputTitle');
+      const cohortInput = document.getElementById('sdInputCohort');
+      const descInput = document.getElementById('sdInputDesc');
+      const mentorSelect = document.getElementById('sdSelectMentor');
+      const menteesList = document.getElementById('sdMenteesCheckList');
+      const countEl = document.getElementById('sdSelectedMenteesCount');
+      const searchInput = document.getElementById('sdMenteeSearch');
+
+      if (searchInput) searchInput.value = '';
+
+      // Populate Mentors Dropdown
+      const faculty = adminSuperDreamData.facultyList || [];
+      mentorSelect.innerHTML = `
+        <option value="" disabled selected>-- Select Faculty Mentor --</option>
+        ${faculty.map(f => `<option value="${f._id}">${f.name} &bull; ${f.department || 'Faculty'}</option>`).join('')}
+      `;
+
+      // Determine currently selected mentee IDs
+      let selectedMenteeIds = new Set();
+      if (editGroupId) {
+        const group = adminSuperDreamData.groups.find(g => g._id === editGroupId);
+        if (group) {
+          titleEl.textContent = 'Edit Super Dream Track';
+          idInput.value = group._id;
+          titleInput.value = group.title || '';
+          cohortInput.value = group.cohort || 'Super Dream 2025-2026';
+          descInput.value = group.description || '';
+          mentorSelect.value = group.mentor ? (group.mentor._id || group.mentor) : '';
+          selectedMenteeIds = new Set((group.mentees || []).map(m => m._id || m));
+        }
+      } else {
+        titleEl.textContent = 'Create Super Dream Track';
+        idInput.value = '';
+        titleInput.value = '';
+        cohortInput.value = 'Super Dream 2025-2026';
+        descInput.value = '';
+        mentorSelect.selectedIndex = 0;
+      }
+
+      // Populate Mentees Checklist
+      const students = adminSuperDreamData.studentList || [];
+      menteesList.innerHTML = students.map(s => {
+        const isChecked = selectedMenteeIds.has(s._id);
+        return `
+          <label class="sd-mentee-item flex items-center justify-between p-2 rounded-lg bg-surface-container hover:bg-surface-container-high transition-colors cursor-pointer text-xs" data-search="${(s.name + ' ' + s.email + ' ' + (s.studentId || '')).toLowerCase()}">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <input type="checkbox" value="${s._id}" ${isChecked ? 'checked' : ''} onchange="updateSdMenteesCount()" class="sd-mentee-cb rounded text-amber-500 focus:ring-amber-400 bg-surface-container-lowest border-outline-variant/40">
+              <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-6 h-6 rounded-full object-cover shrink-0" alt="${s.name}">
+              <div class="truncate">
+                <span class="font-medium text-on-surface">${s.name}</span>
+                <span class="text-[10px] text-outline font-mono ml-1.5">${s.studentId ? `[${s.studentId}]` : ''}</span>
+              </div>
+            </div>
+            <span class="text-[10px] text-outline truncate">${s.department ? s.department.split(' ')[0] : 'Eng'}</span>
+          </label>
+        `;
+      }).join('');
+
+      updateSdMenteesCount();
+      modal.classList.remove('hidden');
+    }
+
+    function closeSuperDreamModal() {
+      const modal = document.getElementById('superDreamModal');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function updateSdMenteesCount() {
+      const checked = document.querySelectorAll('.sd-mentee-cb:checked').length;
+      const countEl = document.getElementById('sdSelectedMenteesCount');
+      if (countEl) countEl.textContent = `${checked} mentee(s) selected`;
+    }
+
+    function filterSdMentees(query) {
+      const q = query.trim().toLowerCase();
+      document.querySelectorAll('.sd-mentee-item').forEach(item => {
+        const text = item.getAttribute('data-search') || '';
+        if (!q || text.includes(q)) {
+          item.classList.remove('hidden');
+        } else {
+          item.classList.add('hidden');
+        }
+      });
+    }
+
+    async function handleSaveSuperDream(e) {
+      e.preventDefault();
+      const groupId = document.getElementById('sdGroupId').value;
+      const title = document.getElementById('sdInputTitle').value.trim();
+      const cohort = document.getElementById('sdInputCohort').value.trim();
+      const description = document.getElementById('sdInputDesc').value.trim();
+      const mentorId = document.getElementById('sdSelectMentor').value;
+      const menteeIds = Array.from(document.querySelectorAll('.sd-mentee-cb:checked')).map(cb => cb.value);
+
+      if (!title || !mentorId) {
+        alert('Please provide a track title and select a faculty mentor.');
+        return;
+      }
+
+      const btn = document.getElementById('sdSaveSubmitBtn');
+      if (btn) btn.disabled = true;
+
+      try {
+        const url = groupId ? `/api/super-dream/admin/${groupId}` : '/api/super-dream/admin/create';
+        const method = groupId ? 'PUT' : 'POST';
+
+        const res = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, cohort, description, mentorId, menteeIds })
+        });
+        const json = await res.json();
+        if (json.success) {
+          if (window.showToast) window.showToast(json.message || 'Super Dream track saved successfully!', 'success', 'Super Dream');
+          closeSuperDreamModal();
+          loadAdminSuperDream();
+        } else {
+          alert(json.message || 'Failed to save Super Dream track.');
+        }
+      } catch (err) {
+        alert('Network or server error saving Super Dream track.');
+      } finally {
+        if (btn) btn.disabled = false;
+      }
+    }
+
+    async function deleteSuperDreamGroup(groupId, title) {
+      if (!confirm(`Are you sure you want to delete the Super Dream track "${title}"?\n\nThis will remove the mentorship allocation and all associated communications between mentor and mentees.`)) {
+        return;
+      }
+
+      try {
+        const res = await fetch(`/api/super-dream/admin/${groupId}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        const json = await res.json();
+        if (json.success) {
+          if (window.showToast) window.showToast('Super Dream track deleted.', 'info', 'Super Dream');
+          loadAdminSuperDream();
+        } else {
+          alert(json.message || 'Failed to delete track.');
+        }
+      } catch (err) {
+        alert('Network error deleting track.');
       }
     }
 
