@@ -48,6 +48,11 @@ exports.createUser = async (req, res) => {
     const sec = (section ? section.toUpperCase().trim() : 'A') === 'B' ? 'B' : 'A';
     const defaultCohort = `AI&ML - ${yr} (Section ${sec})`;
 
+    // STRICT RULE: Mentorship tier (MARQUEE, SUPER_DREAM, DREAM) is strictly restricted to 3rd Year!
+    if (yr !== '3rd Year') {
+      normalizedCategory = 'REGULAR';
+    }
+
     const hashedPassword = await User.hashPassword(password);
     const user = await User.create({
       name,

@@ -2945,8 +2945,13 @@
       const isStudent = (role === 'STUDENT');
 
       if (yrWrapper) {
-        if (isStudent) yrWrapper.classList.remove('hidden');
-        else yrWrapper.classList.add('hidden');
+        if (isStudent) {
+          yrWrapper.classList.remove('hidden');
+          yrWrapper.style.display = 'grid';
+        } else {
+          yrWrapper.classList.add('hidden');
+          yrWrapper.style.display = 'none';
+        }
       }
 
       // Mentorship Tier (Marquee / Super Dream / Dream) STRICTLY ONLY FOR 3RD YEAR STUDENTS!
@@ -2954,8 +2959,10 @@
       if (catWrapper) {
         if (isStudent && year === '3rd Year') {
           catWrapper.classList.remove('hidden');
+          catWrapper.style.display = 'block';
         } else {
           catWrapper.classList.add('hidden');
+          catWrapper.style.display = 'none';
           const catSelect = document.getElementById('newUserStudentCategory');
           if (catSelect) catSelect.value = 'REGULAR';
         }

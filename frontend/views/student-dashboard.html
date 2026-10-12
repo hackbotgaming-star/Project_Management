@@ -127,7 +127,7 @@
            Overview, My Projects, My Tasks, Milestones, Calendar, Documents, Team, Notifications, Profile, Settings, Logout -->
       <nav class="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-360px)] pr-1">
         <!-- Mentorship Tracks (3rd Year Only - Placed right on top of navigation) -->
-        <button onclick="switchTab('super-dream')" id="nav-super-dream" class="student-nav-item hidden flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-400 hover:bg-surface-container-high border border-amber-500/30 bg-amber-500/10 shadow-sm transition-all mb-1">
+        <button onclick="switchTab('super-dream')" id="nav-super-dream" style="display: none;" class="student-nav-item items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-400 hover:bg-surface-container-high border border-amber-500/30 bg-amber-500/10 shadow-sm transition-all mb-1">
           <span class="material-symbols-outlined text-base text-amber-400">stars</span>
           <span class="font-bold text-amber-300">Mentorship Tracks</span>
           <span class="ml-auto text-[9px] px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-mono font-bold">3rd YR</span>
@@ -967,13 +967,14 @@
     }
 
     function switchTab(tabId) {
+      const yrLower = (dashboardData?.studentProfile?.academicYear || dashboardData?.studentProfile?.cohort || '').toLowerCase();
+      const isNon3rd = yrLower.includes('1st') || yrLower.includes('2nd') || yrLower.includes('4th');
+      const is3rdYear = !isNon3rd && (yrLower.includes('3rd') || yrLower.includes('3rd year') || yrLower.includes('3rd yr'));
+
       // STRICT RULE: Mentorship tracks tab is strictly restricted to 3rd Year students
-      if (tabId === 'super-dream') {
-        const yr = dashboardData?.studentProfile?.academicYear;
-        if (yr && yr !== '3rd Year') {
-          switchTab('overview');
-          return;
-        }
+      if (tabId === 'super-dream' && !is3rdYear) {
+        switchTab('overview');
+        return;
       }
 
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
@@ -995,6 +996,21 @@
           navBtn.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-primary bg-surface-container-high';
         }
       }
+
+      // Enforce display of 3rd year mentorship buttons
+      const sdNav = document.getElementById('nav-super-dream');
+      if (sdNav) {
+        sdNav.style.display = is3rdYear ? 'flex' : 'none';
+      }
+      const topNav = document.getElementById('topNavMentorshipBtn');
+      if (topNav) {
+        topNav.style.display = is3rdYear ? 'inline-flex' : 'none';
+      }
+      const topHero = document.getElementById('topMentorshipTrackCard');
+      if (topHero) {
+        topHero.style.display = (is3rdYear && tabId === 'overview') ? 'flex' : 'none';
+      }
+
       document.getElementById('pageTitle').textContent = tabId === 'super-dream' ? '3rd Year Mentorship Tracks' : (tabId.charAt(0).toUpperCase() + tabId.slice(1));
 
       closeMobileSidebar();
@@ -1147,23 +1163,29 @@
 
       // Mentorship Tracks Visibility Control:
       // STRICT RULE: This option MUST NOT be visible for 1st, 2nd, and 4th years! ONLY 3rd Year!
-      const is3rdYear = (p.academicYear === '3rd Year');
+      const yrLower = (p.academicYear || p.cohort || '').toLowerCase();
+      const isNon3rd = yrLower.includes('1st') || yrLower.includes('2nd') || yrLower.includes('4th');
+      const is3rdYear = !isNon3rd && (yrLower.includes('3rd') || yrLower.includes('3rd year') || yrLower.includes('3rd yr'));
+
       const sdNavBtn = document.getElementById('nav-super-dream');
       const topSdCard = document.getElementById('topMentorshipTrackCard');
       const topNavBtn = document.getElementById('topNavMentorshipBtn');
 
       if (sdNavBtn) {
+        sdNavBtn.style.display = is3rdYear ? 'flex' : 'none';
         if (is3rdYear) sdNavBtn.classList.remove('hidden');
         else sdNavBtn.classList.add('hidden');
       }
 
       if (topNavBtn) {
+        topNavBtn.style.display = is3rdYear ? 'inline-flex' : 'none';
         if (is3rdYear) topNavBtn.classList.remove('hidden');
         else topNavBtn.classList.add('hidden');
       }
 
       if (topSdCard) {
         if (is3rdYear) {
+          topSdCard.style.display = 'flex';
           topSdCard.classList.remove('hidden');
           const cat = p.studentCategory || 'SUPER_DREAM';
           const tierBadgeEl = document.getElementById('topTrackTierBadge');
@@ -1182,6 +1204,7 @@
               cat === 'DREAM' ? '🚀 Dream Advanced Placement Mentorship Hub' : '⭐ Super Dream Tier-1 Placement Mentorship Hub';
           }
         } else {
+          topSdCard.style.display = 'none';
           topSdCard.classList.add('hidden');
         }
       }

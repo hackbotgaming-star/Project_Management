@@ -13,6 +13,15 @@ exports.getStudentDashboard = async (req, res) => {
   try {
     const studentId = req.user._id;
 
+    let userAcademicYear = req.user.academicYear;
+    if (!userAcademicYear && req.user.cohort) {
+      if (req.user.cohort.includes('1st Year')) userAcademicYear = '1st Year';
+      else if (req.user.cohort.includes('2nd Year')) userAcademicYear = '2nd Year';
+      else if (req.user.cohort.includes('4th Year')) userAcademicYear = '4th Year';
+      else if (req.user.cohort.includes('3rd Year')) userAcademicYear = '3rd Year';
+    }
+    if (!userAcademicYear) userAcademicYear = '3rd Year';
+
     // Student profile
     const studentProfile = {
       id: req.user._id,
@@ -21,9 +30,9 @@ exports.getStudentDashboard = async (req, res) => {
       role: req.user.role,
       department: req.user.department,
       cohort: req.user.cohort,
-      academicYear: req.user.academicYear || '3rd Year',
+      academicYear: userAcademicYear,
       section: req.user.section || 'A',
-      studentCategory: req.user.studentCategory || 'REGULAR',
+      studentCategory: userAcademicYear === '3rd Year' ? (req.user.studentCategory || 'REGULAR') : 'REGULAR',
       studentId: req.user.studentId,
       title: req.user.title,
       avatar: req.user.avatar,
