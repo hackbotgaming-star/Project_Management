@@ -1997,8 +1997,15 @@
     // SUPER DREAM PORTAL LOGIC (STUDENT MENTEE)
     // ==========================================
     let currentStudentSuperDreamGroup = null;
+    let currentStudentSuperDreamGroups = [];
+    let selectedStudentSuperDreamGroupId = null;
 
-    async function loadStudentSuperDream() {
+    async function selectStudentSuperDreamGroup(groupId) {
+      selectedStudentSuperDreamGroupId = groupId;
+      loadStudentSuperDream(groupId);
+    }
+
+    async function loadStudentSuperDream(preferredGroupId = null) {
       const container = document.getElementById('studentSuperDreamContainer');
       if (!container) return;
 
@@ -2028,14 +2035,33 @@
           return;
         }
 
-        currentStudentSuperDreamGroup = json.groups[0];
-        const group = currentStudentSuperDreamGroup;
+        currentStudentSuperDreamGroups = json.groups;
+        if (preferredGroupId) {
+          selectedStudentSuperDreamGroupId = preferredGroupId;
+        } else if (!selectedStudentSuperDreamGroupId || !currentStudentSuperDreamGroups.find(g => g._id === selectedStudentSuperDreamGroupId)) {
+          selectedStudentSuperDreamGroupId = currentStudentSuperDreamGroups[0]._id;
+        }
+
+        const group = currentStudentSuperDreamGroups.find(g => g._id === selectedStudentSuperDreamGroupId) || currentStudentSuperDreamGroups[0];
+        currentStudentSuperDreamGroup = group;
         const mentor = group.mentor || {};
 
         // Fetch messages for this group
         const msgRes = await fetch(`/api/super-dream/group/${group._id}/messages`);
         const msgJson = await msgRes.json();
         const messages = (msgJson.success && msgJson.messages) ? msgJson.messages : [];
+
+        // Track selector tabs if student is in multiple tracks
+        const groupTabsHtml = currentStudentSuperDreamGroups.length > 1 ? `
+          <div class="p-2 rounded-xl bg-surface-container border border-outline-variant/25 flex items-center gap-2 overflow-x-auto text-xs">
+            <span class="text-outline font-medium shrink-0 ml-1">My Mentorship Tracks:</span>
+            ${currentStudentSuperDreamGroups.map(g => `
+              <button onclick="selectStudentSuperDreamGroup('${g._id}')" class="px-3 py-1.5 rounded-lg shrink-0 font-medium transition-all ${g._id === group._id ? 'bg-amber-500 text-black font-semibold shadow-sm' : 'bg-surface-container-high text-outline hover:text-on-surface'}">
+                ${g.title}
+              </button>
+            `).join('')}
+          </div>
+        ` : '';
 
         // Build Peer Mentees chips
         const peerMenteesHtml = (group.mentees && group.mentees.length > 0)
@@ -2136,6 +2162,8 @@
           `;
 
         container.innerHTML = `
+          ${groupTabsHtml}
+
           <!-- 1. Track Header & Assigned Mentor Card -->
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
             <!-- Mentor Card -->

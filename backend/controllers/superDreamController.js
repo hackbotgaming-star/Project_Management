@@ -23,11 +23,30 @@ exports.getAdminOverview = async (req, res) => {
       .select('name email studentId department avatar cohort')
       .sort({ name: 1 });
 
+    // Map each mentee to their assigned mentor for instant allocation lookup
+    const menteeToMentorMap = {};
+    groups.forEach((g) => {
+      if (g.mentor && Array.isArray(g.mentees)) {
+        g.mentees.forEach((m) => {
+          const mId = (m._id || m).toString();
+          menteeToMentorMap[mId] = {
+            groupId: g._id,
+            groupTitle: g.title,
+            mentorId: (g.mentor._id || g.mentor).toString(),
+            mentorName: g.mentor.name || 'Faculty Mentor',
+            mentorEmail: g.mentor.email || '',
+            mentorDepartment: g.mentor.department || '',
+          };
+        });
+      }
+    });
+
     res.json({
       success: true,
       groups,
       facultyList,
       studentList,
+      menteeToMentorMap,
     });
   } catch (err) {
     console.error('SuperDream getAdminOverview error:', err);
@@ -38,10 +57,10 @@ exports.getAdminOverview = async (req, res) => {
 // Admin creates a Super Dream mentorship allocation
 exports.createGroup = async (req, res) => {
   try {
-    const { title, description, mentorId, menteeIds, cohort } = req.body;
+    const { title, description, mentorId, menteeIds, cohort, reassignMentees = true } = req.body;
 
-    if (!title || !mentorId) {
-      return res.status(400).json({ success: false, message: 'Title and Mentor are required.' });
+    if (!mentorId) {
+      return res.status(400).json({ success: false, message: 'Faculty Mentor is required.' });
     }
 
     const mentor = await User.findById(mentorId);
@@ -50,9 +69,19 @@ exports.createGroup = async (req, res) => {
     }
 
     const validMentees = Array.isArray(menteeIds) ? menteeIds : [];
+    const groupTitle = title && title.trim() ? title.trim() : `Super Dream Mentorship - ${mentor.name}`;
+
+    // If reassignMentees is enabled, remove these students from any other existing Super Dream group
+    // so each mentee has their own separate designated mentor
+    if (reassignMentees && validMentees.length > 0) {
+      await SuperDream.updateMany(
+        { mentees: { $in: validMentees } },
+        { $pull: { mentees: { $in: validMentees } } }
+      );
+    }
 
     const newGroup = await SuperDream.create({
-      title,
+      title: groupTitle,
       description: description || '',
       mentor: mentorId,
       mentees: validMentees,
@@ -64,7 +93,7 @@ exports.createGroup = async (req, res) => {
     await Notification.create({
       user: mentorId,
       title: '🌟 Super Dream Mentor Assignment',
-      message: `You have been designated as the Mentor for "${title}" with ${validMentees.length} mentee(s).`,
+      message: `You have been designated as the Mentor for "${groupTitle}" with ${validMentees.length} mentee(s).`,
       type: 'INFO',
       link: '/faculty/dashboard',
     });
@@ -74,7 +103,7 @@ exports.createGroup = async (req, res) => {
       const notifications = validMentees.map((menteeId) => ({
         user: menteeId,
         title: '🌟 Super Dream Enrollment',
-        message: `You have been selected for the Super Dream Track "${title}" under Mentor Dr./Prof. ${mentor.name}.`,
+        message: `You have been assigned to Faculty Mentor ${mentor.name} in Super Dream (${groupTitle}).`,
         type: 'SUCCESS',
         link: '/student/dashboard',
       }));
@@ -100,7 +129,7 @@ exports.createGroup = async (req, res) => {
 exports.updateGroup = async (req, res) => {
   try {
     const { id } = req.params;
-    const { title, description, mentorId, menteeIds, status, cohort } = req.body;
+    const { title, description, mentorId, menteeIds, status, cohort, reassignMentees = true } = req.body;
 
     const group = await SuperDream.findById(id);
     if (!group) {
@@ -110,7 +139,15 @@ exports.updateGroup = async (req, res) => {
     if (title) group.title = title;
     if (description !== undefined) group.description = description;
     if (mentorId) group.mentor = mentorId;
-    if (Array.isArray(menteeIds)) group.mentees = menteeIds;
+    if (Array.isArray(menteeIds)) {
+      if (reassignMentees && menteeIds.length > 0) {
+        await SuperDream.updateMany(
+          { _id: { $ne: id }, mentees: { $in: menteeIds } },
+          { $pull: { mentees: { $in: menteeIds } } }
+        );
+      }
+      group.mentees = menteeIds;
+    }
     if (status) group.status = status;
     if (cohort) group.cohort = cohort;
 
@@ -128,6 +165,86 @@ exports.updateGroup = async (req, res) => {
   } catch (err) {
     console.error('SuperDream updateGroup error:', err);
     res.status(500).json({ success: false, message: 'Server error updating Super Dream group.' });
+  }
+};
+
+// Direct Quick Assignment: Assign a mentor for specific mentees
+exports.assignMentorDirect = async (req, res) => {
+  try {
+    const { mentorId, menteeIds, reassignMentees = true, groupTitle, cohort } = req.body;
+
+    if (!mentorId) {
+      return res.status(400).json({ success: false, message: 'Faculty Mentor is required.' });
+    }
+
+    const mentor = await User.findById(mentorId);
+    if (!mentor) {
+      return res.status(404).json({ success: false, message: 'Specified faculty mentor not found.' });
+    }
+
+    const targetMentees = Array.isArray(menteeIds) ? menteeIds : [menteeIds].filter(Boolean);
+    if (targetMentees.length === 0) {
+      return res.status(400).json({ success: false, message: 'At least one student mentee must be selected.' });
+    }
+
+    // Reassign from other groups if requested so each mentee has their separate mentor
+    if (reassignMentees) {
+      await SuperDream.updateMany(
+        { mentees: { $in: targetMentees } },
+        { $pull: { mentees: { $in: targetMentees } } }
+      );
+    }
+
+    // Find an existing active group for this mentor or create a new one
+    let group = await SuperDream.findOne({ mentor: mentorId, status: 'ACTIVE' });
+    if (!group) {
+      group = await SuperDream.create({
+        title: groupTitle || `Super Dream Mentorship - ${mentor.name}`,
+        description: `Direct Super Dream mentorship supervised by ${mentor.name}.`,
+        mentor: mentorId,
+        mentees: targetMentees,
+        cohort: cohort || 'Super Dream Track 2025-2026',
+        createdBy: req.user._id,
+      });
+    } else {
+      // Append mentees without duplicates
+      const existingSet = new Set(group.mentees.map((m) => m.toString()));
+      targetMentees.forEach((mId) => existingSet.add(mId.toString()));
+      group.mentees = Array.from(existingSet);
+      if (groupTitle) group.title = groupTitle;
+      await group.save();
+    }
+
+    // Send notifications
+    await Notification.create({
+      user: mentorId,
+      title: '🌟 Super Dream Mentee Allocation',
+      message: `${targetMentees.length} student mentee(s) have been assigned to your Super Dream mentorship.`,
+      type: 'INFO',
+      link: '/faculty/dashboard',
+    });
+
+    const notifs = targetMentees.map((mId) => ({
+      user: mId,
+      title: '🌟 Super Dream Mentor Assigned',
+      message: `You have been paired with Faculty Mentor ${mentor.name} in Super Dream.`,
+      type: 'SUCCESS',
+      link: '/student/dashboard',
+    }));
+    await Notification.insertMany(notifs);
+
+    const populated = await SuperDream.findById(group._id)
+      .populate('mentor', 'name email department avatar title')
+      .populate('mentees', 'name email studentId department avatar cohort');
+
+    res.json({
+      success: true,
+      message: `Mentees allocated to ${mentor.name} successfully.`,
+      group: populated,
+    });
+  } catch (err) {
+    console.error('SuperDream assignMentorDirect error:', err);
+    res.status(500).json({ success: false, message: 'Server error assigning mentor.' });
   }
 };
 

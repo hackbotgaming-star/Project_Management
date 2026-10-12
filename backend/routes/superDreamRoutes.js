@@ -9,6 +9,7 @@ router.use(authenticateToken);
 // Admin Management
 router.get('/admin/overview', requireAdmin, superDreamController.getAdminOverview);
 router.post('/admin/create', requireAdmin, superDreamController.createGroup);
+router.post('/admin/assign-mentor', requireAdmin, superDreamController.assignMentorDirect);
 router.put('/admin/:id', requireAdmin, superDreamController.updateGroup);
 router.delete('/admin/:id', requireAdmin, superDreamController.deleteGroup);
 

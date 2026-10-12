@@ -1638,8 +1638,15 @@
     // SUPER DREAM PORTAL LOGIC (FACULTY MENTOR)
     // ==========================================
     let currentFacSuperDreamGroup = null;
+    let currentFacSuperDreamGroups = [];
+    let selectedFacSuperDreamGroupId = null;
 
-    async function loadFacultySuperDream() {
+    async function selectFacSuperDreamGroup(groupId) {
+      selectedFacSuperDreamGroupId = groupId;
+      loadFacultySuperDream(groupId);
+    }
+
+    async function loadFacultySuperDream(preferredGroupId = null) {
       const container = document.getElementById('facSuperDreamContainer');
       if (!container) return;
 
@@ -1669,13 +1676,32 @@
           return;
         }
 
-        currentFacSuperDreamGroup = json.groups[0];
-        const group = currentFacSuperDreamGroup;
+        currentFacSuperDreamGroups = json.groups;
+        if (preferredGroupId) {
+          selectedFacSuperDreamGroupId = preferredGroupId;
+        } else if (!selectedFacSuperDreamGroupId || !currentFacSuperDreamGroups.find(g => g._id === selectedFacSuperDreamGroupId)) {
+          selectedFacSuperDreamGroupId = currentFacSuperDreamGroups[0]._id;
+        }
+
+        const group = currentFacSuperDreamGroups.find(g => g._id === selectedFacSuperDreamGroupId) || currentFacSuperDreamGroups[0];
+        currentFacSuperDreamGroup = group;
 
         // Fetch messages for this group
         const msgRes = await fetch(`/api/super-dream/group/${group._id}/messages`);
         const msgJson = await msgRes.json();
         const messages = (msgJson.success && msgJson.messages) ? msgJson.messages : [];
+
+        // Track selector tabs if mentor oversees multiple cohorts
+        const groupTabsHtml = currentFacSuperDreamGroups.length > 1 ? `
+          <div class="p-2 rounded-xl bg-surface-container border border-outline-variant/25 flex items-center gap-2 overflow-x-auto text-xs">
+            <span class="text-outline font-medium shrink-0 ml-1">My Mentee Cohorts:</span>
+            ${currentFacSuperDreamGroups.map(g => `
+              <button onclick="selectFacSuperDreamGroup('${g._id}')" class="px-3 py-1.5 rounded-lg shrink-0 font-medium transition-all ${g._id === group._id ? 'bg-amber-500 text-black font-semibold shadow-sm' : 'bg-surface-container-high text-outline hover:text-on-surface'}">
+                ${g.title} (${g.mentees ? g.mentees.length : 0} mentees)
+              </button>
+            `).join('')}
+          </div>
+        ` : '';
 
         // Build Mentees Cards HTML
         const menteesHtml = (group.mentees && group.mentees.length > 0)
@@ -1782,6 +1808,8 @@
           `;
 
         container.innerHTML = `
+          ${groupTabsHtml}
+
           <!-- 1. Track Overview Card -->
           <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/40 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
