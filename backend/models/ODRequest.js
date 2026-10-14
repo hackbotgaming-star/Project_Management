@@ -53,6 +53,17 @@ const ODRequestSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+    // Accompanying Teammates / Students
+    teammates: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+      },
+    ],
+    teammatesNames: {
+      type: String,
+      default: '',
+    },
     // Workflow State
     status: {
       type: String,

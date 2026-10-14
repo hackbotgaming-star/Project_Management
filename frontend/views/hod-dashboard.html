@@ -937,6 +937,12 @@
           <span class="block text-[10px] text-outline uppercase font-mono">Supporting Document / Proof</span>
           <div id="hodModalOdDocLink" class="mt-0.5">-</div>
         </div>
+        <div class="sm:col-span-2 pt-2 border-t border-outline-variant/20">
+          <span class="block text-[10px] text-outline uppercase font-mono">Accompanying Teammates / Co-Participants</span>
+          <div id="hodModalOdTeammates" class="mt-1 flex flex-wrap gap-1.5 text-xs">
+            <span class="text-outline italic text-[11px]">Individual Request (No other teammates)</span>
+          </div>
+        </div>
       </div>
 
       <!-- Purpose Section -->
@@ -1855,6 +1861,28 @@
           `;
         } else {
           docLinkEl.innerHTML = '<span class="text-outline italic">No document attached</span>';
+        }
+
+        // Accompanying Teammates
+        const tmContainer = document.getElementById('hodModalOdTeammates');
+        if (tmContainer) {
+          let tmHtml = '';
+          if (od.teammates && od.teammates.length > 0) {
+            tmHtml += od.teammates.map(t => `
+              <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-400/10 text-amber-400 border border-amber-400/20 font-medium text-xs">
+                <span class="material-symbols-outlined text-[14px]">person</span>
+                <span>${escapeHtml(t.name || 'Teammate')} ${t.studentId ? `(${escapeHtml(t.studentId)})` : ''}</span>
+              </span>
+            `).join('');
+          }
+          if (od.teammatesNames) {
+            tmHtml += `
+              <div class="w-full text-xs text-on-surface/90 mt-1 font-mono p-2 rounded-lg bg-surface-container border border-outline-variant/20">
+                ${escapeHtml(od.teammatesNames)}
+              </div>
+            `;
+          }
+          tmContainer.innerHTML = tmHtml || '<span class="text-outline italic text-[11px]">Individual Request (No other teammates)</span>';
         }
 
         document.getElementById('hodModalOdPurpose').textContent = od.purpose;

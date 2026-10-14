@@ -80,11 +80,37 @@ exports.submitODRequest = async (req, res) => {
       }
     }
 
+    // Supporting document or invitation letter is MANDATORY
+    if (!req.file && (!customDocUrl || !customDocUrl.trim())) {
+      return res.status(400).json({
+        success: false,
+        message: 'Supporting document or invitation letter is mandatory. Please upload a file or provide a valid invitation letter URL.',
+      });
+    }
+
+    // Parse accompanying teammates
+    let teammateIds = [];
+    if (req.body.teammateIds) {
+      try {
+        const parsed = typeof req.body.teammateIds === 'string' ? JSON.parse(req.body.teammateIds) : req.body.teammateIds;
+        if (Array.isArray(parsed)) {
+          teammateIds = parsed.filter(id => id && id.toString().length === 24);
+        }
+      } catch (e) {
+        if (typeof req.body.teammateIds === 'string' && req.body.teammateIds.trim().length === 24) {
+          teammateIds = [req.body.teammateIds.trim()];
+        }
+      }
+    }
+    const teammatesNames = (req.body.teammatesNames || req.body.teammatesText || '').trim();
+
     const requestId = await generateRequestId();
 
     const newOD = new ODRequest({
       requestId,
       student: req.user._id,
+      teammates: teammateIds,
+      teammatesNames,
       facultyReviewer: facultyId || undefined,
       eventName: eventName.trim(),
       purpose: purpose.trim(),
@@ -148,6 +174,7 @@ exports.submitODRequest = async (req, res) => {
 
     const populatedOD = await ODRequest.findById(newOD._id)
       .populate('student', 'name email studentId department academicYear section avatar')
+      .populate('teammates', 'name email studentId avatar department section')
       .populate('facultyReviewer', 'name email title')
       .populate('adminReviewer', 'name email title')
       .populate('hodReviewer', 'name email title');
@@ -169,6 +196,7 @@ exports.getMyODRequests = async (req, res) => {
   try {
     const requests = await ODRequest.find({ student: req.user._id })
       .populate('student', 'name email studentId department academicYear section avatar')
+      .populate('teammates', 'name email studentId avatar department section')
       .populate('facultyReviewer', 'name email title')
       .populate('adminReviewer', 'name email title')
       .populate('hodReviewer', 'name email title')
@@ -321,6 +349,7 @@ exports.getFacultyODRequests = async (req, res) => {
       ],
     })
       .populate('student', 'name email studentId department academicYear section avatar mentor')
+      .populate('teammates', 'name email studentId avatar department section')
       .populate('facultyReviewer', 'name email title')
       .populate('adminReviewer', 'name email title')
       .populate('hodReviewer', 'name email title')
@@ -494,6 +523,7 @@ exports.getAdminODRequests = async (req, res) => {
 
     const requests = await ODRequest.find(filter)
       .populate('student', 'name email studentId department academicYear section avatar')
+      .populate('teammates', 'name email studentId avatar department section')
       .populate('facultyReviewer', 'name email title')
       .populate('adminReviewer', 'name email title')
       .populate('hodReviewer', 'name email title')
@@ -785,6 +815,7 @@ exports.getHODODRequests = async (req, res) => {
   try {
     const requests = await ODRequest.find({})
       .populate('student', 'name email studentId department academicYear section avatar')
+      .populate('teammates', 'name email studentId avatar department section')
       .populate('facultyReviewer', 'name email title')
       .populate('adminReviewer', 'name email title')
       .populate('hodReviewer', 'name email title')
@@ -997,6 +1028,7 @@ exports.getODRequestById = async (req, res) => {
   try {
     const od = await ODRequest.findById(req.params.id)
       .populate('student', 'name email studentId department academicYear section avatar mentor')
+      .populate('teammates', 'name email studentId avatar department section')
       .populate('facultyReviewer', 'name email title')
       .populate('adminReviewer', 'name email title')
       .populate('hodReviewer', 'name email title')
