@@ -829,6 +829,9 @@
       const heroGraph = document.getElementById('heroProgressGraph');
       if (heroGraph) {
         heroGraph.innerHTML = renderProgressLineGraph(progressPercent, {
+          project: p,
+          milestones: milestones,
+          tasks: tasks,
           color: '#ff5436',
           compact: true,
           showLabel: true
@@ -838,6 +841,9 @@
       const mainTrajectoryEl = document.getElementById('mainProjectTrajectoryGraph');
       if (mainTrajectoryEl) {
         mainTrajectoryEl.innerHTML = renderProgressLineGraph(progressPercent, {
+          project: p,
+          milestones: milestones,
+          tasks: tasks,
           color: '#ff5436',
           showLabel: true
         });

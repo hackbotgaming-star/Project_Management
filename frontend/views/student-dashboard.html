@@ -1500,6 +1500,9 @@
         const progGraph = document.getElementById('projProgressGraph');
         if (progGraph) {
           progGraph.innerHTML = renderProgressLineGraph(primary.progressPercentage || 0, {
+            project: primary,
+            milestones: data.milestones,
+            tasks: allProjectTasks,
             color: '#ff5436',
             showLabel: true
           });
@@ -1601,7 +1604,7 @@
             <div class="flex flex-col sm:flex-row sm:items-center gap-3 flex-1">
               <div class="text-outline shrink-0">Advisor: <span class="text-secondary font-medium">${proj.facultyMentor ? proj.facultyMentor.name : 'Unassigned'}</span></div>
               <div class="flex-1 max-w-xs">
-                ${renderProgressLineGraph(proj.progressPercentage, { color: '#ff5436', width: '100%', height: 32, showLabel: true })}
+                ${renderProgressLineGraph(proj.progressPercentage, { project: proj, color: '#ff5436', width: '100%', height: 32, showLabel: true })}
               </div>
             </div>
             <div class="flex items-center gap-2 self-start sm:self-auto">

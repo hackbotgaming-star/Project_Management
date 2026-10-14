@@ -12,21 +12,132 @@
   };
 
   // Global registry for interactive functional progress graphs
+  // Global registry for interactive functional progress graphs
   window._progressGraphs = window._progressGraphs || {};
 
-  const GRAPH_STAGES = [
-    { index: 0, shortName: 'Kickoff', name: 'Project Kickoff & Scope', desc: 'Team assembled, scope clarified, initial repository initialized.' },
-    { index: 1, shortName: 'Lit Review', name: 'Literature Review & Specs', desc: 'Comprehensive domain study and formal requirement specifications.' },
-    { index: 2, shortName: 'Architecture', name: 'System Architecture & Stack', desc: 'Technical stack selected, data flow and system architecture drafted.' },
-    { index: 3, shortName: 'Database', name: 'Database Schema & Modeling', desc: 'Mongoose data models, indexes, schemas, and seed collections configured.' },
-    { index: 4, shortName: 'Core APIs', name: 'Core APIs & Authentication', desc: 'Backend endpoints, JWT role authentication, and controller pipelines built.' },
-    { index: 5, shortName: 'Mid-Review', name: 'Mid-Term Progress Review', desc: 'Advisor evaluation checkpoint, formative evaluation criteria assessed.' },
-    { index: 6, shortName: 'Frontend UI', name: 'Frontend Dashboards & UI Polish', desc: 'Responsive dashboard interfaces, interactive widgets, and state handling.' },
-    { index: 7, shortName: 'Testing', name: 'Integration & Security Testing', desc: 'Role permission testing, API stress verification, and edge case coverage.' },
-    { index: 8, shortName: 'Audit & Rev', name: 'Advisor Audit & Revisions', desc: 'Faculty mentor review, deliverable revisions, and code refactoring.' },
-    { index: 9, shortName: 'Pre-Defense', name: 'Pre-Defense Rehearsal', desc: 'Dry-run presentations, documentation finalized, artifacts packaged.' },
-    { index: 10, shortName: 'Final Defense', name: 'Final Capstone Defense & Completion', desc: 'Formal graduation defense, jury evaluation, and repo archive approved.' }
-  ];
+  function _hashString(str) {
+    if (!str) return 42;
+    let hash = 0;
+    const s = String(str);
+    for (let i = 0; i < s.length; i++) {
+      hash = (hash << 5) - hash + s.charCodeAt(i);
+      hash |= 0;
+    }
+    return Math.abs(hash);
+  }
+
+  // Generates unique, deterministic milestone stages and trajectory points tailored to a specific project
+  function _generateProjectGraphData(project, percent, options = {}) {
+    const proj = project || options.project || {};
+    const title = proj.title || options.title || 'Project Workspace';
+    const code = proj.code || options.code || '';
+    const projId = proj._id || proj.id || code || title || 'default';
+    const seed = _hashString(String(projId));
+    const p = Math.max(0, Math.min(100, Math.round(Number(percent !== undefined ? percent : (proj.progressPercentage || 0))) || 0));
+    const activeIdx = Math.min(10, Math.max(0, Math.round((p / 100) * 10)));
+    const tasks = options.tasks || proj.tasks || [];
+    const milestones = options.milestones || proj.milestones || [];
+
+    // Derive custom stage names tailored specifically to this project's title and domain
+    const lowerTitle = title.toLowerCase();
+    let domainNoun = 'System Module';
+    let techFocus = 'Architecture & Data Layer';
+    let coreAction = 'Core Algorithms & Features';
+    let testAction = 'System & Integration Testing';
+
+    if (lowerTitle.includes('slam') || lowerTitle.includes('quadrotor') || lowerTitle.includes('drone') || lowerTitle.includes('robot')) {
+      domainNoun = 'Robotics & Navigation';
+      techFocus = 'Sensor Fusion & Flight Controller';
+      coreAction = 'SLAM Algorithm & Autonomy';
+      testAction = 'Hardware Flight Trials & Benchmark';
+    } else if (lowerTitle.includes('database') || lowerTitle.includes('cloud') || lowerTitle.includes('distributed')) {
+      domainNoun = 'Distributed Engine';
+      techFocus = 'Consensus & Storage Topology';
+      coreAction = 'Distributed Replication & Sharding';
+      testAction = 'Fault Tolerance & High-Load Stress';
+    } else if (lowerTitle.includes('ai') || lowerTitle.includes('learning') || lowerTitle.includes('model') || lowerTitle.includes('neural') || lowerTitle.includes('vision') || lowerTitle.includes('nlp')) {
+      domainNoun = 'AI / ML Pipeline';
+      techFocus = 'Data Preprocessing & Model Architecture';
+      coreAction = 'Neural Network Training & Weights';
+      testAction = 'Validation Loss & Inference Benchmarks';
+    } else if (lowerTitle.includes('health') || lowerTitle.includes('med') || lowerTitle.includes('bio')) {
+      domainNoun = 'Biomedical Platform';
+      techFocus = 'Clinical Data Pipeline & Compliance';
+      coreAction = 'Predictive Diagnostic Engine';
+      testAction = 'Accuracy Verification & Validation';
+    } else if (lowerTitle.includes('security') || lowerTitle.includes('crypto') || lowerTitle.includes('chain')) {
+      domainNoun = 'Cryptographic Ledger';
+      techFocus = 'Zero-Knowledge & Smart Contracts';
+      coreAction = 'Consensus Node & Ledger Transactions';
+      testAction = 'Vulnerability Audit & Stress Tests';
+    }
+
+    const shortProjName = title.split(':')[0].trim();
+    const stages = [
+      { index: 0, shortName: 'Kickoff', name: `Kickoff & Team Setup: ${code || shortProjName}`, desc: 'Project charter formed, advisor assigned, and repository initialized.' },
+      { index: 1, shortName: 'Literature', name: `Domain Survey: ${shortProjName}`, desc: 'Formal requirement specifications and state-of-the-art literature review.' },
+      { index: 2, shortName: 'Architecture', name: techFocus, desc: 'Design blueprints, system component diagrams, and technological stack validation.' },
+      { index: 3, shortName: 'Data Schema', name: `${domainNoun} Schema`, desc: 'Data modeling, entity relations, collections, and mock test fixtures.' },
+      { index: 4, shortName: 'Core Engine', name: coreAction, desc: 'Core computational logic, backend APIs, and controller implementation.' },
+      { index: 5, shortName: 'Mid-Review', name: 'Mid-Term Advisor Review', desc: 'Formative evaluation assessment and progress audit by faculty advisor.' },
+      { index: 6, shortName: 'UI / UX', name: 'Dashboard & User Interface', desc: 'Interactive monitoring components, responsive views, and user feedback.' },
+      { index: 7, shortName: 'Verification', name: testAction, desc: 'Unit tests, system verification, role permissions, and edge cases.' },
+      { index: 8, shortName: 'Revisions', name: 'Advisor Audit & Code Refinement', desc: 'Addressing formative reviewer feedback and code performance optimizations.' },
+      { index: 9, shortName: 'Pre-Defense', name: 'Pre-Defense Simulation & Package', desc: 'Documentation finalization, dry-run evaluation, and artifact bundling.' },
+      { index: 10, shortName: 'Capstone', name: `Final Defense: ${code || shortProjName}`, desc: 'Final graduation jury evaluation, project sign-off, and repository archiving.' }
+    ];
+
+    // Weave real database milestones directly into checkpoints
+    if (Array.isArray(milestones) && milestones.length > 0) {
+      milestones.forEach((m, idx) => {
+        const targetStep = Math.min(10, Math.max(1, Math.round(((idx + 1) / (milestones.length + 1)) * 10)));
+        if (stages[targetStep]) {
+          stages[targetStep].name = m.title || stages[targetStep].name;
+          if (m.description) stages[targetStep].desc = m.description;
+          stages[targetStep].shortName = m.title ? m.title.substring(0, 12) : stages[targetStep].shortName;
+          stages[targetStep].realMilestone = m;
+        }
+      });
+    }
+
+    // Generate unique, deterministic trajectory values (0 to 1000) for THIS SPECIFIC PROJECT
+    const values = [];
+    const targetScore = p * 10; // e.g. 45% = 450 pts out of 1000
+
+    for (let i = 0; i <= 10; i++) {
+      if (p === 0) {
+        values.push(i === 0 ? 0 : Math.min(1000, Math.round(i * 35)));
+      } else if (i <= activeIdx) {
+        if (activeIdx === 0) {
+          values.push(targetScore);
+        } else {
+          const fraction = i / activeIdx;
+          const variance = Math.sin((i + (seed % 7)) * 1.5) * 25;
+          const val = Math.round(fraction * targetScore + variance);
+          const clamped = Math.max(40, Math.min(1000, i === activeIdx ? targetScore : val));
+          values.push(clamped);
+        }
+      } else {
+        const remainingSteps = 10 - activeIdx;
+        const currentStep = i - activeIdx;
+        const projectedFraction = currentStep / remainingSteps;
+        const remainingScore = 1000 - targetScore;
+        const variance = Math.cos((i + (seed % 5)) * 1.2) * 20;
+        const projectedVal = Math.round(targetScore + projectedFraction * remainingScore + variance);
+        values.push(Math.max(targetScore, Math.min(1000, projectedVal)));
+      }
+    }
+
+    return {
+      title,
+      code,
+      p,
+      activeIdx,
+      stages,
+      values,
+      seed
+    };
+  }
 
   window._progressGraphHover = function(graphId, index) {
     const data = window._progressGraphs[graphId];
@@ -152,15 +263,8 @@
     } else if (mode === 'velocity') {
       data.values = data.stages.map((_, i) => Math.min(1000, Math.round(((i + 1) / 11) * (data.p * 10))));
     } else {
-      // Dynamic real trajectory matching user curve scaled to progress
-      const scale = data.p > 0 ? (data.p / 70) : 0.2;
-      data.values = baseRaw.map((v, i) => {
-        if (i <= data.activeIdx) {
-          return Math.min(1000, Math.max(60, Math.round(v * scale)));
-        } else {
-          return Math.min(1000, Math.max(60, Math.round(v * 0.75)));
-        }
-      });
+      // Restore dynamic trajectory calculated specifically for this project
+      data.values = [...data.originalProjectValues];
     }
 
     // Recompute SVG coordinates
@@ -200,27 +304,19 @@
     window._progressGraphUpdateInspector(graphId, data.selectedIdx !== undefined ? data.selectedIdx : data.activeIdx);
   };
 
-  // Cartesian Progress Status Line Graph Generator matching user reference
+  // Cartesian Progress Status Line Graph Generator dynamically adapting to specific project
   window.renderProgressLineGraph = function(percent, options = {}) {
-    const p = Math.max(0, Math.min(100, Math.round(Number(percent) || 0)));
+    const projData = _generateProjectGraphData(options.project, percent, options);
+    const p = projData.p;
     const isCompact = options.compact === true || (options.height && options.height <= 110);
     const strokeColor = options.color || '#ff5436'; // Vibrant Coral-Red matching reference image
     const axisColor = options.axisColor || '#94a3b8';
     const showHeader = options.showLabel !== false;
     const graphId = 'cg_' + Math.random().toString(36).substring(2, 9);
 
-    // Baseline coordinates from user's chart: [200, 290, 290, 500, 470, 600, 780, 900, 660, 700, 510]
-    const baseRaw = [200, 290, 290, 500, 470, 600, 780, 900, 660, 700, 510];
-    const scale = p > 0 ? (p / 70) : 0.2;
-    const values = baseRaw.map((v, i) => {
-      const activePoint = Math.min(10, Math.max(0, Math.round(p / 10)));
-      if (i <= activePoint) {
-        return Math.min(1000, Math.max(50, Math.round(v * scale)));
-      } else {
-        return Math.min(1000, Math.max(50, Math.round(v * 0.75)));
-      }
-    });
-    const activeIdx = Math.min(10, Math.max(0, Math.round(p / 10)));
+    const values = [...projData.values];
+    const activeIdx = projData.activeIdx;
+    const stages = projData.stages;
 
     let stageText = 'Planning';
     if (p >= 100) stageText = 'Completed';
@@ -310,6 +406,7 @@
       strokeColor,
       axisColor,
       values: [...values],
+      originalProjectValues: [...values],
       activeIdx,
       selectedIdx: activeIdx,
       mode: 'trajectory',
@@ -320,7 +417,9 @@
       xStep,
       yRange,
       coords,
-      stages: GRAPH_STAGES
+      stages: stages,
+      projectTitle: projData.title,
+      projectCode: projData.code
     };
 
     // Defer initial inspector rendering
@@ -334,7 +433,10 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div class="flex items-center gap-2">
               <span class="w-2.5 h-2.5 rounded-full" style="background-color: ${strokeColor};"></span>
-              <span class="font-bold text-on-surface">Project Trajectory &amp; Milestone Velocity</span>
+              <span class="font-bold text-on-surface truncate max-w-sm sm:max-w-md" title="${escapeHtml(projData.title)}">
+                ${projData.code ? `<span class="font-mono text-outline font-semibold">${escapeHtml(projData.code)} &bull; </span>` : ''}
+                ${escapeHtml(projData.title)}
+              </span>
               <span class="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-surface-container-high border border-outline-variant/30 font-mono" style="color: ${strokeColor};">
                 ${p}% &bull; ${stageText}
               </span>
