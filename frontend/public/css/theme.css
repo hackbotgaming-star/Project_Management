@@ -4,7 +4,7 @@
 
 /* Material Symbols standard ligature support across all pages */
 .material-symbols-outlined {
-  font-family: 'Material Symbols Outlined', sans-serif !important;
+  font-family: 'Material Symbols Outlined' !important;
   font-weight: normal !important;
   font-style: normal !important;
   line-height: 1 !important;
@@ -16,7 +16,74 @@
   word-wrap: normal !important;
   direction: ltr !important;
   -webkit-font-feature-settings: 'liga' !important;
+  font-feature-settings: 'liga' !important;
   -webkit-font-smoothing: antialiased !important;
+}
+
+/* HOD Portal Leadership Hero Card High-Contrast Styles */
+html.light .hod-hero-card {
+  background: #ffffff !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.12), 0 8px 10px -6px rgba(245, 158, 11, 0.08) !important;
+}
+
+html.light .hod-hero-card h1,
+html.light #hodHeroTitle {
+  color: #0f172a !important; /* High-contrast bold dark text in light mode */
+}
+
+html.light .hod-hero-card p,
+html.light #hodHeroDesc {
+  color: #334155 !important; /* High-contrast slate-700 description */
+}
+
+html.light .hod-hero-card .hod-badge-bar span {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+html.light .hod-hero-card .hod-quick-action-btn {
+  background-color: #fef3c7 !important;
+  border-color: #f59e0b !important;
+  color: #92400e !important;
+}
+
+html.light .hod-hero-card .hod-quick-action-btn:hover {
+  background-color: #fde68a !important;
+}
+
+html.dark .hod-hero-card {
+  background: linear-gradient(to bottom right, #181b25, #1c1f29, #262a34) !important;
+  border-color: rgba(251, 191, 36, 0.35) !important;
+}
+
+html.dark .hod-hero-card h1,
+html.dark #hodHeroTitle {
+  color: #f8fafc !important;
+}
+
+html.dark .hod-hero-card p,
+html.dark #hodHeroDesc {
+  color: #94a3b8 !important;
+}
+
+/* Amber Accents & Badges High-Contrast in Light Mode */
+html.light .text-amber-300,
+html.light .text-amber-400 {
+  color: #b45309 !important; /* Amber-700 */
+}
+
+html.light .border-amber-400\/30,
+html.light .border-amber-400\/40,
+html.light .border-amber-400\/20 {
+  border-color: rgba(217, 119, 6, 0.35) !important;
+}
+
+html.light .bg-amber-400\/10,
+html.light .bg-amber-400\/15,
+html.light .bg-amber-400\/20 {
+  background-color: #fef3c7 !important; /* Soft Amber-100 */
 }
 
 /* Project & Task Details High-Contrast Styles */

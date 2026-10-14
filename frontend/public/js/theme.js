@@ -27,6 +27,12 @@
     if (activeThemeLabel) {
       activeThemeLabel.textContent = theme.charAt(0).toUpperCase() + theme.slice(1) + ' Mode';
     }
+
+    // Update theme toggle button icons if present
+    const toggleIcons = document.querySelectorAll('.theme-toggle-icon, #themeToggleIcon');
+    toggleIcons.forEach(icon => {
+      icon.textContent = (theme === 'light') ? 'light_mode' : 'dark_mode';
+    });
   }
 
   window.setTheme = function(theme) {
@@ -34,6 +40,12 @@
     if (window.showToast) {
       window.showToast(`Switched to ${theme.toUpperCase()} theme`, 'success', 'Theme Updated');
     }
+  };
+
+  window.toggleTheme = function() {
+    const current = getStoredTheme();
+    const next = (current === 'light') ? 'dark' : 'light';
+    window.setTheme(next);
   };
 
   // Immediate execution before DOM finishes rendering to prevent flash of wrong theme
