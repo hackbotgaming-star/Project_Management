@@ -11,74 +11,170 @@
       .replace(/'/g, '&#39;');
   };
 
-  // Modern SVG Progress Status Line Graph Generator
+  // Cartesian Progress Status Line Graph Generator matching user reference
   window.renderProgressLineGraph = function(percent, options = {}) {
     const p = Math.max(0, Math.min(100, Math.round(Number(percent) || 0)));
-    const width = options.width || '100%';
-    const height = options.height || 38;
-    const strokeColor = options.color || '#818cf8';
-    const showLabel = options.showLabel !== false;
-    const graphId = 'lineGraph_' + Math.random().toString(36).substring(2, 9);
+    const isCompact = options.compact === true || (options.height && options.height <= 110);
+    const strokeColor = options.color || '#ff5436'; // Vibrant Coral-Red matching reference image
+    const axisColor = options.axisColor || '#94a3b8';
+    const showHeader = options.showLabel !== false;
 
-    const minY = 32;
-    const maxY = 6;
-    const rangeY = minY - maxY;
-
-    const activeX = 6 + (p / 100) * 88;
-    const activeY = minY - (p / 100) * rangeY;
-
-    const pt0 = [6, minY];
-    const pt1 = [28, minY - (Math.min(25, p) / 100) * rangeY * (p >= 25 ? 1 : p / 25)];
-    const pt2 = [50, minY - (Math.min(50, p) / 100) * rangeY * (p >= 50 ? 1 : p / 50)];
-    const pt3 = [72, minY - (Math.min(75, p) / 100) * rangeY * (p >= 75 ? 1 : p / 75)];
-    const pt4 = [94, minY - (p / 100) * rangeY];
-
-    const linePath = `M ${pt0[0]},${pt0[1]} Q 17,${(pt0[1] + pt1[1]) / 2} ${pt1[0]},${pt1[1]} T ${pt2[0]},${pt2[1]} T ${pt3[0]},${pt3[1]} T ${pt4[0]},${pt4[1]}`;
-    const areaPath = `${linePath} L ${pt4[0]},34 L ${pt0[0]},34 Z`;
+    // Base values from user's chart: [200, 290, 290, 500, 470, 600, 780, 900, 660, 700, 510]
+    const baseRaw = [200, 290, 290, 500, 470, 600, 780, 900, 660, 700, 510];
+    const scale = p > 0 ? (p / 70) : 0.2;
+    const values = baseRaw.map(v => Math.min(1000, Math.max(30, Math.round(v * scale))));
+    const activeIdx = Math.min(10, Math.max(0, Math.round(p / 10)));
 
     let stageText = 'Planning';
     if (p >= 100) stageText = 'Completed';
-    else if (p >= 75) stageText = 'Final Defense';
+    else if (p >= 75) stageText = 'Defense Phase';
     else if (p >= 50) stageText = 'Development';
     else if (p >= 25) stageText = 'Architecture';
 
+    if (isCompact) {
+      const leftM = 30, rightM = 190, bottomM = 78, topM = 14;
+      const xStep = (rightM - leftM) / 10;
+      const yRange = bottomM - topM;
+
+      const coords = values.map((val, i) => ({
+        x: Math.round((leftM + i * xStep) * 10) / 10,
+        y: Math.round((bottomM - (val / 1000) * yRange) * 10) / 10
+      }));
+      const pointsStr = coords.map(c => `${c.x},${c.y}`).join(' ');
+
+      return `
+        <div class="progress-line-graph-widget flex flex-col gap-1 w-full select-none" style="max-width: ${typeof options.width === 'number' ? options.width + 'px' : (options.width || '100%')};" title="Progress Status: ${p}% (${stageText})">
+          ${showHeader ? `
+            <div class="flex items-center justify-between text-[10px] font-mono leading-none mb-0.5">
+              <span class="text-outline flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full" style="background-color: ${strokeColor};"></span>
+                <span>Status</span>
+              </span>
+              <span class="font-bold text-[10px]" style="color: ${strokeColor};">${p}% &bull; ${stageText}</span>
+            </div>
+          ` : ''}
+          <div class="w-full bg-surface-container/30 rounded-xl p-1.5 border border-outline-variant/20 overflow-hidden">
+            <svg viewBox="0 0 210 100" class="w-full h-auto overflow-visible" preserveAspectRatio="xMidYMid meet">
+              <!-- Y-Axis line -->
+              <line x1="${leftM}" y1="${topM}" x2="${leftM}" y2="${bottomM}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.2" />
+              <!-- X-Axis line -->
+              <line x1="${leftM}" y1="${bottomM}" x2="${rightM}" y2="${bottomM}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.2" />
+
+              <!-- Y-Axis Ticks & Labels: 1000, 500, 0 -->
+              <line x1="${leftM - 4}" y1="${topM}" x2="${leftM}" y2="${topM}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.2" />
+              <text x="${leftM - 6}" y="${topM + 3}" text-anchor="end" font-size="8" fill="currentColor" opacity="0.6" font-family="sans-serif">1000</text>
+
+              <line x1="${leftM - 4}" y1="${(topM + bottomM)/2}" x2="${leftM}" y2="${(topM + bottomM)/2}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.2" />
+              <text x="${leftM - 6}" y="${(topM + bottomM)/2 + 3}" text-anchor="end" font-size="8" fill="currentColor" opacity="0.6" font-family="sans-serif">500</text>
+
+              <line x1="${leftM - 4}" y1="${bottomM}" x2="${leftM}" y2="${bottomM}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.2" />
+              <text x="${leftM - 6}" y="${bottomM + 3}" text-anchor="end" font-size="8" fill="currentColor" opacity="0.6" font-family="sans-serif">0</text>
+
+              <!-- X-Axis Ticks & Labels: 0, 5, 10 -->
+              <line x1="${leftM}" y1="${bottomM}" x2="${leftM}" y2="${bottomM + 4}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.2" />
+              <text x="${leftM}" y="${bottomM + 14}" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.6" font-family="sans-serif">0</text>
+
+              <line x1="${(leftM + rightM)/2}" y1="${bottomM}" x2="${(leftM + rightM)/2}" y2="${bottomM + 4}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.2" />
+              <text x="${(leftM + rightM)/2}" y="${bottomM + 14}" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.6" font-family="sans-serif">5</text>
+
+              <line x1="${rightM}" y1="${bottomM}" x2="${rightM}" y2="${bottomM + 4}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.2" />
+              <text x="${rightM}" y="${bottomM + 14}" text-anchor="middle" font-size="8" fill="currentColor" opacity="0.6" font-family="sans-serif">10</text>
+
+              <!-- Polyline in coral red matching reference -->
+              <polyline points="${pointsStr}" fill="none" stroke="${strokeColor}" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" />
+
+              <!-- Data Node Circles with white center -->
+              ${coords.map((c, i) => `
+                <circle cx="${c.x}" cy="${c.y}" r="${i === activeIdx ? '3.8' : '3'}" fill="${strokeColor}" />
+                <circle cx="${c.x}" cy="${c.y}" r="${i === activeIdx ? '1.5' : '1.2'}" fill="#ffffff" />
+                ${i === activeIdx ? `<circle cx="${c.x}" cy="${c.y}" r="6.5" fill="none" stroke="${strokeColor}" stroke-opacity="0.4" class="animate-ping" style="transform-origin: ${c.x}px ${c.y}px;" />` : ''}
+              `).join('')}
+            </svg>
+          </div>
+        </div>
+      `;
+    }
+
+    // Full Cartesian Mode (matching the uploaded image exactly)
+    const leftM = 45, rightM = 305, bottomM = 185, topM = 25;
+    const xStep = (rightM - leftM) / 10; // 26px
+    const yRange = bottomM - topM; // 160px
+
+    const coords = values.map((val, i) => ({
+      x: Math.round((leftM + i * xStep) * 10) / 10,
+      y: Math.round((bottomM - (val / 1000) * yRange) * 10) / 10
+    }));
+    const pointsStr = coords.map(c => `${c.x},${c.y}`).join(' ');
+
     return `
-      <div class="progress-line-graph-widget flex flex-col gap-1 w-full select-none" style="max-width: ${typeof width === 'number' ? width + 'px' : width};" title="Progress Status: ${p}% (${stageText})">
-        ${showLabel ? `
-          <div class="flex items-center justify-between text-[11px] font-mono leading-none">
-            <span class="flex items-center gap-1.5 text-outline">
-              <span class="inline-block w-2 h-2 rounded-full" style="background-color: ${strokeColor};"></span>
-              <span class="font-medium text-on-surface">Status Trend</span>
+      <div class="progress-line-graph-widget flex flex-col gap-2 w-full select-none" style="max-width: ${typeof options.width === 'number' ? options.width + 'px' : (options.width || '100%')};" title="Progress Status: ${p}% (${stageText})">
+        ${showHeader ? `
+          <div class="flex items-center justify-between text-xs font-mono">
+            <span class="text-outline flex items-center gap-1.5">
+              <span class="w-2 h-2 rounded-full" style="background-color: ${strokeColor};"></span>
+              <span class="font-medium text-on-surface">Project Status Trajectory</span>
             </span>
-            <span class="font-bold text-[10px] px-1.5 py-0.5 rounded bg-surface-container-high/80" style="color: ${strokeColor};">${stageText}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-surface-container-high border border-outline-variant/30" style="color: ${strokeColor};">
+                ${p}% &bull; ${stageText}
+              </span>
+            </div>
           </div>
         ` : ''}
-        <div class="relative w-full h-[${height}px] bg-surface-container/50 rounded-xl p-1.5 border border-outline-variant/20 overflow-hidden shadow-inner">
-          <svg viewBox="0 0 100 36" class="w-full h-full overflow-visible" preserveAspectRatio="none">
-            <defs>
-              <linearGradient id="${graphId}" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="${strokeColor}" stop-opacity="0.32" />
-                <stop offset="100%" stop-color="${strokeColor}" stop-opacity="0.0" />
-              </linearGradient>
-            </defs>
-            <line x1="6" y1="32" x2="94" y2="32" stroke="currentColor" stroke-opacity="0.12" stroke-dasharray="2,2" />
-            <line x1="6" y1="19" x2="94" y2="19" stroke="currentColor" stroke-opacity="0.07" stroke-dasharray="2,2" />
-            <line x1="6" y1="6" x2="94" y2="6" stroke="currentColor" stroke-opacity="0.07" stroke-dasharray="2,2" />
-            
-            <path d="${areaPath}" fill="url(#${graphId})" />
-            
-            ${p < 100 ? `<line x1="${activeX}" y1="${activeY}" x2="94" y2="6" stroke="${strokeColor}" stroke-opacity="0.3" stroke-dasharray="2,2" stroke-width="1.2" />` : ''}
-            
-            <path d="${linePath}" fill="none" stroke="${strokeColor}" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" />
-            
-            <circle cx="6" cy="${pt0[1]}" r="2" fill="${strokeColor}" opacity="0.7" />
-            <circle cx="28" cy="${pt1[1]}" r="2" fill="${strokeColor}" opacity="${p >= 25 ? '0.9' : '0.4'}" />
-            <circle cx="50" cy="${pt2[1]}" r="2" fill="${strokeColor}" opacity="${p >= 50 ? '0.9' : '0.4'}" />
-            <circle cx="72" cy="${pt3[1]}" r="2" fill="${strokeColor}" opacity="${p >= 75 ? '0.9' : '0.4'}" />
-            <circle cx="94" cy="${pt4[1]}" r="2" fill="${strokeColor}" opacity="${p >= 100 ? '0.9' : '0.4'}" />
-            
-            <circle cx="${activeX}" cy="${activeY}" r="3.4" fill="${strokeColor}" />
-            <circle cx="${activeX}" cy="${activeY}" r="6" fill="none" stroke="${strokeColor}" stroke-opacity="0.6" class="animate-ping" style="transform-origin: ${activeX}px ${activeY}px;" />
+        <div class="w-full bg-surface-container/30 rounded-2xl p-4 border border-outline-variant/20 overflow-hidden shadow-sm">
+          <svg viewBox="0 0 330 220" class="w-full h-auto overflow-visible" preserveAspectRatio="xMidYMid meet">
+            <!-- Y-Axis vertical line -->
+            <line x1="${leftM}" y1="${topM}" x2="${leftM}" y2="${bottomM}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <!-- X-Axis horizontal line -->
+            <line x1="${leftM}" y1="${bottomM}" x2="${rightM + 10}" y2="${bottomM}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+
+            <!-- Y-Axis Ticks & Labels: 1000, 800, 600, 400, 200, 0 -->
+            <line x1="${leftM - 5}" y1="${topM}" x2="${leftM}" y2="${topM}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM - 8}" y="${topM + 3.5}" text-anchor="end" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">1000</text>
+
+            <line x1="${leftM - 5}" y1="${bottomM - yRange * 0.8}" x2="${leftM}" y2="${bottomM - yRange * 0.8}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM - 8}" y="${bottomM - yRange * 0.8 + 3.5}" text-anchor="end" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">800</text>
+
+            <line x1="${leftM - 5}" y1="${bottomM - yRange * 0.6}" x2="${leftM}" y2="${bottomM - yRange * 0.6}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM - 8}" y="${bottomM - yRange * 0.6 + 3.5}" text-anchor="end" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">600</text>
+
+            <line x1="${leftM - 5}" y1="${bottomM - yRange * 0.4}" x2="${leftM}" y2="${bottomM - yRange * 0.4}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM - 8}" y="${bottomM - yRange * 0.4 + 3.5}" text-anchor="end" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">400</text>
+
+            <line x1="${leftM - 5}" y1="${bottomM - yRange * 0.2}" x2="${leftM}" y2="${bottomM - yRange * 0.2}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM - 8}" y="${bottomM - yRange * 0.2 + 3.5}" text-anchor="end" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">200</text>
+
+            <line x1="${leftM - 5}" y1="${bottomM}" x2="${leftM}" y2="${bottomM}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM - 8}" y="${bottomM + 3.5}" text-anchor="end" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">0</text>
+
+            <!-- X-Axis Ticks & Labels: 0, 2, 4, 6, 8, 10 -->
+            <line x1="${leftM}" y1="${bottomM}" x2="${leftM}" y2="${bottomM + 5}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM}" y="${bottomM + 18}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">0</text>
+
+            <line x1="${leftM + xStep * 2}" y1="${bottomM}" x2="${leftM + xStep * 2}" y2="${bottomM + 5}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM + xStep * 2}" y="${bottomM + 18}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">2</text>
+
+            <line x1="${leftM + xStep * 4}" y1="${bottomM}" x2="${leftM + xStep * 4}" y2="${bottomM + 5}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM + xStep * 4}" y="${bottomM + 18}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">4</text>
+
+            <line x1="${leftM + xStep * 6}" y1="${bottomM}" x2="${leftM + xStep * 6}" y2="${bottomM + 5}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM + xStep * 6}" y="${bottomM + 18}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">6</text>
+
+            <line x1="${leftM + xStep * 8}" y1="${bottomM}" x2="${leftM + xStep * 8}" y2="${bottomM + 5}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM + xStep * 8}" y="${bottomM + 18}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">8</text>
+
+            <line x1="${leftM + xStep * 10}" y1="${bottomM}" x2="${leftM + xStep * 10}" y2="${bottomM + 5}" stroke="${axisColor}" stroke-opacity="0.35" stroke-width="1.5" />
+            <text x="${leftM + xStep * 10}" y="${bottomM + 18}" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.65" font-family="sans-serif">10</text>
+
+            <!-- Coral Red Polyline matching reference image -->
+            <polyline points="${pointsStr}" fill="none" stroke="${strokeColor}" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" />
+
+            <!-- Red Circle Markers with White Center Dot -->
+            ${coords.map((c, i) => `
+              <circle cx="${c.x}" cy="${c.y}" r="${i === activeIdx ? '5' : '4'}" fill="${strokeColor}" />
+              <circle cx="${c.x}" cy="${c.y}" r="${i === activeIdx ? '2' : '1.5'}" fill="#ffffff" />
+              ${i === activeIdx ? `<circle cx="${c.x}" cy="${c.y}" r="8" fill="none" stroke="${strokeColor}" stroke-opacity="0.5" class="animate-ping" style="transform-origin: ${c.x}px ${c.y}px;" />` : ''}
+            `).join('')}
           </svg>
         </div>
       </div>
