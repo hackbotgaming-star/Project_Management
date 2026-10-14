@@ -178,7 +178,7 @@ exports.removeTeamMember = async (req, res) => {
 // POST /api/projects (Admin create, or Student proposed)
 exports.createProject = async (req, res) => {
   try {
-    const { title, code, abstract, department, cohort, teamMembers, facultyMentor, tags } = req.body;
+    const { title, code, abstract, department, cohort, teamMembers, facultyMentor, tags, repositoryUrl, documentationUrl } = req.body;
 
     if (!title) {
       return res.status(400).json({ success: false, message: 'Project title is required.' });
@@ -207,6 +207,8 @@ exports.createProject = async (req, res) => {
       facultyMentor: assignedFaculty,
       tags: tags || [],
       status: req.user.role === 'STUDENT' ? 'PROPOSED' : 'IN_PROGRESS',
+      repositoryUrl: repositoryUrl || '',
+      documentationUrl: documentationUrl || '',
     });
 
     await AuditTrail.create({

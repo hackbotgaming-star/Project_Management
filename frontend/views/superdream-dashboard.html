@@ -607,6 +607,11 @@
           <label class="block text-xs text-outline mb-1 font-medium">Abstract / Description</label>
           <textarea id="newProjAbstract" rows="3" placeholder="Brief project summary, objectives, and technology stack..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none"></textarea>
         </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Code Repository URL (Optional)</label>
+          <input type="url" id="newProjRepo" placeholder="https://github.com/username/project" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none font-mono">
+          <p class="text-[10px] text-outline mt-1">Provide your GitHub, GitLab, or Bitbucket codebase link.</p>
+        </div>
         <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
           <button type="button" onclick="closeModal('studentNewProjectModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
           <button type="submit" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs">Create Project</button>
@@ -1406,12 +1411,16 @@
       const title = document.getElementById('newProjTitle').value.trim();
       const code = document.getElementById('newProjCode').value.trim();
       const abstract = document.getElementById('newProjAbstract').value.trim();
+      let repositoryUrl = document.getElementById('newProjRepo') ? document.getElementById('newProjRepo').value.trim() : '';
+      if (repositoryUrl && !repositoryUrl.startsWith('http://') && !repositoryUrl.startsWith('https://')) {
+        repositoryUrl = 'https://' + repositoryUrl;
+      }
 
       try {
         const res = await fetch('/api/projects', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, code, abstract })
+          body: JSON.stringify({ title, code, abstract, repositoryUrl })
         });
         const json = await res.json();
         if (json.success) {

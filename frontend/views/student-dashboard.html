@@ -648,6 +648,12 @@
           <textarea id="stuNewProjAbstract" rows="3" placeholder="Outline the research scope, subsystems, and expected deliverables..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none"></textarea>
         </div>
 
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Code Repository URL (Optional)</label>
+          <input type="url" id="stuNewProjRepo" placeholder="https://github.com/username/project" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none font-mono">
+          <p class="text-[10px] text-outline mt-1">Provide your GitHub, GitLab, or Bitbucket link if already created.</p>
+        </div>
+
         <!-- Team Members Selection Checklist -->
         <div>
           <label class="block text-xs text-outline mb-1.5 font-medium flex items-center justify-between">
@@ -1399,6 +1405,10 @@
       const code = document.getElementById('stuNewProjCode').value.trim();
       const department = document.getElementById('stuNewProjDept').value;
       const abstract = document.getElementById('stuNewProjAbstract').value.trim();
+      let repositoryUrl = document.getElementById('stuNewProjRepo') ? document.getElementById('stuNewProjRepo').value.trim() : '';
+      if (repositoryUrl && !repositoryUrl.startsWith('http://') && !repositoryUrl.startsWith('https://')) {
+        repositoryUrl = 'https://' + repositoryUrl;
+      }
 
       // Collect checked students
       const checkboxes = document.querySelectorAll('input[name="selectedTeamMembers"]:checked');
@@ -1408,7 +1418,7 @@
         const res = await fetch('/api/projects', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, code, department, abstract, teamMembers })
+          body: JSON.stringify({ title, code, department, abstract, teamMembers, repositoryUrl })
         });
         const json = await res.json();
         if (json.success) {

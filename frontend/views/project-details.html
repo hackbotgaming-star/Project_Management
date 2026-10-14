@@ -268,6 +268,10 @@
               </div>
               <div class="flex items-center gap-2">
                 <span id="documentsCountBadge" class="font-mono text-xs px-2 py-0.5 rounded-full bg-secondary/20 text-secondary font-bold">0</span>
+                <button onclick="openRepoModal()" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-xs text-primary flex items-center gap-1 font-medium transition-colors" title="Link or edit code repository">
+                  <span class="material-symbols-outlined text-sm">code</span>
+                  <span>Link Repo</span>
+                </button>
                 <button onclick="openUploadDocModal()" class="px-2.5 py-1 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-xs text-secondary flex items-center gap-1 font-medium">
                   <span class="material-symbols-outlined text-sm">cloud_upload</span>
                   <span>Upload</span>
@@ -577,6 +581,51 @@
     </div>
   </div>
 
+  <!-- 5. DEDICATED REPOSITORY LINK MODAL -->
+  <div id="repoModal" class="fixed inset-0 z-50 hidden bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container border border-outline-variant/30 rounded-2xl max-w-md w-full p-6 space-y-4 shadow-2xl">
+      <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-primary/20 text-primary flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">code</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-on-surface">Code Repository Link</h3>
+            <p class="text-[11px] text-outline">GitHub, GitLab, or Bitbucket codebase URL</p>
+          </div>
+        </div>
+        <button onclick="closeModal('repoModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="quickRepoForm" class="space-y-4 text-xs">
+        <div>
+          <label class="block text-outline font-medium mb-1.5">Repository URL</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[16px]">link</span>
+            <input type="url" id="quickRepoInput" required placeholder="https://github.com/organization/repository" class="w-full pl-9 p-2.5 rounded-xl bg-surface-container-high border border-outline-variant/30 text-on-surface focus:border-primary outline-none font-mono text-xs">
+          </div>
+          <p class="text-[10px] text-outline mt-1.5 leading-relaxed">Paste the URL to your project's repository. Your faculty mentor, evaluators, and teammates can view your code, branch activity, and defense materials directly.</p>
+        </div>
+
+        <div class="flex items-center justify-between pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="removeRepositoryLink()" id="btnRemoveRepo" class="text-error hover:underline text-xs flex items-center gap-1 hidden">
+            <span class="material-symbols-outlined text-sm">link_off</span>
+            <span>Remove Link</span>
+          </button>
+          <div class="flex items-center gap-2 ml-auto">
+            <button type="button" onclick="closeModal('repoModal')" class="px-4 py-2 rounded-xl bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors">Cancel</button>
+            <button type="submit" id="btnSaveRepo" class="px-4 py-2 rounded-xl bg-primary text-on-primary font-bold hover:bg-indigo-600 transition-colors flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm">save</span>
+              <span>Save Repository</span>
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- SCRIPT LOGIC -->
   <script>
     // Auto-attach JWT auth header for mobile and desktop fetch requests
@@ -718,14 +767,25 @@
       const repoContainer = document.getElementById('repoLinkContainer');
       if (p.repositoryUrl) {
         repoContainer.innerHTML = `
-          <a href="${p.repositoryUrl}" target="_blank" rel="noopener noreferrer" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-on-surface hover:text-primary transition-all flex items-center gap-1.5 font-mono">
-            <span class="material-symbols-outlined text-[15px]">code</span>
-            <span>Repository</span>
-            <span class="material-symbols-outlined text-[12px] text-outline">open_in_new</span>
-          </a>
+          <div class="inline-flex items-center gap-1.5">
+            <a href="${p.repositoryUrl}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/30 text-xs text-on-surface hover:text-primary transition-all flex items-center gap-1.5 font-mono shadow-sm">
+              <span class="material-symbols-outlined text-[16px] text-primary">code</span>
+              <span class="font-semibold">Code Repository</span>
+              <span class="material-symbols-outlined text-[12px] text-outline">open_in_new</span>
+            </a>
+            <button onclick="openRepoModal()" class="px-2 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/30 text-outline hover:text-primary transition-colors flex items-center gap-1 text-xs" title="Edit Repository URL">
+              <span class="material-symbols-outlined text-[14px]">edit</span>
+              <span>Edit</span>
+            </button>
+          </div>
         `;
       } else {
-        repoContainer.innerHTML = '';
+        repoContainer.innerHTML = `
+          <button onclick="openRepoModal()" class="px-3 py-1.5 rounded-lg bg-primary/15 hover:bg-primary/25 border border-primary/40 text-xs font-semibold text-primary hover:text-white transition-all flex items-center gap-1.5 font-mono cursor-pointer shadow-sm hover:scale-[1.02] active:scale-[0.98]">
+            <span class="material-symbols-outlined text-[16px]">add_link</span>
+            <span>+ Link Code Repository</span>
+          </button>
+        `;
       }
 
       const docsContainer = document.getElementById('docsLinkContainer');
@@ -1016,27 +1076,85 @@
     // 5. DOCUMENTS RENDERING
     function renderProjectDocuments(documents) {
       const container = document.getElementById('projectDocumentsList');
+      const hasRepo = projectData && projectData.repositoryUrl;
+
+      let repoCardHtml = '';
+      if (hasRepo) {
+        repoCardHtml = `
+          <div class="p-3.5 rounded-xl bg-primary/10 border border-primary/30 hover:border-primary/50 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs mb-3">
+            <div class="flex items-start gap-3">
+              <div class="w-9 h-9 rounded-lg bg-primary/20 border border-primary/40 flex items-center justify-center text-primary shrink-0">
+                <span class="material-symbols-outlined text-[20px]">code</span>
+              </div>
+              <div class="min-w-0">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-bold text-on-surface text-sm">Official Source Code Repository</span>
+                  <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-primary/20 text-primary font-bold">Git / Codebase</span>
+                </div>
+                <div class="text-[11px] text-primary hover:underline font-mono truncate max-w-md mt-0.5">
+                  <a href="${projectData.repositoryUrl}" target="_blank" rel="noopener noreferrer" class="flex items-center gap-1">
+                    <span>${projectData.repositoryUrl}</span>
+                    <span class="material-symbols-outlined text-[12px]">open_in_new</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 self-end sm:self-center">
+              <a href="${projectData.repositoryUrl}" target="_blank" rel="noopener noreferrer" class="px-3 py-1.5 rounded-lg bg-primary text-on-primary font-semibold hover:bg-indigo-600 transition-colors flex items-center gap-1 shadow-sm">
+                <span class="material-symbols-outlined text-[15px]">code</span>
+                <span>Open Repo</span>
+              </a>
+              <button onclick="openRepoModal()" class="px-2.5 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/30 text-outline hover:text-on-surface transition-colors flex items-center gap-1" title="Change Repository URL">
+                <span class="material-symbols-outlined text-[14px]">edit</span>
+                <span>Change</span>
+              </button>
+            </div>
+          </div>
+        `;
+      }
+
       if (!documents || documents.length === 0) {
+        if (hasRepo) {
+          container.innerHTML = repoCardHtml + `
+            <div class="p-5 rounded-xl bg-surface-container border border-dashed border-outline-variant/30 text-center space-y-2">
+              <span class="material-symbols-outlined text-2xl text-outline">description</span>
+              <div class="text-xs font-semibold text-on-surface">No additional document files uploaded</div>
+              <p class="text-[11px] text-outline max-w-sm mx-auto">Upload reports, presentation slides, architecture diagrams, and files stored on Cloudinary.</p>
+              <button onclick="openUploadDocModal()" class="mt-1 px-3 py-1 rounded-lg bg-secondary text-black font-semibold text-xs hover:bg-cyan-400 transition-colors inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">cloud_upload</span>
+                <span>Upload Document</span>
+              </button>
+            </div>
+          `;
+          return;
+        }
+
         container.innerHTML = `
           <div class="p-6 rounded-xl bg-surface-container border border-dashed border-outline-variant/30 text-center space-y-2">
             <span class="material-symbols-outlined text-2xl text-outline">folder_open</span>
-            <div class="text-xs font-semibold text-on-surface">No documents uploaded for this project</div>
-            <p class="text-[11px] text-outline max-w-sm mx-auto">Upload reports, system architecture diagrams, and files stored on Cloudinary.</p>
-            <button onclick="openUploadDocModal()" class="mt-1 px-3 py-1 rounded-lg bg-secondary text-black font-semibold text-xs hover:bg-cyan-400 transition-colors inline-flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm">cloud_upload</span>
-              <span>Upload File</span>
-            </button>
+            <div class="text-xs font-semibold text-on-surface">No documents or repository linked yet</div>
+            <p class="text-[11px] text-outline max-w-sm mx-auto">Link your GitHub repository or upload reports, slides, and files stored on Cloudinary.</p>
+            <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+              <button onclick="openRepoModal()" class="px-3 py-1.5 rounded-lg bg-primary text-on-primary font-semibold text-xs hover:bg-indigo-600 transition-colors inline-flex items-center gap-1 shadow-sm">
+                <span class="material-symbols-outlined text-sm">code</span>
+                <span>Link Code Repository</span>
+              </button>
+              <button onclick="openUploadDocModal()" class="px-3 py-1.5 rounded-lg bg-secondary text-black font-semibold text-xs hover:bg-cyan-400 transition-colors inline-flex items-center gap-1 shadow-sm">
+                <span class="material-symbols-outlined text-sm">cloud_upload</span>
+                <span>Upload Document</span>
+              </button>
+            </div>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = documents.map(d => {
+      const docsHtml = documents.map(d => {
         const isCloudinary = d.fileUrl && d.fileUrl.includes('cloudinary');
         const uploaderName = d.uploadedBy ? d.uploadedBy.name : 'Team Member';
 
         return `
-          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-outline-variant/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-outline-variant/40 transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs mb-3 last:mb-0">
             <div class="flex items-start gap-3">
               <div class="w-9 h-9 rounded-lg bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-secondary shrink-0">
                 <span class="material-symbols-outlined text-[20px]">
@@ -1069,6 +1187,8 @@
           </div>
         `;
       }).join('');
+
+      container.innerHTML = repoCardHtml + docsHtml;
     }
 
     // Modal Helpers
@@ -1095,6 +1215,41 @@
 
     function openEditProjectModal() {
       openModal('editProjectModal');
+    }
+
+    function openRepoModal() {
+      const currentUrl = projectData ? (projectData.repositoryUrl || '') : '';
+      const input = document.getElementById('quickRepoInput');
+      if (input) input.value = currentUrl;
+      const btnRemove = document.getElementById('btnRemoveRepo');
+      if (btnRemove) {
+        if (currentUrl) {
+          btnRemove.classList.remove('hidden');
+        } else {
+          btnRemove.classList.add('hidden');
+        }
+      }
+      openModal('repoModal');
+    }
+
+    async function removeRepositoryLink() {
+      if (!confirm('Are you sure you want to remove the code repository link from this project?')) return;
+      try {
+        const res = await fetch(`/api/projects/${currentProjectId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ repositoryUrl: '' })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('repoModal');
+          await loadProjectWorkspace();
+        } else {
+          alert(json.message || 'Failed to remove repository URL.');
+        }
+      } catch (err) {
+        alert('Network error removing repository URL.');
+      }
     }
 
     // Add Teammate Modal logic
@@ -1294,6 +1449,40 @@
       } finally {
         btn.disabled = false;
         btn.textContent = 'Upload Document';
+      }
+    });
+
+    // Quick Repository Link Form Submit
+    document.getElementById('quickRepoForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      let repoUrl = document.getElementById('quickRepoInput').value.trim();
+      if (repoUrl && !repoUrl.startsWith('http://') && !repoUrl.startsWith('https://')) {
+        repoUrl = 'https://' + repoUrl;
+      }
+
+      const btn = document.getElementById('btnSaveRepo');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      try {
+        const res = await fetch(`/api/projects/${currentProjectId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ repositoryUrl: repoUrl })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('repoModal');
+          alert('Code repository link saved successfully!');
+          await loadProjectWorkspace();
+        } else {
+          alert(json.message || 'Failed to save repository URL.');
+        }
+      } catch (err) {
+        alert('Network error saving repository URL.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Repository';
       }
     });
 
