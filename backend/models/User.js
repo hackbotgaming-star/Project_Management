@@ -51,6 +51,11 @@ const UserSchema = new mongoose.Schema(
       enum: ['MARQUEE', 'SUPER_DREAM', 'DREAM', 'REGULAR'],
       default: 'REGULAR',
     },
+    mentor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
     facultyId: {
       type: String,
       default: null,

@@ -1191,6 +1191,32 @@
           </div>
         </div>
 
+        <!-- Super Dream Option: STRICTLY visible only when Role is STUDENT and Academic Year is 3rd Year -->
+        <div id="superDreamOptionWrapper" class="space-y-3 p-3.5 rounded-xl bg-amber-500/10 border border-amber-500/30">
+          <div class="flex items-center justify-between">
+            <label class="text-xs font-bold text-amber-300 flex items-center gap-1.5">
+              <span class="material-symbols-outlined text-sm text-amber-400">stars</span>
+              Super Dream Student Track (3rd Year)
+            </label>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="newUserSuperDreamCheck" onchange="toggleSuperDreamMentorSelect()" class="sr-only peer">
+              <div class="w-9 h-5 bg-surface-container-high peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-amber-500"></div>
+            </label>
+          </div>
+          <p class="text-[11px] text-amber-200/80 leading-relaxed">
+            Enroll this 3rd-year student into the Super Dream program. Students are mentored by specific faculty (e.g. ~15 students per mentor) who have exclusive access to mentor and assess them.
+          </p>
+          <div id="superDreamMentorWrapper" class="hidden space-y-1 pt-1 border-t border-amber-500/20">
+            <label class="block text-xs text-amber-300 font-medium">Assigned Faculty Mentor <span class="text-rose-400">*</span></label>
+            <select id="newUserMentorSelect" class="w-full p-2 bg-surface-container rounded border border-amber-500/40 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+              <option value="">-- Choose Assigned Faculty Mentor --</option>
+            </select>
+            <p class="text-[10px] text-outline font-mono">
+              Note: This faculty mentor only can mentor and access this student.
+            </p>
+          </div>
+        </div>
+
         <div>
           <label class="block text-xs text-outline mb-1 font-medium">Academic Department</label>
           <select id="newUserDept" required class="w-full p-2 bg-surface-container rounded border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
@@ -2603,17 +2629,42 @@
       const academicYear = document.getElementById('newUserYear')?.value || '3rd Year';
       const section = document.getElementById('newUserSection')?.value || 'A';
 
+      const isStudent = (role === 'STUDENT');
+      const isThirdYear = (academicYear === '3rd Year');
+      const isSuperDream = isStudent && isThirdYear && document.getElementById('newUserSuperDreamCheck')?.checked;
+      const mentorId = isSuperDream ? document.getElementById('newUserMentorSelect')?.value : null;
+
+      if (isSuperDream && !mentorId) {
+        showToast('Please select an assigned faculty mentor for this Super Dream student.', 'warning', 'MENTOR REQUIRED');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = submitBtn.dataset.origText || 'Provision Account';
+        }
+        return;
+      }
+
       try {
         const res = await fetch('/api/admin/users', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name, email, password, role, department, academicYear, section })
+          body: JSON.stringify({
+            name,
+            email,
+            password,
+            role,
+            department,
+            academicYear,
+            section,
+            isSuperDream,
+            studentCategory: isSuperDream ? 'SUPER_DREAM' : 'REGULAR',
+            mentorId: isSuperDream ? mentorId : null
+          })
         });
         const json = await res.json();
         if (json.success) {
           closeModal('createUserModal');
           form.reset();
-          showToast(`Account created for ${name} as ${role}${role === 'STUDENT' ? ` (${academicYear} Sec ${section})` : ''}!`, 'success', 'ACCOUNT CREATED');
+          showToast(`Account created for ${name} as ${role}${role === 'STUDENT' ? ` (${academicYear} Sec ${section}${isSuperDream ? ' ⭐ Super Dream' : ''})` : ''}!`, 'success', 'ACCOUNT CREATED');
           loadAdminDashboard();
         } else {
           showToast(json.message || 'Failed to create user account.', 'error', 'ERROR');
@@ -2623,14 +2674,51 @@
       } finally {
         if (submitBtn) {
           submitBtn.disabled = false;
-          submitBtn.innerText = submitBtn.dataset.origText || 'Create Account';
+          submitBtn.innerText = submitBtn.dataset.origText || 'Provision Account';
         }
       }
     });
 
+    let facultyCache = null;
+    async function populateMentorDropdown() {
+      const select = document.getElementById('newUserMentorSelect');
+      if (!select) return;
+      try {
+        if (!facultyCache) {
+          const res = await fetch('/api/admin/users?role=FACULTY');
+          const data = await res.json();
+          if (data.success && Array.isArray(data.users)) {
+            facultyCache = data.users;
+          }
+        }
+        if (facultyCache && facultyCache.length > 0) {
+          const currentVal = select.value;
+          select.innerHTML = '<option value="">-- Choose Assigned Faculty Mentor (1 Mentor per ~15 Students) --</option>' +
+            facultyCache.map(f => `<option value="${f._id}">${f.name} (${f.email}) - ${f.title || 'Faculty Advisor'}</option>`).join('');
+          if (currentVal) select.value = currentVal;
+        }
+      } catch (err) {
+        console.error('Error fetching faculty list:', err);
+      }
+    }
+
+    function toggleSuperDreamMentorSelect() {
+      const chk = document.getElementById('newUserSuperDreamCheck');
+      const mWrap = document.getElementById('superDreamMentorWrapper');
+      if (!mWrap) return;
+      if (chk && chk.checked) {
+        mWrap.classList.remove('hidden');
+        populateMentorDropdown();
+      } else {
+        mWrap.classList.add('hidden');
+      }
+    }
+
     function toggleNewUserCategory() {
       const role = document.getElementById('newUserRole')?.value || 'STUDENT';
+      const yr = document.getElementById('newUserYear')?.value || '3rd Year';
       const yrWrapper = document.getElementById('studentYearSectionWrapper');
+      const sdWrapper = document.getElementById('superDreamOptionWrapper');
       const isStudent = (role === 'STUDENT');
 
       if (yrWrapper) {
@@ -2640,6 +2728,20 @@
         } else {
           yrWrapper.classList.add('hidden');
           yrWrapper.style.display = 'none';
+        }
+      }
+
+      // STRICT RULE: Super Dream option ONLY appears for 3rd Year Students!
+      if (sdWrapper) {
+        if (isStudent && yr === '3rd Year') {
+          sdWrapper.classList.remove('hidden');
+          populateMentorDropdown();
+        } else {
+          sdWrapper.classList.add('hidden');
+          const chk = document.getElementById('newUserSuperDreamCheck');
+          if (chk) chk.checked = false;
+          const mWrap = document.getElementById('superDreamMentorWrapper');
+          if (mWrap) mWrap.classList.add('hidden');
         }
       }
     }
@@ -2678,7 +2780,10 @@
               ${json.users.map(u => {
                 const isSelf = currentAdminId && (u._id === currentAdminId);
                 const isStudent = u.role === 'STUDENT';
+                const isSuperDream = isStudent && u.studentCategory === 'SUPER_DREAM';
                 const yrBadge = isStudent && u.academicYear ? `<span class="font-mono text-[9px] px-1.5 py-0.5 rounded bg-surface-container-high text-outline font-semibold">${u.academicYear} &bull; Sec ${u.section || 'A'}</span>` : '';
+                const sdBadge = isSuperDream ? `<span class="font-mono text-[9px] px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold inline-flex items-center gap-0.5">⭐ Super Dream</span>` : '';
+                const mentorDisplay = (isSuperDream && u.mentor) ? `<div class="text-[10px] text-amber-300/80 font-mono mt-0.5 flex items-center gap-1"><span class="material-symbols-outlined text-[12px]">person</span> Mentor: ${u.mentor.name || u.mentor}</div>` : '';
 
                 return `
                   <tr class="hover:bg-surface-container-high/40 transition-colors">
@@ -2687,12 +2792,14 @@
                       <div>
                         <div class="font-semibold">${u.name}</div>
                         ${u.studentId ? `<div class="text-[10px] text-outline font-mono">${u.studentId}</div>` : ''}
+                        ${mentorDisplay}
                       </div>
                     </td>
                     <td class="py-3">
                       <div class="flex items-center gap-1.5 flex-wrap">
                         <span class="font-mono text-[10px] px-2 py-0.5 rounded font-bold ${u.role === 'ADMIN' ? 'bg-tertiary/20 text-tertiary' : u.role === 'HOD' ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30' : u.role === 'FACULTY' ? 'bg-secondary/20 text-secondary' : 'bg-primary/20 text-primary'}">${u.role}</span>
                         ${yrBadge}
+                        ${sdBadge}
                       </div>
                     </td>
                     <td class="py-3 text-outline font-mono">${u.email}</td>

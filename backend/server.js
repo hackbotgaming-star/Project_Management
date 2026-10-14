@@ -85,6 +85,12 @@ app.get(/^\/student\/.*/, authenticateToken, requireStudent, (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/views/student-dashboard.html'));
 });
 
+// Super Dream Dedicated Student Dashboard & Subroutes
+app.get(['/superdream/dashboard', '/superdream', /^\/superdream\/.*/], authenticateToken, requireStudent, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.sendFile(path.join(__dirname, '../frontend/views/superdream-dashboard.html'));
+});
+
 // Faculty Protected Dashboard & Subroutes
 app.get(/^\/faculty\/.*/, authenticateToken, requireFaculty, (req, res) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');

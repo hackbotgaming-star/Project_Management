@@ -4,6 +4,7 @@ const Department = require('../models/Department');
 const Cohort = require('../models/Cohort');
 const AuditTrail = require('../models/AuditTrail');
 const Notification = require('../models/Notification');
+const SuperDream = require('../models/SuperDream');
 
 // GET /api/admin/users
 exports.getUsers = async (req, res) => {
@@ -13,7 +14,10 @@ exports.getUsers = async (req, res) => {
     if (role) filter.role = role.toUpperCase();
     if (department) filter.department = department;
 
-    const users = await User.find(filter).select('-password').sort({ createdAt: -1 });
+    const users = await User.find(filter)
+      .select('-password')
+      .populate('mentor', 'name email title avatar')
+      .sort({ createdAt: -1 });
     return res.json({ success: true, count: users.length, users });
   } catch (err) {
     console.error('getUsers error:', err);
@@ -24,7 +28,23 @@ exports.getUsers = async (req, res) => {
 // POST /api/admin/users (Create student / faculty)
 exports.createUser = async (req, res) => {
   try {
-    const { name, email, password, role, department, cohort, title, studentId, facultyId, studentCategory, academicYear, section } = req.body;
+    const {
+      name,
+      email,
+      password,
+      role,
+      department,
+      cohort,
+      title,
+      studentId,
+      facultyId,
+      studentCategory,
+      academicYear,
+      section,
+      mentorId,
+      isSuperDream,
+    } = req.body;
+
     if (!name || !email || !password || !role) {
       return res.status(400).json({ success: false, message: 'Name, email, password, and role are required.' });
     }
@@ -36,7 +56,30 @@ exports.createUser = async (req, res) => {
 
     const yr = academicYear || '3rd Year';
     const sec = (section ? section.toUpperCase().trim() : 'A') === 'B' ? 'B' : 'A';
-    const defaultCohort = `AI&ML - ${yr} (Section ${sec})`;
+    const isRoleStudent = role.toUpperCase() === 'STUDENT';
+    const wantsSuperDream = (studentCategory === 'SUPER_DREAM' || isSuperDream === true || isSuperDream === 'true');
+
+    // Super Dream option is STRICTLY restricted to 3rd Year Students!
+    let normalizedCategory = 'REGULAR';
+    let assignedMentorId = null;
+
+    if (isRoleStudent && yr === '3rd Year' && wantsSuperDream) {
+      normalizedCategory = 'SUPER_DREAM';
+      if (mentorId) {
+        assignedMentorId = mentorId;
+      }
+    }
+
+    const defaultCohort = (normalizedCategory === 'SUPER_DREAM')
+      ? `AI&ML - 3rd Year Super Dream (Section ${sec})`
+      : (cohort || `AI&ML - ${yr} (Section ${sec})`);
+
+    const userTitle = title || (
+      role.toUpperCase() === 'HOD' ? 'Head of Department (AI&ML)' :
+      role.toUpperCase() === 'FACULTY' ? 'Assistant Professor' :
+      normalizedCategory === 'SUPER_DREAM' ? 'Super Dream Scholar (AI&ML)' :
+      `AI&ML Student (${yr} - Sec ${sec})`
+    );
 
     const hashedPassword = await User.hashPassword(password);
     const user = await User.create({
@@ -47,16 +90,56 @@ exports.createUser = async (req, res) => {
       department: department || 'Artificial Intelligence & Machine Learning',
       academicYear: yr,
       section: sec,
-      cohort: cohort || defaultCohort,
-      title: title || (
-        role.toUpperCase() === 'HOD' ? 'Head of Department (AI&ML)' :
-        role.toUpperCase() === 'FACULTY' ? 'Assistant Professor' :
-        `AI&ML Student (${yr} - Sec ${sec})`
-      ),
-      studentId: studentId || (role.toUpperCase() === 'STUDENT' ? `STU-${Date.now().toString().slice(-4)}` : null),
+      cohort: defaultCohort,
+      title: userTitle,
+      studentId: studentId || (isRoleStudent ? `STU-${Date.now().toString().slice(-4)}` : null),
       facultyId: facultyId || (role.toUpperCase() === 'FACULTY' || role.toUpperCase() === 'HOD' ? `FAC-${Date.now().toString().slice(-4)}` : null),
-      studentCategory: role.toUpperCase() === 'STUDENT' ? normalizedCategory : 'REGULAR',
+      studentCategory: isRoleStudent ? normalizedCategory : 'REGULAR',
+      mentor: assignedMentorId,
     });
+
+    // If Super Dream student is assigned a specific faculty mentor, link them to the mentor's group
+    if (normalizedCategory === 'SUPER_DREAM' && assignedMentorId) {
+      const mentorUser = await User.findById(assignedMentorId);
+      if (mentorUser) {
+        let sdGroup = await SuperDream.findOne({ mentor: assignedMentorId, category: 'SUPER_DREAM', status: 'ACTIVE' });
+        if (!sdGroup) {
+          sdGroup = await SuperDream.create({
+            title: `⭐ Super Dream Track - ${mentorUser.name}`,
+            description: `Super Dream Mentorship Cohort exclusively guided by ${mentorUser.name}.`,
+            mentor: assignedMentorId,
+            mentees: [user._id],
+            cohort: 'Super Dream Track (3rd Year)',
+            academicYear: '3rd Year',
+            category: 'SUPER_DREAM',
+            createdBy: req.user._id,
+          });
+        } else {
+          if (!sdGroup.mentees.some((m) => m.toString() === user._id.toString())) {
+            sdGroup.mentees.push(user._id);
+            await sdGroup.save();
+          }
+        }
+
+        // Notify Mentor
+        await Notification.create({
+          user: assignedMentorId,
+          title: '⭐ New Super Dream Mentee Assigned',
+          message: `${user.name} (${user.email}, Sec ${sec}) has been enrolled into your Super Dream mentorship batch.`,
+          type: 'INFO',
+          link: '/faculty/dashboard',
+        });
+
+        // Notify Student
+        await Notification.create({
+          user: user._id,
+          title: '⭐ Super Dream Mentorship Welcome',
+          message: `Welcome to Super Dream! Your assigned Faculty Mentor is ${mentorUser.name} (${mentorUser.email}).`,
+          type: 'SUCCESS',
+          link: '/superdream/dashboard',
+        });
+      }
+    }
 
     if (role.toUpperCase() === 'HOD' && department) {
       try {
@@ -76,7 +159,7 @@ exports.createUser = async (req, res) => {
       action: 'CREATE_USER',
       targetType: 'USER',
       targetId: user._id.toString(),
-      details: `Created new user ${user.name} (${user.email}) in ${user.department} as ${user.role} (${user.academicYear || ''} Sec ${user.section || ''})${role.toUpperCase() === 'STUDENT' ? ` [${user.studentCategory}]` : ''}.`,
+      details: `Created new user ${user.name} (${user.email}) in ${user.department} as ${user.role} (${user.academicYear || ''} Sec ${user.section || ''})${isRoleStudent ? ` [${user.studentCategory}]` : ''}${assignedMentorId ? ' with assigned Faculty Mentor' : ''}.`,
       ipAddress: req.ip || '127.0.0.1',
     });
 
@@ -92,6 +175,7 @@ exports.createUser = async (req, res) => {
         academicYear: user.academicYear,
         section: user.section,
         studentCategory: user.studentCategory,
+        mentor: user.mentor,
       },
     });
   } catch (err) {

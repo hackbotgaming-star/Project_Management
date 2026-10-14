@@ -121,6 +121,11 @@
           <span class="material-symbols-outlined text-base">dashboard</span>
           <span>Overview</span>
         </button>
+        <button onclick="switchTab('superdream-mentees')" id="nav-superdream-mentees" class="fac-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-300 hover:bg-surface-container-high border border-amber-500/20 bg-amber-500/5">
+          <span class="material-symbols-outlined text-base text-amber-400">stars</span>
+          <span class="flex-1 text-left">Super Dream Mentees</span>
+          <span id="facSuperDreamBadge" class="text-[10px] px-1.5 py-0.2 rounded bg-amber-500 text-black font-bold">0</span>
+        </button>
         <button onclick="switchTab('projects')" id="nav-projects" class="fac-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
           <span class="material-symbols-outlined text-base">folder_special</span>
           <span>My Projects</span>
@@ -299,6 +304,67 @@
         <div id="defenseScheduleList" class="space-y-3"></div>
       </div>
 
+    </section>
+
+    <!-- TAB: SUPER DREAM MENTEES (Strict Batch Isolation) -->
+    <section id="tab-superdream-mentees" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-6 rounded-2xl bg-gradient-to-r from-amber-500/15 via-surface-container-low to-surface-container-low border border-amber-500/30">
+        <div>
+          <div class="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30 mb-2">
+            <span class="material-symbols-outlined text-sm">workspace_premium</span>
+            3rd Year Super Dream Mentorship Batch
+          </div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Your Assigned Mentees</h2>
+          <p class="text-xs text-outline mt-1 max-w-xl">
+            Exclusive mentorship allocation: You can mentor and access strictly the students enrolled in your designated batch (e.g. up to 15 students per mentor). Other faculty cannot view or alter your mentees.
+          </p>
+        </div>
+        <div class="flex items-center gap-3">
+          <div class="p-3 rounded-xl bg-surface-container border border-amber-500/30 text-center min-w-[120px]">
+            <div id="facSuperDreamCount" class="text-2xl font-bold font-headline text-amber-300">0</div>
+            <div class="text-[10px] font-mono text-outline uppercase tracking-wider">Assigned Mentees</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Broadcast to Mentees -->
+      <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="font-headline text-sm font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-400 text-base">campaign</span>
+            Post Guidance or Notice to Your Super Dream Mentees
+          </h3>
+          <span class="text-[10px] text-outline font-mono">Delivered directly to their Super Dream dashboard</span>
+        </div>
+        <form id="facSuperDreamPostForm" onsubmit="handlePostSuperDreamNotice(event)" class="space-y-3">
+          <input type="text" id="facSuperDreamPostTitle" placeholder="Notice title (e.g. Sprint Checkpoint: Transformer Model Benchmarks)" required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+          <textarea id="facSuperDreamPostContent" rows="2" placeholder="Write academic guidance, reading list, or milestone instructions for your mentees..." required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none"></textarea>
+          <div class="flex items-center justify-between pt-1">
+            <input type="url" id="facSuperDreamPostLink" placeholder="Resource link / Paper URL (optional)" class="p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none flex-1 max-w-md mr-3">
+            <button type="submit" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+              <span class="material-symbols-outlined text-sm">send</span>
+              <span>Post to Mentees</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Mentees Directory -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-headline text-sm font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-400 text-base">school</span>
+            Students Under Your Mentorship
+          </h3>
+          <div class="relative">
+            <input type="text" id="facMenteeSearch" oninput="filterFacultyMentees(this.value)" placeholder="Search mentee name or ID..." class="px-3 py-1 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none w-48">
+          </div>
+        </div>
+
+        <div id="facSuperDreamMenteesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
     </section>
 
     <!-- TAB 2: MY PROJECTS -->
@@ -1122,8 +1188,141 @@
         </div>
       `;
 
+      // Populate Super Dream Mentees (Strict Batch Isolation)
+      const mentees = data.superDreamMentees || [];
+      const badge = document.getElementById('facSuperDreamBadge');
+      if (badge) {
+        badge.textContent = mentees.length;
+        if (mentees.length > 0) badge.classList.remove('hidden');
+        else badge.classList.add('hidden');
+      }
+      const countEl = document.getElementById('facSuperDreamCount');
+      if (countEl) countEl.textContent = mentees.length;
+
+      renderFacultyMenteesList(mentees);
+
       loadFacultyMilestones();
       loadFacultyTasks();
+    }
+
+    function renderFacultyMenteesList(mentees) {
+      const container = document.getElementById('facSuperDreamMenteesList');
+      if (!container) return;
+
+      if (!mentees || mentees.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full p-8 rounded-2xl bg-surface-container-low border border-dashed border-amber-500/30 text-center space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-amber-500/15 border border-amber-500/30 text-amber-400 flex items-center justify-center mx-auto">
+              <span class="material-symbols-outlined text-2xl">school</span>
+            </div>
+            <div class="space-y-1">
+              <h4 class="font-headline font-bold text-sm text-on-surface">No Super Dream Mentees Assigned Yet</h4>
+              <p class="text-xs text-outline max-w-md mx-auto">
+                When the administrator enrolls 3rd-year Super Dream students and designates you as their faculty mentor, your assigned students will appear here exclusively for your supervision.
+              </p>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = mentees.map(m => `
+        <div class="p-4 rounded-xl bg-surface-container border border-amber-500/25 hover:border-amber-400 transition-all space-y-3">
+          <div class="flex items-center gap-3">
+            <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100'}" class="w-10 h-10 rounded-xl object-cover border border-amber-500/40 shadow-sm shrink-0">
+            <div class="overflow-hidden flex-1">
+              <div class="font-bold text-xs text-on-surface truncate">${m.name}</div>
+              <div class="text-[10px] text-outline font-mono truncate">${m.email}</div>
+              <div class="flex items-center gap-1.5 mt-1">
+                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">3rd Year</span>
+                <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-surface-container-high text-outline">Sec ${m.section || 'A'}</span>
+                ${m.studentId ? `<span class="text-[9px] font-mono text-outline">${m.studentId}</span>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-2 border-t border-outline-variant/20 flex items-center justify-between text-xs">
+            <a href="mailto:${m.email}" class="text-[11px] text-amber-300 hover:text-amber-200 inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs">mail</span>
+              <span>Email</span>
+            </a>
+            <button onclick="quickAssignTaskToMentee('${m.id || m._id}', '${(m.name || '').replace(/'/g, "\\'")}')" class="px-2.5 py-1 rounded bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 text-[11px] font-medium transition-colors inline-flex items-center gap-1">
+              <span class="material-symbols-outlined text-xs">add_task</span>
+              <span>Assign Task</span>
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterFacultyMentees(query) {
+      if (!facultyData || !facultyData.superDreamMentees) return;
+      const q = (query || '').toLowerCase().trim();
+      const filtered = facultyData.superDreamMentees.filter(m => 
+        (m.name || '').toLowerCase().includes(q) ||
+        (m.email || '').toLowerCase().includes(q) ||
+        (m.studentId || '').toLowerCase().includes(q)
+      );
+      renderFacultyMenteesList(filtered);
+    }
+
+    function quickAssignTaskToMentee(studentId, studentName) {
+      openModal('facNewTaskModal');
+      const select = document.getElementById('facTaskAssigneeSelect');
+      if (select) {
+        let found = false;
+        for (let i = 0; i < select.options.length; i++) {
+          if (select.options[i].value === studentId) {
+            select.selectedIndex = i;
+            found = true;
+            break;
+          }
+        }
+        if (!found) {
+          const opt = document.createElement('option');
+          opt.value = studentId;
+          opt.textContent = `${studentName} (Super Dream Mentee)`;
+          select.appendChild(opt);
+          select.value = studentId;
+        }
+      }
+    }
+
+    async function handlePostSuperDreamNotice(e) {
+      e.preventDefault();
+      const title = document.getElementById('facSuperDreamPostTitle').value.trim();
+      const content = document.getElementById('facSuperDreamPostContent').value.trim();
+      const link = document.getElementById('facSuperDreamPostLink').value.trim();
+
+      try {
+        const res = await fetch('/api/super-dream/faculty');
+        const json = await res.json();
+        if (!json.success || !json.groups || json.groups.length === 0) {
+          showToast('No active Super Dream mentorship cohort found for your account.', 'warning', 'NO GROUP FOUND');
+          return;
+        }
+
+        const group = json.groups[0];
+        const postRes = await fetch(`/api/super-dream/group/${group._id}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title,
+            content,
+            type: 'ANNOUNCEMENT',
+            links: link ? [{ title: 'Resource Link', url: link }] : []
+          })
+        });
+        const postJson = await postRes.json();
+        if (postJson.success) {
+          showToast('Notice successfully posted to your Super Dream mentees!', 'success', 'NOTICE POSTED');
+          document.getElementById('facSuperDreamPostForm').reset();
+        } else {
+          showToast(postJson.message || 'Failed to post notice.', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Error posting notice: ' + err.message, 'error', 'ERROR');
+      }
     }
 
     function updateFacAssigneeOptions() {

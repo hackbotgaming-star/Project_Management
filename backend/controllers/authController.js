@@ -63,11 +63,17 @@ exports.loginStudent = async (req, res) => {
       ipAddress: req.ip || '127.0.0.1',
     });
 
+    const isSuperDreamStudent = (
+      user.studentCategory === 'SUPER_DREAM' &&
+      (user.academicYear === '3rd Year' || (user.cohort && user.cohort.includes('3rd Year')))
+    );
+    const redirectUrl = isSuperDreamStudent ? '/superdream/dashboard' : '/student/dashboard';
+
     return res.json({
       success: true,
       message: 'Student authentication successful.',
       token,
-      redirectUrl: '/student/dashboard',
+      redirectUrl,
       user: {
         id: user._id,
         name: user.name,
@@ -75,6 +81,10 @@ exports.loginStudent = async (req, res) => {
         role: user.role,
         department: user.department,
         cohort: user.cohort,
+        academicYear: user.academicYear,
+        section: user.section,
+        studentCategory: user.studentCategory,
+        mentor: user.mentor,
         avatar: user.avatar,
       },
     });

@@ -24,7 +24,7 @@ async function authenticateToken(req, res, next) {
       }
 
       // Web route: redirect to corresponding login page or general login
-      if (req.originalUrl.startsWith('/student')) return res.redirect('/login/student');
+      if (req.originalUrl.startsWith('/student') || req.originalUrl.startsWith('/superdream')) return res.redirect('/login/student');
       if (req.originalUrl.startsWith('/faculty')) return res.redirect('/login/faculty');
       if (req.originalUrl.startsWith('/admin')) return res.redirect('/login/admin');
       return res.redirect('/');

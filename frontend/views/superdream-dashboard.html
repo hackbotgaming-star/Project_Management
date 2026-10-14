@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Super Dream Workspace - ProjectHub</title>
+  <!-- PWA Meta & Icons -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f131c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ProjectHub">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <script src="/js/pwa-install.js" defer></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
+  <script src="/js/theme.js"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/js/toast.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#0f131c",
+            "surface-container-lowest": "#0a0e17",
+            "surface-container-low": "#181b25",
+            "surface-container": "#1c1f29",
+            "surface-container-high": "#262a34",
+            "surface-container-highest": "#31353f",
+            "on-surface": "#dfe2ef",
+            "on-surface-variant": "#c7c4d8",
+            "outline": "#918fa1",
+            "outline-variant": "#464555",
+            "primary": "#f59e0b",
+            "on-primary": "#451a03",
+            "primary-container": "#d97706",
+            "on-primary-container": "#fef3c7",
+            "secondary": "#38bdf8",
+            "tertiary": "#10b981",
+            "error": "#ffb4ab",
+            "background": "#0f131c",
+            "on-background": "#dfe2ef"
+          },
+          fontFamily: {
+            headline: ["Geist", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 20;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.filled {
+      font-variation-settings: 'FILL' 1;
+    }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: rgba(245, 158, 11, 0.2); border-radius: 9999px; }
+  </style>
+</head>
+<body class="bg-background text-on-background font-body antialiased min-h-screen selection:bg-amber-500 selection:text-black">
+
+  <!-- Mobile Sidebar Backdrop Overlay -->
+  <div id="sidebarBackdrop" onclick="closeMobileSidebar()"></div>
+
+  <!-- ========================================== -->
+  <!-- SIDEBAR NAVIGATION (Super Dream Workspace) -->
+  <!-- ========================================== -->
+  <aside id="mainSidebar" class="fixed top-0 left-0 h-screen w-72 md:w-64 border-r border-amber-500/25 bg-surface-container-low flex flex-col justify-between p-4 z-50 md:shadow-none">
+    <div class="flex flex-col gap-4">
+      <!-- Logo Branding & Mobile Close Button -->
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2.5">
+          <div class="h-8 w-8 rounded-lg bg-amber-500 flex items-center justify-center text-black font-bold shadow-sm shadow-amber-500/20">
+            <span class="material-symbols-outlined text-lg filled">stars</span>
+          </div>
+          <div>
+            <span class="font-headline font-bold tracking-tight text-on-surface">ProjectHub</span>
+            <span class="block text-[10px] text-amber-400 font-semibold uppercase tracking-wider">Super Dream Track</span>
+          </div>
+        </div>
+        <button type="button" onclick="closeMobileSidebar()" aria-label="Close navigation" class="md:hidden p-1.5 rounded-lg text-outline hover:text-on-surface hover:bg-surface-container-high transition-colors">
+          <span class="material-symbols-outlined text-xl">close</span>
+        </button>
+      </div>
+
+      <!-- Super Dream Badge -->
+      <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
+        <div class="flex items-center gap-2 overflow-hidden">
+          <div class="w-6 h-6 rounded bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs font-mono font-bold">
+            SD
+          </div>
+          <div class="truncate">
+            <div id="sideCohortTitle" class="text-xs font-semibold text-amber-300 truncate">3rd Year Super Dream</div>
+            <div id="sideMentorName" class="text-[10px] text-outline truncate">Faculty Mentor Assigned</div>
+          </div>
+        </div>
+        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">HONORS</span>
+      </div>
+
+      <!-- Primary Action Buttons: Create Project & Create Task -->
+      <div class="flex flex-col gap-2">
+        <button onclick="openModal('studentNewProjectModal')" class="w-full flex items-center justify-center gap-2 bg-amber-500 hover:bg-amber-400 text-black text-xs font-semibold py-2 px-3 rounded-lg transition-all shadow-sm">
+          <span class="material-symbols-outlined text-base">add_circle</span>
+          <span>New Project</span>
+        </button>
+        <button onclick="openModal('newTaskModal')" class="w-full flex items-center justify-center gap-2 bg-surface-container-high hover:bg-surface-container-highest border border-amber-500/25 text-on-surface text-xs font-medium py-1.5 px-3 rounded-lg transition-all">
+          <span class="material-symbols-outlined text-base">add_task</span>
+          <span>Create Task</span>
+        </button>
+      </div>
+
+      <!-- All General Options + Super Dream Mentor Hub -->
+      <nav class="flex flex-col gap-1 overflow-y-auto max-h-[calc(100vh-370px)] pr-1">
+        <button onclick="switchTab('overview')" id="nav-overview" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-300 bg-surface-container-high">
+          <span class="material-symbols-outlined text-base text-amber-400">dashboard</span>
+          <span>Overview</span>
+        </button>
+        <button onclick="switchTab('mentor-hub')" id="nav-mentor-hub" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-300 hover:bg-surface-container-high border border-amber-500/20 bg-amber-500/5">
+          <span class="material-symbols-outlined text-base text-amber-400">school</span>
+          <span class="flex-1 text-left">Faculty Mentor Hub</span>
+          <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+        </button>
+        <button onclick="switchTab('projects')" id="nav-projects" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">folder_open</span>
+          <span>My Projects</span>
+        </button>
+        <button onclick="switchTab('tasks')" id="nav-tasks" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">check_circle</span>
+          <span>My Tasks</span>
+        </button>
+        <button onclick="switchTab('milestones')" id="nav-milestones" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">flag</span>
+          <span>Milestones</span>
+        </button>
+        <button onclick="switchTab('calendar')" id="nav-calendar" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">calendar_today</span>
+          <span>Calendar</span>
+        </button>
+        <button onclick="switchTab('documents')" id="nav-documents" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">description</span>
+          <span>Documents</span>
+        </button>
+        <button onclick="switchTab('team')" id="nav-team" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">group</span>
+          <span>Batch &amp; Team</span>
+        </button>
+        <button onclick="switchTab('notifications')" id="nav-notifications" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">notifications</span>
+          <span class="flex-1 text-left">Notifications</span>
+          <span id="notifBadge" class="w-2 h-2 rounded-full bg-amber-400 hidden"></span>
+        </button>
+        <button onclick="switchTab('profile')" id="nav-profile" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">person</span>
+          <span>Profile</span>
+        </button>
+        <button onclick="switchTab('settings')" id="nav-settings" class="student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">settings</span>
+          <span>Settings</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Student Profile Strip, Switcher & Logout -->
+    <div class="pt-3 border-t border-outline-variant/20 space-y-2">
+      <a href="/student/dashboard" class="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 rounded-lg bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-[11px] text-outline hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-sm">swap_horiz</span>
+        <span>Switch to Standard View</span>
+      </a>
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2.5 overflow-hidden">
+          <img id="userAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="w-8 h-8 rounded-full border border-amber-500/50 object-cover" alt="Avatar">
+          <div class="truncate">
+            <div id="userName" class="text-xs font-medium text-on-surface truncate">Alex Chen</div>
+            <div id="userRoleBadge" class="text-[10px] text-amber-400 font-semibold truncate">SUPER DREAM SCHOLAR</div>
+          </div>
+        </div>
+        <button onclick="handleLogout()" title="Logout" class="p-1.5 rounded-lg text-outline hover:text-error hover:bg-surface-container-high transition-colors">
+          <span class="material-symbols-outlined text-lg">logout</span>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ========================================== -->
+  <!-- MAIN CONTENT AREA                          -->
+  <!-- ========================================== -->
+  <main class="md:ml-64 p-4 md:p-8 min-h-screen">
+
+    <!-- Top Sticky Mobile Bar -->
+    <div class="md:hidden sticky top-0 z-30 flex items-center justify-between p-3 bg-surface-container-low/95 backdrop-blur-md border-b border-amber-500/20 -mx-4 -mt-4 mb-4 shadow-sm">
+      <div class="flex items-center gap-2.5">
+        <button type="button" onclick="toggleMobileSidebar()" aria-label="Toggle navigation" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-on-surface transition-colors flex items-center justify-center">
+          <span class="material-symbols-outlined text-xl">menu</span>
+        </button>
+        <div class="flex items-center gap-2">
+          <div class="h-6 w-6 rounded bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300">
+            <span class="material-symbols-outlined text-sm filled">stars</span>
+          </div>
+          <span class="font-headline font-bold text-sm text-on-surface tracking-tight">Super Dream</span>
+          <span class="text-[9px] font-mono px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-bold">3RD YEAR</span>
+        </div>
+      </div>
+      <button onclick="openModal('studentNewProjectModal')" class="p-1.5 px-2.5 rounded-lg bg-amber-500 text-black text-xs font-semibold flex items-center gap-1 shadow-sm">
+        <span class="material-symbols-outlined text-sm">add</span>
+        <span>Project</span>
+      </button>
+    </div>
+
+    <!-- Header Banner -->
+    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-outline-variant/20">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="text-xs font-mono text-amber-400 font-bold flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs filled">stars</span>
+            AI&ML 3RD YEAR HONORS
+          </span>
+          <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+          <span id="headerAcademicBadge" class="text-xs text-outline">Section A &bull; Super Dream</span>
+        </div>
+        <h1 id="pageTitle" class="font-headline text-2xl font-bold text-on-surface tracking-tight mt-0.5">Super Dream Overview</h1>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2.5">
+        <button onclick="switchTab('mentor-hub')" class="px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-sm">forum</span>
+          <span>Contact Mentor</span>
+        </button>
+        <button onclick="openModal('studentNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-sm">add_circle</span>
+          <span>New Project</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- TAB 1: OVERVIEW -->
+    <section id="tab-overview" class="tab-pane space-y-6">
+
+      <!-- Assigned Mentor Spotlight Banner -->
+      <div id="assignedMentorBanner" class="p-6 rounded-2xl bg-gradient-to-r from-amber-500/15 via-surface-container-low to-surface-container-low border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
+        <div class="flex items-center gap-4">
+          <img id="mentorAvatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" class="w-14 h-14 rounded-2xl object-cover border-2 border-amber-500/50 shadow-md">
+          <div class="space-y-1">
+            <div class="inline-flex items-center gap-1.5 text-[10px] font-mono font-bold text-amber-400 px-2 py-0.5 rounded bg-amber-500/20 border border-amber-500/30">
+              <span class="material-symbols-outlined text-xs">verified</span>
+              YOUR DESIGNATED FACULTY MENTOR
+            </div>
+            <h3 id="mentorNameDisplay" class="font-headline font-bold text-lg text-on-surface">Dr. Aris Thorne</h3>
+            <p id="mentorTitleDisplay" class="text-xs text-outline font-medium">Associate Professor &bull; AI &amp; Deep Learning Research Lead</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2 pt-2 md:pt-0">
+          <a id="mentorEmailLink" href="mailto:faculty@university.edu" class="px-3.5 py-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-xs font-semibold text-on-surface transition-colors flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">mail</span>
+            <span>Send Email</span>
+          </a>
+          <button onclick="switchTab('mentor-hub')" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-sm">forum</span>
+            <span>Open Mentor Stream &rarr;</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Overview Metric Cards -->
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Active Projects</div>
+          <div id="statProjectsCount" class="text-2xl font-bold font-headline text-on-surface">0</div>
+          <div class="text-[11px] text-amber-400 mt-1">Super Dream Capstones</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Tasks Completed</div>
+          <div id="statTasksDone" class="text-2xl font-bold font-headline text-tertiary">0</div>
+          <div id="statTasksTotal" class="text-[11px] text-outline mt-1">0 total assigned</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Upcoming Milestones</div>
+          <div id="statMilestonesDue" class="text-2xl font-bold font-headline text-amber-400">0</div>
+          <div class="text-[11px] text-outline mt-1">Deliverables in Queue</div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30">
+          <div class="text-[11px] text-outline uppercase font-mono mb-1">Cohort Batch Peers</div>
+          <div id="statBatchCount" class="text-2xl font-bold font-headline text-secondary">0</div>
+          <div class="text-[11px] text-outline mt-1">Under same mentor</div>
+        </div>
+      </div>
+
+      <!-- Active Projects Section -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+          <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-400">folder_open</span>
+            Your Enrolled Projects
+          </h3>
+          <button onclick="openModal('studentNewProjectModal')" class="text-xs text-amber-400 hover:text-amber-300 font-semibold flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">add</span>
+            <span>Create Project</span>
+          </button>
+        </div>
+        <div id="activeProjectsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Tasks Due & Upcoming Deadlines -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-base">check_circle</span>
+              Tasks Due
+            </h3>
+            <button onclick="switchTab('tasks')" class="text-xs text-amber-400 hover:text-amber-300">View All Tasks &rarr;</button>
+          </div>
+          <div id="tasksDueList" class="space-y-2 text-xs"></div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+          <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+            <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-base">event</span>
+              Upcoming Deadlines
+            </h3>
+            <button onclick="switchTab('calendar')" class="text-xs text-amber-400 hover:text-amber-300">Open Calendar &rarr;</button>
+          </div>
+          <div id="deadlinesList" class="space-y-2 text-xs"></div>
+        </div>
+      </div>
+
+      <!-- Recent Activity Audit Log -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3">
+        <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-outline text-base">history</span>
+          Recent Activity &amp; Submissions
+        </h3>
+        <div id="recentActivityList" class="space-y-2 text-xs font-mono"></div>
+      </div>
+
+    </section>
+
+    <!-- TAB: MENTOR HUB (Direct Stream with Assigned Faculty Mentor) -->
+    <section id="tab-mentor-hub" class="tab-pane hidden space-y-6">
+      <!-- Mentor Profile Card -->
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div class="flex items-center gap-4">
+          <img id="hubMentorAvatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" class="w-16 h-16 rounded-2xl object-cover border-2 border-amber-500/50">
+          <div>
+            <div class="text-[10px] font-mono text-amber-400 font-bold uppercase tracking-wider">Faculty Mentor Dedicated Portal</div>
+            <h2 id="hubMentorName" class="font-headline text-xl font-bold text-on-surface">Dr. Aris Thorne</h2>
+            <div id="hubMentorEmail" class="text-xs text-outline font-mono">faculty@university.edu</div>
+            <div id="hubMentorDept" class="text-xs text-on-surface-variant mt-0.5">Department of Artificial Intelligence &amp; Machine Learning</div>
+          </div>
+        </div>
+        <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/30 text-xs space-y-1">
+          <div class="text-outline font-mono text-[10px]">MENTORSHIP SCOPE</div>
+          <div class="text-amber-300 font-semibold">1:1 Advising &bull; Sprint Reviews &bull; Placement Guidance</div>
+          <div class="text-outline text-[11px]">Direct communications are encrypted &amp; logged.</div>
+        </div>
+      </div>
+
+      <!-- Post Question / Query to Mentor -->
+      <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-3">
+        <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-400 text-base">edit_note</span>
+          Post Query or Sprint Update to Your Mentor
+        </h3>
+        <form id="studentPostNoticeForm" onsubmit="handleStudentPostNotice(event)" class="space-y-3">
+          <input type="text" id="studentNoticeTitle" placeholder="Update / question subject (e.g. Model inference latency issue on GPU cluster)" required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+          <textarea id="studentNoticeContent" rows="3" placeholder="Provide full details, metrics, code references, or roadblocks for your faculty mentor..." required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none"></textarea>
+          <div class="flex items-center justify-between pt-1">
+            <input type="url" id="studentNoticeLink" placeholder="GitHub / Paper / Colab Link (optional)" class="p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none flex-1 max-w-md mr-3">
+            <button type="submit" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+              <span class="material-symbols-outlined text-sm">send</span>
+              <span>Send to Mentor</span>
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <!-- Feed of Announcements & Q&A Stream -->
+      <div class="space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-amber-400 text-base">forum</span>
+            Mentorship Stream &amp; Advisory Feed
+          </h3>
+          <button onclick="loadSuperDreamFeed()" class="text-xs text-amber-400 hover:text-amber-300 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">refresh</span>
+            <span>Refresh Stream</span>
+          </button>
+        </div>
+        <div id="mentorHubStreamList" class="space-y-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: MY PROJECTS -->
+    <section id="tab-projects" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">My Projects</h2>
+          <p class="text-xs text-outline">Manage your active capstone research, code repositories, and deliverables.</p>
+        </div>
+        <button onclick="openModal('studentNewProjectModal')" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-sm">add</span>
+          <span>New Project</span>
+        </button>
+      </div>
+      <div id="projectsDetailedList" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+    </section>
+
+    <!-- TAB 3: MY TASKS (Kanban Board) -->
+    <section id="tab-tasks" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Sprint Tasks &amp; Milestones</h2>
+          <p class="text-xs text-outline">Track progress through TODO, IN PROGRESS, REVIEW, and DONE states.</p>
+        </div>
+        <button onclick="openModal('newTaskModal')" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-sm">add_task</span>
+          <span>Create Task</span>
+        </button>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4" id="kanbanBoard">
+        <!-- Columns: TODO, IN_PROGRESS, REVIEW, DONE -->
+        <div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-3 min-h-[380px]">
+          <div class="flex items-center justify-between font-mono text-xs font-semibold text-outline pb-2 border-b border-outline-variant/20">
+            <span>TO DO</span>
+            <span id="countTodo" class="px-1.5 py-0.2 rounded bg-surface-container-high text-on-surface text-[10px]">0</span>
+          </div>
+          <div id="colTodo" class="space-y-2 flex-1"></div>
+        </div>
+        <div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-3 min-h-[380px]">
+          <div class="flex items-center justify-between font-mono text-xs font-semibold text-amber-400 pb-2 border-b border-outline-variant/20">
+            <span>IN PROGRESS</span>
+            <span id="countInProgress" class="px-1.5 py-0.2 rounded bg-amber-500/20 text-amber-300 text-[10px]">0</span>
+          </div>
+          <div id="colInProgress" class="space-y-2 flex-1"></div>
+        </div>
+        <div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-3 min-h-[380px]">
+          <div class="flex items-center justify-between font-mono text-xs font-semibold text-secondary pb-2 border-b border-outline-variant/20">
+            <span>IN REVIEW</span>
+            <span id="countReview" class="px-1.5 py-0.2 rounded bg-secondary/20 text-secondary text-[10px]">0</span>
+          </div>
+          <div id="colReview" class="space-y-2 flex-1"></div>
+        </div>
+        <div class="p-4 rounded-2xl bg-surface-container-low border border-outline-variant/30 flex flex-col gap-3 min-h-[380px]">
+          <div class="flex items-center justify-between font-mono text-xs font-semibold text-tertiary pb-2 border-b border-outline-variant/20">
+            <span>DONE</span>
+            <span id="countDone" class="px-1.5 py-0.2 rounded bg-tertiary/20 text-tertiary text-[10px]">0</span>
+          </div>
+          <div id="colDone" class="space-y-2 flex-1"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: MILESTONES -->
+    <section id="tab-milestones" class="tab-pane hidden space-y-6">
+      <div>
+        <h2 class="font-headline text-xl font-bold text-on-surface">Milestones &amp; Deliverables</h2>
+        <p class="text-xs text-outline">Submit required deliverables directly to your faculty advisor for evaluation.</p>
+      </div>
+      <div id="milestonesDetailedList" class="space-y-4"></div>
+    </section>
+
+    <!-- TAB 5: CALENDAR -->
+    <section id="tab-calendar" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Academic Calendar &amp; Deadlines</h2>
+          <p class="text-xs text-outline">Sprint milestones, mentor checkpoints, and presentation schedules.</p>
+        </div>
+      </div>
+      <div id="calendarContainer" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+        <div class="flex items-center justify-between pb-4 border-b border-outline-variant/20">
+          <h3 id="calMonthDisplay" class="font-headline font-bold text-base text-on-surface">October 2026</h3>
+          <div class="flex gap-2">
+            <button onclick="changeCalMonth(-1)" class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+            <button onclick="changeCalMonth(1)" class="p-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+          </div>
+        </div>
+        <div class="grid grid-cols-7 gap-2 text-center text-xs font-mono text-outline">
+          <div>SUN</div><div>MON</div><div>TUE</div><div>WED</div><div>THU</div><div>FRI</div><div>SAT</div>
+        </div>
+        <div id="calGrid" class="grid grid-cols-7 gap-2 text-xs"></div>
+      </div>
+    </section>
+
+    <!-- TAB 6: DOCUMENTS -->
+    <section id="tab-documents" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Documents &amp; Artifacts</h2>
+          <p class="text-xs text-outline">Research papers, architectures, and deliverables stored securely.</p>
+        </div>
+        <button onclick="openModal('uploadDocModal')" class="px-3.5 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-sm">upload_file</span>
+          <span>Upload Document</span>
+        </button>
+      </div>
+      <div id="documentsListGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </section>
+
+    <!-- TAB 7: TEAM & BATCH PEERS -->
+    <section id="tab-team" class="tab-pane hidden space-y-6">
+      <div>
+        <h2 class="font-headline text-xl font-bold text-on-surface">Super Dream Mentorship Batch &amp; Project Peers</h2>
+        <p class="text-xs text-outline">Students in your assigned mentor's batch and your capstone team members.</p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-amber-500/25 space-y-4">
+        <h3 class="font-headline font-bold text-sm text-amber-300 flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-400">school</span>
+          Fellow Mentees Supervised by Your Mentor
+        </h3>
+        <div id="batchPeersList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+        <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-primary">group</span>
+          Active Capstone Team Members
+        </h3>
+        <div id="projectTeammatesList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+      </div>
+    </section>
+
+    <!-- TAB 8: NOTIFICATIONS -->
+    <section id="tab-notifications" class="tab-pane hidden space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface">Notifications</h2>
+          <p class="text-xs text-outline">Alerts from your mentor, project updates, and deadlines.</p>
+        </div>
+      </div>
+      <div id="notificationsDetailedList" class="space-y-3 max-w-2xl"></div>
+    </section>
+
+    <!-- TAB 9: PROFILE -->
+    <section id="tab-profile" class="tab-pane hidden space-y-6">
+      <h2 class="font-headline text-xl font-bold text-on-surface">Student Profile</h2>
+      <div id="studentProfileDetails" class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 max-w-xl"></div>
+    </section>
+
+    <!-- TAB 10: SETTINGS -->
+    <section id="tab-settings" class="tab-pane hidden space-y-6">
+      <h2 class="font-headline text-xl font-bold text-on-surface">Workspace Settings</h2>
+      <div class="p-6 rounded-2xl bg-surface-container-low border border-outline-variant/30 max-w-xl space-y-4">
+        <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-400">palette</span>
+          Appearance Preference
+        </h3>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="setTheme('dark')" class="p-3 rounded-xl bg-surface-container border border-outline-variant/30 hover:border-amber-400 text-xs font-semibold text-on-surface flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-base">dark_mode</span>
+            <span>Dark Theme</span>
+          </button>
+          <button onclick="setTheme('light')" class="p-3 rounded-xl bg-surface-container border border-outline-variant/30 hover:border-amber-400 text-xs font-semibold text-on-surface flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-base">light_mode</span>
+            <span>Light Theme</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODALS                                     -->
+  <!-- ========================================== -->
+
+  <!-- Modal: Create New Project -->
+  <div id="studentNewProjectModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-amber-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-400">add_circle</span>
+          Create New Project
+        </h3>
+        <button onclick="closeModal('studentNewProjectModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+      <form id="createProjectForm" class="space-y-3">
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Project Title</label>
+          <input id="newProjTitle" required placeholder="e.g. Distributed LLM Inference with Speculative Decoding" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Project Code</label>
+          <input id="newProjCode" required placeholder="e.g. SD-AIML-01" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Abstract / Description</label>
+          <textarea id="newProjAbstract" rows="3" placeholder="Brief project summary, objectives, and technology stack..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none"></textarea>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('studentNewProjectModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs">Create Project</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Create New Task -->
+  <div id="newTaskModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-amber-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-400">add_task</span>
+          Create New Task
+        </h3>
+        <button onclick="closeModal('newTaskModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+      <form id="createTaskForm" class="space-y-3">
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Select Project</label>
+          <select id="taskProjectSelect" required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none"></select>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Task Title</label>
+          <input id="taskTitleInput" required placeholder="e.g. Implement Transformer Attention Layer" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Priority</label>
+            <select id="taskPrioritySelect" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM" selected>MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+              <option value="URGENT">URGENT</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs text-outline mb-1 font-medium">Due Date</label>
+            <input id="taskDueDateInput" type="date" required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+          </div>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('newTaskModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs">Save Task</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Upload Document -->
+  <div id="uploadDocModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-400">upload_file</span>
+          Upload Artifact
+        </h3>
+        <button onclick="closeModal('uploadDocModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+      <form id="uploadDocForm" class="space-y-3">
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Document Title</label>
+          <input id="docTitleInput" required placeholder="e.g. Model Architecture Specification v1" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Category</label>
+          <select id="docCategorySelect" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+            <option value="Specification">Specification</option>
+            <option value="Architecture">Architecture</option>
+            <option value="Report">Report</option>
+            <option value="Code">Code</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">File / Cloud Link</label>
+          <input id="docUrlInput" required placeholder="https://drive.google.com/... or https://github.com/..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('uploadDocModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs">Save Document</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Submit Milestone -->
+  <div id="submitMilestoneModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-amber-500/30 rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <h3 class="font-headline font-bold text-base text-on-surface flex items-center gap-2">
+          <span class="material-symbols-outlined text-amber-400">upload</span>
+          Submit Milestone Deliverable
+        </h3>
+        <button onclick="closeModal('submitMilestoneModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+      <form id="submitMilestoneForm" onsubmit="executeMilestoneSubmit(event)" class="space-y-3">
+        <input type="hidden" id="submitMilestoneId">
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Milestone</label>
+          <input id="submitMilestoneTitle" disabled class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/20 text-xs text-on-surface font-semibold">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Deliverable Link / Artifact URL</label>
+          <input id="submitDeliverableUrl" required placeholder="https://github.com/... or https://colab.research.google.com/..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Submission Notes for Advisor</label>
+          <textarea id="submitNotes" rows="3" placeholder="Explain your implementation, performance metrics, and test coverage..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none"></textarea>
+        </div>
+        <div class="flex items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('submitMilestoneModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" class="px-4 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs">Submit to Mentor</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- JAVASCRIPT LOGIC & API INTEGRATION         -->
+  <!-- ========================================== -->
+  <script>
+    // Intercept fetch requests to pass Bearer JWT
+    const originalFetch = window.fetch;
+    window.fetch = async function(url, options = {}) {
+      const token = localStorage.getItem('projecthub_token');
+      if (token && typeof url === 'string' && url.startsWith('/api/')) {
+        options.headers = options.headers || {};
+        if (options.headers instanceof Headers) {
+          if (!options.headers.has('Authorization')) options.headers.set('Authorization', 'Bearer ' + token);
+        } else if (Array.isArray(options.headers)) {
+          options.headers.push(['Authorization', 'Bearer ' + token]);
+        } else {
+          if (!options.headers['Authorization']) options.headers['Authorization'] = 'Bearer ' + token;
+        }
+      }
+      return originalFetch(url, options);
+    };
+
+    let studentData = null;
+    let calendarEvents = [];
+    let calDate = new Date();
+    let superDreamGroupData = null;
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function openMobileSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (sidebar) sidebar.classList.add('sidebar-open');
+      if (backdrop) backdrop.classList.add('backdrop-open');
+      document.body.classList.add('overflow-hidden');
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (sidebar) sidebar.classList.remove('sidebar-open');
+      if (backdrop) backdrop.classList.remove('backdrop-open');
+      document.body.classList.remove('overflow-hidden');
+    }
+
+    function toggleMobileSidebar() {
+      const sidebar = document.getElementById('mainSidebar');
+      if (!sidebar) return;
+      if (sidebar.classList.contains('sidebar-open')) closeMobileSidebar();
+      else openMobileSidebar();
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.student-nav-item').forEach(el => {
+        el.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high';
+      });
+
+      const pane = document.getElementById(`tab-${tabId}`);
+      if (pane) pane.classList.remove('hidden');
+      const navBtn = document.getElementById(`nav-${tabId}`);
+      if (navBtn) navBtn.className = 'student-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-amber-300 bg-surface-container-high';
+
+      const titles = {
+        'overview': 'Super Dream Overview',
+        'mentor-hub': 'Faculty Mentor Dedicated Portal',
+        'projects': 'Super Dream Projects',
+        'tasks': 'Tasks & Milestones Kanban',
+        'milestones': 'Capstone Milestones',
+        'calendar': 'Deadlines & Events Calendar',
+        'documents': 'Documents & Papers Repository',
+        'team': 'Super Dream Batch & Peers',
+        'notifications': 'Notifications',
+        'profile': 'Student Scholar Profile',
+        'settings': 'Preferences & Settings'
+      };
+      document.getElementById('pageTitle').textContent = titles[tabId] || 'Super Dream Workspace';
+
+      closeMobileSidebar();
+
+      if (tabId === 'mentor-hub') loadSuperDreamFeed();
+      if (tabId === 'calendar') loadCalendar();
+      if (tabId === 'documents') loadDocuments();
+      if (tabId === 'tasks') loadTasks();
+      if (tabId === 'milestones') loadMilestones();
+    }
+
+    async function loadStudentDashboard() {
+      try {
+        const res = await fetch('/api/dashboard/student');
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = '/login/student';
+          return;
+        }
+        const json = await res.json();
+        if (!json.success) return;
+
+        studentData = json.data;
+        renderDashboard(studentData);
+      } catch (err) {
+        console.error('Failed to load student dashboard:', err);
+      }
+    }
+
+    function renderDashboard(data) {
+      const p = data.studentProfile;
+      document.getElementById('userName').textContent = p.name;
+      if (p.avatar) document.getElementById('userAvatar').src = p.avatar;
+
+      document.getElementById('headerAcademicBadge').textContent = `${p.academicYear || '3rd Year'} &bull; Sec ${p.section || 'A'}`;
+      document.getElementById('sideCohortTitle').textContent = `AI&ML - ${p.academicYear || '3rd Year'} (Sec ${p.section || 'A'})`;
+
+      // Stat Counters
+      document.getElementById('statProjectsCount').textContent = data.activeProjects.length;
+      document.getElementById('statTasksDone').textContent = data.taskCounts.completed;
+      document.getElementById('statTasksTotal').textContent = `${data.taskCounts.total} total assigned`;
+      document.getElementById('statMilestonesDue').textContent = data.upcomingMilestones.length;
+
+      const peers = data.superDreamBatchPeers || [];
+      document.getElementById('statBatchCount').textContent = peers.length;
+
+      // Mentor Spotlight Card
+      const mentor = data.assignedFacultyMentor;
+      if (mentor) {
+        document.getElementById('sideMentorName').textContent = `Mentor: ${mentor.name}`;
+        document.getElementById('mentorNameDisplay').textContent = mentor.name;
+        document.getElementById('mentorTitleDisplay').textContent = `${mentor.title || 'Faculty Advisor'} &bull; ${mentor.department || 'AI&ML'}`;
+        if (mentor.avatar) document.getElementById('mentorAvatar').src = mentor.avatar;
+        document.getElementById('mentorEmailLink').href = `mailto:${mentor.email}`;
+
+        document.getElementById('hubMentorName').textContent = mentor.name;
+        document.getElementById('hubMentorEmail').textContent = mentor.email;
+        document.getElementById('hubMentorDept').textContent = `${mentor.department || 'AI&ML'} &bull; ${mentor.title || 'Faculty Advisor'}`;
+        if (mentor.avatar) document.getElementById('hubMentorAvatar').src = mentor.avatar;
+      } else {
+        document.getElementById('sideMentorName').textContent = 'Faculty Mentor Assigned';
+        document.getElementById('mentorNameDisplay').textContent = 'Faculty Advisor';
+      }
+
+      // Populate Project Dropdown for Tasks
+      const pSelect = document.getElementById('taskProjectSelect');
+      if (pSelect) {
+        pSelect.innerHTML = data.activeProjects.map(proj => `<option value="${proj._id}">${proj.code}: ${proj.title}</option>`).join('');
+      }
+
+      // Render Active Projects in Overview
+      const pGrid = document.getElementById('activeProjectsGrid');
+      if (data.activeProjects.length === 0) {
+        pGrid.innerHTML = `
+          <div class="col-span-full p-8 rounded-xl bg-surface-container border border-dashed border-outline-variant/30 text-center space-y-2">
+            <span class="material-symbols-outlined text-3xl text-outline">folder_open</span>
+            <div class="text-xs text-outline">No enrolled projects yet. Create your Super Dream capstone project above!</div>
+          </div>
+        `;
+      } else {
+        pGrid.innerHTML = data.activeProjects.map(proj => `
+          <div class="p-4 rounded-xl bg-surface-container border border-amber-500/20 hover:border-amber-400 transition-all space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold">${proj.code}</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-surface-container-high text-outline">${proj.status}</span>
+            </div>
+            <div>
+              <a href="/projects/${proj._id}" class="font-headline font-bold text-sm text-on-surface hover:text-amber-300 transition-colors flex items-center justify-between">
+                <span>${proj.title}</span>
+                <span class="material-symbols-outlined text-sm text-amber-400">open_in_new</span>
+              </a>
+              <p class="text-[11px] text-outline mt-1 line-clamp-2">${proj.abstract || ''}</p>
+            </div>
+            <div class="pt-2 border-t border-outline-variant/20 flex items-center justify-between text-xs text-outline">
+              <span>Progress: <strong class="text-on-surface">${proj.progressPercentage}%</strong></span>
+              <a href="/projects/${proj._id}" class="text-amber-400 hover:text-amber-300 font-semibold text-[11px]">View Workspace &rarr;</a>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Detailed Projects Tab
+      const detList = document.getElementById('projectsDetailedList');
+      if (detList) detList.innerHTML = pGrid.innerHTML;
+
+      // Render Tasks Due
+      const tList = document.getElementById('tasksDueList');
+      if (data.tasksDue.length === 0) {
+        tList.innerHTML = '<div class="text-outline text-xs py-3 text-center">No pending tasks due. All clear!</div>';
+      } else {
+        tList.innerHTML = data.tasksDue.slice(0, 5).map(t => `
+          <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center justify-between">
+            <div class="overflow-hidden pr-2">
+              <div class="font-semibold text-on-surface truncate">${t.title}</div>
+              <div class="text-[10px] text-outline">${t.project ? t.project.title : 'Project'} &bull; Due ${new Date(t.dueDate).toLocaleDateString()}</div>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 font-bold shrink-0">${t.priority}</span>
+          </div>
+        `).join('');
+      }
+
+      // Render Deadlines
+      const dList = document.getElementById('deadlinesList');
+      if (data.deadlines.length === 0) {
+        dList.innerHTML = '<div class="text-outline text-xs py-3 text-center">No upcoming deadlines scheduled.</div>';
+      } else {
+        dList.innerHTML = data.deadlines.slice(0, 5).map(d => `
+          <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center justify-between">
+            <div class="overflow-hidden pr-2">
+              <div class="font-semibold text-on-surface truncate">${d.title}</div>
+              <div class="text-[10px] text-outline">${d.project} &bull; Due ${new Date(d.dueDate).toLocaleDateString()}</div>
+            </div>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded ${d.type === 'MILESTONE' ? 'bg-secondary/20 text-secondary' : 'bg-primary/20 text-primary'} font-bold shrink-0">${d.type}</span>
+          </div>
+        `).join('');
+      }
+
+      // Render Recent Activity
+      const aList = document.getElementById('recentActivityList');
+      if (data.recentActivity.length === 0) {
+        aList.innerHTML = '<div class="text-outline text-xs py-2 text-center">No recent activity recorded.</div>';
+      } else {
+        aList.innerHTML = data.recentActivity.slice(0, 6).map(act => `
+          <div class="flex items-start gap-2 p-2 rounded bg-surface-container text-[11px]">
+            <span class="material-symbols-outlined text-xs text-amber-400 mt-0.5">terminal</span>
+            <div class="overflow-hidden flex-1">
+              <span class="text-on-surface">${act.details || act.action}</span>
+              <span class="text-outline text-[10px] block">${new Date(act.timestamp || act.createdAt).toLocaleString()}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      // Render Batch Peers in Team tab
+      const bList = document.getElementById('batchPeersList');
+      if (bList) {
+        if (peers.length === 0) {
+          bList.innerHTML = '<div class="col-span-full text-xs text-outline py-2">You are currently the leading scholar enrolled under this faculty mentor!</div>';
+        } else {
+          bList.innerHTML = peers.map(peer => `
+            <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-2.5">
+              <img src="${peer.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-8 h-8 rounded-full object-cover border border-amber-500/30">
+              <div class="overflow-hidden">
+                <div class="font-semibold text-xs text-on-surface truncate">${peer.name}</div>
+                <div class="text-[10px] text-outline font-mono truncate">${peer.studentId || 'SCHOLAR'} &bull; Sec ${peer.section || 'A'}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Render Project Teammates
+      const tTeam = document.getElementById('projectTeammatesList');
+      if (tTeam) {
+        const teamSet = new Map();
+        data.activeProjects.forEach(proj => {
+          if (Array.isArray(proj.teamMembers)) {
+            proj.teamMembers.forEach(m => teamSet.set(m._id, m));
+          }
+        });
+        if (teamSet.size === 0) {
+          tTeam.innerHTML = '<div class="col-span-full text-xs text-outline py-2">No team members assigned yet.</div>';
+        } else {
+          tTeam.innerHTML = Array.from(teamSet.values()).map(m => `
+            <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-2.5">
+              <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-8 h-8 rounded-full object-cover border border-outline-variant/30">
+              <div class="overflow-hidden">
+                <div class="font-semibold text-xs text-on-surface truncate">${m.name}</div>
+                <div class="text-[10px] text-outline font-mono truncate">${m.studentId || 'STUDENT'}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
+
+      // Render Profile Tab
+      const profDiv = document.getElementById('studentProfileDetails');
+      if (profDiv) {
+        profDiv.innerHTML = `
+          <div class="space-y-4">
+            <div class="flex items-center gap-4 pb-4 border-b border-outline-variant/20">
+              <img src="${p.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=120'}" class="w-16 h-16 rounded-2xl object-cover border-2 border-amber-500">
+              <div>
+                <h3 class="font-headline font-bold text-lg text-on-surface">${p.name}</h3>
+                <div class="text-xs text-outline font-mono">${p.email}</div>
+                <div class="flex items-center gap-2 mt-1">
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">⭐ SUPER DREAM</span>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-outline">${p.academicYear || '3rd Year'} &bull; Sec ${p.section || 'A'}</span>
+                </div>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3 text-xs">
+              <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20">
+                <div class="text-outline text-[10px] font-mono">STUDENT ID</div>
+                <div class="text-on-surface font-bold mt-0.5">${p.studentId || 'STU-AIML-301'}</div>
+              </div>
+              <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20">
+                <div class="text-outline text-[10px] font-mono">DEPARTMENT</div>
+                <div class="text-on-surface font-bold mt-0.5 truncate">${p.department}</div>
+              </div>
+            </div>
+            ${mentor ? `
+              <div class="p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 text-xs">
+                <div class="text-amber-400 text-[10px] font-mono font-bold">ASSIGNED FACULTY MENTOR</div>
+                <div class="text-on-surface font-bold mt-0.5">${mentor.name} (${mentor.email})</div>
+                <div class="text-outline text-[11px]">${mentor.title || 'Faculty Advisor'}</div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }
+    }
+
+    // Load Super Dream Mentor Q&A / Announcement Stream
+    async function loadSuperDreamFeed() {
+      const container = document.getElementById('mentorHubStreamList');
+      if (!container) return;
+      container.innerHTML = '<div class="text-xs text-outline py-4 text-center">Loading mentor announcements and stream...</div>';
+
+      try {
+        const res = await fetch('/api/super-dream/student');
+        const json = await res.json();
+        if (!json.success || !json.groups || json.groups.length === 0) {
+          container.innerHTML = `
+            <div class="p-8 rounded-2xl bg-surface-container border border-dashed border-amber-500/30 text-center space-y-2">
+              <span class="material-symbols-outlined text-3xl text-amber-400">forum</span>
+              <div class="text-xs font-semibold text-on-surface">No mentor stream posts yet</div>
+              <p class="text-[11px] text-outline max-w-sm mx-auto">Use the post box above to send your first milestone update or technical question directly to your faculty advisor.</p>
+            </div>
+          `;
+          return;
+        }
+
+        const group = json.groups[0];
+        superDreamGroupData = group;
+        const msgRes = await fetch(`/api/super-dream/group/${group._id}/messages`);
+        const msgJson = await msgRes.json();
+
+        if (!msgJson.success || !msgJson.messages || msgJson.messages.length === 0) {
+          container.innerHTML = `
+            <div class="p-8 rounded-2xl bg-surface-container border border-dashed border-amber-500/30 text-center space-y-2">
+              <span class="material-symbols-outlined text-3xl text-amber-400">forum</span>
+              <div class="text-xs font-semibold text-on-surface">No messages posted in this batch stream yet</div>
+              <p class="text-[11px] text-outline max-w-sm mx-auto">Be the first to post a query or wait for your advisor's weekly sprint briefing.</p>
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = msgJson.messages.map(m => {
+          const isMentor = m.senderRole === 'FACULTY' || (m.sender && m.sender.role === 'FACULTY');
+          return `
+            <div class="p-5 rounded-2xl bg-surface-container-low border ${isMentor ? 'border-amber-500/40 bg-amber-500/5' : 'border-outline-variant/30'} space-y-3">
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                  <img src="${(m.sender && m.sender.avatar) || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80'}" class="w-8 h-8 rounded-full object-cover border border-amber-500/40">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-xs text-on-surface">${(m.sender && m.sender.name) || 'Faculty Advisor'}</span>
+                      <span class="text-[9px] font-mono px-1.5 py-0.2 rounded ${isMentor ? 'bg-amber-500 text-black font-bold' : 'bg-primary/20 text-primary'}">${m.senderRole || 'SCHOLAR'}</span>
+                    </div>
+                    <div class="text-[10px] text-outline font-mono">${new Date(m.createdAt).toLocaleString()}</div>
+                  </div>
+                </div>
+                ${m.type ? `<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-outline">${m.type}</span>` : ''}
+              </div>
+
+              ${m.title ? `<h4 class="font-headline font-bold text-sm text-on-surface">${m.title}</h4>` : ''}
+              <p class="text-xs text-on-surface-variant leading-relaxed whitespace-pre-line">${m.content}</p>
+
+              ${m.links && m.links.length > 0 ? `
+                <div class="pt-2 flex flex-wrap gap-2">
+                  ${m.links.map(l => `
+                    <a href="${l.url}" target="_blank" class="text-[11px] text-amber-300 hover:text-amber-200 underline inline-flex items-center gap-1">
+                      <span class="material-symbols-outlined text-xs">link</span>
+                      <span>${l.title || 'Reference Link'}</span>
+                    </a>
+                  `).join('')}
+                </div>
+              ` : ''}
+
+              <!-- Comments / Responses -->
+              <div class="pt-3 border-t border-outline-variant/20 space-y-2">
+                ${m.comments && m.comments.length > 0 ? m.comments.map(c => `
+                  <div class="p-2.5 rounded-xl bg-surface-container text-xs space-y-1">
+                    <div class="flex items-center justify-between text-[10px] font-mono text-outline">
+                      <span class="font-bold text-on-surface">${(c.sender && c.sender.name) || 'Response'}</span>
+                      <span>${new Date(c.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                    </div>
+                    <p class="text-on-surface-variant text-[11px]">${c.text}</p>
+                  </div>
+                `).join('') : ''}
+
+                <!-- Add Comment Input -->
+                <form onsubmit="handleSendComment(event, '${m._id}')" class="flex items-center gap-2 pt-1">
+                  <input type="text" placeholder="Reply to this update or ask clarification..." required class="flex-1 p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+                  <button type="submit" class="px-3 py-2 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 font-semibold text-xs border border-amber-500/30 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-xs">reply</span>
+                    <span>Reply</span>
+                  </button>
+                </form>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        container.innerHTML = '<div class="text-xs text-rose-400 py-3 text-center">Failed to load stream. Please retry.</div>';
+      }
+    }
+
+    async function handleStudentPostNotice(e) {
+      e.preventDefault();
+      const title = document.getElementById('studentNoticeTitle').value.trim();
+      const content = document.getElementById('studentNoticeContent').value.trim();
+      const link = document.getElementById('studentNoticeLink').value.trim();
+
+      try {
+        const res = await fetch('/api/super-dream/student');
+        const json = await res.json();
+        if (!json.success || !json.groups || json.groups.length === 0) {
+          showToast('No active Super Dream mentorship group assigned.', 'warning', 'NO GROUP');
+          return;
+        }
+
+        const group = json.groups[0];
+        const postRes = await fetch(`/api/super-dream/group/${group._id}/messages`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title,
+            content,
+            type: 'QUERY',
+            links: link ? [{ title: 'Resource Link', url: link }] : []
+          })
+        });
+        const postJson = await postRes.json();
+        if (postJson.success) {
+          showToast('Query successfully sent to your faculty mentor!', 'success', 'POSTED');
+          document.getElementById('studentPostNoticeForm').reset();
+          loadSuperDreamFeed();
+        } else {
+          showToast(postJson.message || 'Failed to post.', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error', 'ERROR');
+      }
+    }
+
+    async function handleSendComment(e, messageId) {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const text = input.value.trim();
+      if (!text) return;
+
+      try {
+        const res = await fetch(`/api/super-dream/message/${messageId}/comments`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        const json = await res.json();
+        if (json.success) {
+          input.value = '';
+          loadSuperDreamFeed();
+        } else {
+          showToast(json.message || 'Failed to send comment', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Error: ' + err.message, 'error', 'ERROR');
+      }
+    }
+
+    // Load Kanban Tasks
+    async function loadTasks() {
+      try {
+        const res = await fetch('/api/tasks');
+        const json = await res.json();
+        if (!json.success) return;
+        const tasks = json.tasks || [];
+
+        const colTodo = document.getElementById('colTodo');
+        const colInProg = document.getElementById('colInProgress');
+        const colRev = document.getElementById('colReview');
+        const colDone = document.getElementById('colDone');
+
+        colTodo.innerHTML = '';
+        colInProg.innerHTML = '';
+        colRev.innerHTML = '';
+        colDone.innerHTML = '';
+
+        let todoC = 0, inProgC = 0, revC = 0, doneC = 0;
+
+        tasks.forEach(t => {
+          const card = `
+            <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/30 space-y-2 hover:border-amber-400 transition-colors">
+              <div class="flex items-center justify-between text-[10px] font-mono">
+                <span class="px-1.5 py-0.2 rounded bg-surface-container-high text-outline">${t.project ? t.project.code || 'TASK' : 'TASK'}</span>
+                <span class="px-1.5 py-0.2 rounded font-bold ${t.priority === 'HIGH' || t.priority === 'URGENT' ? 'bg-rose-500/20 text-rose-300' : 'bg-surface-container-high text-outline'}">${t.priority}</span>
+              </div>
+              <div class="font-semibold text-xs text-on-surface">${t.title}</div>
+              <div class="flex items-center justify-between pt-1 border-t border-outline-variant/20 text-[10px] text-outline">
+                <span>Due ${new Date(t.dueDate).toLocaleDateString()}</span>
+                <select onchange="updateTaskStatus('${t._id}', this.value)" class="bg-surface-container-high text-on-surface rounded border border-outline-variant/30 text-[10px] p-0.5">
+                  <option value="TODO" ${t.status === 'TODO' ? 'selected' : ''}>TODO</option>
+                  <option value="IN_PROGRESS" ${t.status === 'IN_PROGRESS' ? 'selected' : ''}>PROGRESS</option>
+                  <option value="REVIEW" ${t.status === 'REVIEW' ? 'selected' : ''}>REVIEW</option>
+                  <option value="DONE" ${t.status === 'DONE' ? 'selected' : ''}>DONE</option>
+                </select>
+              </div>
+            </div>
+          `;
+
+          if (t.status === 'TODO') { colTodo.innerHTML += card; todoC++; }
+          else if (t.status === 'IN_PROGRESS') { colInProg.innerHTML += card; inProgC++; }
+          else if (t.status === 'REVIEW') { colRev.innerHTML += card; revC++; }
+          else if (t.status === 'DONE') { colDone.innerHTML += card; doneC++; }
+        });
+
+        document.getElementById('countTodo').textContent = todoC;
+        document.getElementById('countInProgress').textContent = inProgC;
+        document.getElementById('countReview').textContent = revC;
+        document.getElementById('countDone').textContent = doneC;
+      } catch (err) {}
+    }
+
+    async function updateTaskStatus(taskId, status) {
+      try {
+        const res = await fetch(`/api/tasks/${taskId}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ status })
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(`Task status updated to ${status}!`, 'success', 'UPDATED');
+          loadTasks();
+        }
+      } catch (err) {}
+    }
+
+    // Load Milestones
+    async function loadMilestones() {
+      const container = document.getElementById('milestonesDetailedList');
+      if (!container) return;
+      try {
+        const res = await fetch('/api/milestones');
+        const json = await res.json();
+        if (!json.success || !json.milestones || json.milestones.length === 0) {
+          container.innerHTML = '<div class="text-xs text-outline py-4 text-center">No milestones created yet.</div>';
+          return;
+        }
+
+        container.innerHTML = json.milestones.map(m => `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-secondary/20 text-secondary font-bold">${m.project ? m.project.code || 'CAP' : 'CAP'}</span>
+                <span class="font-bold text-xs text-on-surface">${m.title}</span>
+                <span class="text-[10px] font-mono px-1.5 py-0.2 rounded ${m.status === 'APPROVED' ? 'bg-tertiary/20 text-tertiary' : m.status === 'SUBMITTED' ? 'bg-secondary/20 text-secondary' : 'bg-surface-container-high text-outline'}">${m.status}</span>
+              </div>
+              <p class="text-xs text-outline">${m.description || ''}</p>
+              <div class="text-[10px] text-outline mt-1 font-mono">Due: ${new Date(m.dueDate).toLocaleDateString()}</div>
+            </div>
+            <div>
+              ${m.status === 'APPROVED' ? `
+                <span class="text-xs font-mono text-tertiary font-bold flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">check_circle</span> Approved
+                </span>
+              ` : `
+                <button onclick="promptSubmitMilestone('${m._id}', '${m.title.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-lg bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">upload</span>
+                  <span>Submit Deliverable</span>
+                </button>
+              `}
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {}
+    }
+
+    function promptSubmitMilestone(id, title) {
+      document.getElementById('submitMilestoneId').value = id;
+      document.getElementById('submitMilestoneTitle').value = title;
+      openModal('submitMilestoneModal');
+    }
+
+    async function executeMilestoneSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('submitMilestoneId').value;
+      const deliverableUrl = document.getElementById('submitDeliverableUrl').value.trim();
+      const submissionNotes = document.getElementById('submitNotes').value.trim();
+
+      try {
+        const res = await fetch(`/api/milestones/${id}/submit`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ deliverableUrl, submissionNotes })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('submitMilestoneModal');
+          showToast('Milestone deliverable submitted for mentor review!', 'success', 'SUBMITTED');
+          loadMilestones();
+        } else {
+          showToast(json.message || 'Submission failed.', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Error submitting milestone.', 'error', 'ERROR');
+      }
+    }
+
+    // Load Documents
+    async function loadDocuments() {
+      const container = document.getElementById('documentsListGrid');
+      if (!container) return;
+      try {
+        const res = await fetch('/api/documents');
+        const json = await res.json();
+        if (!json.success || !json.documents || json.documents.length === 0) {
+          container.innerHTML = '<div class="col-span-full text-xs text-outline py-4 text-center">No documents uploaded yet.</div>';
+          return;
+        }
+
+        container.innerHTML = json.documents.map(d => `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/30 space-y-2">
+            <div class="flex items-center justify-between text-[10px] font-mono text-outline">
+              <span class="px-1.5 py-0.2 rounded bg-surface-container-high">${d.category || 'Document'}</span>
+              <span>${new Date(d.createdAt).toLocaleDateString()}</span>
+            </div>
+            <div class="font-bold text-xs text-on-surface">${d.title}</div>
+            <a href="${d.url}" target="_blank" class="inline-flex items-center gap-1 text-[11px] text-amber-400 hover:text-amber-300 font-semibold pt-1">
+              <span class="material-symbols-outlined text-xs">download</span>
+              <span>Open Document &rarr;</span>
+            </a>
+          </div>
+        `).join('');
+      } catch (err) {}
+    }
+
+    // Calendar Handlers
+    function changeCalMonth(delta) {
+      calDate.setMonth(calDate.getMonth() + delta);
+      loadCalendar();
+    }
+
+    function loadCalendar() {
+      const grid = document.getElementById('calGrid');
+      const monthDisplay = document.getElementById('calMonthDisplay');
+      if (!grid || !monthDisplay) return;
+
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      monthDisplay.textContent = `${monthNames[month]} ${year}`;
+
+      const firstDay = new Date(year, month, 1).getDay();
+      const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+      let html = '';
+      for (let i = 0; i < firstDay; i++) {
+        html += '<div class="h-16 rounded-xl bg-surface-container-low/40 p-1"></div>';
+      }
+
+      for (let day = 1; day <= daysInMonth; day++) {
+        const isToday = (new Date().getDate() === day && new Date().getMonth() === month && new Date().getFullYear() === year);
+        html += `
+          <div class="h-16 rounded-xl p-1 bg-surface-container border ${isToday ? 'border-amber-400 bg-amber-500/10' : 'border-outline-variant/20'} flex flex-col justify-between">
+            <span class="font-mono text-[10px] ${isToday ? 'text-amber-400 font-bold' : 'text-outline'}">${day}</span>
+          </div>
+        `;
+      }
+      grid.innerHTML = html;
+    }
+
+    // Create Project Form
+    document.getElementById('createProjectForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('newProjTitle').value.trim();
+      const code = document.getElementById('newProjCode').value.trim();
+      const abstract = document.getElementById('newProjAbstract').value.trim();
+
+      try {
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, code, abstract })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('studentNewProjectModal');
+          showToast('Project created successfully!', 'success', 'PROJECT CREATED');
+          loadStudentDashboard();
+        } else {
+          showToast(json.message || 'Failed to create project.', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Error creating project.', 'error', 'ERROR');
+      }
+    });
+
+    // Create Task Form
+    document.getElementById('createTaskForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const project = document.getElementById('taskProjectSelect').value;
+      const title = document.getElementById('taskTitleInput').value.trim();
+      const priority = document.getElementById('taskPrioritySelect').value;
+      const dueDate = document.getElementById('taskDueDateInput').value;
+
+      try {
+        const res = await fetch('/api/tasks', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ project, title, priority, dueDate })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('newTaskModal');
+          showToast('Task added to sprint!', 'success', 'TASK CREATED');
+          loadTasks();
+          loadStudentDashboard();
+        } else {
+          showToast(json.message || 'Failed to create task.', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Error creating task.', 'error', 'ERROR');
+      }
+    });
+
+    // Upload Document Form
+    document.getElementById('uploadDocForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const title = document.getElementById('docTitleInput').value.trim();
+      const category = document.getElementById('docCategorySelect').value;
+      const url = document.getElementById('docUrlInput').value.trim();
+
+      try {
+        const res = await fetch('/api/documents', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, category, url })
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('uploadDocModal');
+          showToast('Document saved!', 'success', 'SAVED');
+          loadDocuments();
+        } else {
+          showToast(json.message || 'Failed to save document.', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Error saving document.', 'error', 'ERROR');
+      }
+    });
+
+    async function handleLogout() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+      } catch (e) {}
+      localStorage.removeItem('projecthub_token');
+      window.location.href = '/login/student';
+    }
+
+    // Initialize on load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadStudentDashboard();
+    });
+  </script>
+</body>
+</html>

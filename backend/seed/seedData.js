@@ -169,6 +169,7 @@ async function seedDatabase() {
       studentCategory: 'SUPER_DREAM',
       studentId: 'STU-AIML-301',
       title: 'Super Dream Scholar (AI&ML)',
+      mentor: facultyUser1 ? facultyUser1._id : null,
       avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
       bio: '3rd Year AI&ML student focused on Computer Vision and Transformer Architectures.',
     });
@@ -178,6 +179,7 @@ async function seedDatabase() {
     studentUser.section = 'A';
     studentUser.cohort = 'AI&ML - 3rd Year (Section A)';
     studentUser.studentCategory = 'SUPER_DREAM';
+    if (facultyUser1) studentUser.mentor = facultyUser1._id;
     await studentUser.save();
   }
 

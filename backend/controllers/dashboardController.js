@@ -6,6 +6,7 @@ const AuditTrail = require('../models/AuditTrail');
 const Notification = require('../models/Notification');
 const Department = require('../models/Department');
 const Cohort = require('../models/Cohort');
+const SuperDream = require('../models/SuperDream');
 
 // 1. STUDENT DASHBOARD API: GET /api/dashboard/student
 // Enforces strictly STUDENT role and returns only student-authorized records
@@ -98,23 +99,44 @@ exports.getStudentDashboard = async (req, res) => {
 
     // Recent activity related to student's projects or student
     const recentActivity = await AuditTrail.find({
-      $or: [{ user: studentId }, { targetId: { $in: projectIds.map((id) => id.toString()) } }],
-    })
-      .sort({ timestamp: -1 })
-      .limit(10);
+       $or: [{ user: studentId }, { targetId: { $in: projectIds.map((id) => id.toString()) } }],
+     })
+       .sort({ timestamp: -1 })
+       .limit(10);
 
     // Notifications
     const notifications = await Notification.find({
-      user: studentId,
-    })
-      .sort({ createdAt: -1 })
-      .limit(10);
+       user: studentId,
+     })
+       .sort({ createdAt: -1 })
+       .limit(10);
+
+    // Fetch assigned faculty mentor if in Super Dream
+    let assignedFacultyMentor = null;
+    let superDreamBatchPeers = [];
+    let superDreamGroup = null;
+
+    if (studentProfile.studentCategory === 'SUPER_DREAM') {
+      superDreamGroup = await SuperDream.findOne({ mentees: studentId, status: 'ACTIVE' })
+        .populate('mentor', 'name email department title avatar facultyId')
+        .populate('mentees', 'name email studentId section cohort avatar studentCategory title');
+
+      if (superDreamGroup && superDreamGroup.mentor) {
+        assignedFacultyMentor = superDreamGroup.mentor;
+        superDreamBatchPeers = (superDreamGroup.mentees || []).filter((m) => m._id.toString() !== studentId.toString());
+      } else if (req.user.mentor) {
+        assignedFacultyMentor = await User.findById(req.user.mentor).select('name email department title avatar facultyId');
+      }
+    }
 
     return res.json({
       success: true,
       role: 'STUDENT',
       data: {
         studentProfile,
+        assignedFacultyMentor,
+        superDreamBatchPeers,
+        superDreamGroup,
         activeProjects,
         taskCounts,
         tasksDue,
@@ -244,6 +266,54 @@ exports.getFacultyDashboard = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(20);
 
+    // Exclusively fetch Super Dream students assigned to this faculty mentor
+    const superDreamGroups = await SuperDream.find({ mentor: facultyId, status: 'ACTIVE' })
+      .populate('mentees', 'name email studentId section cohort avatar studentCategory title academicYear createdAt');
+
+    const superDreamMentees = [];
+    const menteeIds = [];
+    superDreamGroups.forEach((g) => {
+      if (Array.isArray(g.mentees)) {
+        g.mentees.forEach((m) => {
+          superDreamMentees.push({
+            id: m._id,
+            name: m.name,
+            email: m.email,
+            studentId: m.studentId,
+            section: m.section,
+            cohort: m.cohort,
+            academicYear: m.academicYear,
+            avatar: m.avatar,
+            title: m.title,
+            studentCategory: m.studentCategory,
+            groupId: g._id,
+            groupTitle: g.title,
+          });
+          menteeIds.push(m._id.toString());
+        });
+      }
+    });
+
+    // Also fetch any students who directly have user.mentor = facultyId and not already counted
+    const directMentees = await User.find({ mentor: facultyId, studentCategory: 'SUPER_DREAM' })
+      .select('name email studentId section cohort avatar studentCategory title academicYear createdAt');
+    directMentees.forEach((m) => {
+      if (!menteeIds.includes(m._id.toString())) {
+        superDreamMentees.push({
+          id: m._id,
+          name: m.name,
+          email: m.email,
+          studentId: m.studentId,
+          section: m.section,
+          cohort: m.cohort,
+          academicYear: m.academicYear,
+          avatar: m.avatar,
+          title: m.title,
+          studentCategory: m.studentCategory,
+        });
+      }
+    });
+
     return res.json({
       success: true,
       role: 'FACULTY',
@@ -259,6 +329,7 @@ exports.getFacultyDashboard = async (req, res) => {
         defenseSchedule,
         analyticsSummary,
         notifications,
+        superDreamMentees,
       },
     });
   } catch (err) {

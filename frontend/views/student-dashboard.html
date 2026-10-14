@@ -247,6 +247,22 @@
       </button>
     </div>
 
+    <!-- Super Dream Scholar Promotion Banner (Only shown if student is enrolled in Super Dream) -->
+    <div id="superDreamEnrolledBanner" class="hidden mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-surface-container-low to-surface-container-low border border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg shadow-amber-500/5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 shrink-0">
+          <span class="material-symbols-outlined text-xl filled">stars</span>
+        </div>
+        <div>
+          <div class="text-xs font-bold text-amber-300">⭐ You are enrolled in 3rd Year Super Dream Track!</div>
+          <p class="text-[11px] text-outline">You have access to a dedicated honors workspace with direct 1-on-1 faculty mentorship and specialized milestones.</p>
+        </div>
+      </div>
+      <a href="/superdream/dashboard" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm whitespace-nowrap self-start sm:self-auto">
+        <span>Open Super Dream Dashboard &rarr;</span>
+      </a>
+    </div>
+
     <!-- TAB 1: OVERVIEW -->
     <section id="tab-overview" class="tab-pane space-y-6">
       
@@ -1061,6 +1077,11 @@
         document.getElementById('sideDeptTitle').textContent = p.department;
         const deptSelect = document.getElementById('stuNewProjDept');
         if (deptSelect) deptSelect.value = p.department;
+      }
+
+      if (p.studentCategory === 'SUPER_DREAM') {
+        const sdBanner = document.getElementById('superDreamEnrolledBanner');
+        if (sdBanner) sdBanner.classList.remove('hidden');
       }
 
       // Stats
