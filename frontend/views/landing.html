@@ -87,15 +87,19 @@
       </nav>
 
       <div id="headerNavActions" class="flex items-center gap-1 sm:gap-2 shrink-0">
-        <a href="/login/student" class="text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-lg border border-outline-variant/50 text-on-surface hover:bg-surface-container-high transition-colors">
+        <a href="/login/student" class="text-xs sm:text-sm px-2 sm:px-2.5 py-1.5 rounded-lg border border-outline-variant/50 text-on-surface hover:bg-surface-container-high transition-colors">
           <span class="hidden sm:inline">Student Portal</span>
           <span class="sm:hidden">Student</span>
         </a>
-        <a href="/login/faculty" class="text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-lg border border-outline-variant/50 text-secondary hover:bg-surface-container-high transition-colors">
+        <a href="/login/faculty" class="text-xs sm:text-sm px-2 sm:px-2.5 py-1.5 rounded-lg border border-outline-variant/50 text-secondary hover:bg-surface-container-high transition-colors">
           <span class="hidden sm:inline">Faculty Portal</span>
           <span class="sm:hidden">Faculty</span>
         </a>
-        <a href="/login/admin" class="text-xs sm:text-sm px-2 sm:px-3.5 py-1.5 rounded-lg bg-primary-container text-on-primary font-medium hover:bg-indigo-600 transition-colors shadow-sm">
+        <a href="/login/hod" class="text-xs sm:text-sm px-2 sm:px-2.5 py-1.5 rounded-lg border border-amber-400/40 text-amber-400 hover:bg-amber-400/10 transition-colors">
+          <span class="hidden sm:inline">HOD Portal</span>
+          <span class="sm:hidden">HOD</span>
+        </a>
+        <a href="/login/admin" class="text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-lg bg-primary-container text-on-primary font-medium hover:bg-indigo-600 transition-colors shadow-sm">
           <span class="hidden sm:inline">Admin Portal</span>
           <span class="sm:hidden">Admin</span>
         </a>
@@ -136,7 +140,7 @@
 
       <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high border border-outline-variant/50 text-xs mb-6 sm:mb-8 shadow-sm max-w-full">
         <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse shrink-0"></span>
-        <span class="text-on-surface font-medium truncate">Three Dedicated Roles &bull; MongoDB-Verified Authorization</span>
+        <span class="text-on-surface font-medium truncate">Institutional Roles &bull; MongoDB-Verified Authorization</span>
       </div>
 
       <h1 class="font-headline text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-on-surface max-w-4xl mx-auto mb-4 sm:mb-6 leading-tight">
@@ -147,21 +151,21 @@
       </h1>
 
       <p class="text-sm sm:text-base md:text-lg text-on-surface-variant max-w-2xl mx-auto mb-8 sm:mb-12">
-        ProjectHub enforces dedicated authentication entry points, specialized dashboards, and server-side MongoDB role verification for Students, Faculty Advisors, and Institutional Deans.
+        ProjectHub enforces dedicated authentication entry points, specialized dashboards, and server-side MongoDB role verification for Students, Faculty Advisors, Department Heads, and Institutional Deans.
       </p>
 
       <!-- ROLE ACCESS CARDS -->
-      <div id="roles" class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto text-left mb-16">
+      <div id="roles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-7xl mx-auto text-left mb-16">
         
         <!-- CARD 1: STUDENT -->
-        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-6 flex flex-col justify-between hover:border-primary/50 transition-all hover:shadow-lg group">
+        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 flex flex-col justify-between hover:border-primary/50 transition-all hover:shadow-lg group">
           <div>
             <div class="w-12 h-12 rounded-lg bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary mb-4 group-hover:scale-105 transition-transform">
               <span class="material-symbols-outlined text-[26px]">terminal</span>
             </div>
             <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline text-xl font-bold text-on-surface">1. STUDENT</h3>
-              <span class="text-[11px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-primary">/login/student</span>
+              <h3 class="font-headline text-lg font-bold text-on-surface">1. STUDENT</h3>
+              <span class="text-[10px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-primary">/login/student</span>
             </div>
             <p class="text-xs text-outline mb-4">Workspace &amp; Deliverables Execution</p>
             
@@ -186,38 +190,38 @@
           </div>
 
           <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
-            <a href="/login/student" class="w-full py-2.5 px-4 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary font-medium text-center text-sm transition-colors flex items-center justify-center gap-2">
+            <a href="/login/student" class="w-full py-2.5 px-3 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary font-medium text-center text-xs transition-colors flex items-center justify-center gap-1.5">
               <span>Enter Student Portal</span>
               <span class="material-symbols-outlined text-sm">arrow_forward</span>
             </a>
-            <div class="text-[11px] text-outline text-center">Demo: student@university.edu / Password123!</div>
+            <div class="text-[10px] text-outline text-center truncate">Demo: student@university.edu / Password123!</div>
           </div>
         </div>
 
         <!-- CARD 2: FACULTY -->
-        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 sm:p-6 flex flex-col justify-between hover:border-secondary/50 transition-all hover:shadow-lg group">
+        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 flex flex-col justify-between hover:border-secondary/50 transition-all hover:shadow-lg group">
           <div>
             <div class="w-12 h-12 rounded-lg bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary mb-4 group-hover:scale-105 transition-transform">
               <span class="material-symbols-outlined text-[26px]">rate_review</span>
             </div>
             <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline text-xl font-bold text-on-surface">2. FACULTY</h3>
-              <span class="text-[11px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-secondary">/login/faculty</span>
+              <h3 class="font-headline text-lg font-bold text-on-surface">2. FACULTY</h3>
+              <span class="text-[10px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-secondary">/login/faculty</span>
             </div>
-            <p class="text-xs text-outline mb-4">Advisory, Reviews &amp; Defense Evaluations</p>
+            <p class="text-xs text-outline mb-4">Advisory, Reviews &amp; Defense Scoring</p>
             
             <div class="space-y-2 mb-6">
               <div class="text-xs text-tertiary flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Auto-filtered to supervised teams &amp; projects</span>
+                <span>Auto-filtered to supervised teams &amp; mentees</span>
               </div>
               <div class="text-xs text-tertiary flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Review submissions, approve &amp; request revisions</span>
+                <span>Review submissions &amp; evaluate defense</span>
               </div>
               <div class="text-xs text-tertiary flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Schedule defenses &amp; monitor project health</span>
+                <span>Isolated Super Dream mentee batch hub</span>
               </div>
               <div class="text-xs text-error flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">block</span>
@@ -227,23 +231,65 @@
           </div>
 
           <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
-            <a href="/login/faculty" class="w-full py-2.5 px-4 rounded-lg bg-surface-container-high hover:bg-secondary hover:text-black border border-secondary/40 text-secondary font-medium text-center text-sm transition-all flex items-center justify-center gap-2">
+            <a href="/login/faculty" class="w-full py-2.5 px-3 rounded-lg bg-surface-container-high hover:bg-secondary hover:text-black border border-secondary/40 text-secondary font-medium text-center text-xs transition-all flex items-center justify-center gap-1.5">
               <span>Enter Faculty Portal</span>
               <span class="material-symbols-outlined text-sm">arrow_forward</span>
             </a>
-            <div class="text-[11px] text-outline text-center">Demo: faculty@university.edu / Password123!</div>
+            <div class="text-[10px] text-outline text-center truncate">Demo: faculty@university.edu / Password123!</div>
           </div>
         </div>
 
-        <!-- CARD 3: ADMIN -->
-        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 sm:p-6 flex flex-col justify-between hover:border-tertiary/50 transition-all hover:shadow-lg group">
+        <!-- CARD 3: HEAD OF DEPARTMENT (HOD) -->
+        <div class="rounded-xl bg-surface-container-low border border-amber-400/30 p-5 flex flex-col justify-between hover:border-amber-400/60 transition-all hover:shadow-lg group relative overflow-hidden">
+          <div class="absolute -right-8 -top-8 w-24 h-24 bg-amber-400/10 rounded-full blur-xl pointer-events-none"></div>
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-[26px]">manage_accounts</span>
+            </div>
+            <div class="flex items-center justify-between mb-1">
+              <h3 class="font-headline text-lg font-bold text-on-surface">3. HOD</h3>
+              <span class="text-[10px] font-mono uppercase bg-amber-400/10 px-2 py-0.5 rounded text-amber-400 border border-amber-400/20">/login/hod</span>
+            </div>
+            <p class="text-xs text-outline mb-4">Department Oversight &amp; User Enrollment</p>
+            
+            <div class="space-y-2 mb-6">
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Full read access to all projects, tasks &amp; metrics</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Enroll students &amp; faculty members</span>
+              </div>
+              <div class="text-xs text-tertiary flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                <span>Super Dream 3rd-year mentorship oversight</span>
+              </div>
+              <div class="text-xs text-error flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">block</span>
+                <span>Cannot remove users or create projects/tasks</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
+            <a href="/login/hod" class="w-full py-2.5 px-3 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-semibold text-center text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm">
+              <span>Enter HOD Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <div class="text-[10px] text-outline text-center truncate">Demo: hod@university.edu / Password123!</div>
+          </div>
+        </div>
+
+        <!-- CARD 4: ADMIN -->
+        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 flex flex-col justify-between hover:border-tertiary/50 transition-all hover:shadow-lg group">
           <div>
             <div class="w-12 h-12 rounded-lg bg-tertiary/10 border border-tertiary/30 flex items-center justify-center text-tertiary mb-4 group-hover:scale-105 transition-transform">
               <span class="material-symbols-outlined text-[26px]">admin_panel_settings</span>
             </div>
             <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline text-xl font-bold text-on-surface">3. ADMIN</h3>
-              <span class="text-[11px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-tertiary">/login/admin</span>
+              <h3 class="font-headline text-lg font-bold text-on-surface">4. ADMIN</h3>
+              <span class="text-[10px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-tertiary">/login/admin</span>
             </div>
             <p class="text-xs text-outline mb-4">Institutional Governance &amp; Accreditation</p>
             
@@ -254,25 +300,25 @@
               </div>
               <div class="text-xs text-tertiary flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Manage departments, cohorts, and user accounts</span>
+                <span>Manage departments, cohorts &amp; user accounts</span>
               </div>
               <div class="text-xs text-tertiary flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Institution-wide analytics &amp; faculty workload balance</span>
+                <span>Full delete privileges &amp; structural administration</span>
               </div>
               <div class="text-xs text-tertiary flex items-center gap-1.5">
                 <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Full tamper-evident audit trail &amp; compliance logs</span>
+                <span>Tamper-evident audit trail &amp; compliance logs</span>
               </div>
             </div>
           </div>
 
           <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
-            <a href="/login/admin" class="w-full py-2.5 px-4 rounded-lg bg-surface-container-high hover:bg-tertiary hover:text-black border border-tertiary/40 text-tertiary font-medium text-center text-sm transition-all flex items-center justify-center gap-2">
+            <a href="/login/admin" class="w-full py-2.5 px-3 rounded-lg bg-surface-container-high hover:bg-tertiary hover:text-black border border-tertiary/40 text-tertiary font-medium text-center text-xs transition-all flex items-center justify-center gap-1.5">
               <span>Enter Admin Portal</span>
               <span class="material-symbols-outlined text-sm">arrow_forward</span>
             </a>
-            <div class="text-[11px] text-outline text-center">Demo: admin@university.edu / Password123!</div>
+            <div class="text-[10px] text-outline text-center truncate">Demo: admin@university.edu / Password123!</div>
           </div>
         </div>
 
@@ -316,6 +362,7 @@
       <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
         <a href="/login/student" class="hover:text-primary transition-colors">Student Login</a>
         <a href="/login/faculty" class="hover:text-secondary transition-colors">Faculty Login</a>
+        <a href="/login/hod" class="hover:text-amber-400 transition-colors">HOD Login</a>
         <a href="/login/admin" class="hover:text-tertiary transition-colors">Admin Login</a>
       </div>
     </div>
@@ -357,6 +404,7 @@
       const roleUpper = role.toUpperCase();
       let dashboardUrl = '/student/dashboard';
       if (role === 'faculty') dashboardUrl = '/faculty/dashboard';
+      if (role === 'hod') dashboardUrl = '/hod/dashboard';
       if (role === 'admin') dashboardUrl = '/admin/dashboard';
 
       if (banner && nameEl && emailEl && roleBadge && dashBtn) {

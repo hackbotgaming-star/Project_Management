@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Head of Department Portal Login - ProjectHub</title>
+  <!-- PWA Meta & Icons -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f131c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ProjectHub">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <script src="/js/pwa-install.js" defer></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/js/toast.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#0f131c",
+            "surface-container-lowest": "#0a0e17",
+            "surface-container-low": "#181b25",
+            "surface-container": "#1c1f29",
+            "surface-container-high": "#262a34",
+            "surface-container-highest": "#31353f",
+            "on-surface": "#dfe2ef",
+            "on-surface-variant": "#c7c4d8",
+            "outline": "#918fa1",
+            "outline-variant": "#464555",
+            "primary": "#c3c0ff",
+            "on-primary": "#1d00a5",
+            "primary-container": "#4f46e5",
+            "secondary": "#4cd7f6",
+            "tertiary": "#4edea3",
+            "error": "#ffb4ab",
+            "background": "#0f131c",
+            "on-background": "#dfe2ef"
+          },
+          fontFamily: {
+            headline: ["Geist", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body antialiased min-h-screen flex flex-col justify-between selection:bg-amber-400 selection:text-black">
+  
+  <!-- Header -->
+  <header class="px-4 py-3 sm:px-6 sm:py-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 border-b border-outline-variant/20 bg-surface-container-low">
+    <a href="/" class="flex items-center gap-2.5 sm:gap-3">
+      <div class="w-9 h-9 rounded-lg bg-amber-400/10 border border-amber-400/40 flex items-center justify-center text-amber-400 font-bold shadow-sm shrink-0">
+        <span class="material-symbols-outlined text-[20px]">manage_accounts</span>
+      </div>
+      <div>
+        <span class="font-headline font-bold text-base sm:text-lg text-on-surface">ProjectHub</span>
+        <span class="block text-[10px] sm:text-[11px] text-outline">Department Head Leadership &amp; Oversight</span>
+      </div>
+    </a>
+    <div class="text-[11px] sm:text-xs text-outline flex items-center gap-1.5 flex-wrap">
+      <span>Switch Portal:</span>
+      <a href="/login/student" class="text-primary hover:underline">Student</a>
+      <span>&bull;</span>
+      <a href="/login/faculty" class="text-secondary hover:underline">Faculty</a>
+      <span>&bull;</span>
+      <a href="/login/admin" class="text-tertiary hover:underline">Admin</a>
+      <span>&bull;</span>
+      <a href="/" class="text-on-surface hover:underline">Home</a>
+    </div>
+  </header>
+
+  <!-- Login Card Container -->
+  <main class="flex items-center justify-center p-3 sm:p-6 flex-1">
+    <div class="w-full max-w-md bg-surface-container-low border border-amber-400/30 rounded-2xl p-5 sm:p-8 shadow-2xl relative overflow-hidden">
+      
+      <!-- Top Accent Bar -->
+      <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-400 to-indigo-500"></div>
+
+      <!-- Icon & Title -->
+      <div class="text-center mb-5 sm:mb-6">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-amber-400/15 border border-amber-400/40 text-amber-400 mx-auto flex items-center justify-center mb-2.5 sm:mb-3">
+          <span class="material-symbols-outlined text-[28px] sm:text-[32px]">manage_accounts</span>
+        </div>
+        <h1 class="font-headline text-xl sm:text-2xl font-bold text-on-surface">Head of Department Portal</h1>
+        <p class="text-xs text-on-surface-variant mt-1">Departmental academic oversight, project monitoring &amp; student enrollment</p>
+      </div>
+
+      <!-- Notification / Error Box -->
+      <div id="alertBox" class="hidden mb-4 p-3 rounded-lg text-xs border"></div>
+
+      <!-- Credentials Form -->
+      <form id="hodLoginForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-on-surface-variant mb-1">HOD University Email</label>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">verified_user</span>
+            <input id="email" type="email" required autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" placeholder="hod@university.edu" class="w-full pl-10 pr-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-amber-400 transition-colors">
+          </div>
+        </div>
+
+        <div>
+          <div class="flex items-center justify-between mb-1">
+            <label class="block text-xs font-medium text-on-surface-variant">Security Password</label>
+            <button type="button" onclick="openForgotModal()" class="text-[11px] text-amber-400 hover:underline font-medium">Forgot Password?</button>
+          </div>
+          <div class="relative">
+            <span class="material-symbols-outlined absolute left-3 top-2.5 text-outline text-[18px]">key</span>
+            <input id="password" type="password" required autocomplete="current-password" placeholder="••••••••" class="w-full pl-10 pr-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-amber-400 transition-colors">
+          </div>
+        </div>
+
+        <button id="btnSubmit" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-semibold text-sm transition-all shadow-md active:scale-[0.99] flex items-center justify-center gap-2">
+          <span>Authenticate as Head of Department</span>
+          <span class="material-symbols-outlined text-sm">login</span>
+        </button>
+
+        <button type="button" onclick="fillDemoHOD()" class="w-full py-2 px-3 rounded-lg border border-amber-400/30 hover:bg-amber-400/10 text-amber-400 text-xs font-medium transition-colors flex items-center justify-center gap-1.5">
+          <span class="material-symbols-outlined text-[15px]">bolt</span>
+          <span>⚡ Tap to Fill Demo Credentials</span>
+        </button>
+      </form>
+
+    </div>
+  </main>
+
+  <!-- FORGOT PASSWORD MODAL -->
+  <div id="forgotModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+      <button onclick="closeForgotModal()" class="absolute top-4 right-4 text-outline hover:text-on-surface">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+
+      <div class="text-center mb-5">
+        <div class="w-12 h-12 rounded-xl bg-amber-400/10 border border-amber-400/30 text-amber-400 mx-auto flex items-center justify-center mb-2">
+          <span class="material-symbols-outlined text-[26px]">lock_reset</span>
+        </div>
+        <h3 class="font-headline font-bold text-lg text-on-surface">Reset Password</h3>
+        <p class="text-xs text-outline mt-1">Generate a verification reset code to update your account password.</p>
+      </div>
+
+      <div id="forgotAlert" class="hidden mb-4 p-3 rounded-lg text-xs border"></div>
+
+      <!-- Step 1: Request Code -->
+      <form id="requestCodeForm" class="space-y-4">
+        <div>
+          <label class="block text-xs font-medium text-on-surface-variant mb-1">Enter your HOD email</label>
+          <input type="email" id="forgotEmail" required placeholder="hod@university.edu" class="w-full px-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-amber-400">
+        </div>
+        <button type="submit" id="btnRequestCode" class="w-full py-2 px-4 rounded-xl bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center justify-center gap-1.5">
+          <span>Generate Verification Code</span>
+          <span class="material-symbols-outlined text-sm">send</span>
+        </button>
+      </form>
+
+      <!-- Step 2: Submit Reset -->
+      <form id="resetPasswordForm" class="space-y-4 mt-4 pt-4 border-t border-outline-variant/20 hidden">
+        <div>
+          <label class="block text-xs font-medium text-on-surface-variant mb-1">6-Digit Verification Code</label>
+          <input type="text" id="resetCode" maxlength="6" required placeholder="123456" class="w-full px-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm font-mono tracking-widest text-center focus:outline-none focus:border-amber-400">
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-on-surface-variant mb-1">New Password (Min 8 characters)</label>
+          <input type="password" id="newPassword" minlength="8" required placeholder="••••••••" class="w-full px-3 py-2 bg-surface-container rounded-lg border border-outline-variant/30 text-on-surface text-sm focus:outline-none focus:border-amber-400">
+        </div>
+        <button type="submit" id="btnResetSubmit" class="w-full py-2 px-4 rounded-xl bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center justify-center gap-1.5">
+          <span>Set New Password</span>
+          <span class="material-symbols-outlined text-sm">check_circle</span>
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="py-4 text-center text-xs text-outline border-t border-outline-variant/20 bg-surface-container-low">
+    ProjectHub Academic Governance &bull; Department of Artificial Intelligence &amp; Machine Learning
+  </footer>
+
+  <script>
+    function showAlert(msg, isError) {
+      const box = document.getElementById('alertBox');
+      box.textContent = msg;
+      box.className = isError 
+        ? 'mb-4 p-3 rounded-lg text-xs border border-error/40 bg-error/10 text-error'
+        : 'mb-4 p-3 rounded-lg text-xs border border-tertiary/40 bg-tertiary/10 text-tertiary';
+      box.classList.remove('hidden');
+    }
+
+    function openForgotModal() {
+      document.getElementById('forgotModal').classList.remove('hidden');
+      document.getElementById('forgotAlert').classList.add('hidden');
+      const emailVal = document.getElementById('email').value.trim();
+      if (emailVal) document.getElementById('forgotEmail').value = emailVal;
+    }
+
+    function closeForgotModal() {
+      document.getElementById('forgotModal').classList.add('hidden');
+    }
+
+    function showForgotAlert(msg, isError) {
+      const box = document.getElementById('forgotAlert');
+      box.textContent = msg;
+      box.className = isError 
+        ? 'mb-4 p-3 rounded-lg text-xs border border-error/40 bg-error/10 text-error'
+        : 'mb-4 p-3 rounded-lg text-xs border border-tertiary/40 bg-tertiary/10 text-tertiary';
+      box.classList.remove('hidden');
+    }
+
+    // Request Reset Code
+    document.getElementById('requestCodeForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      const btn = document.getElementById('btnRequestCode');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Generating...';
+
+      try {
+        const res = await fetch('/api/auth/forgot-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email })
+        });
+        const data = await res.json();
+        btn.disabled = false;
+        btn.innerHTML = '<span>Generate Verification Code</span><span class="material-symbols-outlined text-sm">send</span>';
+
+        if (data.success) {
+          showForgotAlert(`Code generated! ${data.demoCode ? `Use demo code: [ ${data.demoCode} ]` : data.message}`, false);
+          document.getElementById('resetPasswordForm').classList.remove('hidden');
+        } else {
+          showForgotAlert(data.message || 'Email not found.', true);
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Generate Verification Code</span><span class="material-symbols-outlined text-sm">send</span>';
+        showForgotAlert('Network error requesting reset code.', true);
+      }
+    });
+
+    // Submit New Password
+    document.getElementById('resetPasswordForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('forgotEmail').value.trim();
+      const resetCode = document.getElementById('resetCode').value.trim();
+      const newPassword = document.getElementById('newPassword').value;
+      const btn = document.getElementById('btnResetSubmit');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Updating...';
+
+      try {
+        const res = await fetch('/api/auth/reset-password', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, resetCode, newPassword })
+        });
+        const data = await res.json();
+        btn.disabled = false;
+        btn.innerHTML = '<span>Set New Password</span><span class="material-symbols-outlined text-sm">check_circle</span>';
+
+        if (data.success) {
+          showForgotAlert(data.message, false);
+          setTimeout(() => {
+            closeForgotModal();
+            showAlert('Password reset successful! Please log in with your new password.', false);
+            document.getElementById('password').value = newPassword;
+          }, 1200);
+        } else {
+          showForgotAlert(data.message || 'Failed to update password.', true);
+        }
+      } catch (err) {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Set New Password</span><span class="material-symbols-outlined text-sm">check_circle</span>';
+        showForgotAlert('Network error updating password.', true);
+      }
+    });
+
+    document.getElementById('hodLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Authenticating...';
+
+      try {
+        const res = await fetch('/api/auth/login/hod', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+        if (data.success) {
+          if (data.token) localStorage.setItem('projecthub_token', data.token);
+          showAlert('Head of Department authenticated. Redirecting to Leadership Dashboard...', false);
+          setTimeout(() => {
+            window.location.href = data.redirectUrl || '/hod/dashboard';
+          }, 400);
+        } else {
+          showAlert(data.message || 'Authentication failed.', true);
+          btn.disabled = false;
+          btn.innerHTML = '<span>Authenticate as Head of Department</span><span class="material-symbols-outlined text-sm">login</span>';
+        }
+      } catch (err) {
+        showAlert('Network or server error.', true);
+        btn.disabled = false;
+        btn.innerHTML = '<span>Authenticate as Head of Department</span><span class="material-symbols-outlined text-sm">login</span>';
+      }
+    });
+
+    function fillDemoHOD() {
+      document.getElementById('email').value = 'hod@university.edu';
+      document.getElementById('password').value = 'Password123!';
+    }
+
+    // Check if already authenticated
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const token = localStorage.getItem('projecthub_token');
+        const headers = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        const res = await fetch('/api/auth/me', { headers, credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.success && data.user) {
+            if (data.user.role === 'HOD') {
+              showAlert(`Already logged in as ${data.user.name}. Redirecting to HOD Dashboard...`, false);
+              setTimeout(() => {
+                window.location.href = '/hod/dashboard';
+              }, 800);
+            }
+          }
+        }
+      } catch (e) {}
+    });
+  </script>
+</body>
+</html>

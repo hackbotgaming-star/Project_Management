@@ -7,7 +7,7 @@ const morgan = require('morgan');
 
 const { connectDB } = require('./config/db');
 const { seedDatabase } = require('./seed/seedData');
-const { authenticateToken, requireStudent, requireFaculty, requireAdmin } = require('./middleware/auth');
+const { authenticateToken, requireStudent, requireFaculty, requireAdmin, requireHOD } = require('./middleware/auth');
 
 // Import Route Handlers
 const authRoutes = require('./routes/authRoutes');
@@ -65,6 +65,10 @@ app.get('/login/faculty', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/views/login-faculty.html'));
 });
 
+app.get('/login/hod', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/views/login-hod.html'));
+});
+
 app.get('/login/admin', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/views/login-admin.html'));
 });
@@ -95,6 +99,12 @@ app.get(['/superdream/dashboard', '/superdream', /^\/superdream\/.*/], authentic
 app.get(/^\/faculty\/.*/, authenticateToken, requireFaculty, (req, res) => {
   res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
   res.sendFile(path.join(__dirname, '../frontend/views/faculty-dashboard.html'));
+});
+
+// Head of Department Protected Dashboard & Subroutes
+app.get(['/hod/dashboard', '/hod', /^\/hod\/.*/], authenticateToken, requireHOD, (req, res) => {
+  res.set('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.sendFile(path.join(__dirname, '../frontend/views/hod-dashboard.html'));
 });
 
 // Admin Protected Dashboard & Subroutes

@@ -463,6 +463,123 @@ exports.getAdminDashboard = async (req, res) => {
   }
 };
 
+// 4. HOD DASHBOARD API: GET /api/dashboard/hod
+// Comprehensive read-only institutional & departmental oversight with user enrollment capabilities
+exports.getHODDashboard = async (req, res) => {
+  try {
+    const studentCount = await User.countDocuments({ role: 'STUDENT' });
+    const facultyCount = await User.countDocuments({ role: { $in: ['FACULTY', 'HOD'] } });
+
+    // Fetch all projects
+    const allProjects = await Project.find()
+      .populate('facultyMentor', 'name email title avatar department')
+      .populate('teamMembers', 'name email avatar studentId title department academicYear section studentCategory')
+      .sort({ updatedAt: -1 });
+
+    const activeProjects = allProjects.filter((p) => p.status !== 'COMPLETED');
+    const completedProjects = allProjects.filter((p) => p.status === 'COMPLETED' || p.status === 'APPROVED');
+    const atRiskProjects = allProjects.filter((p) => p.health === 'AT_RISK');
+
+    // Fetch all tasks across all projects
+    const allTasks = await Task.find()
+      .populate('assignedTo', 'name email avatar studentId')
+      .populate('project', 'title code department health status')
+      .sort({ dueDate: 1 });
+
+    // Fetch all milestones
+    const allMilestones = await Milestone.find()
+      .populate('project', 'title code department')
+      .sort({ dueDate: 1 });
+
+    // Fetch all students and faculty
+    const studentUsers = await User.find({ role: 'STUDENT' })
+      .select('name email title avatar department studentId cohort status academicYear section studentCategory mentor createdAt')
+      .populate('mentor', 'name email title avatar')
+      .sort({ academicYear: 1, section: 1, name: 1 });
+
+    const facultyUsers = await User.find({ role: { $in: ['FACULTY', 'HOD'] } })
+      .select('name email title avatar department facultyId status createdAt bio')
+      .sort({ name: 1 });
+
+    // Faculty workload calculation
+    const facultyWorkload = facultyUsers.map((fac) => {
+      const assigned = allProjects.filter((p) => p.facultyMentor && p.facultyMentor._id.toString() === fac._id.toString());
+      const mentees = studentUsers.filter((s) => s.mentor && s.mentor._id.toString() === fac._id.toString());
+      return {
+        facultyId: fac._id,
+        name: fac.name,
+        email: fac.email,
+        title: fac.title,
+        department: fac.department,
+        avatar: fac.avatar,
+        status: fac.status || 'Active',
+        assignedProjectsCount: assigned.length,
+        menteesCount: mentees.length,
+        projects: assigned.map((p) => ({ id: p._id, title: p.title, code: p.code, status: p.status, health: p.health })),
+      };
+    });
+
+    // 3rd-Year Super Dream Student Breakdown
+    const superDreamStudents = studentUsers.filter((s) => s.academicYear === '3rd Year' && s.studentCategory === 'SUPER_DREAM');
+
+    // Departments & Cohorts
+    const departments = await Department.find();
+    const cohorts = await Cohort.find();
+
+    // Audit summary (last 20 actions)
+    const auditSummary = await AuditTrail.find().sort({ timestamp: -1 }).limit(20);
+
+    const hodProfile = {
+      id: req.user._id,
+      name: req.user.name,
+      email: req.user.email,
+      role: 'HOD',
+      department: req.user.department || 'Artificial Intelligence & Machine Learning',
+      title: req.user.title || 'Professor & Head of Department (AI&ML)',
+      avatar: req.user.avatar || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+    };
+
+    return res.json({
+      success: true,
+      role: 'HOD',
+      permissions: {
+        canAddUsers: true,
+        canDeleteUsers: false,
+        canCreateProjects: false,
+        canCreateTasks: false,
+        canDeleteProjects: false,
+        canDeleteTasks: false,
+        readOnlyWorkspace: true,
+      },
+      data: {
+        hodProfile,
+        studentCount,
+        facultyCount,
+        totalProjects: allProjects.length,
+        activeProjects: activeProjects.length,
+        completedProjects: completedProjects.length,
+        atRiskProjects: atRiskProjects.length,
+        totalTasks: allTasks.length,
+        totalMilestones: allMilestones.length,
+        superDreamCount: superDreamStudents.length,
+        allProjects,
+        allTasks,
+        allMilestones,
+        studentUsers,
+        facultyUsers,
+        facultyWorkload,
+        superDreamStudents,
+        departments,
+        cohorts,
+        auditSummary,
+      },
+    });
+  } catch (err) {
+    console.error('getHODDashboard error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to retrieve HOD dashboard data: ' + err.message });
+  }
+};
+
 // 4. CALENDAR EVENTS API: GET /api/dashboard/calendar-events
 // Role-scoped aggregation of milestones, tasks, and defenses
 exports.getCalendarEvents = async (req, res) => {

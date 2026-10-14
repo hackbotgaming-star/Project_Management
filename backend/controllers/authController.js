@@ -135,7 +135,7 @@ exports.loginFaculty = async (req, res) => {
       success: true,
       message: 'Faculty authentication successful.',
       token,
-      redirectUrl: '/faculty/dashboard',
+      redirectUrl: user.role === 'HOD' ? '/hod/dashboard' : '/faculty/dashboard',
       user: {
         id: user._id,
         name: user.name,
@@ -152,7 +152,65 @@ exports.loginFaculty = async (req, res) => {
   }
 };
 
-// 3. ADMIN LOGIN
+// 3. HEAD OF DEPARTMENT (HOD) LOGIN
+exports.loginHOD = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({ success: false, message: 'HOD email and password are required.' });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid Head of Department credentials.' });
+    }
+
+    const isMatch = await user.comparePassword(password);
+    if (!isMatch) {
+      return res.status(401).json({ success: false, message: 'Invalid Head of Department credentials.' });
+    }
+
+    // MANDATORY BACKEND ROLE VERIFICATION FROM MONGODB
+    if (user.role !== 'HOD') {
+      return res.status(403).json({
+        success: false,
+        message: `Account verification failed: This account is registered as '${user.role}', not as Head of Department (HOD). Please use the appropriate login portal.`,
+      });
+    }
+
+    const token = createSessionToken(user, res);
+
+    await AuditTrail.create({
+      user: user._id,
+      userName: user.name,
+      role: user.role,
+      action: 'LOGIN_HOD',
+      details: 'Head of Department authenticated successfully.',
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    return res.json({
+      success: true,
+      message: 'Head of Department authentication successful.',
+      token,
+      redirectUrl: '/hod/dashboard',
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        department: user.department,
+        title: user.title,
+        avatar: user.avatar,
+      },
+    });
+  } catch (err) {
+    console.error('loginHOD error:', err);
+    return res.status(500).json({ success: false, message: 'Authentication error: ' + (err.message || 'Database error') });
+  }
+};
+
+// 4. ADMIN LOGIN
 exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;

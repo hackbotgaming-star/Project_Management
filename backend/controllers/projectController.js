@@ -20,8 +20,8 @@ exports.getMyProjects = async (req, res) => {
     } else if (userRole === 'FACULTY') {
       // ONLY return projects where the authenticated faculty is the assigned mentor
       query = { facultyMentor: userId };
-    } else if (userRole === 'ADMIN') {
-      // Institution-wide scope
+    } else if (userRole === 'ADMIN' || userRole === 'HOD') {
+      // Institution-wide scope & Departmental oversight
       query = {};
     } else {
       return res.status(403).json({ success: false, message: 'Invalid role.' });
@@ -180,6 +180,10 @@ exports.createProject = async (req, res) => {
   try {
     const { title, code, abstract, department, cohort, teamMembers, facultyMentor, tags, repositoryUrl, documentationUrl } = req.body;
 
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access to projects and cannot create projects.' });
+    }
+
     if (!title) {
       return res.status(400).json({ success: false, message: 'Project title is required.' });
     }
@@ -294,6 +298,10 @@ exports.deleteProject = async (req, res) => {
     const project = await Project.findById(req.params.id);
     if (!project) {
       return res.status(404).json({ success: false, message: 'Project not found.' });
+    }
+
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access and cannot delete projects.' });
     }
 
     // Role check: Students can delete projects where they are team members

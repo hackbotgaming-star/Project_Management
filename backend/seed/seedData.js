@@ -119,6 +119,22 @@ async function seedDatabase() {
     });
   }
 
+  let hodAlias = await User.findOne({ email: 'hod@university.edu' });
+  if (!hodAlias) {
+    hodAlias = await User.create({
+      name: 'Dr. V. Deepa',
+      email: 'hod@university.edu',
+      password: facultyPw,
+      role: 'HOD',
+      department: AIML_DEPARTMENT.name,
+      cohort: 'AI&ML Academic Leadership',
+      facultyId: 'FAC-HOD-AIML-01',
+      title: 'Professor & Head of Department (AI&ML)',
+      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
+      bio: 'Head of Department of Artificial Intelligence & Machine Learning.',
+    });
+  }
+
   // 3. Faculty Mentors (AI&ML)
   let facultyUser1 = await User.findOne({ email: 'faculty@university.edu' });
   if (!facultyUser1) {

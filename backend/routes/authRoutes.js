@@ -9,9 +9,10 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB image limit
 });
 
-// Three dedicated role login endpoints
+// Dedicated role login endpoints
 router.post('/login/student', authController.loginStudent);
 router.post('/login/faculty', authController.loginFaculty);
+router.post('/login/hod', authController.loginHOD);
 router.post('/login/admin', authController.loginAdmin);
 
 // Password recovery endpoints

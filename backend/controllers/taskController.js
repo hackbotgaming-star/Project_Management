@@ -16,7 +16,7 @@ exports.getTasks = async (req, res) => {
     } else if (req.user.role === 'FACULTY') {
       const myProjects = await Project.find({ facultyMentor: req.user._id }).select('_id');
       allowedProjectIds = myProjects.map((p) => p._id);
-    } else if (req.user.role === 'ADMIN') {
+    } else if (req.user.role === 'ADMIN' || req.user.role === 'HOD') {
       const allProjects = await Project.find().select('_id');
       allowedProjectIds = allProjects.map((p) => p._id);
     }
@@ -58,6 +58,10 @@ exports.createTask = async (req, res) => {
     const project = await Project.findById(projectId);
     if (!project) {
       return res.status(404).json({ success: false, message: 'Project not found.' });
+    }
+
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access to tasks and cannot create tasks.' });
     }
 
     // Authorization
@@ -114,6 +118,10 @@ exports.updateTaskStatus = async (req, res) => {
     const task = await Task.findById(req.params.id).populate('project');
     if (!task) {
       return res.status(404).json({ success: false, message: 'Task not found.' });
+    }
+
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access and cannot update tasks.' });
     }
 
     // Role check: Student can update task in their own project

@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Head of Department Portal - ProjectHub</title>
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#0f131c">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ProjectHub HOD">
+  <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <script src="/js/pwa-install.js" defer></script>
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet">
+  <link rel="stylesheet" href="/css/theme.css">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script src="/js/toast.js"></script>
+  <script src="/js/theme.js"></script>
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface": "#0f131c",
+            "surface-container-lowest": "#0a0e17",
+            "surface-container-low": "#181b25",
+            "surface-container": "#1c1f29",
+            "surface-container-high": "#262a34",
+            "surface-container-highest": "#31353f",
+            "on-surface": "#dfe2ef",
+            "on-surface-variant": "#c7c4d8",
+            "outline": "#918fa1",
+            "outline-variant": "#464555",
+            "primary": "#c3c0ff",
+            "on-primary": "#1d00a5",
+            "primary-container": "#4f46e5",
+            "secondary": "#4cd7f6",
+            "tertiary": "#4edea3",
+            "error": "#ffb4ab",
+            "background": "#0f131c",
+            "on-background": "#dfe2ef"
+          },
+          fontFamily: {
+            headline: ["Geist", "sans-serif"],
+            body: ["Inter", "sans-serif"],
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body antialiased min-h-screen selection:bg-amber-400 selection:text-black">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-40 w-full bg-surface-container/90 backdrop-blur-md border-b border-outline-variant/30">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+      
+      <!-- Brand & Dept -->
+      <div class="flex items-center gap-3 min-w-0">
+        <a href="/" class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-amber-400/15 border border-amber-400/40 flex items-center justify-center text-amber-400 font-bold shadow-sm shrink-0">
+            <span class="material-symbols-outlined text-[20px]">manage_accounts</span>
+          </div>
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="font-headline font-bold text-base sm:text-lg text-on-surface">ProjectHub</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-amber-400/15 text-amber-400 border border-amber-400/30">HOD PORTAL</span>
+            </div>
+            <span class="text-[11px] text-outline truncate block">Dept of Artificial Intelligence &amp; Machine Learning</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Quick Actions / User Info -->
+      <div class="flex items-center gap-2 sm:gap-3 shrink-0">
+        <!-- Theme Toggle -->
+        <button onclick="toggleTheme()" class="p-2 rounded-xl bg-surface-container hover:bg-surface-container-high border border-outline-variant/30 text-outline hover:text-on-surface transition-colors" title="Toggle Theme">
+          <span class="material-symbols-outlined text-[18px]">dark_mode</span>
+        </button>
+
+        <!-- HOD Profile Chip -->
+        <div class="flex items-center gap-2.5 px-3 py-1.5 rounded-xl bg-surface-container border border-outline-variant/20">
+          <img id="hodAvatar" src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150" class="w-7 h-7 rounded-full object-cover border border-amber-400/40">
+          <div class="hidden sm:block text-left">
+            <div id="hodName" class="text-xs font-bold text-on-surface leading-tight">Dr. V. Deepa</div>
+            <div id="hodTitle" class="text-[10px] text-outline font-mono leading-tight">Head of Department</div>
+          </div>
+        </div>
+
+        <!-- Sign Out -->
+        <button onclick="handleLogout()" class="px-2.5 sm:px-3 py-1.5 rounded-xl border border-outline-variant/30 text-outline hover:text-error hover:border-error/30 text-xs font-medium transition-colors flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">logout</span>
+          <span class="hidden sm:inline">Sign Out</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8 space-y-6">
+
+    <!-- LEADERSHIP HERO BANNER -->
+    <section class="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-surface-container-low via-surface-container to-surface-container-high border border-amber-400/30 shadow-xl relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-64 h-64 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute -right-8 -bottom-8 w-48 h-48 bg-primary/10 rounded-full blur-2xl pointer-events-none"></div>
+
+      <div class="relative z-10 flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+        <div class="space-y-3 max-w-3xl">
+          <div class="flex flex-wrap items-center gap-2">
+            <span class="px-2.5 py-1 rounded-lg bg-amber-400/15 border border-amber-400/40 font-mono text-xs font-bold text-amber-400 uppercase tracking-wider flex items-center gap-1">
+              <span class="material-symbols-outlined text-[15px]">verified</span>
+              <span>Head of Department</span>
+            </span>
+            <span class="px-2.5 py-1 rounded-lg bg-surface-container-high text-xs text-outline font-mono">Academic Session 2024-2025</span>
+            <span class="px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 text-xs font-mono font-bold">ALL YEARS ACTIVE</span>
+          </div>
+
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-on-surface tracking-tight">
+            Department Leadership &amp; Academic Oversight
+          </h1>
+          <p class="text-xs sm:text-sm text-outline leading-relaxed max-w-2xl">
+            Welcome, Dr. V. Deepa. As Head of Department, you hold comprehensive read access to all active capstones, task pipelines, and 3rd-year Super Dream mentor batches, alongside administrative authority to enroll new students and faculty.
+          </p>
+
+          <!-- Governance Permissions Badge Bar -->
+          <div class="flex flex-wrap items-center gap-2 pt-1 text-[11px] font-mono">
+            <span class="px-2 py-0.5 rounded bg-surface-container-highest text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+              <span class="material-symbols-outlined text-[13px]">check</span>
+              <span>Full Read Access to All Data</span>
+            </span>
+            <span class="px-2 py-0.5 rounded bg-surface-container-highest text-emerald-400 border border-emerald-500/20 flex items-center gap-1">
+              <span class="material-symbols-outlined text-[13px]">person_add</span>
+              <span>User Enrollment Privileges</span>
+            </span>
+            <span class="px-2 py-0.5 rounded bg-surface-container-highest text-amber-300 border border-amber-400/20 flex items-center gap-1">
+              <span class="material-symbols-outlined text-[13px]">shield</span>
+              <span>View-Only Projects &amp; Tasks</span>
+            </span>
+            <span class="px-2 py-0.5 rounded bg-surface-container-highest text-outline border border-outline-variant/30 flex items-center gap-1">
+              <span class="material-symbols-outlined text-[13px]">lock</span>
+              <span>Non-Destructive (No Deletions)</span>
+            </span>
+          </div>
+        </div>
+
+        <!-- Quick Primary Action: Add User -->
+        <div class="flex flex-col sm:flex-row lg:flex-col gap-2.5 shrink-0">
+          <button onclick="openAddUserModal()" class="px-4 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs sm:text-sm transition-all shadow-md hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-[18px]">person_add</span>
+            <span>+ Enroll / Add User</span>
+          </button>
+          <button onclick="switchTab('superdream')" class="px-4 py-2.5 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-amber-400/30 text-amber-300 text-xs font-semibold transition-colors flex items-center justify-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">stars</span>
+            <span>Super Dream Oversight</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- METRICS OVERVIEW CARDS -->
+    <section class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 hover:border-amber-400/40 transition-colors">
+        <div class="text-[11px] text-outline font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm text-primary">folder</span>
+          <span>Total Projects</span>
+        </div>
+        <div id="metricTotalProjects" class="text-xl sm:text-2xl font-extrabold font-mono text-on-surface mt-1">0</div>
+        <div id="metricActiveProjects" class="text-[10px] text-tertiary mt-0.5">0 Active</div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 hover:border-amber-400/40 transition-colors">
+        <div class="text-[11px] text-outline font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm text-secondary">groups</span>
+          <span>Students Enrolled</span>
+        </div>
+        <div id="metricTotalStudents" class="text-xl sm:text-2xl font-extrabold font-mono text-on-surface mt-1">0</div>
+        <div class="text-[10px] text-outline mt-0.5">Years 1–4 (Sec A &amp; B)</div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-surface-container-low border border-amber-400/30 hover:border-amber-400/60 transition-colors">
+        <div class="text-[11px] text-amber-300 font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm text-amber-400">stars</span>
+          <span>Super Dream (3rd Yr)</span>
+        </div>
+        <div id="metricSuperDream" class="text-xl sm:text-2xl font-extrabold font-mono text-amber-400 mt-1">0</div>
+        <div class="text-[10px] text-amber-400/80 mt-0.5">Assigned to Mentors</div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 hover:border-amber-400/40 transition-colors">
+        <div class="text-[11px] text-outline font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm text-tertiary">school</span>
+          <span>Faculty Mentors</span>
+        </div>
+        <div id="metricTotalFaculty" class="text-xl sm:text-2xl font-extrabold font-mono text-on-surface mt-1">0</div>
+        <div class="text-[10px] text-tertiary mt-0.5">Advisors &amp; Leads</div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 hover:border-amber-400/40 transition-colors">
+        <div class="text-[11px] text-outline font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm text-primary">task_alt</span>
+          <span>Tasks &amp; Milestones</span>
+        </div>
+        <div id="metricTotalTasks" class="text-xl sm:text-2xl font-extrabold font-mono text-on-surface mt-1">0</div>
+        <div id="metricTotalMilestones" class="text-[10px] text-outline mt-0.5">0 Milestones</div>
+      </div>
+
+      <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 hover:border-amber-400/40 transition-colors">
+        <div class="text-[11px] text-outline font-medium flex items-center gap-1">
+          <span class="material-symbols-outlined text-sm text-error">warning</span>
+          <span>At Risk Projects</span>
+        </div>
+        <div id="metricAtRiskProjects" class="text-xl sm:text-2xl font-extrabold font-mono text-error mt-1">0</div>
+        <div class="text-[10px] text-outline mt-0.5">Needs Intervention</div>
+      </div>
+    </section>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="flex items-center gap-2 overflow-x-auto pb-2 border-b border-outline-variant/20 no-scrollbar text-xs font-medium">
+      <button onclick="switchTab('overview')" id="tabBtn-overview" class="tab-btn px-4 py-2 rounded-xl bg-amber-400 text-black font-bold flex items-center gap-1.5 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-sm">dashboard</span>
+        <span>Overview</span>
+      </button>
+      <button onclick="switchTab('projects')" id="tabBtn-projects" class="tab-btn px-4 py-2 rounded-xl text-outline hover:text-on-surface hover:bg-surface-container flex items-center gap-1.5 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-sm">folder</span>
+        <span>Projects (Read-Only)</span>
+      </button>
+      <button onclick="switchTab('tasks')" id="tabBtn-tasks" class="tab-btn px-4 py-2 rounded-xl text-outline hover:text-on-surface hover:bg-surface-container flex items-center gap-1.5 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-sm">task_alt</span>
+        <span>Tasks &amp; Deliverables</span>
+      </button>
+      <button onclick="switchTab('superdream')" id="tabBtn-superdream" class="tab-btn px-4 py-2 rounded-xl text-outline hover:text-on-surface hover:bg-surface-container flex items-center gap-1.5 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-sm text-amber-400">stars</span>
+        <span>Super Dream Track</span>
+      </button>
+      <button onclick="switchTab('students')" id="tabBtn-students" class="tab-btn px-4 py-2 rounded-xl text-outline hover:text-on-surface hover:bg-surface-container flex items-center gap-1.5 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-sm">groups</span>
+        <span>Student Directory &amp; Add</span>
+      </button>
+      <button onclick="switchTab('faculty')" id="tabBtn-faculty" class="tab-btn px-4 py-2 rounded-xl text-outline hover:text-on-surface hover:bg-surface-container flex items-center gap-1.5 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-sm">school</span>
+        <span>Faculty &amp; Workload</span>
+      </button>
+      <button onclick="switchTab('audit')" id="tabBtn-audit" class="tab-btn px-4 py-2 rounded-xl text-outline hover:text-on-surface hover:bg-surface-container flex items-center gap-1.5 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-sm">history</span>
+        <span>Audit Trail</span>
+      </button>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: OVERVIEW                            -->
+    <!-- ========================================== -->
+    <div id="tabContent-overview" class="space-y-6">
+      
+      <!-- Academic Years Grid -->
+      <div class="space-y-3">
+        <div class="flex items-center justify-between">
+          <h2 class="font-bold text-base text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-primary text-xl">calendar_view_month</span>
+            <span>Department Academic Cohort Distribution (AI &amp; ML)</span>
+          </h2>
+          <span class="text-xs text-outline font-mono">4 Years &bull; Section A &amp; B</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- 1st Year -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-primary">1st Year</span>
+              <span id="badgeCount1st" class="text-xs font-mono px-2 py-0.5 rounded bg-primary/20 text-primary font-bold">0</span>
+            </div>
+            <p class="text-xs text-outline">Foundational AI, Discrete Math, Programming</p>
+            <div class="pt-2 border-t border-outline-variant/15 flex justify-between text-[11px] font-mono text-outline">
+              <span id="count1stSecA">Sec A: 0</span>
+              <span id="count1stSecB">Sec B: 0</span>
+            </div>
+          </div>
+
+          <!-- 2nd Year -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-secondary">2nd Year</span>
+              <span id="badgeCount2nd" class="text-xs font-mono px-2 py-0.5 rounded bg-secondary/20 text-secondary font-bold">0</span>
+            </div>
+            <p class="text-xs text-outline">Data Structures, Algorithms, Machine Learning</p>
+            <div class="pt-2 border-t border-outline-variant/15 flex justify-between text-[11px] font-mono text-outline">
+              <span id="count2ndSecA">Sec A: 0</span>
+              <span id="count2ndSecB">Sec B: 0</span>
+            </div>
+          </div>
+
+          <!-- 3rd Year -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-amber-400/30 space-y-2 shadow-sm relative overflow-hidden">
+            <div class="absolute right-0 top-0 w-16 h-16 bg-amber-400/5 rounded-full blur-lg pointer-events-none"></div>
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-amber-300 flex items-center gap-1">
+                <span>3rd Year</span>
+                <span class="material-symbols-outlined text-xs text-amber-400">stars</span>
+              </span>
+              <span id="badgeCount3rd" class="text-xs font-mono px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">0</span>
+            </div>
+            <p class="text-xs text-outline">Capstone Projects, Super Dream Mentorship</p>
+            <div class="pt-2 border-t border-outline-variant/15 flex justify-between text-[11px] font-mono text-outline">
+              <span id="count3rdSecA">Sec A: 0</span>
+              <span id="count3rdSecB">Sec B: 0</span>
+            </div>
+          </div>
+
+          <!-- 4th Year -->
+          <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/20 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-sm text-tertiary">4th Year</span>
+              <span id="badgeCount4th" class="text-xs font-mono px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold">0</span>
+            </div>
+            <p class="text-xs text-outline">Industry Internship, Research Defense, Placements</p>
+            <div class="pt-2 border-t border-outline-variant/15 flex justify-between text-[11px] font-mono text-outline">
+              <span id="count4thSecA">Sec A: 0</span>
+              <span id="count4thSecB">Sec B: 0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Dual Grid: Projects Snapshot & Super Dream Distribution -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        
+        <!-- Recent Active Projects -->
+        <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/20 space-y-4">
+          <div class="flex items-center justify-between border-b border-outline-variant/15 pb-3">
+            <h3 class="font-bold text-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-lg">folder_special</span>
+              <span>Recent Capstone Projects</span>
+            </h3>
+            <button onclick="switchTab('projects')" class="text-xs text-primary hover:underline">View All &rarr;</button>
+          </div>
+          <div id="overviewProjectsList" class="space-y-2.5">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+
+        <!-- Super Dream Mentorship Batches -->
+        <div class="p-5 rounded-2xl bg-surface-container-low border border-amber-400/20 space-y-4">
+          <div class="flex items-center justify-between border-b border-outline-variant/15 pb-3">
+            <h3 class="font-bold text-sm text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-lg">supervised_user_circle</span>
+              <span>Super Dream Mentor Distribution</span>
+            </h3>
+            <button onclick="switchTab('superdream')" class="text-xs text-amber-400 hover:underline">Batch View &rarr;</button>
+          </div>
+          <div id="overviewSuperDreamList" class="space-y-2.5">
+            <!-- Dynamically populated -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: PROJECTS DIRECTORY (READ-ONLY)       -->
+    <!-- ========================================== -->
+    <div id="tabContent-projects" class="space-y-4 hidden">
+      <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/20 space-y-4">
+        
+        <!-- Controls & Filters -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="font-bold text-base text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-primary text-xl">folder</span>
+              <span>Department Project Directory (Read-Only)</span>
+            </h2>
+            <p class="text-xs text-outline">Click any project to view its full details page, deliverables, tasks, and repository.</p>
+          </div>
+
+          <!-- Search & Filter -->
+          <div class="flex flex-wrap items-center gap-2">
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-2.5 top-2 text-outline text-[16px]">search</span>
+              <input type="text" id="projectSearchInput" oninput="filterProjectsTable()" placeholder="Search project title or code..." class="pl-8 pr-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface outline-none focus:border-primary">
+            </div>
+            <select id="projectStatusFilter" onchange="filterProjectsTable()" class="py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface outline-none focus:border-primary">
+              <option value="ALL">All Statuses</option>
+              <option value="PROPOSED">PROPOSED</option>
+              <option value="IN_PROGRESS">IN_PROGRESS</option>
+              <option value="UNDER_REVIEW">UNDER_REVIEW</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="COMPLETED">COMPLETED</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Projects Table -->
+        <div class="overflow-x-auto rounded-xl border border-outline-variant/20">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-surface-container text-outline font-mono text-[11px] uppercase border-b border-outline-variant/20">
+              <tr>
+                <th class="py-3 px-4">Code</th>
+                <th class="py-3 px-4">Project Title</th>
+                <th class="py-3 px-4">Faculty Mentor</th>
+                <th class="py-3 px-4">Team</th>
+                <th class="py-3 px-4">Health</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="projectsTableBody" class="divide-y divide-outline-variant/15">
+              <!-- Populated via renderProjectsTable() -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: TASKS & DELIVERABLES (READ-ONLY)    -->
+    <!-- ========================================== -->
+    <div id="tabContent-tasks" class="space-y-4 hidden">
+      <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/20 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="font-bold text-base text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-xl">task_alt</span>
+              <span>All Active Tasks &amp; Deliverables (Read-Only)</span>
+            </h2>
+            <p class="text-xs text-outline">Click any task to inspect details, assigned team member, and deliverables.</p>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <select id="taskStatusFilter" onchange="filterTasksTable()" class="py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface outline-none focus:border-secondary">
+              <option value="ALL">All Tasks</option>
+              <option value="TODO">TODO</option>
+              <option value="IN_PROGRESS">IN PROGRESS</option>
+              <option value="REVIEW">REVIEW</option>
+              <option value="DONE">DONE</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto rounded-xl border border-outline-variant/20">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-surface-container text-outline font-mono text-[11px] uppercase border-b border-outline-variant/20">
+              <tr>
+                <th class="py-3 px-4">Task Title</th>
+                <th class="py-3 px-4">Project Code</th>
+                <th class="py-3 px-4">Assignee</th>
+                <th class="py-3 px-4">Priority</th>
+                <th class="py-3 px-4">Due Date</th>
+                <th class="py-3 px-4">Status</th>
+                <th class="py-3 px-4 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="tasksTableBody" class="divide-y divide-outline-variant/15">
+              <!-- Populated via renderTasksTable() -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: SUPER DREAM 3RD-YEAR TRACK          -->
+    <!-- ========================================== -->
+    <div id="tabContent-superdream" class="space-y-4 hidden">
+      <div class="p-5 rounded-2xl bg-surface-container-low border border-amber-400/30 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-outline-variant/20 pb-4">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-2xl">stars</span>
+              <h2 class="font-bold text-base text-on-surface">3rd-Year Super Dream Mentorship Track</h2>
+              <span id="superDreamCountBadge" class="font-mono text-xs px-2.5 py-0.5 rounded-full bg-amber-400/20 text-amber-300 font-bold">0 Mentees</span>
+            </div>
+            <p class="text-xs text-outline mt-1">Exclusive 3rd Year AI &amp; ML track: ~60 high-performance students mentored in batches of 15 by dedicated faculty.</p>
+          </div>
+          <button onclick="openAddUserModal(true)" class="px-3.5 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black text-xs font-bold transition-all shadow-sm flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">person_add</span>
+            <span>+ Enroll Super Dream Student</span>
+          </button>
+        </div>
+
+        <!-- Mentors Overview Cards -->
+        <div id="superDreamMentorsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+
+        <!-- Mentees Table -->
+        <div class="space-y-2 pt-2">
+          <h3 class="font-bold text-xs text-on-surface uppercase tracking-wider text-outline">Enrolled 3rd-Year Super Dream Students</h3>
+          <div class="overflow-x-auto rounded-xl border border-outline-variant/20">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-surface-container text-outline font-mono text-[11px] uppercase border-b border-outline-variant/20">
+                <tr>
+                  <th class="py-3 px-4">Student</th>
+                  <th class="py-3 px-4">Student ID</th>
+                  <th class="py-3 px-4">Section</th>
+                  <th class="py-3 px-4">Assigned Mentor</th>
+                  <th class="py-3 px-4">Track Status</th>
+                </tr>
+              </thead>
+              <tbody id="superDreamTableBody" class="divide-y divide-outline-variant/15">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 5: STUDENT DIRECTORY & USER ENROLLMENT -->
+    <!-- ========================================== -->
+    <div id="tabContent-students" class="space-y-4 hidden">
+      <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/20 space-y-4">
+        
+        <!-- Controls & Enroll Action -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div>
+            <h2 class="font-bold text-base text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-secondary text-xl">groups</span>
+              <span>Student Directory &amp; Enrollment</span>
+            </h2>
+            <p class="text-xs text-outline">You can view all enrolled students and add new students or faculty members. (Non-destructive: user deletion is restricted to Admin).</p>
+          </div>
+
+          <button onclick="openAddUserModal()" class="px-4 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-bold text-xs sm:text-sm transition-all shadow-md flex items-center gap-1.5 self-start sm:self-center">
+            <span class="material-symbols-outlined text-[18px]">person_add</span>
+            <span>+ Add User (Student / Faculty)</span>
+          </button>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="flex flex-wrap items-center gap-2 pt-1 border-t border-outline-variant/15">
+          <div class="relative flex-1 min-w-[200px]">
+            <span class="material-symbols-outlined absolute left-2.5 top-2 text-outline text-[16px]">search</span>
+            <input type="text" id="studentSearchInput" oninput="filterStudentsTable()" placeholder="Search student name, email, or ID..." class="w-full pl-8 pr-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface outline-none focus:border-amber-400">
+          </div>
+
+          <select id="studentYearFilter" onchange="filterStudentsTable()" class="py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface outline-none focus:border-amber-400">
+            <option value="ALL">All Academic Years</option>
+            <option value="1st Year">1st Year</option>
+            <option value="2nd Year">2nd Year</option>
+            <option value="3rd Year">3rd Year</option>
+            <option value="4th Year">4th Year</option>
+          </select>
+
+          <select id="studentSectionFilter" onchange="filterStudentsTable()" class="py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface outline-none focus:border-amber-400">
+            <option value="ALL">All Sections</option>
+            <option value="A">Section A</option>
+            <option value="B">Section B</option>
+          </select>
+
+          <select id="studentCategoryFilter" onchange="filterStudentsTable()" class="py-1.5 px-2.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs text-on-surface outline-none focus:border-amber-400">
+            <option value="ALL">All Categories</option>
+            <option value="SUPER_DREAM">Super Dream (3rd Yr)</option>
+            <option value="MARQUEE">Marquee</option>
+            <option value="DREAM">Dream</option>
+            <option value="REGULAR">Regular</option>
+          </select>
+        </div>
+
+        <!-- Students Table -->
+        <div class="overflow-x-auto rounded-xl border border-outline-variant/20">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-surface-container text-outline font-mono text-[11px] uppercase border-b border-outline-variant/20">
+              <tr>
+                <th class="py-3 px-4">Student</th>
+                <th class="py-3 px-4">Student ID</th>
+                <th class="py-3 px-4">Academic Year</th>
+                <th class="py-3 px-4">Section</th>
+                <th class="py-3 px-4">Category</th>
+                <th class="py-3 px-4">Assigned Mentor</th>
+                <th class="py-3 px-4">Enrolled On</th>
+              </tr>
+            </thead>
+            <tbody id="studentsTableBody" class="divide-y divide-outline-variant/15">
+              <!-- Populated via renderStudentsTable() -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 6: FACULTY DIRECTORY & WORKLOAD        -->
+    <!-- ========================================== -->
+    <div id="tabContent-faculty" class="space-y-4 hidden">
+      <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/20 space-y-4">
+        <div class="flex items-center justify-between border-b border-outline-variant/15 pb-3">
+          <div>
+            <h2 class="font-bold text-base text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-tertiary text-xl">school</span>
+              <span>Faculty Directory &amp; Advisory Allocation</span>
+            </h2>
+            <p class="text-xs text-outline">Department advisors, active mentored projects, and Super Dream mentee loads.</p>
+          </div>
+          <button onclick="openAddUserModal(false, 'FACULTY')" class="px-3 py-1.5 rounded-lg bg-tertiary text-black text-xs font-semibold hover:bg-emerald-400 transition-colors flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">person_add</span>
+            <span>+ Add Faculty</span>
+          </button>
+        </div>
+
+        <div id="facultyWorkloadGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 7: AUDIT TRAIL (READ-ONLY)             -->
+    <!-- ========================================== -->
+    <div id="tabContent-audit" class="space-y-4 hidden">
+      <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-outline-variant/20 space-y-4">
+        <div class="flex items-center justify-between border-b border-outline-variant/15 pb-3">
+          <div>
+            <h2 class="font-bold text-base text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-outline text-xl">history</span>
+              <span>Institutional Audit &amp; Activity Log</span>
+            </h2>
+            <p class="text-xs text-outline">Real-time immutable activity log across student submissions, milestone grading, and user creation.</p>
+          </div>
+        </div>
+
+        <div id="auditLogContainer" class="space-y-2">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ========================================== -->
+  <!-- MODAL: ADD USER (STUDENT / FACULTY)        -->
+  <!-- ========================================== -->
+  <div id="addUserModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-amber-400/40 rounded-2xl w-full max-w-lg p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-amber-400/20 text-amber-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-lg">person_add</span>
+          </div>
+          <div>
+            <h3 class="font-bold text-sm text-on-surface">Enroll New User</h3>
+            <p class="text-[11px] text-outline">Head of Department Enrollment Privileges</p>
+          </div>
+        </div>
+        <button onclick="closeModal('addUserModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="addUserForm" class="space-y-3.5 text-xs">
+        <!-- Role Selection -->
+        <div>
+          <label class="block text-outline font-medium mb-1">Select Role <span class="text-error">*</span></label>
+          <select id="newUserRole" onchange="handleRoleChange(this.value)" required class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none">
+            <option value="STUDENT" selected>Student</option>
+            <option value="FACULTY">Faculty Advisor</option>
+          </select>
+        </div>
+
+        <!-- Name & Email -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-outline font-medium mb-1">Full Name <span class="text-error">*</span></label>
+            <input type="text" id="newUserName" required placeholder="e.g. Aditi Sharma" class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none">
+          </div>
+          <div>
+            <label class="block text-outline font-medium mb-1">Institutional Email <span class="text-error">*</span></label>
+            <input type="email" id="newUserEmail" required placeholder="aditi.aiml@university.edu" class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none">
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div>
+          <label class="block text-outline font-medium mb-1">Initial Password <span class="text-error">*</span></label>
+          <input type="password" id="newUserPassword" required minlength="8" value="Password123!" class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none">
+          <p class="text-[10px] text-outline mt-1">Default set to Password123! (User can change on first login)</p>
+        </div>
+
+        <!-- Student Specific Fields -->
+        <div id="studentFieldsContainer" class="space-y-3 pt-2 border-t border-outline-variant/20">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-outline font-medium mb-1">Academic Year <span class="text-error">*</span></label>
+              <select id="newUserAcademicYear" onchange="handleYearChange(this.value)" class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year" selected>3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-outline font-medium mb-1">Section <span class="text-error">*</span></label>
+              <select id="newUserSection" class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none">
+                <option value="A" selected>Section A</option>
+                <option value="B">Section B</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-outline font-medium mb-1">Student Roll / Register Number</label>
+            <input type="text" id="newUserStudentId" placeholder="e.g. 22AIML042" class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none font-mono">
+          </div>
+
+          <!-- 3rd-Year Exclusive Super Dream Option -->
+          <div id="superDreamToggleContainer" class="p-3.5 rounded-xl bg-amber-400/10 border border-amber-400/30 space-y-2">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-amber-400 text-lg">stars</span>
+                <div>
+                  <span class="font-bold text-amber-300 block">3rd-Year Super Dream Student</span>
+                  <span class="text-[10px] text-outline">Assign to specialized industry mentor batch (~15 students/mentor)</span>
+                </div>
+              </div>
+              <input type="checkbox" id="newUserIsSuperDream" onchange="handleSuperDreamToggle(this.checked)" class="w-4 h-4 rounded text-amber-500 bg-surface-container border-outline-variant/40 focus:ring-amber-400 cursor-pointer">
+            </div>
+
+            <!-- Mentor Selector (Shown when Super Dream is checked) -->
+            <div id="superDreamMentorContainer" class="hidden pt-2 border-t border-amber-400/20 space-y-1">
+              <label class="block text-amber-300 font-medium">Designated Faculty Mentor <span class="text-error">*</span></label>
+              <select id="newUserMentorSelect" class="w-full p-2 rounded-lg bg-surface-container border border-amber-400/40 text-on-surface focus:border-amber-400 outline-none text-xs">
+                <!-- Populated via loadDashboard() -->
+              </select>
+              <p class="text-[10px] text-outline">Each mentor supervises a focused batch of ~15 students.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faculty Specific Fields -->
+        <div id="facultyFieldsContainer" class="hidden space-y-3 pt-2 border-t border-outline-variant/20">
+          <div>
+            <label class="block text-outline font-medium mb-1">Faculty Academic Title</label>
+            <input type="text" id="newUserFacultyTitle" placeholder="e.g. Associate Professor &amp; AI Research Lead" class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none">
+          </div>
+          <div>
+            <label class="block text-outline font-medium mb-1">Faculty Staff ID</label>
+            <input type="text" id="newUserFacultyId" placeholder="e.g. FAC-AIML-08" class="w-full p-2.5 rounded-xl bg-surface-container border border-outline-variant/30 text-on-surface focus:border-amber-400 outline-none font-mono">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('addUserModal')" class="px-4 py-2 rounded-xl bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors">Cancel</button>
+          <button type="submit" id="btnSubmitAddUser" class="px-5 py-2 rounded-xl bg-amber-400 hover:bg-amber-300 text-black font-bold transition-all shadow-md flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">person_add</span>
+            <span>Enroll User</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <footer class="py-6 text-center text-xs text-outline border-t border-outline-variant/20 bg-surface-container-low mt-12">
+    ProjectHub Academic Leadership Portal &bull; Department of Artificial Intelligence &amp; Machine Learning
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // Auto-attach JWT auth header
+    const originalFetch = window.fetch;
+    window.fetch = function(url, options = {}) {
+      options = options || {};
+      const token = localStorage.getItem('projecthub_token');
+      if (token && typeof url === 'string' && url.startsWith('/api/')) {
+        options.headers = options.headers || {};
+        if (options.headers instanceof Headers) {
+          if (!options.headers.has('Authorization')) options.headers.set('Authorization', 'Bearer ' + token);
+        } else if (Array.isArray(options.headers)) {
+          options.headers.push(['Authorization', 'Bearer ' + token]);
+        } else {
+          if (!options.headers['Authorization']) options.headers['Authorization'] = 'Bearer ' + token;
+        }
+      }
+      return originalFetch(url, options);
+    };
+
+    let hodData = null;
+    let allStudentsCache = [];
+    let allProjectsCache = [];
+    let allTasksCache = [];
+    let allFacultyCache = [];
+
+    // On Load
+    document.addEventListener('DOMContentLoaded', async () => {
+      await loadHODDashboard();
+    });
+
+    async function loadHODDashboard() {
+      try {
+        const res = await fetch('/api/dashboard/hod');
+        if (res.status === 401 || res.status === 403) {
+          window.location.href = '/login/hod';
+          return;
+        }
+        const json = await res.json();
+        if (!json.success || !json.data) {
+          alert(json.message || 'Failed to load HOD dashboard.');
+          return;
+        }
+
+        hodData = json.data;
+        allStudentsCache = hodData.studentUsers || [];
+        allProjectsCache = hodData.allProjects || [];
+        allTasksCache = hodData.allTasks || [];
+        allFacultyCache = hodData.facultyUsers || [];
+
+        renderHODDashboard(hodData);
+      } catch (err) {
+        console.error('Error loading HOD dashboard:', err);
+      }
+    }
+
+    function renderHODDashboard(data) {
+      // 1. Profile
+      if (data.hodProfile) {
+        document.getElementById('hodName').textContent = data.hodProfile.name || 'Dr. V. Deepa';
+        document.getElementById('hodTitle').textContent = data.hodProfile.title || 'Head of Department';
+        if (data.hodProfile.avatar) document.getElementById('hodAvatar').src = data.hodProfile.avatar;
+      }
+
+      // 2. Metrics
+      document.getElementById('metricTotalProjects').textContent = data.totalProjects || 0;
+      document.getElementById('metricActiveProjects').textContent = `${data.activeProjects || 0} Active`;
+      document.getElementById('metricTotalStudents').textContent = data.studentCount || 0;
+      document.getElementById('metricSuperDream').textContent = data.superDreamCount || 0;
+      document.getElementById('metricTotalFaculty').textContent = data.facultyCount || 0;
+      document.getElementById('metricTotalTasks').textContent = data.totalTasks || 0;
+      document.getElementById('metricTotalMilestones').textContent = `${data.totalMilestones || 0} Milestones`;
+      document.getElementById('metricAtRiskProjects').textContent = data.atRiskProjects || 0;
+
+      // 3. Year breakdown
+      renderYearDistribution(data.studentUsers || []);
+
+      // 4. Populate Mentor Selectors in Add User Modal
+      populateMentorDropdown(data.facultyUsers || []);
+
+      // 5. Render Sections
+      renderOverviewRecentProjects(data.allProjects || []);
+      renderOverviewSuperDream(data.superDreamStudents || [], data.facultyUsers || []);
+      renderProjectsTable(data.allProjects || []);
+      renderTasksTable(data.allTasks || []);
+      renderSuperDreamTab(data.superDreamStudents || [], data.facultyUsers || []);
+      renderStudentsTable(data.studentUsers || []);
+      renderFacultyTab(data.facultyWorkload || []);
+      renderAuditLog(data.auditSummary || []);
+    }
+
+    // 1. Year Distribution Calculation
+    function renderYearDistribution(students) {
+      const counts = {
+        '1st Year': { total: 0, A: 0, B: 0 },
+        '2nd Year': { total: 0, A: 0, B: 0 },
+        '3rd Year': { total: 0, A: 0, B: 0 },
+        '4th Year': { total: 0, A: 0, B: 0 }
+      };
+
+      students.forEach(s => {
+        const yr = s.academicYear || '3rd Year';
+        const sec = s.section === 'B' ? 'B' : 'A';
+        if (counts[yr]) {
+          counts[yr].total++;
+          counts[yr][sec]++;
+        }
+      });
+
+      document.getElementById('badgeCount1st').textContent = counts['1st Year'].total;
+      document.getElementById('count1stSecA').textContent = `Sec A: ${counts['1st Year'].A}`;
+      document.getElementById('count1stSecB').textContent = `Sec B: ${counts['1st Year'].B}`;
+
+      document.getElementById('badgeCount2nd').textContent = counts['2nd Year'].total;
+      document.getElementById('count2ndSecA').textContent = `Sec A: ${counts['2nd Year'].A}`;
+      document.getElementById('count2ndSecB').textContent = `Sec B: ${counts['2nd Year'].B}`;
+
+      document.getElementById('badgeCount3rd').textContent = counts['3rd Year'].total;
+      document.getElementById('count3rdSecA').textContent = `Sec A: ${counts['3rd Year'].A}`;
+      document.getElementById('count3rdSecB').textContent = `Sec B: ${counts['3rd Year'].B}`;
+
+      document.getElementById('badgeCount4th').textContent = counts['4th Year'].total;
+      document.getElementById('count4thSecA').textContent = `Sec A: ${counts['4th Year'].A}`;
+      document.getElementById('count4thSecB').textContent = `Sec B: ${counts['4th Year'].B}`;
+    }
+
+    // 2. Overview Recent Projects
+    function renderOverviewRecentProjects(projects) {
+      const container = document.getElementById('overviewProjectsList');
+      if (!projects.length) {
+        container.innerHTML = '<div class="text-xs text-outline py-4 text-center">No projects registered yet.</div>';
+        return;
+      }
+
+      container.innerHTML = projects.slice(0, 5).map(p => `
+        <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-outline-variant/40 transition-colors flex items-center justify-between gap-3 text-xs">
+          <div class="min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-[11px] font-bold text-primary">${p.code}</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded ${p.health === 'AT_RISK' ? 'bg-error/20 text-error' : 'bg-tertiary/20 text-tertiary'}">${p.health}</span>
+            </div>
+            <a href="/projects/${p._id}" class="font-bold text-on-surface truncate block hover:text-amber-300 transition-colors mt-0.5">${p.title}</a>
+            <div class="text-[11px] text-outline">Advisor: ${p.facultyMentor ? p.facultyMentor.name : 'Unassigned'} &bull; ${p.teamMembers ? p.teamMembers.length : 0} Students</div>
+          </div>
+          <a href="/projects/${p._id}" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-amber-400 hover:text-black font-semibold text-[11px] text-on-surface transition-colors shrink-0">
+            View
+          </a>
+        </div>
+      `).join('');
+    }
+
+    // 3. Overview Super Dream
+    function renderOverviewSuperDream(superDreamStudents, faculty) {
+      const container = document.getElementById('overviewSuperDreamList');
+      if (!superDreamStudents.length) {
+        container.innerHTML = '<div class="text-xs text-outline py-4 text-center">No 3rd-year Super Dream students enrolled yet.</div>';
+        return;
+      }
+
+      // Group by mentor
+      const mentorGroups = {};
+      superDreamStudents.forEach(s => {
+        const mentorName = s.mentor ? s.mentor.name : 'Unassigned Mentor';
+        if (!mentorGroups[mentorName]) mentorGroups[mentorName] = [];
+        mentorGroups[mentorName].push(s);
+      });
+
+      container.innerHTML = Object.entries(mentorGroups).map(([mName, students]) => `
+        <div class="p-3 rounded-xl bg-surface-container border border-amber-400/20 flex items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-lg bg-amber-400/20 text-amber-400 flex items-center justify-center font-bold">
+              <span class="material-symbols-outlined text-[18px]">psychology</span>
+            </div>
+            <div>
+              <div class="font-bold text-on-surface">${mName}</div>
+              <div class="text-[10px] text-outline">Assigned Super Dream Batch</div>
+            </div>
+          </div>
+          <div class="text-right">
+            <span class="font-mono font-bold text-amber-300 text-sm">${students.length}</span>
+            <span class="text-[10px] text-outline block">/ 15 Mentees</span>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 4. Projects Directory Table (READ-ONLY)
+    function renderProjectsTable(projects) {
+      const tbody = document.getElementById('projectsTableBody');
+      if (!projects.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-outline">No projects found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = projects.map(p => {
+        const mentorName = p.facultyMentor ? p.facultyMentor.name : '<span class="text-error font-mono">Unassigned</span>';
+        const teamCount = p.teamMembers ? p.teamMembers.length : 0;
+        const healthColor = p.health === 'AT_RISK' ? 'bg-error/20 text-error' : (p.health === 'DELAYED' ? 'bg-amber-400/20 text-amber-400' : 'bg-tertiary/20 text-tertiary');
+
+        return `
+          <tr class="hover:bg-surface-container-high/40 transition-colors">
+            <td class="py-3 px-4 font-mono font-bold text-primary">
+              <a href="/projects/${p._id}" class="hover:underline">${p.code}</a>
+            </td>
+            <td class="py-3 px-4 font-semibold text-on-surface">
+              <a href="/projects/${p._id}" class="hover:text-amber-300 transition-colors">${p.title}</a>
+            </td>
+            <td class="py-3 px-4 text-on-surface-variant">${mentorName}</td>
+            <td class="py-3 px-4 font-mono text-outline">${teamCount} students</td>
+            <td class="py-3 px-4">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${healthColor}">${p.health}</span>
+            </td>
+            <td class="py-3 px-4 font-mono text-[11px] text-outline">${p.status}</td>
+            <td class="py-3 px-4 text-right">
+              <a href="/projects/${p._id}" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-amber-400 hover:text-black text-amber-300 font-semibold text-[11px] transition-colors inline-flex items-center gap-1 shadow-sm">
+                <span class="material-symbols-outlined text-[13px]">folder_special</span>
+                <span>Open Page</span>
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterProjectsTable() {
+      const q = document.getElementById('projectSearchInput').value.toLowerCase().trim();
+      const status = document.getElementById('projectStatusFilter').value;
+
+      const filtered = allProjectsCache.filter(p => {
+        const matchesQ = !q || p.title.toLowerCase().includes(q) || p.code.toLowerCase().includes(q);
+        const matchesStatus = status === 'ALL' || p.status === status;
+        return matchesQ && matchesStatus;
+      });
+
+      renderProjectsTable(filtered);
+    }
+
+    // 5. Tasks Table (READ-ONLY)
+    function renderTasksTable(tasks) {
+      const tbody = document.getElementById('tasksTableBody');
+      if (!tasks.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-outline">No tasks recorded yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = tasks.map(t => {
+        const projCode = t.project ? t.project.code : 'CAP';
+        const projTitle = t.project ? t.project.title : 'Project';
+        const assigneeName = t.assignedTo ? t.assignedTo.name : 'Unassigned';
+        const dueDateStr = t.dueDate ? new Date(t.dueDate).toLocaleDateString() : 'None';
+        const statusColor = t.status === 'DONE' ? 'bg-tertiary/20 text-tertiary' : (t.status === 'REVIEW' ? 'bg-secondary/20 text-secondary' : (t.status === 'IN_PROGRESS' ? 'bg-primary/20 text-primary' : 'bg-surface-container-high text-outline'));
+
+        return `
+          <tr class="hover:bg-surface-container-high/40 transition-colors">
+            <td class="py-3 px-4 font-semibold text-on-surface">
+              <a href="/tasks/${t._id}" class="hover:text-secondary transition-colors">${t.title}</a>
+            </td>
+            <td class="py-3 px-4 font-mono text-primary font-bold">
+              ${t.project ? `<a href="/projects/${t.project._id}" class="hover:underline">${projCode}</a>` : 'CAP'}
+            </td>
+            <td class="py-3 px-4 text-on-surface-variant">${assigneeName}</td>
+            <td class="py-3 px-4 font-mono text-[10px] uppercase font-bold text-outline">${t.priority || 'MEDIUM'}</td>
+            <td class="py-3 px-4 font-mono text-outline">${dueDateStr}</td>
+            <td class="py-3 px-4">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded font-bold uppercase ${statusColor}">${t.status}</span>
+            </td>
+            <td class="py-3 px-4 text-right">
+              <a href="/tasks/${t._id}" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-secondary hover:text-black text-secondary font-semibold text-[11px] transition-colors inline-flex items-center gap-1">
+                <span class="material-symbols-outlined text-[13px]">task</span>
+                <span>Open Task</span>
+              </a>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterTasksTable() {
+      const status = document.getElementById('taskStatusFilter').value;
+      const filtered = allTasksCache.filter(t => status === 'ALL' || t.status === status);
+      renderTasksTable(filtered);
+    }
+
+    // 6. Super Dream Tab
+    function renderSuperDreamTab(superDreamStudents, faculty) {
+      document.getElementById('superDreamCountBadge').textContent = `${superDreamStudents.length} Mentees`;
+
+      // Mentors overview cards
+      const mentorsGrid = document.getElementById('superDreamMentorsGrid');
+      const mentorBuckets = {};
+
+      faculty.forEach(f => {
+        mentorBuckets[f._id] = { mentor: f, students: [] };
+      });
+
+      superDreamStudents.forEach(s => {
+        if (s.mentor && mentorBuckets[s.mentor._id]) {
+          mentorBuckets[s.mentor._id].students.push(s);
+        }
+      });
+
+      mentorsGrid.innerHTML = Object.values(mentorBuckets).map(b => {
+        const f = b.mentor;
+        const count = b.students.length;
+        const percent = Math.min(100, Math.round((count / 15) * 100));
+
+        return `
+          <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 hover:border-amber-400/30 transition-colors space-y-3">
+            <div class="flex items-center gap-3">
+              <img src="${f.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80'}" class="w-10 h-10 rounded-full object-cover border border-amber-400/40">
+              <div class="min-w-0">
+                <div class="font-bold text-xs text-on-surface truncate">${f.name}</div>
+                <div class="text-[10px] text-outline truncate">${f.title || 'Faculty Advisor'}</div>
+              </div>
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-[11px]">
+                <span class="text-outline">Assigned Mentees</span>
+                <span class="font-mono font-bold text-amber-300">${count} / 15</span>
+              </div>
+              <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
+                <div class="h-full bg-amber-400 rounded-full" style="width: ${percent}%"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      // Super Dream Students Table
+      const tbody = document.getElementById('superDreamTableBody');
+      if (!superDreamStudents.length) {
+        tbody.innerHTML = '<tr><td colspan="5" class="py-6 text-center text-outline">No 3rd-year Super Dream students enrolled yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = superDreamStudents.map(s => {
+        const mentorName = s.mentor ? s.mentor.name : '<span class="text-amber-400/80 font-mono">Unassigned</span>';
+        return `
+          <tr class="hover:bg-surface-container-high/40 transition-colors">
+            <td class="py-3 px-4 font-semibold text-on-surface">
+              <div class="flex items-center gap-2.5">
+                <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-6 h-6 rounded-full object-cover border border-amber-400/40">
+                <div>
+                  <span class="font-bold text-on-surface">${s.name}</span>
+                  <span class="block text-[10px] text-outline">${s.email}</span>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-4 font-mono text-outline">${s.studentId || 'N/A'}</td>
+            <td class="py-3 px-4 font-mono font-bold text-amber-300">Sec ${s.section || 'A'}</td>
+            <td class="py-3 px-4 font-medium text-on-surface">${mentorName}</td>
+            <td class="py-3 px-4">
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">SUPER DREAM</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // 7. Students Table & Filter
+    function renderStudentsTable(students) {
+      const tbody = document.getElementById('studentsTableBody');
+      if (!students.length) {
+        tbody.innerHTML = '<tr><td colspan="7" class="py-6 text-center text-outline">No students found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = students.map(s => {
+        const mentorName = s.mentor ? s.mentor.name : '<span class="text-outline italic">None</span>';
+        const isSD = s.studentCategory === 'SUPER_DREAM';
+        const catBadge = isSD 
+          ? '<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 font-bold">SUPER DREAM</span>'
+          : `<span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-outline">${s.studentCategory || 'REGULAR'}</span>`;
+
+        return `
+          <tr class="hover:bg-surface-container-high/40 transition-colors">
+            <td class="py-3 px-4">
+              <div class="flex items-center gap-2.5">
+                <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-7 h-7 rounded-full object-cover border border-outline-variant/30">
+                <div>
+                  <div class="font-bold text-on-surface">${s.name}</div>
+                  <div class="text-[10px] text-outline">${s.email}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-4 font-mono text-outline">${s.studentId || 'N/A'}</td>
+            <td class="py-3 px-4 font-mono font-bold text-primary">${s.academicYear || '3rd Year'}</td>
+            <td class="py-3 px-4 font-mono font-bold text-secondary">Sec ${s.section || 'A'}</td>
+            <td class="py-3 px-4">${catBadge}</td>
+            <td class="py-3 px-4 text-on-surface-variant">${mentorName}</td>
+            <td class="py-3 px-4 font-mono text-[11px] text-outline">${s.createdAt ? new Date(s.createdAt).toLocaleDateString() : 'Active'}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterStudentsTable() {
+      const q = document.getElementById('studentSearchInput').value.toLowerCase().trim();
+      const yr = document.getElementById('studentYearFilter').value;
+      const sec = document.getElementById('studentSectionFilter').value;
+      const cat = document.getElementById('studentCategoryFilter').value;
+
+      const filtered = allStudentsCache.filter(s => {
+        const matchesQ = !q || s.name.toLowerCase().includes(q) || s.email.toLowerCase().includes(q) || (s.studentId && s.studentId.toLowerCase().includes(q));
+        const matchesYr = yr === 'ALL' || (s.academicYear || '3rd Year') === yr;
+        const matchesSec = sec === 'ALL' || (s.section || 'A') === sec;
+        const matchesCat = cat === 'ALL' || s.studentCategory === cat;
+        return matchesQ && matchesYr && matchesSec && matchesCat;
+      });
+
+      renderStudentsTable(filtered);
+    }
+
+    // 8. Faculty Tab
+    function renderFacultyTab(facultyWorkload) {
+      const grid = document.getElementById('facultyWorkloadGrid');
+      if (!facultyWorkload.length) {
+        grid.innerHTML = '<div class="text-xs text-outline py-6 text-center col-span-3">No faculty advisors recorded.</div>';
+        return;
+      }
+
+      grid.innerHTML = facultyWorkload.map(f => `
+        <div class="p-4 rounded-xl bg-surface-container border border-outline-variant/20 space-y-3">
+          <div class="flex items-center gap-3">
+            <img src="${f.avatar || 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80'}" class="w-11 h-11 rounded-full object-cover border border-secondary">
+            <div class="min-w-0">
+              <div class="font-bold text-xs text-on-surface truncate">${f.name}</div>
+              <div class="text-[10px] text-outline truncate">${f.title || 'Faculty Advisor'} &bull; ${f.department || 'AI & ML'}</div>
+              <div class="text-[10px] text-secondary font-mono">${f.email}</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2 pt-2 border-t border-outline-variant/15 text-center text-xs">
+            <div class="p-2 rounded-lg bg-surface-container-high">
+              <span class="font-mono font-bold text-primary block">${f.assignedProjectsCount}</span>
+              <span class="text-[10px] text-outline">Teams Mentored</span>
+            </div>
+            <div class="p-2 rounded-lg bg-surface-container-high">
+              <span class="font-mono font-bold text-amber-300 block">${f.menteesCount}</span>
+              <span class="text-[10px] text-outline">Super Dream Mentees</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // 9. Audit Log
+    function renderAuditLog(auditSummary) {
+      const container = document.getElementById('auditLogContainer');
+      if (!auditSummary.length) {
+        container.innerHTML = '<div class="text-xs text-outline py-6 text-center">No audit trail entries recorded yet.</div>';
+        return;
+      }
+
+      container.innerHTML = auditSummary.map(a => `
+        <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div class="space-y-0.5">
+            <div class="flex items-center gap-2">
+              <span class="font-bold text-on-surface">${a.action}</span>
+              <span class="font-mono text-[10px] px-1.5 py-0.2 rounded bg-surface-container-high text-primary">${a.role}</span>
+              <span class="text-[10px] text-outline font-mono">by ${a.userName || 'System'}</span>
+            </div>
+            <p class="text-[11px] text-outline">${a.details || ''}</p>
+          </div>
+          <span class="font-mono text-[10px] text-outline shrink-0">${new Date(a.timestamp).toLocaleString()}</span>
+        </div>
+      `).join('');
+    }
+
+    // 10. Populate Mentor Dropdown
+    function populateMentorDropdown(facultyList) {
+      const select = document.getElementById('newUserMentorSelect');
+      select.innerHTML = '<option value="">-- Choose Faculty Mentor --</option>' +
+        facultyList.map(f => `<option value="${f._id}">${f.name} (${f.title || 'Faculty Advisor'})</option>`).join('');
+    }
+
+    // TAB SWITCHING
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.className = 'tab-btn px-4 py-2 rounded-xl text-outline hover:text-on-surface hover:bg-surface-container flex items-center gap-1.5 transition-colors shrink-0';
+      });
+
+      const activeBtn = document.getElementById(`tabBtn-${tabId}`);
+      if (activeBtn) {
+        activeBtn.className = 'tab-btn px-4 py-2 rounded-xl bg-amber-400 text-black font-bold flex items-center gap-1.5 transition-colors shrink-0';
+      }
+
+      ['overview', 'projects', 'tasks', 'superdream', 'students', 'faculty', 'audit'].forEach(t => {
+        const el = document.getElementById(`tabContent-${t}`);
+        if (el) el.classList.add('hidden');
+      });
+
+      const target = document.getElementById(`tabContent-${tabId}`);
+      if (target) target.classList.remove('hidden');
+    }
+
+    // MODAL HELPERS
+    function openModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      const el = document.getElementById(id);
+      if (el) el.classList.add('hidden');
+    }
+
+    function openAddUserModal(isSuperDream = false, defaultRole = 'STUDENT') {
+      const form = document.getElementById('addUserForm');
+      form.reset();
+      document.getElementById('newUserPassword').value = 'Password123!';
+      document.getElementById('newUserRole').value = defaultRole;
+      handleRoleChange(defaultRole);
+
+      if (isSuperDream) {
+        document.getElementById('newUserAcademicYear').value = '3rd Year';
+        handleYearChange('3rd Year');
+        document.getElementById('newUserIsSuperDream').checked = true;
+        handleSuperDreamToggle(true);
+      }
+
+      openModal('addUserModal');
+    }
+
+    function handleRoleChange(role) {
+      const stuContainer = document.getElementById('studentFieldsContainer');
+      const facContainer = document.getElementById('facultyFieldsContainer');
+
+      if (role === 'STUDENT') {
+        stuContainer.classList.remove('hidden');
+        facContainer.classList.add('hidden');
+      } else {
+        stuContainer.classList.add('hidden');
+        facContainer.classList.remove('hidden');
+      }
+    }
+
+    function handleYearChange(year) {
+      const toggleContainer = document.getElementById('superDreamToggleContainer');
+      const cb = document.getElementById('newUserIsSuperDream');
+      if (year === '3rd Year') {
+        toggleContainer.classList.remove('hidden');
+      } else {
+        toggleContainer.classList.add('hidden');
+        cb.checked = false;
+        handleSuperDreamToggle(false);
+      }
+    }
+
+    function handleSuperDreamToggle(checked) {
+      const mentorContainer = document.getElementById('superDreamMentorContainer');
+      const mentorSelect = document.getElementById('newUserMentorSelect');
+      if (checked) {
+        mentorContainer.classList.remove('hidden');
+        mentorSelect.required = true;
+      } else {
+        mentorContainer.classList.add('hidden');
+        mentorSelect.required = false;
+        mentorSelect.value = '';
+      }
+    }
+
+    // ADD USER SUBMIT HANDLER
+    document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const role = document.getElementById('newUserRole').value;
+      const name = document.getElementById('newUserName').value.trim();
+      const email = document.getElementById('newUserEmail').value.trim();
+      const password = document.getElementById('newUserPassword').value;
+
+      const btn = document.getElementById('btnSubmitAddUser');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span> Enrolling...';
+
+      const payload = {
+        name,
+        email,
+        password,
+        role,
+        department: 'Artificial Intelligence & Machine Learning'
+      };
+
+      if (role === 'STUDENT') {
+        payload.academicYear = document.getElementById('newUserAcademicYear').value;
+        payload.section = document.getElementById('newUserSection').value;
+        payload.studentId = document.getElementById('newUserStudentId').value.trim();
+        const isSD = document.getElementById('newUserIsSuperDream').checked;
+        payload.isSuperDream = isSD;
+        payload.studentCategory = isSD ? 'SUPER_DREAM' : 'REGULAR';
+        if (isSD) {
+          payload.mentorId = document.getElementById('newUserMentorSelect').value;
+        }
+      } else {
+        payload.title = document.getElementById('newUserFacultyTitle').value.trim();
+        payload.facultyId = document.getElementById('newUserFacultyId').value.trim();
+      }
+
+      try {
+        const res = await fetch('/api/admin/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          closeModal('addUserModal');
+          alert(`Successfully enrolled ${name} as ${role}!`);
+          await loadHODDashboard();
+        } else {
+          alert(json.message || 'Failed to enroll user.');
+        }
+      } catch (err) {
+        alert('Network error enrolling user.');
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span class="material-symbols-outlined text-sm">person_add</span><span>Enroll User</span>';
+      }
+    });
+
+    // LOGOUT
+    async function handleLogout() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+      } catch (e) {}
+      localStorage.removeItem('projecthub_token');
+      window.location.href = '/';
+    }
+  </script>
+</body>
+</html>

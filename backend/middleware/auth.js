@@ -26,6 +26,7 @@ async function authenticateToken(req, res, next) {
       // Web route: redirect to corresponding login page or general login
       if (req.originalUrl.startsWith('/student') || req.originalUrl.startsWith('/superdream')) return res.redirect('/login/student');
       if (req.originalUrl.startsWith('/faculty')) return res.redirect('/login/faculty');
+      if (req.originalUrl.startsWith('/hod')) return res.redirect('/login/hod');
       if (req.originalUrl.startsWith('/admin')) return res.redirect('/login/admin');
       return res.redirect('/');
     }
@@ -61,6 +62,7 @@ async function authenticateToken(req, res, next) {
     }
     if (req.originalUrl.startsWith('/student')) return res.redirect('/login/student');
     if (req.originalUrl.startsWith('/faculty')) return res.redirect('/login/faculty');
+    if (req.originalUrl.startsWith('/hod')) return res.redirect('/login/hod');
     if (req.originalUrl.startsWith('/admin')) return res.redirect('/login/admin');
     return res.redirect('/');
   }
@@ -85,15 +87,15 @@ function requireRole(...allowedRoles) {
       }
 
       // Web Route handling for unauthorized cross-role attempts:
-      // If STUDENT attempts /faculty/dashboard -> return 403 Forbidden or redirect to /student/dashboard
       if (req.user.role === 'STUDENT') {
         return res.redirect('/student/dashboard?error=unauthorized_faculty_area');
       }
-      // If FACULTY or HOD attempts /admin/dashboard -> deny access / redirect to /faculty/dashboard
-      if (req.user.role === 'FACULTY' || req.user.role === 'HOD') {
+      if (req.user.role === 'HOD') {
+        return res.redirect('/hod/dashboard?error=unauthorized_area');
+      }
+      if (req.user.role === 'FACULTY') {
         return res.redirect('/faculty/dashboard?error=unauthorized_admin_area');
       }
-      // If ADMIN attempts student or faculty, admin can view or redirect
       if (req.user.role === 'ADMIN') {
         return res.redirect('/admin/dashboard');
       }
@@ -105,7 +107,7 @@ function requireRole(...allowedRoles) {
         <body style="background:#0f131c; color:#dfe2ef; font-family:sans-serif; display:flex; align-items:center; justify-content:center; height:100vh; flex-direction:column;">
           <h1 style="color:#ffb4ab; margin-bottom:8px;">403 Forbidden</h1>
           <p>Your role (${req.user.role}) does not have permission to access this page.</p>
-          <a href="/${req.user.role === 'HOD' ? 'faculty' : req.user.role.toLowerCase()}/dashboard" style="color:#c3c0ff; margin-top:16px;">Return to your Dashboard</a>
+          <a href="/${req.user.role.toLowerCase()}/dashboard" style="color:#c3c0ff; margin-top:16px;">Return to your Dashboard</a>
         </body>
         </html>
       `);
@@ -117,6 +119,7 @@ function requireRole(...allowedRoles) {
 
 const requireStudent = requireRole('STUDENT');
 const requireFaculty = requireRole('FACULTY', 'HOD');
+const requireHOD = requireRole('HOD', 'ADMIN');
 const requireAdmin = requireRole('ADMIN');
 
 module.exports = {
@@ -124,6 +127,7 @@ module.exports = {
   requireRole,
   requireStudent,
   requireFaculty,
+  requireHOD,
   requireAdmin,
   JWT_SECRET,
 };

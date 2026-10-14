@@ -155,7 +155,7 @@ exports.createUser = async (req, res) => {
     await AuditTrail.create({
       user: req.user._id,
       userName: req.user.name,
-      role: 'ADMIN',
+      role: req.user.role || 'ADMIN',
       action: 'CREATE_USER',
       targetType: 'USER',
       targetId: user._id.toString(),
@@ -236,6 +236,10 @@ exports.updateUser = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
+
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department is not authorized to delete users.' });
+    }
 
     if (req.user._id.toString() === id) {
       return res.status(400).json({ success: false, message: 'You cannot delete your own administrator account.' });

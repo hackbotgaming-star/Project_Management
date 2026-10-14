@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const dashboardController = require('../controllers/dashboardController');
-const { authenticateToken, requireStudent, requireFaculty, requireAdmin } = require('../middleware/auth');
+const { authenticateToken, requireStudent, requireFaculty, requireAdmin, requireHOD } = require('../middleware/auth');
 
 // 1. Student Dashboard API
 router.get('/student', authenticateToken, requireStudent, dashboardController.getStudentDashboard);
@@ -12,7 +12,10 @@ router.get('/faculty', authenticateToken, requireFaculty, dashboardController.ge
 // 3. Admin Dashboard API
 router.get('/admin', authenticateToken, requireAdmin, dashboardController.getAdminDashboard);
 
-// 4. Role-Scoped Calendar Events API
+// 4. Head of Department (HOD) Dashboard API
+router.get('/hod', authenticateToken, requireHOD, dashboardController.getHODDashboard);
+
+// 5. Role-Scoped Calendar Events API
 router.get('/calendar-events', authenticateToken, dashboardController.getCalendarEvents);
 
 module.exports = router;
