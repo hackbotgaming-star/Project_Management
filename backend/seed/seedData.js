@@ -391,11 +391,11 @@ async function seedDatabase() {
     role: 'ADMIN',
     action: 'INITIALIZE_AIML_WORKSPACE',
     targetType: 'SYSTEM',
-    details: 'AI&ML Workspace initialized: 4 Academic Years (1st-4th), Sections A & B, with 3rd Year Marquee, Super Dream, and Dream Mentorship Tracks.',
+    details: 'AI&ML Workspace initialized: 4 Academic Years (1st-4th), Sections A & B.',
     ipAddress: '127.0.0.1',
   });
 
-  console.log('✅ AI&ML Department with 4 Years (Sec A & B) and 3rd Year Marquee/Super Dream/Dream initialized successfully.');
+  console.log('✅ AI&ML Department with 4 Years (Sec A & B) initialized successfully.');
 }
 
 module.exports = { seedDatabase };

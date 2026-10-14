@@ -34,24 +34,9 @@ exports.createUser = async (req, res) => {
       return res.status(400).json({ success: false, message: 'User with this email already exists.' });
     }
 
-    // Normalize student placement category (Marquee, Super Dream, Dream, Regular)
-    let normalizedCategory = 'REGULAR';
-    if (role.toUpperCase() === 'STUDENT' && studentCategory) {
-      const c = studentCategory.toUpperCase().replace(/\s+/g, '_');
-      if (['MARQUEE', 'MARQUE'].includes(c)) normalizedCategory = 'MARQUEE';
-      else if (['SUPER_DREAM', 'SUPERDREAM'].includes(c)) normalizedCategory = 'SUPER_DREAM';
-      else if (['DREAM'].includes(c)) normalizedCategory = 'DREAM';
-      else normalizedCategory = 'REGULAR';
-    }
-
     const yr = academicYear || '3rd Year';
     const sec = (section ? section.toUpperCase().trim() : 'A') === 'B' ? 'B' : 'A';
     const defaultCohort = `AI&ML - ${yr} (Section ${sec})`;
-
-    // STRICT RULE: Mentorship tier (MARQUEE, SUPER_DREAM, DREAM) is strictly restricted to 3rd Year!
-    if (yr !== '3rd Year') {
-      normalizedCategory = 'REGULAR';
-    }
 
     const hashedPassword = await User.hashPassword(password);
     const user = await User.create({
@@ -66,9 +51,6 @@ exports.createUser = async (req, res) => {
       title: title || (
         role.toUpperCase() === 'HOD' ? 'Head of Department (AI&ML)' :
         role.toUpperCase() === 'FACULTY' ? 'Assistant Professor' :
-        normalizedCategory === 'MARQUEE' ? 'Marquee Scholar (AI&ML)' :
-        normalizedCategory === 'SUPER_DREAM' ? 'Super Dream Scholar (AI&ML)' :
-        normalizedCategory === 'DREAM' ? 'Dream Scholar (AI&ML)' :
         `AI&ML Student (${yr} - Sec ${sec})`
       ),
       studentId: studentId || (role.toUpperCase() === 'STUDENT' ? `STU-${Date.now().toString().slice(-4)}` : null),
