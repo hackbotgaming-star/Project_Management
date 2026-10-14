@@ -2,6 +2,57 @@
 /* ProjectHub Comprehensive Light & Dark Theme Polish CSS   */
 /* ========================================================= */
 
+/* Material Symbols standard ligature support across all pages */
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined', sans-serif !important;
+  font-weight: normal !important;
+  font-style: normal !important;
+  line-height: 1 !important;
+  letter-spacing: normal !important;
+  text-transform: none !important;
+  display: inline-block !important;
+  vertical-align: middle !important;
+  white-space: nowrap !important;
+  word-wrap: normal !important;
+  direction: ltr !important;
+  -webkit-font-feature-settings: 'liga' !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+/* Project & Task Details High-Contrast Styles */
+html.light .project-hero-card {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .project-hero-card h1,
+html.light #heroProjectTitle,
+html.light #taskTitle {
+  color: #0f172a !important; /* High-contrast bold dark text in light mode */
+}
+
+html.light #heroProjectAbstract,
+html.light #taskDescription {
+  color: #334155 !important; /* High-contrast slate-700 description */
+}
+
+html.dark .project-hero-card {
+  background: linear-gradient(to bottom right, #11151c, #181d26, #222834) !important;
+  border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+html.dark .project-hero-card h1,
+html.dark #heroProjectTitle,
+html.dark #taskTitle {
+  color: #f3f4f6 !important;
+}
+
+html.dark #heroProjectAbstract,
+html.dark #taskDescription {
+  color: #9ca3af !important;
+}
+
 html.light {
   color-scheme: light;
 }
