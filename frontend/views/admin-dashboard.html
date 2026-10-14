@@ -146,6 +146,11 @@
           <span class="material-symbols-outlined text-base">monitoring</span>
           <span>Analytics</span>
         </button>
+        <button onclick="switchTab('od-management')" id="nav-od-management" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">verified_user</span>
+          <span class="flex-1 text-left">OD Management</span>
+          <span id="admOdBadge" class="hidden text-[10px] px-1.5 py-0.2 rounded bg-tertiary text-black font-bold font-mono">0</span>
+        </button>
         <button onclick="switchTab('audit-trail')" id="nav-audit-trail" class="adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
           <span class="material-symbols-outlined text-base">history_edu</span>
           <span>Audit Trail</span>
@@ -996,6 +1001,110 @@
             </div>
           </label>
         </div>
+      </div>
+    </section>
+
+    <!-- ========================================== -->
+    <!-- TAB: OD MANAGEMENT                         -->
+    <!-- ========================================== -->
+    <section id="tab-od-management" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-tertiary">verified_user</span>
+            <span>On-Duty (OD) Management</span>
+          </h2>
+          <p class="text-xs text-outline mt-0.5">Institutional governance, HOD forwarding, and emergency bypass administration</p>
+        </div>
+        <!-- Filter Toggle Tabs -->
+        <div class="flex items-center gap-2 bg-surface-container p-1 rounded-xl border border-outline-variant/30 text-xs font-medium">
+          <button onclick="setAdmOdFilter('pending')" id="btnAdmOdFilterPending" class="px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold transition-colors">Actionable Queue</button>
+          <button onclick="setAdmOdFilter('all')" id="btnAdmOdFilterAll" class="px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors">All Applications</button>
+        </div>
+      </div>
+
+      <!-- OD Summary Metric Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">assignment_late</span>
+          </div>
+          <div>
+            <div id="admOdStatPending" class="text-lg font-bold font-mono text-blue-400">0</div>
+            <div class="text-[11px] text-outline">Actionable by Admin</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">forward_to_inbox</span>
+          </div>
+          <div>
+            <div id="admOdStatHodReview" class="text-lg font-bold font-mono text-purple-400">0</div>
+            <div class="text-[11px] text-outline">Awaiting HOD</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">verified</span>
+          </div>
+          <div>
+            <div id="admOdStatApproved" class="text-lg font-bold font-mono text-emerald-400">0</div>
+            <div class="text-[11px] text-outline">Approved</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">cancel</span>
+          </div>
+          <div>
+            <div id="admOdStatRejected" class="text-lg font-bold font-mono text-rose-400">0</div>
+            <div class="text-[11px] text-outline">Rejected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OD Review Table Container -->
+      <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/20">
+          <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+            <span>Institutional OD Pipeline</span>
+            <span id="admOdQueueCount" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-container-high text-tertiary font-bold">0</span>
+          </h3>
+          <div class="flex items-center gap-2">
+            <input type="text" id="admOdSearchInput" oninput="filterAdminOdRequests(this.value)" placeholder="Search student name, ID, or event..." class="px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none w-56 sm:w-72">
+          </div>
+        </div>
+
+        <div id="admOdLoading" class="py-12 text-center text-outline text-xs">
+          <span class="material-symbols-outlined text-3xl animate-spin mb-2">progress_activity</span>
+          <p>Loading institutional OD queue...</p>
+        </div>
+
+        <div id="admOdEmpty" class="hidden py-12 text-center space-y-2">
+          <div class="w-12 h-12 rounded-full bg-surface-container-high text-outline flex items-center justify-center mx-auto">
+            <span class="material-symbols-outlined text-2xl">task_alt</span>
+          </div>
+          <p class="text-xs text-on-surface font-medium">No actionable OD requests</p>
+          <p class="text-[11px] text-outline max-w-sm mx-auto">All student On-Duty clearance requests have been reviewed or are in other review stages.</p>
+        </div>
+
+        <div id="admOdTableWrap" class="hidden overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-outline-variant/20 text-outline text-[11px] uppercase tracking-wider">
+                <th class="py-2.5 px-3">Student</th>
+                <th class="py-2.5 px-3">Request ID &amp; Event</th>
+                <th class="py-2.5 px-3">Dates &amp; Venue</th>
+                <th class="py-2.5 px-3">Faculty Reviewer</th>
+                <th class="py-2.5 px-3">Stage</th>
+                <th class="py-2.5 px-3">Status</th>
+                <th class="py-2.5 px-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="admOdTableBody" class="divide-y divide-outline-variant/10 text-on-surface"></tbody>
+          </table>
+        </div>
+      </div>
     </section>
 
   </main>
@@ -1317,6 +1426,162 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL: ADMIN OD REVIEW & FORWARD/BYPASS    -->
+  <!-- ========================================== -->
+  <div id="adminOdActionModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="admModalOdReqId" class="font-mono text-xs px-2 py-0.5 rounded bg-tertiary/20 text-tertiary font-bold">OD-XXXX-XXXX</span>
+            <span id="admModalOdStatus"></span>
+          </div>
+          <h3 id="admModalOdEventName" class="font-headline font-bold text-base text-on-surface mt-1">-</h3>
+        </div>
+        <button onclick="closeModal('adminOdActionModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <!-- Student & Faculty Reviewer Card -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/30 flex items-center gap-3">
+          <img id="admModalStuAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="w-10 h-10 rounded-full border border-tertiary/40 object-cover" alt="Student">
+          <div class="flex-1 min-w-0">
+            <span class="block text-[10px] text-outline uppercase font-mono">Applicant Student</span>
+            <h4 id="admModalStuName" class="font-bold text-xs text-on-surface truncate">-</h4>
+            <div class="text-[10px] text-outline font-mono truncate" id="admModalStuMeta">-</div>
+          </div>
+        </div>
+
+        <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-primary">
+            <span class="material-symbols-outlined text-lg">school</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <span class="block text-[10px] text-outline uppercase font-mono">Faculty Reviewer</span>
+            <h4 id="admModalFacName" class="font-bold text-xs text-on-surface truncate">-</h4>
+            <div class="text-[10px] text-outline truncate" id="admModalFacComments">Endorsed &amp; Forwarded</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Information Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs p-3.5 rounded-xl bg-surface-container border border-outline-variant/20">
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Organizing Institution</span>
+          <span id="admModalOdInstitute" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Venue / Location</span>
+          <span id="admModalOdVenue" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Event Dates</span>
+          <span id="admModalOdDates" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Supporting Document</span>
+          <div id="admModalOdDocLink" class="mt-0.5">-</div>
+        </div>
+      </div>
+
+      <!-- Purpose Section -->
+      <div>
+        <h4 class="text-xs font-semibold text-outline uppercase tracking-wider mb-1">Purpose &amp; Objective</h4>
+        <div id="admModalOdPurpose" class="p-3 rounded-lg bg-surface-container text-xs text-on-surface/90 border border-outline-variant/20 leading-relaxed whitespace-pre-wrap"></div>
+      </div>
+
+      <!-- Previous Audit History -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-semibold text-outline uppercase tracking-wider flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">history</span>
+          <span>Approval Audit Trail</span>
+        </h4>
+        <div id="admModalOdTimeline" class="space-y-3 pl-3 border-l-2 border-outline-variant/30 text-xs"></div>
+      </div>
+
+      <!-- Action Panel (Visible only when in ADMIN_REVIEW) -->
+      <div id="admActionControlsContainer" class="p-4 rounded-xl bg-surface-container border border-tertiary/40 space-y-4">
+        <input type="hidden" id="admActiveOdId">
+
+        <!-- HOD Availability Selection -->
+        <div class="p-3 rounded-xl bg-surface-container-high border border-outline-variant/30 space-y-2">
+          <label class="block text-xs font-bold text-on-surface">Head of Department (HOD) Status</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <label class="flex items-center gap-2 p-2 rounded-lg bg-surface-container border border-outline-variant/20 cursor-pointer hover:border-tertiary">
+              <input type="radio" name="admHodAvailRadio" value="available" checked onchange="toggleAdmBypassMode(false)" class="text-tertiary focus:ring-tertiary">
+              <div>
+                <div class="font-bold text-on-surface">HOD is Available</div>
+                <div class="text-[10px] text-outline">Forward to HOD for final decision</div>
+              </div>
+            </label>
+            <label class="flex items-center gap-2 p-2 rounded-lg bg-surface-container border border-outline-variant/20 cursor-pointer hover:border-amber-400">
+              <input type="radio" name="admHodAvailRadio" value="unavailable" onchange="toggleAdmBypassMode(true)" class="text-amber-400 focus:ring-amber-400">
+              <div>
+                <div class="font-bold text-amber-300">HOD Unavailable</div>
+                <div class="text-[10px] text-outline">Admin makes final decision (Bypass)</div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- Bypass Reason Box (Conditional when HOD unavailable) -->
+        <div id="admBypassReasonBox" class="hidden p-3 rounded-xl bg-amber-500/10 border border-amber-500/30 space-y-1.5">
+          <label class="block text-xs font-bold text-amber-300 flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-sm">warning</span>
+            <span>Mandatory Reason for Bypassing HOD Decision</span>
+          </label>
+          <input type="text" id="admOdBypassReasonInput" placeholder="e.g. HOD on official leave, urgent travel ticket booking deadline..." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none">
+          <p class="text-[10px] text-outline">This reason will be recorded permanently in the official audit trail.</p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-on-surface mb-1">Administrative Remarks / Instructions</label>
+          <textarea id="admActionComments" rows="2" placeholder="Add administrative notes, endorsement, or comments..." class="w-full p-2 bg-surface-container-low rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none"></textarea>
+        </div>
+
+        <!-- Action Buttons Container -->
+        <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('adminOdActionModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+
+          <!-- Normal Workflow Buttons (HOD Available) -->
+          <div id="admNormalButtons" class="flex items-center gap-2">
+            <button type="button" onclick="executeAdminOdAction('REJECT')" class="px-3.5 py-1.5 rounded-lg border border-rose-500/40 text-rose-400 hover:bg-rose-500/10 text-xs font-semibold flex items-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">cancel</span>
+              <span>Reject</span>
+            </button>
+            <button type="button" onclick="executeAdminOdAction('REQUEST_CHANGES')" class="px-3.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold flex items-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">edit_note</span>
+              <span>Request Changes</span>
+            </button>
+            <button type="button" onclick="executeAdminOdAction('FORWARD_TO_HOD')" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+              <span class="material-symbols-outlined text-sm">forward_to_inbox</span>
+              <span>Forward to HOD</span>
+            </button>
+          </div>
+
+          <!-- Bypass Workflow Buttons (HOD Unavailable) -->
+          <div id="admBypassButtons" class="hidden flex items-center gap-2">
+            <button type="button" onclick="executeAdminOdAction('BYPASS_REJECT')" class="px-3.5 py-1.5 rounded-lg bg-rose-500/20 text-rose-300 border border-rose-500/40 hover:bg-rose-500/30 text-xs font-semibold flex items-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">cancel</span>
+              <span>Reject (Bypass)</span>
+            </button>
+            <button type="button" onclick="executeAdminOdAction('REQUEST_CHANGES')" class="px-3.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold flex items-center gap-1 transition-colors">
+              <span class="material-symbols-outlined text-sm">edit_note</span>
+              <span>Request Changes</span>
+            </button>
+            <button type="button" onclick="executeAdminOdAction('BYPASS_APPROVE')" class="px-4 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+              <span class="material-symbols-outlined text-sm">verified</span>
+              <span>Approve (Admin Final Decision)</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- APPLICATION SCRIPTS -->
   <script>
     // Auto-attach JWT auth header for mobile and desktop fetch requests
@@ -1391,6 +1656,10 @@
       if (tabId === 'calendar') loadCalendar();
       if (tabId === 'documents') loadAdminDocuments();
       if (tabId === 'analytics') renderAnalyticsTab(adminData);
+      if (tabId === 'od-management') {
+        document.getElementById('pageTitle').textContent = 'OD Management';
+        loadAdminOdRequests();
+      }
       if (tabId === 'cohorts' && adminData) {
         if (!currentViewingCohortName) closeCohortView();
       }
@@ -1408,6 +1677,7 @@
 
         adminData = json.data;
         renderAdminDashboard(adminData);
+        loadAdminOdRequests(true);
 
         const urlParams = new URLSearchParams(window.location.search);
         if (urlParams.get('cohort')) {
@@ -2981,6 +3251,380 @@
         alert('Failed to update profile.');
       } finally {
         if (btn) btn.disabled = false;
+      }
+    }
+
+    // ==========================================
+    // ON-DUTY (OD) MANAGEMENT (ADMIN)
+    // ==========================================
+    let admOdList = [];
+    let admOdActiveFilter = 'pending';
+
+    function setAdmOdFilter(filter) {
+      admOdActiveFilter = filter;
+      const btnPending = document.getElementById('btnAdmOdFilterPending');
+      const btnAll = document.getElementById('btnAdmOdFilterAll');
+
+      if (filter === 'pending') {
+        if (btnPending) btnPending.className = 'px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold transition-colors';
+        if (btnAll) btnAll.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors';
+      } else {
+        if (btnPending) btnPending.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors';
+        if (btnAll) btnAll.className = 'px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold transition-colors';
+      }
+      renderAdminOdTable();
+    }
+
+    function toggleAdmBypassMode(isUnavailable) {
+      const reasonBox = document.getElementById('admBypassReasonBox');
+      const normalBtns = document.getElementById('admNormalButtons');
+      const bypassBtns = document.getElementById('admBypassButtons');
+
+      if (isUnavailable) {
+        if (reasonBox) reasonBox.classList.remove('hidden');
+        if (normalBtns) normalBtns.classList.add('hidden');
+        if (bypassBtns) bypassBtns.classList.remove('hidden');
+      } else {
+        if (reasonBox) reasonBox.classList.add('hidden');
+        if (normalBtns) normalBtns.classList.remove('hidden');
+        if (bypassBtns) bypassBtns.classList.add('hidden');
+      }
+    }
+
+    async function loadAdminOdRequests(silent = false) {
+      const loading = document.getElementById('admOdLoading');
+      const empty = document.getElementById('admOdEmpty');
+      const tableWrap = document.getElementById('admOdTableWrap');
+
+      if (!silent && loading) loading.classList.remove('hidden');
+      if (!silent && empty) empty.classList.add('hidden');
+      if (!silent && tableWrap) tableWrap.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/od/admin/all');
+        const json = await res.json();
+
+        if (loading) loading.classList.add('hidden');
+
+        if (!json.success) {
+          if (!silent) showToast(json.message || 'Failed to fetch OD requests.', 'error', 'ERROR');
+          return;
+        }
+
+        admOdList = json.requests || [];
+        updateAdminOdMetrics(admOdList);
+        renderAdminOdTable();
+      } catch (err) {
+        if (loading) loading.classList.add('hidden');
+        console.error('loadAdminOdRequests error:', err);
+      }
+    }
+
+    function updateAdminOdMetrics(list) {
+      let pendingAdmin = 0;
+      let awaitingHod = 0;
+      let approved = 0;
+      let rejected = 0;
+
+      list.forEach(r => {
+        if (r.status === 'ADMIN_REVIEW') pendingAdmin++;
+        else if (r.status === 'HOD_REVIEW') awaitingHod++;
+        else if (r.status === 'APPROVED') approved++;
+        else if (r.status === 'REJECTED') rejected++;
+      });
+
+      const pendEl = document.getElementById('admOdStatPending');
+      const hodEl = document.getElementById('admOdStatHodReview');
+      const appEl = document.getElementById('admOdStatApproved');
+      const rejEl = document.getElementById('admOdStatRejected');
+      const badgeEl = document.getElementById('admOdBadge');
+      const countEl = document.getElementById('admOdQueueCount');
+
+      if (pendEl) pendEl.textContent = pendingAdmin;
+      if (hodEl) hodEl.textContent = awaitingHod;
+      if (appEl) appEl.textContent = approved;
+      if (rejEl) rejEl.textContent = rejected;
+
+      if (badgeEl) {
+        if (pendingAdmin > 0) {
+          badgeEl.textContent = pendingAdmin;
+          badgeEl.classList.remove('hidden');
+        } else {
+          badgeEl.classList.add('hidden');
+        }
+      }
+      if (countEl) countEl.textContent = admOdActiveFilter === 'pending' ? pendingAdmin : list.length;
+    }
+
+    function getAdmOdStatusBadge(status) {
+      switch (status) {
+        case 'APPROVED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>APPROVED</span>';
+        case 'REJECTED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>REJECTED</span>';
+        case 'CHANGES_REQUESTED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>CHANGES REQ</span>';
+        case 'WITHDRAWN':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-outline border border-outline-variant/30">WITHDRAWN</span>';
+        case 'HOD_REVIEW':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>HOD REVIEW</span>';
+        case 'ADMIN_REVIEW':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/20 text-blue-300 border border-blue-500/40"><span class="w-1.5 h-1.5 rounded-full bg-blue-400 animate-pulse"></span>ADMIN REVIEW</span>';
+        case 'FACULTY_REVIEW':
+        case 'SUBMITTED':
+        default:
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/15 text-indigo-300 border border-indigo-500/30"><span class="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>FACULTY REVIEW</span>';
+      }
+    }
+
+    function renderAdminOdTable(filteredList = null) {
+      const empty = document.getElementById('admOdEmpty');
+      const tableWrap = document.getElementById('admOdTableWrap');
+      const tbody = document.getElementById('admOdTableBody');
+      const countEl = document.getElementById('admOdQueueCount');
+
+      let list = filteredList !== null ? filteredList : admOdList;
+      if (filteredList === null && admOdActiveFilter === 'pending') {
+        list = list.filter(r => r.status === 'ADMIN_REVIEW');
+      }
+
+      if (countEl) countEl.textContent = list.length;
+
+      if (!list || list.length === 0) {
+        if (empty) empty.classList.remove('hidden');
+        if (tableWrap) tableWrap.classList.add('hidden');
+        return;
+      }
+
+      if (empty) empty.classList.add('hidden');
+      if (tableWrap) tableWrap.classList.remove('hidden');
+
+      tbody.innerHTML = list.map(od => {
+        const stu = od.student || {};
+        const fac = od.facultyReviewer || {};
+        const start = new Date(od.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const end = new Date(od.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const datesFormatted = start === end ? start : `${start} - ${end}`;
+        const isActionable = od.status === 'ADMIN_REVIEW';
+
+        return `
+          <tr class="hover:bg-surface-container-high/40 transition-colors">
+            <td class="py-3 px-3">
+              <div class="flex items-center gap-2.5">
+                <img src="${escapeHtml(stu.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80')}" class="w-8 h-8 rounded-full border border-tertiary/40 object-cover" alt="Student">
+                <div>
+                  <div class="font-medium text-on-surface">${escapeHtml(stu.name || 'Student')}</div>
+                  <div class="text-[10px] text-outline font-mono">${escapeHtml(stu.studentId || 'Reg No N/A')} &bull; Sec ${escapeHtml(stu.section || 'A')}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-3">
+              <div class="font-mono text-[11px] text-tertiary font-bold">${escapeHtml(od.requestId)}</div>
+              <div class="font-medium text-on-surface truncate max-w-xs">${escapeHtml(od.eventName)}</div>
+              <div class="text-[10px] text-outline truncate max-w-xs">${escapeHtml(od.organizingInstitute)}</div>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              <div class="font-mono text-[11px] text-on-surface">${datesFormatted}</div>
+              <div class="text-[10px] text-outline truncate max-w-[130px]">${escapeHtml(od.venue)}</div>
+            </td>
+            <td class="py-3 px-3">
+              <div class="text-xs text-on-surface font-medium">${escapeHtml(fac.name || 'Faculty Verified')}</div>
+              <div class="text-[10px] text-outline truncate max-w-xs">${escapeHtml(fac.title || 'Faculty Supervisor')}</div>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              <span class="px-1.5 py-0.5 rounded bg-surface-container text-[10px] font-mono text-outline">${escapeHtml(od.currentStage)}</span>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              ${getAdmOdStatusBadge(od.status)}
+            </td>
+            <td class="py-3 px-3 text-right whitespace-nowrap">
+              <button onclick="openAdminOdReviewModal('${od._id}')" class="px-3 py-1.5 rounded-lg ${isActionable ? 'bg-tertiary hover:bg-emerald-400 text-black font-bold' : 'bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-medium border border-outline-variant/30'} text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+                <span class="material-symbols-outlined text-[15px]">${isActionable ? 'verified_user' : 'visibility'}</span>
+                <span>${isActionable ? 'Take Action' : 'Details'}</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterAdminOdRequests(q) {
+      const query = (q || '').toLowerCase().trim();
+      if (!query) {
+        renderAdminOdTable();
+        return;
+      }
+      let source = admOdList;
+      if (admOdActiveFilter === 'pending') {
+        source = source.filter(r => r.status === 'ADMIN_REVIEW');
+      }
+      const filtered = source.filter(od => {
+        const stuName = (od.student && od.student.name) ? od.student.name.toLowerCase() : '';
+        const stuId = (od.student && od.student.studentId) ? od.student.studentId.toLowerCase() : '';
+        const reqId = (od.requestId || '').toLowerCase();
+        const event = (od.eventName || '').toLowerCase();
+        const inst = (od.organizingInstitute || '').toLowerCase();
+        return stuName.includes(query) || stuId.includes(query) || reqId.includes(query) || event.includes(query) || inst.includes(query);
+      });
+      renderAdminOdTable(filtered);
+    }
+
+    // OPEN ADMIN OD REVIEW & ACTION MODAL
+    async function openAdminOdReviewModal(id) {
+      try {
+        const res = await fetch(`/api/od/${id}`);
+        const json = await res.json();
+        if (!json.success || !json.request) {
+          showToast('Failed to load OD request details.', 'error', 'ERROR');
+          return;
+        }
+
+        const od = json.request;
+        document.getElementById('admActiveOdId').value = od._id;
+        document.getElementById('admModalOdReqId').textContent = od.requestId;
+        document.getElementById('admModalOdEventName').textContent = od.eventName;
+        document.getElementById('admModalOdStatus').innerHTML = getAdmOdStatusBadge(od.status);
+
+        // Student Details
+        const stu = od.student || {};
+        document.getElementById('admModalStuAvatar').src = stu.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100';
+        document.getElementById('admModalStuName').textContent = stu.name || 'Student';
+        document.getElementById('admModalStuMeta').textContent = `${stu.studentId || 'Reg No N/A'} • ${stu.department || 'AI & ML'} (Sec ${stu.section || 'A'})`;
+
+        // Faculty Details
+        const fac = od.facultyReviewer || {};
+        document.getElementById('admModalFacName').textContent = fac.name || 'Department Faculty';
+        document.getElementById('admModalFacComments').textContent = od.comments || 'Endorsed & forwarded for Admin approval';
+
+        // Event Details
+        document.getElementById('admModalOdInstitute').textContent = od.organizingInstitute;
+        document.getElementById('admModalOdVenue').textContent = od.venue;
+        const start = new Date(od.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const end = new Date(od.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        document.getElementById('admModalOdDates').textContent = start === end ? start : `${start} to ${end}`;
+
+        // Document link
+        const docLinkEl = document.getElementById('admModalOdDocLink');
+        if (od.supportingDocumentUrl) {
+          docLinkEl.innerHTML = `
+            <a href="${escapeHtml(od.supportingDocumentUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-tertiary hover:underline font-medium">
+              <span class="material-symbols-outlined text-sm">attach_file</span>
+              <span>${escapeHtml(od.supportingDocumentName || 'View Supporting Document')}</span>
+              <span class="material-symbols-outlined text-xs">open_in_new</span>
+            </a>
+          `;
+        } else {
+          docLinkEl.innerHTML = '<span class="text-outline italic">No document attached</span>';
+        }
+
+        document.getElementById('admModalOdPurpose').textContent = od.purpose;
+
+        // Render audit timeline
+        renderAdminOdTimeline(od);
+
+        // Reset HOD availability radio & bypass inputs
+        const availRadio = document.querySelector('input[name="admHodAvailRadio"][value="available"]');
+        if (availRadio) availRadio.checked = true;
+        toggleAdmBypassMode(false);
+        const bypassInput = document.getElementById('admOdBypassReasonInput');
+        if (bypassInput) bypassInput.value = '';
+        const commentsInput = document.getElementById('admActionComments');
+        if (commentsInput) commentsInput.value = '';
+
+        // Action controls panel visibility
+        const actionControls = document.getElementById('admActionControlsContainer');
+        if (od.status === 'ADMIN_REVIEW') {
+          if (actionControls) actionControls.classList.remove('hidden');
+        } else {
+          if (actionControls) actionControls.classList.add('hidden');
+        }
+
+        openModal('adminOdActionModal');
+      } catch (err) {
+        showToast('Error opening OD request: ' + err.message, 'error', 'ERROR');
+      }
+    }
+
+    function renderAdminOdTimeline(od) {
+      const container = document.getElementById('admModalOdTimeline');
+      const history = od.approvalHistory || [];
+
+      if (history.length === 0) {
+        container.innerHTML = '<p class="text-xs text-outline italic">No history logged yet.</p>';
+        return;
+      }
+
+      container.innerHTML = history.map(item => {
+        const time = new Date(item.timestamp).toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+
+        return `
+          <div class="rounded-lg bg-surface-container p-2.5 border border-outline-variant/15 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-on-surface">${escapeHtml(item.action.replace(/_/g, ' '))}</span>
+              <span class="text-[10px] font-mono text-outline">${time}</span>
+            </div>
+            <div class="text-[11px] text-outline">
+              By: <span class="font-medium text-on-surface">${escapeHtml(item.performerName || 'System')}</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-container-high text-tertiary ml-1">${escapeHtml(item.performerRole || '')}</span>
+            </div>
+            ${item.comments ? `<div class="text-xs text-on-surface/90 bg-surface-container-high/60 p-1.5 rounded mt-1">"${escapeHtml(item.comments)}"</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // EXECUTE ADMIN OD ACTION
+    async function executeAdminOdAction(action) {
+      const id = document.getElementById('admActiveOdId').value;
+      const comments = document.getElementById('admActionComments').value.trim();
+      const isUnavailable = document.querySelector('input[name="admHodAvailRadio"]:checked')?.value === 'unavailable';
+      const bypassReason = document.getElementById('admOdBypassReasonInput').value.trim();
+
+      if ((action === 'BYPASS_APPROVE' || action === 'BYPASS_REJECT') && !bypassReason) {
+        showToast('A mandatory reason is required when bypassing the HOD stage.', 'warning', 'BYPASS REASON REQUIRED');
+        return;
+      }
+
+      if ((action === 'REQUEST_CHANGES' || action === 'REJECT' || action === 'BYPASS_REJECT') && !comments) {
+        showToast('Please provide administrative comments or reasons for this action.', 'warning', 'REMARKS REQUIRED');
+        return;
+      }
+
+      let confirmMsg = 'Confirm this administrative action on the On-Duty request?';
+      if (action === 'FORWARD_TO_HOD') confirmMsg = 'Forward this request to the Head of Department for final review?';
+      if (action === 'BYPASS_APPROVE') confirmMsg = 'Grant FINAL APPROVAL directly under HOD bypass authority?';
+      if (action === 'BYPASS_REJECT') confirmMsg = 'REJECT this request directly under HOD bypass authority?';
+
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch(`/api/od/admin/${id}/action`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            action,
+            comments,
+            hodAvailable: !isUnavailable,
+            bypassReason,
+          }),
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          closeModal('adminOdActionModal');
+          showToast(json.message || 'Action executed successfully.', 'success', 'COMPLETED');
+          loadAdminOdRequests();
+        } else {
+          showToast(json.message || 'Failed to process admin action.', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Action processing error: ' + err.message, 'error', 'ERROR');
       }
     }
 

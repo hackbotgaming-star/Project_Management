@@ -268,6 +268,11 @@
         <span class="material-symbols-outlined text-sm">history</span>
         <span>Audit Trail</span>
       </button>
+      <button onclick="switchTab('od')" id="tabBtn-od" class="tab-btn px-4 py-2 rounded-xl text-outline hover:text-on-surface hover:bg-surface-container flex items-center gap-1.5 transition-colors shrink-0">
+        <span class="material-symbols-outlined text-sm">how_to_reg</span>
+        <span>OD Approvals</span>
+        <span id="hodOdBadge" class="hidden text-[10px] px-1.5 py-0.2 rounded-full bg-amber-400 text-black font-bold font-mono">0</span>
+      </button>
     </nav>
 
     <!-- ========================================== -->
@@ -647,6 +652,107 @@
       </div>
     </div>
 
+    <!-- ========================================== -->
+    <!-- TAB 8: OD APPROVALS (HOD FINAL DECISION)   -->
+    <!-- ========================================== -->
+    <div id="tabContent-od" class="space-y-4 hidden">
+      <div class="p-4 sm:p-5 rounded-2xl bg-surface-container-low border border-amber-400/30 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-outline-variant/15 pb-4">
+          <div>
+            <h2 class="font-bold text-base text-on-surface flex items-center gap-2">
+              <span class="material-symbols-outlined text-amber-400 text-xl">how_to_reg</span>
+              <span>On-Duty (OD) Final Approvals</span>
+            </h2>
+            <p class="text-xs text-outline mt-0.5">Authoritative executive clearance for student On-Duty requests forwarded by Administration.</p>
+          </div>
+          <div class="flex items-center gap-2 bg-surface-container p-1 rounded-xl border border-outline-variant/30 text-xs font-medium">
+            <button onclick="setHodOdFilter('pending')" id="btnHodOdFilterPending" class="px-3 py-1.5 rounded-lg bg-amber-400 text-black font-bold transition-colors">Awaiting Decision</button>
+            <button onclick="setHodOdFilter('all')" id="btnHodOdFilterAll" class="px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors">All Applications</button>
+          </div>
+        </div>
+
+        <!-- HOD OD Metric Cards -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-amber-400/10 text-amber-400 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">hourglass_top</span>
+            </div>
+            <div>
+              <div id="hodOdStatPending" class="text-base font-bold font-mono text-amber-400">0</div>
+              <div class="text-[10px] text-outline uppercase font-mono">Awaiting HOD</div>
+            </div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">verified</span>
+            </div>
+            <div>
+              <div id="hodOdStatApproved" class="text-base font-bold font-mono text-emerald-400">0</div>
+              <div class="text-[10px] text-outline uppercase font-mono">Approved</div>
+            </div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">cancel</span>
+            </div>
+            <div>
+              <div id="hodOdStatRejected" class="text-base font-bold font-mono text-rose-400">0</div>
+              <div class="text-[10px] text-outline uppercase font-mono">Rejected</div>
+            </div>
+          </div>
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+            <div class="w-9 h-9 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
+              <span class="material-symbols-outlined text-lg">edit_note</span>
+            </div>
+            <div>
+              <div id="hodOdStatChanges" class="text-base font-bold font-mono text-purple-400">0</div>
+              <div class="text-[10px] text-outline uppercase font-mono">Changes Req</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table View -->
+        <div class="space-y-3 pt-2">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <h3 class="font-bold text-xs uppercase tracking-wider text-outline flex items-center gap-2">
+              <span>Departmental OD Queue</span>
+              <span id="hodOdQueueCount" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-container-high text-amber-400 font-bold">0</span>
+            </h3>
+            <input type="text" id="hodOdSearchInput" oninput="filterHodOdRequests(this.value)" placeholder="Search student name, roll no, or event..." class="px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none w-56 sm:w-72">
+          </div>
+
+          <div id="hodOdLoading" class="py-12 text-center text-outline text-xs">
+            <span class="material-symbols-outlined text-3xl animate-spin mb-2">progress_activity</span>
+            <p>Loading HOD review queue...</p>
+          </div>
+
+          <div id="hodOdEmpty" class="hidden py-12 text-center space-y-2">
+            <div class="w-12 h-12 rounded-full bg-surface-container-high text-outline flex items-center justify-center mx-auto">
+              <span class="material-symbols-outlined text-2xl">verified</span>
+            </div>
+            <p class="text-xs text-on-surface font-medium">All applications processed</p>
+            <p class="text-[11px] text-outline max-w-sm mx-auto">There are currently no student On-Duty clearance requests waiting for Head of Department review.</p>
+          </div>
+
+          <div id="hodOdTableWrap" class="hidden overflow-x-auto">
+            <table class="w-full text-left text-xs border-collapse">
+              <thead>
+                <tr class="border-b border-outline-variant/20 text-outline text-[11px] uppercase tracking-wider">
+                  <th class="py-2.5 px-3">Student</th>
+                  <th class="py-2.5 px-3">Request ID &amp; Event</th>
+                  <th class="py-2.5 px-3">Dates &amp; Venue</th>
+                  <th class="py-2.5 px-3">Admin Reviewer</th>
+                  <th class="py-2.5 px-3">Status</th>
+                  <th class="py-2.5 px-3 text-right">Action</th>
+                </tr>
+              </thead>
+              <tbody id="hodOdTableBody" class="divide-y divide-outline-variant/10 text-on-surface"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- ========================================== -->
@@ -772,6 +878,113 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL: HOD OD FINAL REVIEW & DECISION     -->
+  <!-- ========================================== -->
+  <div id="hodOdActionModal" class="hidden fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-amber-400/40 rounded-2xl w-full max-w-2xl p-6 shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+      <div class="flex items-center justify-between border-b border-outline-variant/20 pb-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="hodModalOdReqId" class="font-mono text-xs px-2 py-0.5 rounded bg-amber-400/20 text-amber-400 font-bold">OD-XXXX-XXXX</span>
+            <span id="hodModalOdStatus"></span>
+          </div>
+          <h3 id="hodModalOdEventName" class="font-headline font-bold text-base text-on-surface mt-1">-</h3>
+        </div>
+        <button onclick="closeModal('hodOdActionModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <!-- Student & Reviewers Card -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+          <img id="hodModalStuAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="w-10 h-10 rounded-full border border-amber-400/40 object-cover" alt="Student">
+          <div class="flex-1 min-w-0">
+            <span class="block text-[10px] text-outline uppercase font-mono">Student</span>
+            <h4 id="hodModalStuName" class="font-bold text-xs text-on-surface truncate">-</h4>
+            <div class="text-[10px] text-outline font-mono truncate" id="hodModalStuMeta">-</div>
+          </div>
+        </div>
+
+        <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-surface-container-high border border-outline-variant/30 flex items-center justify-center text-secondary">
+            <span class="material-symbols-outlined text-lg">admin_panel_settings</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <span class="block text-[10px] text-outline uppercase font-mono">Administrative Clearance</span>
+            <h4 id="hodModalAdminName" class="font-bold text-xs text-on-surface truncate">-</h4>
+            <div class="text-[10px] text-outline truncate" id="hodModalAdminRemarks">Verified &amp; forwarded to HOD</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Details Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs p-3.5 rounded-xl bg-surface-container border border-outline-variant/20">
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Organizing Institution</span>
+          <span id="hodModalOdInstitute" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Venue / City</span>
+          <span id="hodModalOdVenue" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Dates</span>
+          <span id="hodModalOdDates" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Supporting Document / Proof</span>
+          <div id="hodModalOdDocLink" class="mt-0.5">-</div>
+        </div>
+      </div>
+
+      <!-- Purpose Section -->
+      <div>
+        <h4 class="text-xs font-semibold text-outline uppercase tracking-wider mb-1">Academic Purpose &amp; Scope</h4>
+        <div id="hodModalOdPurpose" class="p-3 rounded-lg bg-surface-container text-xs text-on-surface/90 border border-outline-variant/20 leading-relaxed whitespace-pre-wrap"></div>
+      </div>
+
+      <!-- Audit History -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-semibold text-outline uppercase tracking-wider flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">history</span>
+          <span>Approval Audit Trail</span>
+        </h4>
+        <div id="hodModalOdTimeline" class="space-y-2.5 pl-3 border-l-2 border-outline-variant/30 text-xs"></div>
+      </div>
+
+      <!-- HOD Action Panel (Active when in HOD_REVIEW) -->
+      <div id="hodActionControlsContainer" class="p-4 rounded-xl bg-surface-container border border-amber-400/40 space-y-3.5">
+        <input type="hidden" id="hodActiveOdId">
+        <div>
+          <label class="block text-xs font-semibold text-on-surface mb-1">Head of Department Executive Remarks</label>
+          <textarea id="hodActionComments" rows="2" placeholder="Add formal remarks or mandatory reason for rejection/change request..." class="w-full p-2 bg-surface-container-low rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-amber-400 focus:outline-none"></textarea>
+          <p class="text-[10px] text-outline mt-1">Rejection reason is strictly mandatory and will be issued to student and administration.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('hodOdActionModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+
+          <button type="button" onclick="executeHodOdAction('REJECT')" class="px-3.5 py-1.5 rounded-lg border border-rose-500/40 text-rose-400 hover:bg-rose-500/10 text-xs font-bold flex items-center gap-1 transition-colors">
+            <span class="material-symbols-outlined text-sm">cancel</span>
+            <span>Reject</span>
+          </button>
+
+          <button type="button" onclick="executeHodOdAction('REQUEST_CHANGES')" class="px-3.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center gap-1 transition-colors">
+            <span class="material-symbols-outlined text-sm">edit_note</span>
+            <span>Request Changes</span>
+          </button>
+
+          <button type="button" onclick="executeHodOdAction('APPROVE')" class="px-4 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-black text-xs font-bold flex items-center gap-1.5 shadow-md transition-colors">
+            <span class="material-symbols-outlined text-sm">verified</span>
+            <span>Grant HOD Approval</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <footer class="py-6 text-center text-xs text-outline border-t border-outline-variant/20 bg-surface-container-low mt-12">
     ProjectHub Academic Leadership Portal &bull; Department of Artificial Intelligence &amp; Machine Learning
   </footer>
@@ -827,6 +1040,7 @@
         allFacultyCache = hodData.facultyUsers || [];
 
         renderHODDashboard(hodData);
+        loadHodOdRequests(true);
       } catch (err) {
         console.error('Error loading HOD dashboard:', err);
       }
@@ -1262,13 +1476,15 @@
         activeBtn.className = 'tab-btn px-4 py-2 rounded-xl bg-amber-400 text-black font-bold flex items-center gap-1.5 transition-colors shrink-0';
       }
 
-      ['overview', 'projects', 'tasks', 'superdream', 'students', 'faculty', 'audit'].forEach(t => {
+      ['overview', 'projects', 'tasks', 'superdream', 'students', 'faculty', 'audit', 'od'].forEach(t => {
         const el = document.getElementById(`tabContent-${t}`);
         if (el) el.classList.add('hidden');
       });
 
       const target = document.getElementById(`tabContent-${tabId}`);
       if (target) target.classList.remove('hidden');
+
+      if (tabId === 'od') loadHodOdRequests();
     }
 
     // MODAL HELPERS
@@ -1393,6 +1609,339 @@
         btn.innerHTML = '<span class="material-symbols-outlined text-sm">person_add</span><span>Enroll User</span>';
       }
     });
+
+    // ==========================================
+    // ON-DUTY (OD) CLEARANCE & APPROVAL (HOD)
+    // ==========================================
+    let hodOdList = [];
+    let hodOdActiveFilter = 'pending';
+
+    function setHodOdFilter(filter) {
+      hodOdActiveFilter = filter;
+      const btnPending = document.getElementById('btnHodOdFilterPending');
+      const btnAll = document.getElementById('btnHodOdFilterAll');
+
+      if (filter === 'pending') {
+        if (btnPending) btnPending.className = 'px-3 py-1.5 rounded-lg bg-amber-400 text-black font-bold transition-colors';
+        if (btnAll) btnAll.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors';
+      } else {
+        if (btnPending) btnPending.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors';
+        if (btnAll) btnAll.className = 'px-3 py-1.5 rounded-lg bg-amber-400 text-black font-bold transition-colors';
+      }
+      renderHodOdTable();
+    }
+
+    async function loadHodOdRequests(silent = false) {
+      const loading = document.getElementById('hodOdLoading');
+      const empty = document.getElementById('hodOdEmpty');
+      const tableWrap = document.getElementById('hodOdTableWrap');
+
+      if (!silent && loading) loading.classList.remove('hidden');
+      if (!silent && empty) empty.classList.add('hidden');
+      if (!silent && tableWrap) tableWrap.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/od/hod/pending');
+        const json = await res.json();
+
+        if (loading) loading.classList.add('hidden');
+
+        if (!json.success) {
+          if (!silent) alert(json.message || 'Failed to fetch HOD OD queue.');
+          return;
+        }
+
+        hodOdList = json.requests || [];
+        updateHodOdMetrics(hodOdList);
+        renderHodOdTable();
+      } catch (err) {
+        if (loading) loading.classList.add('hidden');
+        console.error('loadHodOdRequests error:', err);
+      }
+    }
+
+    function updateHodOdMetrics(list) {
+      let pending = 0;
+      let approved = 0;
+      let rejected = 0;
+      let changes = 0;
+
+      list.forEach(r => {
+        if (r.status === 'HOD_REVIEW') pending++;
+        else if (r.status === 'APPROVED') approved++;
+        else if (r.status === 'REJECTED') rejected++;
+        else if (r.status === 'CHANGES_REQUESTED') changes++;
+      });
+
+      const pendEl = document.getElementById('hodOdStatPending');
+      const appEl = document.getElementById('hodOdStatApproved');
+      const rejEl = document.getElementById('hodOdStatRejected');
+      const chgEl = document.getElementById('hodOdStatChanges');
+      const badgeEl = document.getElementById('hodOdBadge');
+      const countEl = document.getElementById('hodOdQueueCount');
+
+      if (pendEl) pendEl.textContent = pending;
+      if (appEl) appEl.textContent = approved;
+      if (rejEl) rejEl.textContent = rejected;
+      if (chgEl) chgEl.textContent = changes;
+
+      if (badgeEl) {
+        if (pending > 0) {
+          badgeEl.textContent = pending;
+          badgeEl.classList.remove('hidden');
+        } else {
+          badgeEl.classList.add('hidden');
+        }
+      }
+      if (countEl) countEl.textContent = hodOdActiveFilter === 'pending' ? pending : list.length;
+    }
+
+    function getHodOdStatusBadge(status) {
+      switch (status) {
+        case 'APPROVED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>APPROVED</span>';
+        case 'REJECTED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>REJECTED</span>';
+        case 'CHANGES_REQUESTED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>CHANGES REQ</span>';
+        case 'WITHDRAWN':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-outline border border-outline-variant/30">WITHDRAWN</span>';
+        case 'HOD_REVIEW':
+        default:
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-400/20 text-amber-300 border border-amber-400/40"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>AWAITING HOD</span>';
+      }
+    }
+
+    function renderHodOdTable(filteredList = null) {
+      const empty = document.getElementById('hodOdEmpty');
+      const tableWrap = document.getElementById('hodOdTableWrap');
+      const tbody = document.getElementById('hodOdTableBody');
+      const countEl = document.getElementById('hodOdQueueCount');
+
+      let list = filteredList !== null ? filteredList : hodOdList;
+      if (filteredList === null && hodOdActiveFilter === 'pending') {
+        list = list.filter(r => r.status === 'HOD_REVIEW');
+      }
+
+      if (countEl) countEl.textContent = list.length;
+
+      if (!list || list.length === 0) {
+        if (empty) empty.classList.remove('hidden');
+        if (tableWrap) tableWrap.classList.add('hidden');
+        return;
+      }
+
+      if (empty) empty.classList.add('hidden');
+      if (tableWrap) tableWrap.classList.remove('hidden');
+
+      tbody.innerHTML = list.map(od => {
+        const stu = od.student || {};
+        const adm = od.adminReviewer || {};
+        const start = new Date(od.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const end = new Date(od.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const datesFormatted = start === end ? start : `${start} - ${end}`;
+        const isActionable = od.status === 'HOD_REVIEW';
+
+        return `
+          <tr class="hover:bg-surface-container-high/40 transition-colors">
+            <td class="py-3 px-3">
+              <div class="flex items-center gap-2.5">
+                <img src="${escapeHtml(stu.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80')}" class="w-8 h-8 rounded-full border border-amber-400/40 object-cover" alt="Student">
+                <div>
+                  <div class="font-medium text-on-surface">${escapeHtml(stu.name || 'Student')}</div>
+                  <div class="text-[10px] text-outline font-mono">${escapeHtml(stu.studentId || 'Reg No N/A')} &bull; Sec ${escapeHtml(stu.section || 'A')}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-3">
+              <div class="font-mono text-[11px] text-amber-400 font-bold">${escapeHtml(od.requestId)}</div>
+              <div class="font-medium text-on-surface truncate max-w-xs">${escapeHtml(od.eventName)}</div>
+              <div class="text-[10px] text-outline truncate max-w-xs">${escapeHtml(od.organizingInstitute)}</div>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              <div class="font-mono text-[11px] text-on-surface">${datesFormatted}</div>
+              <div class="text-[10px] text-outline truncate max-w-[130px]">${escapeHtml(od.venue)}</div>
+            </td>
+            <td class="py-3 px-3">
+              <div class="text-xs text-on-surface font-medium">${escapeHtml(adm.name || 'Administration')}</div>
+              <div class="text-[10px] text-outline truncate max-w-xs">${escapeHtml(od.comments || 'Endorsed for HOD')}</div>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              ${getHodOdStatusBadge(od.status)}
+            </td>
+            <td class="py-3 px-3 text-right whitespace-nowrap">
+              <button onclick="openHodOdReviewModal('${od._id}')" class="px-3 py-1.5 rounded-lg ${isActionable ? 'bg-amber-400 hover:bg-amber-300 text-black font-bold' : 'bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-medium border border-outline-variant/30'} text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+                <span class="material-symbols-outlined text-[15px]">${isActionable ? 'verified' : 'visibility'}</span>
+                <span>${isActionable ? 'Review & Decide' : 'Details'}</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterHodOdRequests(q) {
+      const query = (q || '').toLowerCase().trim();
+      if (!query) {
+        renderHodOdTable();
+        return;
+      }
+      let source = hodOdList;
+      if (hodOdActiveFilter === 'pending') {
+        source = source.filter(r => r.status === 'HOD_REVIEW');
+      }
+      const filtered = source.filter(od => {
+        const stuName = (od.student && od.student.name) ? od.student.name.toLowerCase() : '';
+        const stuId = (od.student && od.student.studentId) ? od.student.studentId.toLowerCase() : '';
+        const reqId = (od.requestId || '').toLowerCase();
+        const event = (od.eventName || '').toLowerCase();
+        const inst = (od.organizingInstitute || '').toLowerCase();
+        return stuName.includes(query) || stuId.includes(query) || reqId.includes(query) || event.includes(query) || inst.includes(query);
+      });
+      renderHodOdTable(filtered);
+    }
+
+    // OPEN HOD OD REVIEW MODAL
+    async function openHodOdReviewModal(id) {
+      try {
+        const res = await fetch(`/api/od/${id}`);
+        const json = await res.json();
+        if (!json.success || !json.request) {
+          alert('Failed to load OD request details.');
+          return;
+        }
+
+        const od = json.request;
+        document.getElementById('hodActiveOdId').value = od._id;
+        document.getElementById('hodModalOdReqId').textContent = od.requestId;
+        document.getElementById('hodModalOdEventName').textContent = od.eventName;
+        document.getElementById('hodModalOdStatus').innerHTML = getHodOdStatusBadge(od.status);
+
+        // Student Details
+        const stu = od.student || {};
+        document.getElementById('hodModalStuAvatar').src = stu.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100';
+        document.getElementById('hodModalStuName').textContent = stu.name || 'Student';
+        document.getElementById('hodModalStuMeta').textContent = `${stu.studentId || 'Reg No N/A'} • ${stu.department || 'AI & ML'} (Sec ${stu.section || 'A'})`;
+
+        // Admin Reviewer Details
+        const adm = od.adminReviewer || {};
+        document.getElementById('hodModalAdminName').textContent = adm.name || 'Administration Officer';
+        document.getElementById('hodModalAdminRemarks').textContent = od.comments || 'Cleared and forwarded for HOD decision';
+
+        // Event Details
+        document.getElementById('hodModalOdInstitute').textContent = od.organizingInstitute;
+        document.getElementById('hodModalOdVenue').textContent = od.venue;
+        const start = new Date(od.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const end = new Date(od.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        document.getElementById('hodModalOdDates').textContent = start === end ? start : `${start} to ${end}`;
+
+        // Document link
+        const docLinkEl = document.getElementById('hodModalOdDocLink');
+        if (od.supportingDocumentUrl) {
+          docLinkEl.innerHTML = `
+            <a href="${escapeHtml(od.supportingDocumentUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-amber-400 hover:underline font-medium">
+              <span class="material-symbols-outlined text-sm">attach_file</span>
+              <span>${escapeHtml(od.supportingDocumentName || 'View Supporting Document')}</span>
+              <span class="material-symbols-outlined text-xs">open_in_new</span>
+            </a>
+          `;
+        } else {
+          docLinkEl.innerHTML = '<span class="text-outline italic">No document attached</span>';
+        }
+
+        document.getElementById('hodModalOdPurpose').textContent = od.purpose;
+
+        // Render audit timeline
+        renderHodOdTimeline(od);
+
+        const commentsInput = document.getElementById('hodActionComments');
+        if (commentsInput) commentsInput.value = '';
+
+        // Action controls panel visibility
+        const actionControls = document.getElementById('hodActionControlsContainer');
+        if (od.status === 'HOD_REVIEW') {
+          if (actionControls) actionControls.classList.remove('hidden');
+        } else {
+          if (actionControls) actionControls.classList.add('hidden');
+        }
+
+        openModal('hodOdActionModal');
+      } catch (err) {
+        alert('Error opening OD request: ' + err.message);
+      }
+    }
+
+    function renderHodOdTimeline(od) {
+      const container = document.getElementById('hodModalOdTimeline');
+      const history = od.approvalHistory || [];
+
+      if (history.length === 0) {
+        container.innerHTML = '<p class="text-xs text-outline italic">No history logged yet.</p>';
+        return;
+      }
+
+      container.innerHTML = history.map(item => {
+        const time = new Date(item.timestamp).toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+
+        return `
+          <div class="rounded-lg bg-surface-container p-2.5 border border-outline-variant/15 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-on-surface">${escapeHtml(item.action.replace(/_/g, ' '))}</span>
+              <span class="text-[10px] font-mono text-outline">${time}</span>
+            </div>
+            <div class="text-[11px] text-outline">
+              By: <span class="font-medium text-on-surface">${escapeHtml(item.performerName || 'System')}</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-container-high text-amber-400 ml-1">${escapeHtml(item.performerRole || '')}</span>
+            </div>
+            ${item.comments ? `<div class="text-xs text-on-surface/90 bg-surface-container-high/60 p-1.5 rounded mt-1">"${escapeHtml(item.comments)}"</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // EXECUTE HOD OD ACTION
+    async function executeHodOdAction(action) {
+      const id = document.getElementById('hodActiveOdId').value;
+      const comments = document.getElementById('hodActionComments').value.trim();
+
+      if ((action === 'REJECT' || action === 'REQUEST_CHANGES') && !comments) {
+        alert(action === 'REJECT' ? 'A mandatory rejection reason is required.' : 'Please specify the changes requested.');
+        return;
+      }
+
+      const confirmMsg = action === 'APPROVE'
+        ? 'Grant official Head of Department approval for this On-Duty request?'
+        : action === 'REQUEST_CHANGES'
+          ? 'Send change request to the student?'
+          : 'Are you sure you want to REJECT this On-Duty application?';
+
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch(`/api/od/hod/${id}/action`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, comments }),
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          closeModal('hodOdActionModal');
+          alert(json.message || 'HOD action executed successfully.');
+          loadHodOdRequests();
+        } else {
+          alert(json.message || 'Failed to process HOD action.');
+        }
+      } catch (err) {
+        alert('Action processing error: ' + err.message);
+      }
+    }
 
     // LOGOUT
     async function handleLogout() {

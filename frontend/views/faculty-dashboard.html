@@ -143,6 +143,11 @@
           <span class="flex-1 text-left">Reviews</span>
           <span id="reviewsQueueBadge" class="text-[10px] px-1.5 py-0.2 rounded bg-secondary text-black font-bold">0</span>
         </button>
+        <button onclick="switchTab('od-approvals')" id="nav-od-approvals" class="fac-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
+          <span class="material-symbols-outlined text-base">how_to_reg</span>
+          <span class="flex-1 text-left">OD Approvals</span>
+          <span id="facOdBadge" class="hidden text-[10px] px-1.5 py-0.2 rounded bg-secondary text-black font-bold">0</span>
+        </button>
         <button onclick="switchTab('tasks')" id="nav-tasks" class="fac-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-on-surface-variant hover:bg-surface-container-high">
           <span class="material-symbols-outlined text-base">task</span>
           <span>Tasks</span>
@@ -562,6 +567,109 @@
       </div>
     </section>
 
+    <!-- ========================================== -->
+    <!-- TAB: OD APPROVALS                          -->
+    <!-- ========================================== -->
+    <section id="tab-od-approvals" class="tab-pane hidden space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 class="font-headline text-xl font-bold text-on-surface flex items-center gap-2">
+            <span class="material-symbols-outlined text-secondary">how_to_reg</span>
+            <span>On-Duty (OD) Approvals</span>
+          </h2>
+          <p class="text-xs text-outline mt-0.5">Review, verify, and forward student On-Duty clearance requests to Administration</p>
+        </div>
+        <!-- Filter Tabs (Pending Review vs All) -->
+        <div class="flex items-center gap-2 bg-surface-container p-1 rounded-xl border border-outline-variant/30 text-xs font-medium">
+          <button onclick="setFacOdFilter('pending')" id="btnFacOdFilterPending" class="px-3 py-1.5 rounded-lg bg-secondary text-black font-semibold transition-colors">Pending Review</button>
+          <button onclick="setFacOdFilter('all')" id="btnFacOdFilterAll" class="px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors">All Requests</button>
+        </div>
+      </div>
+
+      <!-- OD Summary Metric Cards -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">pending_actions</span>
+          </div>
+          <div>
+            <div id="facOdStatPending" class="text-lg font-bold font-mono text-amber-400">0</div>
+            <div class="text-[11px] text-outline">Awaiting Review</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-blue-500/10 text-blue-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">send</span>
+          </div>
+          <div>
+            <div id="facOdStatForwarded" class="text-lg font-bold font-mono text-blue-400">0</div>
+            <div class="text-[11px] text-outline">Forwarded to Admin</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">verified</span>
+          </div>
+          <div>
+            <div id="facOdStatApproved" class="text-lg font-bold font-mono text-emerald-400">0</div>
+            <div class="text-[11px] text-outline">Fully Approved</div>
+          </div>
+        </div>
+        <div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant/30 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-lg bg-rose-500/10 text-rose-400 flex items-center justify-center">
+            <span class="material-symbols-outlined text-xl">cancel</span>
+          </div>
+          <div>
+            <div id="facOdStatRejected" class="text-lg font-bold font-mono text-rose-400">0</div>
+            <div class="text-[11px] text-outline">Rejected</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- OD Requests Review Queue Table -->
+      <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 space-y-4">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-outline-variant/20">
+          <h3 class="font-headline font-bold text-sm text-on-surface flex items-center gap-2">
+            <span>Student Applications</span>
+            <span id="facOdQueueCount" class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-surface-container-high text-secondary font-bold">0</span>
+          </h3>
+          <div class="flex items-center gap-2">
+            <input type="text" id="facOdSearchInput" oninput="filterFacultyOdRequests(this.value)" placeholder="Search student name, ID, or event..." class="px-3 py-1.5 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-secondary focus:outline-none w-56 sm:w-72">
+          </div>
+        </div>
+
+        <div id="facOdLoading" class="py-12 text-center text-outline text-xs">
+          <span class="material-symbols-outlined text-3xl animate-spin mb-2">progress_activity</span>
+          <p>Loading OD review queue...</p>
+        </div>
+
+        <div id="facOdEmpty" class="hidden py-12 text-center space-y-2">
+          <div class="w-12 h-12 rounded-full bg-surface-container-high text-outline flex items-center justify-center mx-auto">
+            <span class="material-symbols-outlined text-2xl">task_alt</span>
+          </div>
+          <p class="text-xs text-on-surface font-medium">All caught up!</p>
+          <p class="text-[11px] text-outline max-w-sm mx-auto">No pending student On-Duty clearance requests require your action at this time.</p>
+        </div>
+
+        <div id="facOdTableWrap" class="hidden overflow-x-auto">
+          <table class="w-full text-left text-xs border-collapse">
+            <thead>
+              <tr class="border-b border-outline-variant/20 text-outline text-[11px] uppercase tracking-wider">
+                <th class="py-2.5 px-3">Student</th>
+                <th class="py-2.5 px-3">Request ID &amp; Event</th>
+                <th class="py-2.5 px-3">Dates &amp; Venue</th>
+                <th class="py-2.5 px-3">Document</th>
+                <th class="py-2.5 px-3">Stage</th>
+                <th class="py-2.5 px-3">Status</th>
+                <th class="py-2.5 px-3 text-right">Action</th>
+              </tr>
+            </thead>
+            <tbody id="facOdTableBody" class="divide-y divide-outline-variant/10 text-on-surface"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- ========================================== -->
@@ -777,6 +885,106 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL: FACULTY OD REVIEW & ACTION          -->
+  <!-- ========================================== -->
+  <div id="facOdActionModal" class="hidden fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-2xl w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-5">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div>
+          <div class="flex items-center gap-2">
+            <span id="facModalOdReqId" class="font-mono text-xs px-2 py-0.5 rounded bg-secondary/20 text-secondary font-bold">OD-XXXX-XXXX</span>
+            <span id="facModalOdStatus"></span>
+          </div>
+          <h3 id="facModalOdEventName" class="font-headline font-bold text-base text-on-surface mt-1">-</h3>
+        </div>
+        <button onclick="closeModal('facOdActionModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <!-- Student Profile Card -->
+      <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/30 flex items-center gap-3.5">
+        <img id="facModalStuAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100" class="w-11 h-11 rounded-full border border-secondary/40 object-cover" alt="Student">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between">
+            <h4 id="facModalStuName" class="font-bold text-sm text-on-surface truncate">-</h4>
+            <span id="facModalStuId" class="font-mono text-xs text-secondary font-bold">-</span>
+          </div>
+          <div class="flex items-center gap-3 text-xs text-outline mt-0.5">
+            <span id="facModalStuDept" class="truncate">-</span>
+            <span>&bull;</span>
+            <span id="facModalStuSec" class="font-mono">Section -</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Event Details Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs p-3.5 rounded-xl bg-surface-container border border-outline-variant/20">
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Organizing Institution</span>
+          <span id="facModalOdInstitute" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Venue / City</span>
+          <span id="facModalOdVenue" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Dates</span>
+          <span id="facModalOdDates" class="font-medium text-on-surface block mt-0.5">-</span>
+        </div>
+        <div>
+          <span class="block text-[10px] text-outline uppercase font-mono">Supporting Document / Proof</span>
+          <div id="facModalOdDocLink" class="mt-0.5">-</div>
+        </div>
+      </div>
+
+      <!-- Purpose Section -->
+      <div>
+        <h4 class="text-xs font-semibold text-outline uppercase tracking-wider mb-1">Purpose &amp; Objective</h4>
+        <div id="facModalOdPurpose" class="p-3 rounded-lg bg-surface-container text-xs text-on-surface/90 border border-outline-variant/20 leading-relaxed whitespace-pre-wrap"></div>
+      </div>
+
+      <!-- Previous Audit History -->
+      <div class="space-y-2">
+        <h4 class="text-xs font-semibold text-outline uppercase tracking-wider flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-sm">history</span>
+          <span>Approval Audit Trail</span>
+        </h4>
+        <div id="facModalOdTimeline" class="space-y-3 pl-3 border-l-2 border-outline-variant/30 text-xs"></div>
+      </div>
+
+      <!-- Action Panel (Visible only when in SUBMITTED or FACULTY_REVIEW) -->
+      <div id="facActionControlsContainer" class="p-4 rounded-xl bg-surface-container border border-secondary/30 space-y-3.5">
+        <input type="hidden" id="facActiveOdId">
+        <div>
+          <label class="block text-xs font-semibold text-on-surface mb-1">Faculty Verification Feedback / Remarks</label>
+          <textarea id="facActionComments" rows="2" placeholder="Add comments, change requirements, or endorsement note..." class="w-full p-2 bg-surface-container-low rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-secondary focus:outline-none"></textarea>
+          <p class="text-[10px] text-outline mt-1">Comments are mandatory when requesting changes or rejecting.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center justify-end gap-2 pt-2 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('facOdActionModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          
+          <button type="button" onclick="executeFacultyOdAction('REJECT')" class="px-3.5 py-1.5 rounded-lg border border-rose-500/40 text-rose-400 hover:bg-rose-500/10 text-xs font-semibold flex items-center gap-1 transition-colors">
+            <span class="material-symbols-outlined text-sm">cancel</span>
+            <span>Reject</span>
+          </button>
+
+          <button type="button" onclick="executeFacultyOdAction('REQUEST_CHANGES')" class="px-3.5 py-1.5 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/40 text-xs font-semibold flex items-center gap-1 transition-colors">
+            <span class="material-symbols-outlined text-sm">edit_note</span>
+            <span>Request Changes</span>
+          </button>
+
+          <button type="button" onclick="executeFacultyOdAction('APPROVE_FORWARD')" class="px-4 py-1.5 rounded-lg bg-secondary hover:bg-cyan-400 text-black text-xs font-bold flex items-center gap-1.5 shadow-sm transition-colors">
+            <span class="material-symbols-outlined text-sm">forward_to_inbox</span>
+            <span>Approve &amp; Forward to Admin</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- APPLICATION SCRIPTS -->
   <script>
     // Auto-attach JWT auth header for mobile and desktop fetch requests
@@ -840,13 +1048,14 @@
       if (pane) pane.classList.remove('hidden');
       const navBtn = document.getElementById(`nav-${tabId}`);
       if (navBtn) navBtn.className = 'fac-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-secondary bg-surface-container-high';
-      document.getElementById('pageTitle').textContent = tabId.charAt(0).toUpperCase() + tabId.slice(1);
+      document.getElementById('pageTitle').textContent = tabId === 'od-approvals' ? 'OD Approvals' : (tabId.charAt(0).toUpperCase() + tabId.slice(1));
 
       closeMobileSidebar();
 
       if (tabId === 'calendar') loadCalendar();
       if (tabId === 'documents') loadFacultyDocuments();
       if (tabId === 'tasks') loadFacultyTasks();
+      if (tabId === 'od-approvals') loadFacultyOdRequests();
     }
 
     async function loadFacultyDashboard() {
@@ -861,6 +1070,7 @@
 
         facultyData = json.data;
         renderFacultyDashboard(facultyData);
+        loadFacultyOdRequests(true);
       } catch (err) {
         console.error('Failed to load faculty dashboard:', err);
       }
@@ -1795,6 +2005,346 @@
         alert('Failed to update profile.');
       } finally {
         if (btn) btn.disabled = false;
+      }
+    }
+
+    // ==========================================
+    // ON-DUTY (OD) APPROVALS (FACULTY)
+    // ==========================================
+    let facOdList = [];
+    let facOdActiveFilter = 'pending';
+
+    function setFacOdFilter(filter) {
+      facOdActiveFilter = filter;
+      const btnPending = document.getElementById('btnFacOdFilterPending');
+      const btnAll = document.getElementById('btnFacOdFilterAll');
+
+      if (filter === 'pending') {
+        if (btnPending) btnPending.className = 'px-3 py-1.5 rounded-lg bg-secondary text-black font-semibold transition-colors';
+        if (btnAll) btnAll.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors';
+      } else {
+        if (btnPending) btnPending.className = 'px-3 py-1.5 rounded-lg text-outline hover:text-on-surface transition-colors';
+        if (btnAll) btnAll.className = 'px-3 py-1.5 rounded-lg bg-secondary text-black font-semibold transition-colors';
+      }
+      renderFacultyOdTable();
+    }
+
+    async function loadFacultyOdRequests(silent = false) {
+      const loading = document.getElementById('facOdLoading');
+      const empty = document.getElementById('facOdEmpty');
+      const tableWrap = document.getElementById('facOdTableWrap');
+
+      if (!silent && loading) loading.classList.remove('hidden');
+      if (!silent && empty) empty.classList.add('hidden');
+      if (!silent && tableWrap) tableWrap.classList.add('hidden');
+
+      try {
+        const res = await fetch('/api/od/faculty/pending');
+        const json = await res.json();
+
+        if (loading) loading.classList.add('hidden');
+
+        if (!json.success) {
+          if (!silent) showToast(json.message || 'Failed to fetch OD requests.', 'error', 'ERROR');
+          return;
+        }
+
+        facOdList = json.requests || [];
+        updateFacultyOdMetrics(facOdList);
+        renderFacultyOdTable();
+      } catch (err) {
+        if (loading) loading.classList.add('hidden');
+        console.error('loadFacultyOdRequests error:', err);
+      }
+    }
+
+    function updateFacultyOdMetrics(list) {
+      let pending = 0;
+      let forwarded = 0;
+      let approved = 0;
+      let rejected = 0;
+
+      list.forEach(r => {
+        if (r.status === 'SUBMITTED' || r.status === 'FACULTY_REVIEW') pending++;
+        else if (r.status === 'ADMIN_REVIEW' || r.status === 'HOD_REVIEW') forwarded++;
+        else if (r.status === 'APPROVED') approved++;
+        else if (r.status === 'REJECTED') rejected++;
+      });
+
+      const pendEl = document.getElementById('facOdStatPending');
+      const fwdEl = document.getElementById('facOdStatForwarded');
+      const appEl = document.getElementById('facOdStatApproved');
+      const rejEl = document.getElementById('facOdStatRejected');
+      const badgeEl = document.getElementById('facOdBadge');
+      const countEl = document.getElementById('facOdQueueCount');
+
+      if (pendEl) pendEl.textContent = pending;
+      if (fwdEl) fwdEl.textContent = forwarded;
+      if (appEl) appEl.textContent = approved;
+      if (rejEl) rejEl.textContent = rejected;
+
+      if (badgeEl) {
+        if (pending > 0) {
+          badgeEl.textContent = pending;
+          badgeEl.classList.remove('hidden');
+        } else {
+          badgeEl.classList.add('hidden');
+        }
+      }
+      if (countEl) countEl.textContent = facOdActiveFilter === 'pending' ? pending : list.length;
+    }
+
+    function getFacOdStatusBadge(status) {
+      switch (status) {
+        case 'APPROVED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>APPROVED</span>';
+        case 'REJECTED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-400 border border-rose-500/30"><span class="w-1.5 h-1.5 rounded-full bg-rose-400"></span>REJECTED</span>';
+        case 'CHANGES_REQUESTED':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30"><span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>CHANGES REQ</span>';
+        case 'WITHDRAWN':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-surface-container-high text-outline border border-outline-variant/30">WITHDRAWN</span>';
+        case 'HOD_REVIEW':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30"><span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>HOD REVIEW</span>';
+        case 'ADMIN_REVIEW':
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-blue-500/15 text-blue-300 border border-blue-500/30"><span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span>ADMIN REVIEW</span>';
+        case 'FACULTY_REVIEW':
+        case 'SUBMITTED':
+        default:
+          return '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/40"><span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-ping"></span>AWAITING REVIEW</span>';
+      }
+    }
+
+    function renderFacultyOdTable(filteredList = null) {
+      const empty = document.getElementById('facOdEmpty');
+      const tableWrap = document.getElementById('facOdTableWrap');
+      const tbody = document.getElementById('facOdTableBody');
+      const countEl = document.getElementById('facOdQueueCount');
+
+      let list = filteredList !== null ? filteredList : facOdList;
+      if (filteredList === null && facOdActiveFilter === 'pending') {
+        list = list.filter(r => r.status === 'SUBMITTED' || r.status === 'FACULTY_REVIEW');
+      }
+
+      if (countEl) countEl.textContent = list.length;
+
+      if (!list || list.length === 0) {
+        if (empty) empty.classList.remove('hidden');
+        if (tableWrap) tableWrap.classList.add('hidden');
+        return;
+      }
+
+      if (empty) empty.classList.add('hidden');
+      if (tableWrap) tableWrap.classList.remove('hidden');
+
+      tbody.innerHTML = list.map(od => {
+        const stu = od.student || {};
+        const start = new Date(od.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const end = new Date(od.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const datesFormatted = start === end ? start : `${start} - ${end}`;
+        const docBadge = od.supportingDocumentUrl
+          ? `<a href="${escapeHtml(od.supportingDocumentUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-surface-container-high hover:bg-surface-container-highest text-secondary border border-outline-variant/30 text-[11px] font-medium"><span class="material-symbols-outlined text-xs">attach_file</span><span>View Doc</span></a>`
+          : '<span class="text-outline/60 italic text-[11px]">None</span>';
+
+        const isActionable = od.status === 'SUBMITTED' || od.status === 'FACULTY_REVIEW';
+
+        return `
+          <tr class="hover:bg-surface-container-high/40 transition-colors">
+            <td class="py-3 px-3">
+              <div class="flex items-center gap-2.5">
+                <img src="${escapeHtml(stu.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80')}" class="w-8 h-8 rounded-full border border-secondary/40 object-cover" alt="Student">
+                <div>
+                  <div class="font-medium text-on-surface">${escapeHtml(stu.name || 'Student')}</div>
+                  <div class="text-[10px] text-outline font-mono">${escapeHtml(stu.studentId || 'Reg No N/A')} &bull; Sec ${escapeHtml(stu.section || 'A')}</div>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-3">
+              <div class="font-mono text-[11px] text-secondary font-bold">${escapeHtml(od.requestId)}</div>
+              <div class="font-medium text-on-surface truncate max-w-xs">${escapeHtml(od.eventName)}</div>
+              <div class="text-[10px] text-outline truncate max-w-xs">${escapeHtml(od.organizingInstitute)}</div>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              <div class="font-mono text-[11px] text-on-surface">${datesFormatted}</div>
+              <div class="text-[10px] text-outline truncate max-w-[140px]">${escapeHtml(od.venue)}</div>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              ${docBadge}
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              <span class="px-1.5 py-0.5 rounded bg-surface-container text-[10px] font-mono text-outline">${escapeHtml(od.currentStage)}</span>
+            </td>
+            <td class="py-3 px-3 whitespace-nowrap">
+              ${getFacOdStatusBadge(od.status)}
+            </td>
+            <td class="py-3 px-3 text-right whitespace-nowrap">
+              <button onclick="openFacultyOdReviewModal('${od._id}')" class="px-3 py-1.5 rounded-lg ${isActionable ? 'bg-secondary hover:bg-cyan-400 text-black font-bold' : 'bg-surface-container-high hover:bg-surface-container-highest text-on-surface font-medium border border-outline-variant/30'} text-xs flex items-center gap-1.5 shadow-sm transition-colors">
+                <span class="material-symbols-outlined text-[15px]">${isActionable ? 'rate_review' : 'visibility'}</span>
+                <span>${isActionable ? 'Review' : 'Details'}</span>
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function filterFacultyOdRequests(q) {
+      const query = (q || '').toLowerCase().trim();
+      if (!query) {
+        renderFacultyOdTable();
+        return;
+      }
+      let source = facOdList;
+      if (facOdActiveFilter === 'pending') {
+        source = source.filter(r => r.status === 'SUBMITTED' || r.status === 'FACULTY_REVIEW');
+      }
+      const filtered = source.filter(od => {
+        const stuName = (od.student && od.student.name) ? od.student.name.toLowerCase() : '';
+        const stuId = (od.student && od.student.studentId) ? od.student.studentId.toLowerCase() : '';
+        const reqId = (od.requestId || '').toLowerCase();
+        const event = (od.eventName || '').toLowerCase();
+        const inst = (od.organizingInstitute || '').toLowerCase();
+        return stuName.includes(query) || stuId.includes(query) || reqId.includes(query) || event.includes(query) || inst.includes(query);
+      });
+      renderFacultyOdTable(filtered);
+    }
+
+    // OPEN FACULTY OD REVIEW MODAL
+    async function openFacultyOdReviewModal(id) {
+      try {
+        const res = await fetch(`/api/od/${id}`);
+        const json = await res.json();
+        if (!json.success || !json.request) {
+          showToast('Failed to load OD request details.', 'error', 'ERROR');
+          return;
+        }
+
+        const od = json.request;
+        document.getElementById('facActiveOdId').value = od._id;
+        document.getElementById('facModalOdReqId').textContent = od.requestId;
+        document.getElementById('facModalOdEventName').textContent = od.eventName;
+        document.getElementById('facModalOdStatus').innerHTML = getFacOdStatusBadge(od.status);
+
+        // Student Details
+        const stu = od.student || {};
+        document.getElementById('facModalStuAvatar').src = stu.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100';
+        document.getElementById('facModalStuName').textContent = stu.name || 'Student';
+        document.getElementById('facModalStuId').textContent = stu.studentId || 'Reg No N/A';
+        document.getElementById('facModalStuDept').textContent = stu.department || 'AI & ML';
+        document.getElementById('facModalStuSec').textContent = `Section ${stu.section || 'A'}`;
+
+        // Event Details
+        document.getElementById('facModalOdInstitute').textContent = od.organizingInstitute;
+        document.getElementById('facModalOdVenue').textContent = od.venue;
+        const start = new Date(od.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const end = new Date(od.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        document.getElementById('facModalOdDates').textContent = start === end ? start : `${start} to ${end}`;
+
+        // Document link
+        const docLinkEl = document.getElementById('facModalOdDocLink');
+        if (od.supportingDocumentUrl) {
+          docLinkEl.innerHTML = `
+            <a href="${escapeHtml(od.supportingDocumentUrl)}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 text-secondary hover:underline font-medium">
+              <span class="material-symbols-outlined text-sm">attach_file</span>
+              <span>${escapeHtml(od.supportingDocumentName || 'View Supporting Document')}</span>
+              <span class="material-symbols-outlined text-xs">open_in_new</span>
+            </a>
+          `;
+        } else {
+          docLinkEl.innerHTML = '<span class="text-outline italic">No document attached</span>';
+        }
+
+        document.getElementById('facModalOdPurpose').textContent = od.purpose;
+
+        // Render audit timeline
+        renderFacultyOdTimeline(od);
+
+        // Action controls panel
+        const actionControls = document.getElementById('facActionControlsContainer');
+        const commentsInput = document.getElementById('facActionComments');
+        if (commentsInput) commentsInput.value = '';
+
+        if (od.status === 'SUBMITTED' || od.status === 'FACULTY_REVIEW') {
+          if (actionControls) actionControls.classList.remove('hidden');
+        } else {
+          if (actionControls) actionControls.classList.add('hidden');
+        }
+
+        openModal('facOdActionModal');
+      } catch (err) {
+        showToast('Error opening OD request: ' + err.message, 'error', 'ERROR');
+      }
+    }
+
+    function renderFacultyOdTimeline(od) {
+      const container = document.getElementById('facModalOdTimeline');
+      const history = od.approvalHistory || [];
+
+      if (history.length === 0) {
+        container.innerHTML = '<p class="text-xs text-outline italic">No history logged yet.</p>';
+        return;
+      }
+
+      container.innerHTML = history.map(item => {
+        const time = new Date(item.timestamp).toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+        });
+
+        return `
+          <div class="rounded-lg bg-surface-container p-2.5 border border-outline-variant/15 space-y-1">
+            <div class="flex items-center justify-between text-xs">
+              <span class="font-bold text-on-surface">${escapeHtml(item.action.replace(/_/g, ' '))}</span>
+              <span class="text-[10px] font-mono text-outline">${time}</span>
+            </div>
+            <div class="text-[11px] text-outline">
+              By: <span class="font-medium text-on-surface">${escapeHtml(item.performerName || 'System')}</span>
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-surface-container-high text-secondary ml-1">${escapeHtml(item.performerRole || '')}</span>
+            </div>
+            ${item.comments ? `<div class="text-xs text-on-surface/90 bg-surface-container-high/60 p-1.5 rounded mt-1">"${escapeHtml(item.comments)}"</div>` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // EXECUTE FACULTY ACTION
+    async function executeFacultyOdAction(action) {
+      const id = document.getElementById('facActiveOdId').value;
+      const comments = document.getElementById('facActionComments').value.trim();
+
+      if ((action === 'REQUEST_CHANGES' || action === 'REJECT') && !comments) {
+        showToast('Please provide comments or a reason for this decision.', 'warning', 'REASON REQUIRED');
+        return;
+      }
+
+      const confirmMsg = action === 'APPROVE_FORWARD'
+        ? 'Approve this On-Duty request and forward to Administration for review?'
+        : action === 'REQUEST_CHANGES'
+          ? 'Request student to make revisions on this OD application?'
+          : 'Are you sure you want to REJECT this On-Duty request?';
+
+      if (!confirm(confirmMsg)) return;
+
+      try {
+        const res = await fetch(`/api/od/faculty/${id}/action`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ action, comments }),
+        });
+        const json = await res.json();
+
+        if (json.success) {
+          closeModal('facOdActionModal');
+          showToast(json.message || 'Action executed successfully.', 'success', 'COMPLETED');
+          loadFacultyOdRequests();
+        } else {
+          showToast(json.message || 'Failed to process action.', 'error', 'ERROR');
+        }
+      } catch (err) {
+        showToast('Action processing error: ' + err.message, 'error', 'ERROR');
       }
     }
 
