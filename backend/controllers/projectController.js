@@ -133,6 +133,10 @@ exports.updateProject = async (req, res) => {
     if (!project) return res.status(404).json({ success: false, message: 'Project not found.' });
 
     // Role check
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access and cannot edit projects.' });
+    }
+
     if (req.user.role === 'STUDENT') {
       const isMember = project.teamMembers.some((m) => m.toString() === req.user._id.toString());
       if (!isMember) return res.status(403).json({ success: false, message: 'Not authorized.' });
@@ -158,6 +162,10 @@ exports.updateProject = async (req, res) => {
 // DELETE /api/projects/:id/members/:memberId
 exports.removeTeamMember = async (req, res) => {
   try {
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access and cannot remove team members.' });
+    }
+
     const project = await Project.findById(req.params.id);
     if (!project) return res.status(404).json({ success: false, message: 'Project not found.' });
 
@@ -258,6 +266,10 @@ exports.getAvailableStudents = async (req, res) => {
 // Add fellow students to project team
 exports.addTeamMembers = async (req, res) => {
   try {
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access and cannot modify project teams.' });
+    }
+
     const { studentIds } = req.body;
     if (!studentIds || !Array.isArray(studentIds) || studentIds.length === 0) {
       return res.status(400).json({ success: false, message: 'studentIds array is required.' });

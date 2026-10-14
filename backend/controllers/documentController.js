@@ -16,7 +16,7 @@ exports.getDocuments = async (req, res) => {
     } else if (req.user.role === 'FACULTY') {
       const myProjects = await Project.find({ facultyMentor: req.user._id }).select('_id');
       allowedProjectIds = myProjects.map((p) => p._id);
-    } else if (req.user.role === 'ADMIN') {
+    } else if (req.user.role === 'ADMIN' || req.user.role === 'HOD') {
       const allProjects = await Project.find().select('_id');
       allowedProjectIds = allProjects.map((p) => p._id);
     }
@@ -58,6 +58,10 @@ exports.createDocument = async (req, res) => {
     }
 
     // Role check
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access and cannot upload documents.' });
+    }
+
     if (req.user.role === 'STUDENT') {
       const isMember = project.teamMembers.some((m) => m.toString() === req.user._id.toString());
       if (!isMember) {

@@ -90,7 +90,7 @@
 
     <!-- Right Controls -->
     <div class="flex items-center gap-1.5 sm:gap-3 shrink-0">
-      <button onclick="openUploadModal()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold transition-all shadow-md active:scale-95 flex items-center gap-1 sm:gap-1.5">
+      <button id="btnHeaderUploadTaskDoc" onclick="openUploadModal()" class="px-2.5 sm:px-3.5 py-1.5 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary text-xs font-semibold transition-all shadow-md active:scale-95 flex items-center gap-1 sm:gap-1.5">
         <span class="material-symbols-outlined text-[18px]">cloud_upload</span>
         <span class="hidden sm:inline">Upload Document</span>
         <span class="sm:hidden">Upload</span>
@@ -421,11 +421,19 @@
       if (document.referrer && document.referrer.includes(window.location.host)) {
         window.history.back();
       } else {
-        window.location.href = '/student/dashboard';
+        if (currentUserRole === 'HOD') window.location.href = '/hod/dashboard';
+        else if (currentUserRole === 'FACULTY') window.location.href = '/faculty/dashboard';
+        else if (currentUserRole === 'ADMIN') window.location.href = '/admin/dashboard';
+        else window.location.href = '/student/dashboard';
       }
     }
 
     function openUploadModal() {
+      if (currentUserRole === 'HOD') {
+        if (window.showToast) window.showToast('Head of Department has view-only access and cannot upload documents.', 'warning');
+        else alert('Head of Department has view-only access and cannot upload documents.');
+        return;
+      }
       document.getElementById('taskUploadModal').classList.remove('hidden');
     }
 
@@ -481,6 +489,17 @@
 
       // Update Header
       document.getElementById('currentUserRoleBadge').textContent = role;
+      if (role === 'HOD') {
+        document.getElementById('currentUserRoleBadge').className = 'font-mono text-[10px] px-2 py-0.5 rounded bg-amber-400/20 text-amber-300 border border-amber-400/40 font-bold';
+        const uploadBtn = document.getElementById('btnHeaderUploadTaskDoc');
+        if (uploadBtn) uploadBtn.classList.add('hidden');
+        const statusSelect = document.getElementById('taskStatusSelect');
+        if (statusSelect) {
+          statusSelect.disabled = true;
+          statusSelect.title = 'Head of Department has read-only access';
+          statusSelect.classList.add('opacity-80', 'cursor-not-allowed');
+        }
+      }
       document.getElementById('headerProjectSub').textContent = `${task.project ? task.project.code : 'PROJ'}: ${task.project ? task.project.title : 'Project'}`;
 
       const priorityBadge = document.getElementById('headerTaskPriority');
@@ -563,11 +582,13 @@
           <div class="p-8 rounded-xl bg-surface-container/40 border border-outline-variant/20 text-center space-y-2">
             <span class="material-symbols-outlined text-3xl text-outline">cloud_off</span>
             <div class="text-xs font-semibold text-on-surface">No documents uploaded for this task yet</div>
-            <p class="text-[11px] text-outline max-w-sm mx-auto">Upload reports, architectural diagrams, research slides, or code archives directly to Cloudinary.</p>
+            <p class="text-[11px] text-outline max-w-sm mx-auto">${currentUserRole === 'HOD' ? 'No artifacts attached to this deliverable.' : 'Upload reports, architectural diagrams, research slides, or code archives directly to Cloudinary.'}</p>
+            ${currentUserRole === 'HOD' ? '' : `
             <button onclick="openUploadModal()" class="mt-2 px-3 py-1.5 rounded-lg bg-primary-container text-on-primary text-xs font-semibold hover:bg-indigo-600 transition-colors inline-flex items-center gap-1.5">
               <span class="material-symbols-outlined text-sm">cloud_upload</span>
               <span>Upload First File</span>
             </button>
+            `}
           </div>
         `;
         return;
@@ -622,6 +643,12 @@
     // Status change handler
     async function changeTaskStatus(newStatus) {
       if (!currentTask) return;
+      if (currentUserRole === 'HOD') {
+        if (window.showToast) window.showToast('Head of Department has view-only access and cannot change task status.', 'warning');
+        else alert('Head of Department has view-only access and cannot change task status.');
+        document.getElementById('taskStatusSelect').value = currentTask.status;
+        return;
+      }
       try {
         const res = await fetch(`/api/tasks/${currentTask._id}/status`, {
           method: 'PATCH',
