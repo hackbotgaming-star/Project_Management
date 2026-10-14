@@ -167,15 +167,9 @@
             </div>
           </div>
 
-          <!-- Progress Widget -->
+          <!-- Progress Status Line Graph Widget (Instead of flat bar & percentage) -->
           <div class="lg:w-72 w-full p-4 rounded-xl bg-surface-container-lowest/80 border border-outline-variant/20 backdrop-blur-sm space-y-3 shrink-0">
-            <div class="flex items-center justify-between text-xs">
-              <span class="font-semibold text-outline">Overall Completion</span>
-              <span id="heroProgressPercent" class="font-mono font-bold text-secondary text-sm">0%</span>
-            </div>
-            <div class="w-full h-2.5 bg-surface-container-high rounded-full overflow-hidden">
-              <div id="heroProgressBar" class="h-full bg-gradient-to-r from-primary to-secondary transition-all duration-500 rounded-full" style="width: 0%"></div>
-            </div>
+            <div id="heroProgressGraph"></div>
 
             <div class="grid grid-cols-2 gap-2 pt-2 border-t border-outline-variant/15 text-center text-xs">
               <div class="p-2 rounded-lg bg-surface-container/60">
@@ -825,10 +819,16 @@
         docsContainer.innerHTML = '';
       }
 
-      // Progress & Counters
+      // Progress Status Line Graph & Counters
       const progressPercent = stats.progress !== undefined ? stats.progress : (p.progressPercentage || 0);
-      document.getElementById('heroProgressPercent').textContent = `${progressPercent}%`;
-      document.getElementById('heroProgressBar').style.width = `${progressPercent}%`;
+      const heroGraph = document.getElementById('heroProgressGraph');
+      if (heroGraph) {
+        heroGraph.innerHTML = renderProgressLineGraph(progressPercent, {
+          color: '#4cd7f6',
+          height: 48,
+          showLabel: true
+        });
+      }
 
       document.getElementById('statTotalTasks').textContent = stats.totalTasks || 0;
       document.getElementById('statDoneTasks').textContent = stats.completedTasks || 0;

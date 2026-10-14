@@ -2274,9 +2274,8 @@
               <div class="text-[11px] text-outline">Advisor: <span class="text-secondary font-medium">${p.facultyMentor ? p.facultyMentor.name : 'Unassigned'}</span> &bull; Team: ${p.teamMembers ? p.teamMembers.length : 0} students &bull; Status: <span class="font-mono text-on-surface">${p.status}</span></div>
             </div>
             <div class="flex items-center gap-2">
-              <div class="text-right mr-2">
-                <div class="font-bold text-tertiary font-mono">${p.progressPercentage}%</div>
-                <div class="text-[10px] text-outline">Progress</div>
+              <div class="mr-2 w-32 shrink-0">
+                ${renderProgressLineGraph(p.progressPercentage || 0, { color: '#4edea3', width: 130, height: 32, showLabel: true })}
               </div>
               <a href="/projects/${p._id}" class="px-3 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary text-xs font-semibold transition-colors flex items-center gap-1">
                 <span class="material-symbols-outlined text-xs">folder_special</span>
@@ -2517,9 +2516,8 @@
             </div>
 
             <div class="flex items-center gap-3 self-end sm:self-center shrink-0">
-              <div class="text-right">
-                <div class="font-bold text-tertiary font-mono text-sm">${p.progressPercentage || 0}%</div>
-                <div class="text-[10px] text-outline">Progress</div>
+              <div class="w-32">
+                ${renderProgressLineGraph(p.progressPercentage || 0, { color: '#4edea3', width: 130, height: 32, showLabel: true })}
               </div>
               <a href="/projects/${p._id}" class="px-3.5 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm">
                 <span class="material-symbols-outlined text-[15px]">folder_special</span>

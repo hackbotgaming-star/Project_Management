@@ -1162,10 +1162,10 @@
             <span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${proj.health === 'AT_RISK' ? 'bg-error/20 text-error' : 'bg-tertiary/20 text-tertiary'}">${proj.health}</span>
           </div>
           <h4 class="font-headline font-bold text-xs text-on-surface mb-2">${proj.title}</h4>
-          <div class="w-full bg-surface-container-high h-1.5 rounded-full mb-3">
-            <div class="bg-secondary h-full rounded-full" style="width: ${proj.progressPercentage}%"></div>
+          <div class="mb-2">
+            ${renderProgressLineGraph(proj.progressPercentage, { color: '#4cd7f6', height: 32, showLabel: true })}
           </div>
-          <div class="text-[11px] text-outline mb-2">Progress: <span class="text-on-surface">${proj.progressPercentage}%</span> &bull; Status: ${proj.status}</div>
+          <div class="text-[11px] text-outline mb-2">Status: <span class="text-on-surface font-mono font-medium">${proj.status}</span></div>
           <div class="flex items-center gap-1.5">
             ${proj.teamMembers.map(m => `
               <span class="text-[10px] px-2 py-0.5 rounded bg-surface-container-high text-on-surface" title="${m.name}">${m.name}</span>

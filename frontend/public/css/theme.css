@@ -636,3 +636,12 @@ html.light #availableStudentsChecklist label:hover,
 html.light #addMemberStudentList label:hover {
   background-color: #eff6ff !important;
 }
+
+/* Progress Line Graph Widget High-Contrast Light Mode Polish */
+html.light .progress-line-graph-widget svg line {
+  stroke: #94a3b8 !important;
+}
+html.light .progress-line-graph-widget > div:last-child {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}

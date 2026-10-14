@@ -1316,13 +1316,11 @@
               </div>
             </div>
             <div class="space-y-1">
-              <div class="flex items-center justify-between text-[11px]">
+              <div class="flex items-center justify-between text-[11px] mb-1">
                 <span class="text-outline">Assigned Mentees</span>
                 <span class="font-mono font-bold text-amber-300">${count} / 15</span>
               </div>
-              <div class="w-full h-1.5 bg-surface-container-high rounded-full overflow-hidden">
-                <div class="h-full bg-amber-400 rounded-full" style="width: ${percent}%"></div>
-              </div>
+              ${renderProgressLineGraph(percent, { color: '#f59e0b', height: 28, showLabel: false })}
             </div>
           </div>
         `;
