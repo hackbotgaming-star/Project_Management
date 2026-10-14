@@ -731,19 +731,7 @@
           <div>
             <label class="block text-xs text-outline mb-1 font-medium">Department</label>
             <select id="stuNewProjDept" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
-              <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
-              <option value="Artificial Intelligence & Data Science">Artificial Intelligence & Data Science (AI&DS)</option>
-              <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning (AI&ML)</option>
-              <option value="Computer Science & Engineering (Cyber Security)">Computer Science & Engineering - Cyber Security (CSE-CS)</option>
-              <option value="Computer Science & Design">Computer Science & Design (CSD)</option>
-              <option value="Information Technology">Information Technology (IT)</option>
-              <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
-              <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
-              <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
-              <option value="Automobile Engineering">Automobile Engineering (AUTO)</option>
-              <option value="Robotics & Automation Engineering">Robotics & Automation Engineering (ROB)</option>
-              <option value="Biomedical Engineering">Biomedical Engineering (BME)</option>
-              <option value="Civil Engineering">Civil Engineering (CIVIL)</option>
+              <option value="Artificial Intelligence & Machine Learning" selected>Artificial Intelligence & Machine Learning (AI&ML)</option>
             </select>
           </div>
         </div>
@@ -754,9 +742,9 @@
         </div>
 
         <div>
-          <label class="block text-xs text-outline mb-1 font-medium">Code Repository URL (Optional)</label>
-          <input type="url" id="stuNewProjRepo" placeholder="https://github.com/username/project" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none font-mono">
-          <p class="text-[10px] text-outline mt-1">Provide your GitHub, GitLab, or Bitbucket link if already created.</p>
+          <label class="block text-xs text-outline mb-1 font-medium">Code Repository URL <span class="text-rose-400 font-bold">*</span></label>
+          <input type="url" id="stuNewProjRepo" required placeholder="https://github.com/username/project" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none font-mono">
+          <p class="text-[10px] text-outline mt-1">Provide your GitHub, GitLab, or Bitbucket repository link.</p>
         </div>
 
         <!-- Team Members Selection Checklist -->
@@ -1046,6 +1034,14 @@
         </div>
 
         <div>
+          <label class="block text-xs text-outline mb-1 font-medium">Select Faculty Mentor / Reviewer <span class="text-rose-400 font-bold">*</span></label>
+          <select id="odFacultySelect" required class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-primary focus:outline-none">
+            <option value="">-- Choose Faculty Reviewer / Mentor --</option>
+          </select>
+          <p class="text-[10px] text-outline mt-1">Select the faculty supervisor authorized to verify and forward your OD request.</p>
+        </div>
+
+        <div>
           <label class="block text-xs text-outline mb-1 font-medium">Supporting Document or Invitation Letter</label>
           <div class="space-y-2">
             <input type="file" id="odFile" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" class="w-full text-xs text-outline file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-primary-container file:text-on-primary hover:file:bg-indigo-600 cursor-pointer">
@@ -1219,6 +1215,16 @@
 
   <!-- APPLICATION SCRIPTS -->
   <script>
+    function escapeHtml(str) {
+      if (str === null || str === undefined) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     // Auto-attach JWT auth header for mobile and desktop fetch requests
     const originalFetch = window.fetch;
     window.fetch = function(url, options = {}) {
@@ -1350,15 +1356,16 @@
       }
 
       container.innerHTML = filtered.map(s => {
-        const isChecked = checkedNewProjMembers.has(s._id) ? 'checked' : '';
+        const isChecked = checkedNewProjMembers.has(s._id);
         return `
-          <label class="flex items-center gap-2 p-1.5 rounded hover:bg-surface-container-high cursor-pointer transition-colors">
-            <input type="checkbox" name="selectedTeamMembers" value="${s._id}" ${isChecked} onchange="toggleNewProjMember('${s._id}', this.checked)" class="rounded border-outline-variant/40 text-primary focus:ring-0">
-            <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-5 h-5 rounded-full object-cover border border-outline-variant/30">
+          <label class="flex items-center gap-2.5 p-2 rounded-xl cursor-pointer transition-all border ${isChecked ? 'bg-primary/10 border-primary text-on-surface shadow-sm' : 'bg-surface-container/60 hover:bg-primary/5 border-outline-variant/30 text-on-surface'}">
+            <input type="checkbox" name="selectedTeamMembers" value="${s._id}" ${isChecked ? 'checked' : ''} onchange="toggleNewProjMember('${s._id}', this.checked)" class="rounded border-outline-variant/40 text-primary focus:ring-0">
+            <img src="${escapeHtml(s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50')}" class="w-6 h-6 rounded-full object-cover border border-outline-variant/30">
             <div class="flex-1 truncate">
-              <span class="text-on-surface font-medium">${s.name}</span>
-              <span class="text-outline text-[10px] ml-1">(${s.studentId || s.email})</span>
+              <span class="text-on-surface font-medium text-xs">${escapeHtml(s.name)}</span>
+              <span class="text-outline text-[10px] ml-1">(${escapeHtml(s.studentId || s.email)})</span>
             </div>
+            ${isChecked ? '<span class="material-symbols-outlined text-primary text-sm">check_circle</span>' : ''}
           </label>
         `;
       }).join('');
@@ -1367,6 +1374,8 @@
     function toggleNewProjMember(id, isChecked) {
       if (isChecked) checkedNewProjMembers.add(id);
       else checkedNewProjMembers.delete(id);
+      const searchVal = document.getElementById('newProjMemberSearchInput') ? document.getElementById('newProjMemberSearchInput').value : '';
+      renderAvailableStudentsChecklist(searchVal);
     }
 
     function filterNewProjectStudents(query) {
@@ -1397,15 +1406,16 @@
       }
 
       addList.innerHTML = filtered.map(s => {
-        const isChecked = checkedAddMembers.has(s._id) ? 'checked' : '';
+        const isChecked = checkedAddMembers.has(s._id);
         return `
-          <label class="flex items-center gap-2 p-1.5 rounded hover:bg-surface-container-high cursor-pointer transition-colors">
-            <input type="checkbox" name="membersToAdd" value="${s._id}" ${isChecked} onchange="toggleAddMember('${s._id}', this.checked)" class="rounded border-outline-variant/40 text-primary focus:ring-0">
-            <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50'}" class="w-5 h-5 rounded-full object-cover border border-outline-variant/30">
+          <label class="flex items-center gap-2.5 p-2 rounded-xl cursor-pointer transition-all border ${isChecked ? 'bg-primary/10 border-primary text-on-surface shadow-sm' : 'bg-surface-container/60 hover:bg-primary/5 border-outline-variant/30 text-on-surface'}">
+            <input type="checkbox" name="membersToAdd" value="${s._id}" ${isChecked ? 'checked' : ''} onchange="toggleAddMember('${s._id}', this.checked)" class="rounded border-outline-variant/40 text-primary focus:ring-0">
+            <img src="${escapeHtml(s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=50')}" class="w-6 h-6 rounded-full object-cover border border-outline-variant/30">
             <div class="flex-1 truncate">
-              <span class="text-on-surface font-medium">${s.name}</span>
-              <span class="text-outline text-[10px] ml-1">${s.email}</span>
+              <span class="text-on-surface font-medium text-xs">${escapeHtml(s.name)}</span>
+              <span class="text-outline text-[10px] ml-1">(${escapeHtml(s.studentId || s.email)})</span>
             </div>
+            ${isChecked ? '<span class="material-symbols-outlined text-primary text-sm">check_circle</span>' : ''}
           </label>
         `;
       }).join('');
@@ -1414,6 +1424,8 @@
     function toggleAddMember(id, isChecked) {
       if (isChecked) checkedAddMembers.add(id);
       else checkedAddMembers.delete(id);
+      const searchVal = document.getElementById('addMemberSearchInput') ? document.getElementById('addMemberSearchInput').value : '';
+      renderAddMemberList(searchVal);
     }
 
     function filterAddMemberStudents(query) {
@@ -1756,7 +1768,15 @@
       const department = document.getElementById('stuNewProjDept').value;
       const abstract = document.getElementById('stuNewProjAbstract').value.trim();
       let repositoryUrl = document.getElementById('stuNewProjRepo') ? document.getElementById('stuNewProjRepo').value.trim() : '';
-      if (repositoryUrl && !repositoryUrl.startsWith('http://') && !repositoryUrl.startsWith('https://')) {
+      if (!repositoryUrl) {
+        showToast('Code Repository URL is required for the project.', 'warning', 'REPO URL REQUIRED');
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = submitBtn.dataset.origText || 'Create Project';
+        }
+        return;
+      }
+      if (!repositoryUrl.startsWith('http://') && !repositoryUrl.startsWith('https://')) {
         repositoryUrl = 'https://' + repositoryUrl;
       }
 
@@ -2345,6 +2365,32 @@
     // ==========================================
     let studentOdList = [];
 
+    async function loadFacultyListForOd() {
+      const select = document.getElementById('odFacultySelect');
+      if (!select) return;
+      try {
+        const res = await fetch('/api/od/faculty-list');
+        const json = await res.json();
+        if (json.success && json.faculty) {
+          const currentMentorId = (dashboardData && dashboardData.studentProfile && dashboardData.studentProfile.mentor)
+            ? (dashboardData.studentProfile.mentor._id || dashboardData.studentProfile.mentor)
+            : '';
+          const projectMentorId = (dashboardData && dashboardData.projects && dashboardData.projects[0] && dashboardData.projects[0].facultyMentor)
+            ? (dashboardData.projects[0].facultyMentor._id || dashboardData.projects[0].facultyMentor)
+            : '';
+          const preferredMentor = currentMentorId || projectMentorId;
+
+          select.innerHTML = '<option value="">-- Choose Faculty Reviewer / Mentor --</option>' + 
+            json.faculty.map(f => {
+              const isSelected = preferredMentor && String(preferredMentor) === String(f._id) ? 'selected' : '';
+              return `<option value="${f._id}" ${isSelected}>${escapeHtml(f.name)} (${escapeHtml(f.department || 'AI&ML')} - ${escapeHtml(f.title || 'Faculty Advisor')})</option>`;
+            }).join('');
+        }
+      } catch (err) {
+        console.error('Failed to load faculty list for OD:', err);
+      }
+    }
+
     function openCreateOdModal() {
       const form = document.getElementById('createOdForm');
       if (form) form.reset();
@@ -2362,6 +2408,7 @@
         if (secEl) secEl.textContent = p.section || 'A';
       }
 
+      loadFacultyListForOd();
       openModal('createOdModal');
     }
 
@@ -2551,11 +2598,17 @@
       const endDate = document.getElementById('odEndDate').value;
       const venue = document.getElementById('odVenue').value.trim();
       const organizingInstitute = document.getElementById('odInstitute').value.trim();
+      const facultyId = document.getElementById('odFacultySelect') ? document.getElementById('odFacultySelect').value : '';
       const supportingDocumentUrl = document.getElementById('odDocUrl').value.trim();
       const fileInput = document.getElementById('odFile');
 
       if (!eventName || !purpose || !startDate || !endDate || !venue || !organizingInstitute) {
         showToast('Please fill in all mandatory event details.', 'warning', 'WARNING');
+        return;
+      }
+
+      if (!facultyId) {
+        showToast('Please select a faculty mentor to review your OD request.', 'warning', 'FACULTY REQUIRED');
         return;
       }
 
@@ -2577,6 +2630,7 @@
         formData.append('endDate', endDate);
         formData.append('venue', venue);
         formData.append('organizingInstitute', organizingInstitute);
+        formData.append('facultyId', facultyId);
         if (supportingDocumentUrl) formData.append('supportingDocumentUrl', supportingDocumentUrl);
         if (fileInput && fileInput.files[0]) {
           formData.append('file', fileInput.files[0]);

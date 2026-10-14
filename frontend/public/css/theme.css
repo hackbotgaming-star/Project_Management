@@ -612,3 +612,27 @@ html.light .projecthub-toast-close:hover {
     transform: translateX(0) !important;
   }
 }
+
+/* Light mode hover & checklist card polish (prevents dark pitch-black blocks in light mode) */
+html.light .hover\:bg-surface-container-high:hover,
+html.light .hover\:bg-surface-container-highest:hover,
+html.light .hover\:bg-surface-container:hover {
+  background-color: #e2e8f0 !important;
+}
+
+html.light #availableStudentsChecklist,
+html.light #addMemberStudentList {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light #availableStudentsChecklist label,
+html.light #addMemberStudentList label {
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+}
+
+html.light #availableStudentsChecklist label:hover,
+html.light #addMemberStudentList label:hover {
+  background-color: #eff6ff !important;
+}

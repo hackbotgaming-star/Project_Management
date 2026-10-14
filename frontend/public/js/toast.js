@@ -1,5 +1,16 @@
 // Modern Toast Notification Utility to replace native browser alert dialogs
 (function() {
+  // Universal HTML escape helper to prevent XSS and ReferenceErrors across all dashboards
+  window.escapeHtml = function(str) {
+    if (str === null || str === undefined) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  };
+
   function ensureToastContainer() {
     let container = document.getElementById('projecthub-toast-container');
     if (!container) {

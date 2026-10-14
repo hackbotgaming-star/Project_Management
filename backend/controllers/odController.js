@@ -31,6 +31,20 @@ async function generateRequestId() {
 // 1. STUDENT CONTROLLERS
 // ==========================================
 
+// GET /api/od/faculty-list
+// Return list of active faculty members for student OD faculty selection
+exports.getFacultyList = async (req, res) => {
+  try {
+    const faculty = await User.find({ role: 'FACULTY', status: 'ACTIVE' })
+      .select('name email department title avatar')
+      .sort({ name: 1 });
+    return res.json({ success: true, count: faculty.length, faculty });
+  } catch (err) {
+    console.error('getFacultyList error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to retrieve faculty list.' });
+  }
+};
+
 // POST /api/od
 // Student submits a new On-Duty Request
 exports.submitODRequest = async (req, res) => {
@@ -39,7 +53,7 @@ exports.submitODRequest = async (req, res) => {
       return res.status(403).json({ success: false, message: 'Only students can submit OD requests.' });
     }
 
-    const { eventName, purpose, startDate, endDate, venue, organizingInstitute } = req.body;
+    const { eventName, purpose, startDate, endDate, venue, organizingInstitute, facultyId } = req.body;
     let customDocUrl = req.body.supportingDocumentUrl || '';
     let docName = req.body.supportingDocumentName || '';
 
@@ -71,6 +85,7 @@ exports.submitODRequest = async (req, res) => {
     const newOD = new ODRequest({
       requestId,
       student: req.user._id,
+      facultyReviewer: facultyId || undefined,
       eventName: eventName.trim(),
       purpose: purpose.trim(),
       startDate: new Date(startDate),
@@ -88,7 +103,9 @@ exports.submitODRequest = async (req, res) => {
           performedBy: req.user._id,
           performerName: req.user.name,
           performerRole: req.user.role,
-          comments: 'OD Request submitted by student.',
+          comments: facultyId
+            ? 'OD Request submitted by student and assigned to selected faculty reviewer.'
+            : 'OD Request submitted by student.',
           timestamp: new Date(),
         },
       ],
@@ -105,9 +122,11 @@ exports.submitODRequest = async (req, res) => {
       '/student/dashboard'
     );
 
-    // Notify student's mentor or departmental faculty
+    // Notify chosen faculty reviewer or student's mentor or departmental faculty
     let facultyToNotify = [];
-    if (req.user.mentor) {
+    if (facultyId) {
+      facultyToNotify.push(facultyId);
+    } else if (req.user.mentor) {
       facultyToNotify.push(req.user.mentor);
     } else {
       const deptFaculty = await User.find({
@@ -291,12 +310,14 @@ exports.withdrawODRequest = async (req, res) => {
 // Faculty gets OD requests pending their review or reviewed by them
 exports.getFacultyODRequests = async (req, res) => {
   try {
-    // Show requests that are in SUBMITTED/FACULTY_REVIEW or already reviewed by this faculty
-    // Check if faculty is designated mentor of student OR student in same department
+    // Show requests assigned to this faculty, unassigned requests awaiting faculty review, or any request reviewed by them
     const requests = await ODRequest.find({
       $or: [
-        { status: { $in: ['SUBMITTED', 'FACULTY_REVIEW'] } },
         { facultyReviewer: req.user._id },
+        { facultyReviewer: null },
+        { facultyReviewer: { $exists: false } },
+        { status: { $in: ['SUBMITTED', 'FACULTY_REVIEW'] } },
+        { 'approvalHistory.performedBy': req.user._id },
       ],
     })
       .populate('student', 'name email studentId department academicYear section avatar mentor')
@@ -759,12 +780,10 @@ exports.adminAction = async (req, res) => {
 // ==========================================
 
 // GET /api/od/hod/pending
-// HOD views requests awaiting HOD decision or previously decided by HOD
+// HOD views requests awaiting HOD decision or all requests for academic oversight
 exports.getHODODRequests = async (req, res) => {
   try {
-    const requests = await ODRequest.find({
-      $or: [{ status: 'HOD_REVIEW' }, { hodReviewer: req.user._id }],
-    })
+    const requests = await ODRequest.find({})
       .populate('student', 'name email studentId department academicYear section avatar')
       .populate('facultyReviewer', 'name email title')
       .populate('adminReviewer', 'name email title')

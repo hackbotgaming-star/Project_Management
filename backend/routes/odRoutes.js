@@ -19,6 +19,12 @@ const upload = multer({
 // ==========================================
 // 1. STUDENT ROUTES
 // ==========================================
+router.get(
+  '/faculty-list',
+  authenticateToken,
+  odController.getFacultyList
+);
+
 router.post(
   '/',
   authenticateToken,
