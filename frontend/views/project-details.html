@@ -707,7 +707,7 @@
 
       } catch (err) {
         console.error('loadProjectWorkspace error:', err);
-        showError('Network error connecting to ProjectHub server.');
+        showError(err && err.message ? `Error loading project: ${err.message}` : 'Network error connecting to ProjectHub server.');
       }
     }
 
@@ -725,6 +725,7 @@
       const members = p.teamMembers || [];
       const milestones = data.milestones || [];
       const documents = data.documents || [];
+      const tasks = data.tasks || allProjectTasks || [];
 
       // User badge
       document.getElementById('currentUserRoleBadge').textContent = currentUserRole;
