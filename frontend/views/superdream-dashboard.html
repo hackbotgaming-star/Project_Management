@@ -220,8 +220,8 @@
     </div>
 
     <!-- Header Banner -->
-    <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 mb-6 border-b border-outline-variant/20">
-      <div>
+    <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-5 mb-6 border-b border-outline-variant/20">
+      <div class="space-y-1">
         <div class="flex items-center gap-2">
           <span class="text-xs font-mono text-amber-400 font-bold flex items-center gap-1">
             <span class="material-symbols-outlined text-xs filled">stars</span>
@@ -230,16 +230,16 @@
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
           <span id="headerAcademicBadge" class="text-xs text-outline">Section A • Super Dream</span>
         </div>
-        <h1 id="pageTitle" class="font-headline text-2xl font-bold text-on-surface tracking-tight mt-0.5">Super Dream Overview</h1>
+        <h1 id="pageTitle" class="font-headline text-2xl sm:text-3xl font-bold text-on-surface tracking-tight leading-none">Super Dream Overview</h1>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2.5">
-        <button onclick="switchTab('mentor-hub')" class="px-3 py-1.5 rounded-lg bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm">
-          <span class="material-symbols-outlined text-sm">forum</span>
+      <div class="flex flex-wrap items-center gap-2.5 sm:self-end">
+        <button onclick="switchTab('mentor-hub')" class="h-10 px-3.5 rounded-xl bg-amber-500/15 hover:bg-amber-500/25 text-amber-300 border border-amber-500/30 font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-base">forum</span>
           <span>Contact Mentor</span>
         </button>
-        <button onclick="openModal('studentNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors flex items-center gap-1.5 shadow-sm">
-          <span class="material-symbols-outlined text-sm">add_circle</span>
+        <button onclick="openModal('studentNewProjectModal')" class="h-10 px-4 rounded-xl bg-amber-500 text-black font-semibold text-xs hover:bg-amber-400 transition-colors flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-base">add_circle</span>
           <span>New Project</span>
         </button>
       </div>
