@@ -222,22 +222,23 @@
     </div>
 
     <!-- Top Header Bar -->
-    <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-5 mb-6 border-b border-outline-variant/20">
-      <div class="space-y-1">
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-mono text-outline">FACULTY ADVISORY SYSTEM</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
-          <span class="text-xs text-secondary">Assigned Cohort Teams Scoped</span>
-        </div>
-        <h1 id="pageTitle" class="font-headline text-2xl sm:text-3xl font-bold text-on-surface tracking-tight leading-none">Advisor Overview</h1>
+    <header class="pb-5 mb-6 border-b border-outline-variant/20 space-y-1.5">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-mono text-outline">FACULTY ADVISORY SYSTEM</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+        <span class="text-xs text-secondary">Assigned Cohort Teams Scoped</span>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2.5 sm:self-end">
-        <!-- Assign Task Action -->
-        <button onclick="openModal('facNewTaskModal')" class="h-10 px-4 rounded-xl bg-secondary text-black font-semibold text-xs hover:bg-cyan-400 transition-colors flex items-center gap-2 shadow-sm">
-          <span class="material-symbols-outlined text-base">add_task</span>
-          <span>Assign Task</span>
-        </button>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 id="pageTitle" class="font-headline text-2xl sm:text-3xl font-bold text-on-surface tracking-tight">Advisor Overview</h1>
+
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Assign Task Action -->
+          <button onclick="openModal('facNewTaskModal')" class="h-10 px-4 rounded-xl bg-secondary text-black font-semibold text-xs hover:bg-cyan-400 transition-colors flex items-center gap-2 shadow-sm">
+            <span class="material-symbols-outlined text-base">add_task</span>
+            <span>Assign Task</span>
+          </button>
+        </div>
       </div>
     </header>
 

@@ -216,28 +216,29 @@
     </div>
 
     <!-- Top Header Bar -->
-    <header class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 pb-5 mb-6 border-b border-outline-variant/20">
-      <div class="space-y-1">
-        <div class="flex items-center gap-2">
-          <span class="text-xs font-mono text-outline">STUDENT WORKSPACE</span>
-          <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
-          <span class="text-xs text-tertiary">MongoDB Atlas Active</span>
-        </div>
-        <h1 id="pageTitle" class="font-headline text-2xl sm:text-3xl font-bold text-on-surface tracking-tight leading-none">Overview</h1>
+    <header class="pb-5 mb-6 border-b border-outline-variant/20 space-y-1.5">
+      <div class="flex items-center gap-2">
+        <span class="text-xs font-mono text-outline">STUDENT WORKSPACE</span>
+        <span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+        <span class="text-xs text-tertiary">MongoDB Atlas Active</span>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2.5 sm:self-end">
-        <!-- Faculty Mentor Direct Link -->
-        <div class="h-10 flex items-center gap-2 px-3.5 rounded-xl bg-surface-container border border-outline-variant/30 text-xs shadow-sm">
-          <span class="material-symbols-outlined text-base text-secondary">school</span>
-          <span class="text-outline font-medium">Assigned Mentor:</span>
-          <span id="headerMentorName" class="font-bold text-secondary truncate max-w-[160px]">Dr. Aris Thorne</span>
-        </div>
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <h1 id="pageTitle" class="font-headline text-2xl sm:text-3xl font-bold text-on-surface tracking-tight">Overview</h1>
 
-        <button onclick="openModal('studentNewProjectModal')" class="h-10 px-4 rounded-xl bg-primary-container text-on-primary font-semibold text-xs hover:bg-indigo-600 transition-colors flex items-center gap-1.5 shadow-sm">
-          <span class="material-symbols-outlined text-base">add_circle</span>
-          <span>New Project</span>
-        </button>
+        <div class="flex flex-wrap items-center gap-2.5">
+          <!-- Faculty Mentor Direct Link -->
+          <div class="h-10 flex items-center gap-2 px-3.5 rounded-xl bg-surface-container border border-outline-variant/30 text-xs shadow-sm">
+            <span class="material-symbols-outlined text-base text-secondary">school</span>
+            <span class="text-outline font-medium">Assigned Mentor:</span>
+            <span id="headerMentorName" class="font-bold text-secondary truncate max-w-[160px]">Dr. Aris Thorne</span>
+          </div>
+
+          <button onclick="openModal('studentNewProjectModal')" class="h-10 px-4 rounded-xl bg-primary-container text-on-primary font-semibold text-xs hover:bg-indigo-600 transition-colors flex items-center gap-1.5 shadow-sm">
+            <span class="material-symbols-outlined text-base">add_circle</span>
+            <span>New Project</span>
+          </button>
+        </div>
       </div>
     </header>
 
