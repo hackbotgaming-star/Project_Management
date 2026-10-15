@@ -157,3 +157,47 @@ exports.createDocument = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Failed to upload document.' });
   }
 };
+
+// PUT /api/documents/:id (Update document metadata: title, category, version)
+exports.updateDocument = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, category, version } = req.body;
+    const doc = await Document.findById(id);
+    if (!doc) return res.status(404).json({ success: false, message: 'Document not found.' });
+
+    if (req.user.role === 'HOD') {
+      return res.status(403).json({ success: false, message: 'Head of Department has view-only access and cannot edit documents.' });
+    }
+
+    if (req.user.role === 'STUDENT' && doc.uploadedBy.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not authorized to edit this document.' });
+    }
+
+    if (title) doc.title = title.trim();
+    if (category) doc.category = category.trim();
+    if (version) doc.version = version.trim();
+
+    await doc.save();
+
+    await AuditTrail.create({
+      user: req.user._id,
+      userName: req.user.name,
+      role: req.user.role,
+      action: 'UPDATE_DOCUMENT',
+      targetType: 'DOCUMENT',
+      targetId: doc._id.toString(),
+      details: `Updated document "${doc.title}" details.`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    const populated = await Document.findById(doc._id)
+      .populate('project', 'title code')
+      .populate('uploadedBy', 'name email avatar role');
+
+    return res.json({ success: true, message: 'Document updated successfully.', document: populated });
+  } catch (err) {
+    console.error('updateDocument error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to update document: ' + err.message });
+  }
+};

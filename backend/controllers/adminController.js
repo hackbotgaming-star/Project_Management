@@ -196,12 +196,35 @@ exports.createUser = async (req, res) => {
 exports.updateUser = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name, department, role, status, studentCategory, cohort, title, academicYear, section } = req.body;
+    const {
+      name,
+      email,
+      department,
+      role,
+      status,
+      studentCategory,
+      cohort,
+      title,
+      academicYear,
+      section,
+      registerNumber,
+      studentId,
+      facultyId,
+      password,
+    } = req.body;
     const user = await User.findById(id);
     if (!user) return res.status(404).json({ success: false, message: 'User not found.' });
 
     if (name) user.name = name.trim();
-    if (department) user.department = department;
+    if (email && email.toLowerCase().trim() !== user.email) {
+      const emailLower = email.toLowerCase().trim();
+      const existingUser = await User.findOne({ email: emailLower, _id: { $ne: user._id } });
+      if (existingUser) {
+        return res.status(400).json({ success: false, message: 'Email is already in use by another account.' });
+      }
+      user.email = emailLower;
+    }
+    if (department) user.department = department.trim();
     if (role) user.role = role.toUpperCase();
     if (status) user.status = status;
     if (academicYear) user.academicYear = academicYear;
@@ -212,6 +235,17 @@ exports.updateUser = async (req, res) => {
       user.cohort = `AI&ML - ${user.academicYear || '3rd Year'} (Section ${user.section || 'A'})`;
     }
     if (title) user.title = title;
+    if (registerNumber !== undefined || studentId !== undefined) {
+      const regNo = (registerNumber !== undefined ? registerNumber : studentId).trim();
+      user.registerNumber = regNo || null;
+      user.studentId = regNo || null;
+    }
+    if (facultyId !== undefined) {
+      user.facultyId = facultyId.trim() || null;
+    }
+    if (password && password.trim().length > 0) {
+      user.password = await User.hashPassword(password.trim());
+    }
     if (studentCategory) {
       const c = studentCategory.toUpperCase().replace(/\s+/g, '_');
       if (['MARQUEE', 'MARQUE'].includes(c)) user.studentCategory = 'MARQUEE';
@@ -229,7 +263,7 @@ exports.updateUser = async (req, res) => {
       action: 'UPDATE_USER',
       targetType: 'USER',
       targetId: user._id.toString(),
-      details: `Updated user ${user.name} (${user.email}) profile/category.`,
+      details: `Updated user ${user.name} (${user.email}, ${user.role}) details.`,
       ipAddress: req.ip || '127.0.0.1',
     });
 
@@ -385,6 +419,65 @@ exports.updateProjectStatus = async (req, res) => {
   }
 };
 
+// PUT /api/admin/projects/:id (Comprehensive project edit by institutional admin)
+exports.updateProjectAdmin = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      title,
+      description,
+      abstract,
+      department,
+      category,
+      status,
+      health,
+      facultyMentor,
+      repositoryUrl,
+      documentationUrl,
+      defenseDate,
+    } = req.body;
+
+    const project = await Project.findById(id);
+    if (!project) return res.status(404).json({ success: false, message: 'Project not found.' });
+
+    if (title !== undefined) project.title = title.trim();
+    if (abstract !== undefined) project.abstract = abstract.trim();
+    if (description !== undefined && !project.abstract) project.abstract = description.trim();
+    if (department !== undefined) project.department = department.trim();
+    if (category !== undefined) project.category = category;
+    if (status !== undefined) project.status = status;
+    if (health !== undefined) project.health = health;
+    if (repositoryUrl !== undefined) project.repositoryUrl = repositoryUrl.trim();
+    if (documentationUrl !== undefined) project.documentationUrl = documentationUrl.trim();
+    if (defenseDate !== undefined) project.defenseDate = defenseDate ? new Date(defenseDate) : null;
+    if (facultyMentor !== undefined) {
+      project.facultyMentor = facultyMentor && facultyMentor.trim() ? facultyMentor.trim() : null;
+    }
+
+    await project.save();
+
+    await AuditTrail.create({
+      user: req.user._id,
+      userName: req.user.name,
+      role: 'ADMIN',
+      action: 'UPDATE_PROJECT',
+      targetType: 'PROJECT',
+      targetId: project._id.toString(),
+      details: `Institutional admin updated project "${project.title}" (${project.code}).`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    const populated = await Project.findById(project._id)
+      .populate('facultyMentor', 'name email title avatar')
+      .populate('teamMembers', 'name email avatar studentId registerNumber');
+
+    return res.json({ success: true, message: 'Project updated successfully.', project: populated });
+  } catch (err) {
+    console.error('updateProjectAdmin error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to update project: ' + err.message });
+  }
+};
+
 // GET /api/admin/departments
 exports.getDepartments = async (req, res) => {
   try {
@@ -473,9 +566,35 @@ exports.createDepartment = async (req, res) => {
 exports.updateDepartment = async (req, res) => {
   try {
     const { head, name, code, description } = req.body;
-    const dept = await Department.findById(req.params.id);
+    const { id } = req.params;
+    let dept = null;
+    if (id && id.match(/^[0-9a-fA-F]{24}$/)) {
+      dept = await Department.findById(id);
+    }
+    if (!dept && id) {
+      dept = await Department.findOne({
+        $or: [
+          { code: new RegExp(`^${id}$`, 'i') },
+          { name: new RegExp(`^${id}$`, 'i') }
+        ]
+      });
+    }
+    if (!dept && name) {
+      dept = await Department.findOne({
+        $or: [
+          { name: new RegExp(`^${name}$`, 'i') },
+          ...(code ? [{ code: new RegExp(`^${code}$`, 'i') }] : [])
+        ]
+      });
+    }
     if (!dept) {
-      return res.status(404).json({ success: false, message: 'Department not found.' });
+      // Create if it doesn't exist yet
+      dept = new Department({
+        name: name || id,
+        code: (code || id.substring(0, 5)).toUpperCase(),
+        head: head || 'To be assigned',
+        description: description || ''
+      });
     }
 
     if (head !== undefined) dept.head = head.trim();
@@ -525,6 +644,49 @@ exports.createCohort = async (req, res) => {
     return res.status(201).json({ success: true, cohort });
   } catch (err) {
     return res.status(500).json({ success: false, message: 'Failed to create cohort.' });
+  }
+};
+
+// PUT /api/admin/cohorts/:id (Update cohort details)
+exports.updateCohort = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, code, term, year, department, status } = req.body;
+    let cohort = null;
+    if (id.match(/^[0-9a-fA-F]{24}$/)) {
+      cohort = await Cohort.findById(id);
+    }
+    if (!cohort) {
+      cohort = await Cohort.findOne({
+        $or: [{ code: new RegExp(`^${id}$`, 'i') }, { name: new RegExp(`^${id}$`, 'i') }]
+      });
+    }
+    if (!cohort) return res.status(404).json({ success: false, message: 'Cohort not found.' });
+
+    if (name) cohort.name = name.trim();
+    if (code) cohort.code = code.trim().toUpperCase();
+    if (term) cohort.term = term.trim();
+    if (year) cohort.year = Number(year);
+    if (department) cohort.department = department.trim();
+    if (status) cohort.status = status;
+
+    await cohort.save();
+
+    await AuditTrail.create({
+      user: req.user._id,
+      userName: req.user.name,
+      role: 'ADMIN',
+      action: 'UPDATE_COHORT',
+      targetType: 'COHORT',
+      targetId: cohort._id.toString(),
+      details: `Institutional admin updated cohort "${cohort.name}" (${cohort.code}).`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    return res.json({ success: true, message: 'Cohort updated successfully.', cohort });
+  } catch (err) {
+    console.error('updateCohort error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to update cohort: ' + err.message });
   }
 };
 

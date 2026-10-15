@@ -230,3 +230,51 @@ exports.reviewMilestone = async (req, res) => {
     return res.status(500).json({ success: false, message: 'Failed to review milestone.' });
   }
 };
+
+// PUT /api/milestones/:id (Update milestone details: title, description, dueDate, deliverableUrl, status)
+exports.updateMilestone = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, dueDate, deliverableUrl, status } = req.body;
+
+    if (req.user.role === 'STUDENT') {
+      return res.status(403).json({ success: false, message: 'Permission denied: Students cannot edit milestones.' });
+    }
+
+    const milestone = await Milestone.findById(id).populate('project');
+    if (!milestone) return res.status(404).json({ success: false, message: 'Milestone not found.' });
+
+    if (req.user.role === 'FACULTY' && milestone.project && milestone.project.facultyMentor && milestone.project.facultyMentor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Permission denied: You do not mentor this project.' });
+    }
+
+    if (title) milestone.title = title.trim();
+    if (description !== undefined) milestone.description = description;
+    if (dueDate) milestone.dueDate = new Date(dueDate);
+    if (deliverableUrl !== undefined) milestone.deliverableUrl = deliverableUrl;
+    if (status) milestone.status = status;
+
+    await milestone.save();
+
+    await AuditTrail.create({
+      user: req.user._id,
+      userName: req.user.name,
+      role: req.user.role,
+      action: 'UPDATE_MILESTONE',
+      targetType: 'MILESTONE',
+      targetId: milestone._id.toString(),
+      details: `${req.user.role} updated milestone "${milestone.title}" (Status: ${milestone.status}).`,
+      ipAddress: req.ip || '127.0.0.1',
+    });
+
+    const populated = await Milestone.findById(milestone._id)
+      .populate('project', 'title code facultyMentor teamMembers')
+      .populate('submittedBy', 'name email avatar')
+      .populate('evaluatedBy', 'name email title');
+
+    return res.json({ success: true, message: 'Milestone updated successfully.', milestone: populated });
+  } catch (err) {
+    console.error('updateMilestone error:', err);
+    return res.status(500).json({ success: false, message: 'Failed to update milestone: ' + err.message });
+  }
+};

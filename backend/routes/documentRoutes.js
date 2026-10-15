@@ -12,5 +12,6 @@ const upload = multer({
 
 router.get('/', authenticateToken, documentController.getDocuments);
 router.post('/', authenticateToken, upload.single('file'), documentController.createDocument);
+router.put('/:id', authenticateToken, documentController.updateDocument);
 
 module.exports = router;

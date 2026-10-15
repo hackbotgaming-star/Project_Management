@@ -1644,6 +1644,501 @@
     </div>
   </div>
 
+  <!-- ========================================== -->
+  <!-- MODAL: EDIT USER ACCOUNT                   -->
+  <!-- ========================================== -->
+  <div id="editUserModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-tertiary/15 border border-tertiary/30 flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-lg">manage_accounts</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Edit User Account</h3>
+            <p class="text-xs text-outline">Update profile, roles, credentials, and academic parameters</p>
+          </div>
+        </div>
+        <button onclick="closeModal('editUserModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="editUserForm" onsubmit="handleEditUserSubmit(event)" class="space-y-4">
+        <input type="hidden" id="editUserId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Full Name <span class="text-error">*</span></label>
+            <input type="text" id="editUserName" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Email Address <span class="text-error">*</span></label>
+            <input type="email" id="editUserEmail" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Institutional Role <span class="text-error">*</span></label>
+            <select id="editUserRole" onchange="toggleEditUserRoleFields()" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+              <option value="STUDENT">STUDENT</option>
+              <option value="FACULTY">FACULTY</option>
+              <option value="HOD">HOD (Head of Department)</option>
+              <option value="ADMIN">ADMIN</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Account Status</label>
+            <select id="editUserStatus" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="INACTIVE">INACTIVE</option>
+              <option value="ON_LEAVE">ON_LEAVE</option>
+              <option value="SUSPENDED">SUSPENDED</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Department</label>
+          <select id="editUserDepartment" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+            <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning (AI&ML)</option>
+            <option value="Computer Science & Engineering">Computer Science & Engineering (CSE)</option>
+            <option value="Information Technology">Information Technology (IT)</option>
+            <option value="Electronics & Communication Engineering">Electronics & Communication Engineering (ECE)</option>
+            <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering (EEE)</option>
+            <option value="Mechanical Engineering">Mechanical Engineering (MECH)</option>
+          </select>
+        </div>
+
+        <!-- Student-specific fields -->
+        <div id="editUserStudentFields" class="space-y-3 p-3.5 rounded-xl bg-surface-container/60 border border-outline-variant/20">
+          <div class="text-[11px] font-mono font-bold text-primary uppercase">Student Credentials &amp; Academic Year</div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-outline mb-1">Register Number</label>
+              <input type="text" id="editUserRegisterNumber" placeholder="e.g. 310621205001" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-outline mb-1">Student Category</label>
+              <select id="editUserCategory" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+                <option value="REGULAR">Regular Capstone</option>
+                <option value="SUPER_DREAM">⭐ Super Dream Track</option>
+                <option value="DREAM">Dream Scholar</option>
+                <option value="MARQUEE">Marquee Scholar</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-outline mb-1">Academic Year</label>
+              <select id="editUserYear" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+                <option value="1st Year">1st Year</option>
+                <option value="2nd Year">2nd Year</option>
+                <option value="3rd Year">3rd Year</option>
+                <option value="4th Year">4th Year</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-outline mb-1">Section</label>
+              <select id="editUserSection" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+                <option value="A">Section A</option>
+                <option value="B">Section B</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <!-- Faculty/HOD specific fields -->
+        <div id="editUserFacultyFields" class="hidden space-y-3 p-3.5 rounded-xl bg-surface-container/60 border border-outline-variant/20">
+          <div class="text-[11px] font-mono font-bold text-secondary uppercase">Faculty Designation &amp; ID</div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-medium text-outline mb-1">Academic Title</label>
+              <input type="text" id="editUserTitle" placeholder="e.g. Associate Professor, Ph.D." class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-outline mb-1">Faculty ID</label>
+              <input type="text" id="editUserFacultyId" placeholder="e.g. FAC-2091" class="w-full p-2 bg-surface-container rounded-lg border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+            </div>
+          </div>
+        </div>
+
+        <!-- Optional Password Reset -->
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Reset Password (Optional)</label>
+          <input type="password" id="editUserPassword" placeholder="Leave blank to keep current password" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('editUserModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnSaveEditUser" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-md">
+            <span class="material-symbols-outlined text-sm">save</span>
+            <span>Save User Changes</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: EDIT CAPSTONE PROJECT               -->
+  <!-- ========================================== -->
+  <div id="editProjectAdminModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-tertiary/15 border border-tertiary/30 flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-lg">edit_note</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Edit Capstone Project</h3>
+            <p class="text-xs text-outline">Modify metadata, timeline, status, and mentorship assignment</p>
+          </div>
+        </div>
+        <button onclick="closeModal('editProjectAdminModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="editProjectAdminForm" onsubmit="handleEditProjectAdminSubmit(event)" class="space-y-4">
+        <input type="hidden" id="editProjId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Project Code</label>
+            <input type="text" id="editProjCode" readonly class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-outline font-mono cursor-not-allowed">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-outline mb-1">Project Title <span class="text-error">*</span></label>
+            <input type="text" id="editProjTitle" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Abstract / Executive Summary</label>
+          <textarea id="editProjAbstract" rows="3" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none resize-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Department</label>
+            <select id="editProjDepartment" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+              <option value="Artificial Intelligence & Machine Learning">Artificial Intelligence & Machine Learning</option>
+              <option value="Computer Science & Engineering">Computer Science & Engineering</option>
+              <option value="Information Technology">Information Technology</option>
+              <option value="Electronics & Communication Engineering">Electronics & Communication Engineering</option>
+              <option value="Electrical & Electronics Engineering">Electrical & Electronics Engineering</option>
+              <option value="Mechanical Engineering">Mechanical Engineering</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Assigned Faculty Advisor</label>
+            <select id="editProjMentorSelect" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+              <option value="">None (Unassigned)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Project Status</label>
+            <select id="editProjStatus" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+              <option value="PLANNING">PLANNING</option>
+              <option value="IN_PROGRESS">IN_PROGRESS</option>
+              <option value="REVIEW">REVIEW</option>
+              <option value="COMPLETED">COMPLETED</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="ARCHIVED">ARCHIVED</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Health Governance</label>
+            <select id="editProjHealth" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+              <option value="ON_TRACK">ON_TRACK (Healthy)</option>
+              <option value="AT_RISK">AT_RISK (Requires Review)</option>
+              <option value="DELAYED">DELAYED (Action Needed)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Repository URL (GitHub / GitLab)</label>
+            <input type="url" id="editProjRepoUrl" placeholder="https://github.com/..." class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Defense Presentation Date</label>
+            <input type="date" id="editProjDefenseDate" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('editProjectAdminModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnSaveEditProjectAdmin" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-md">
+            <span class="material-symbols-outlined text-sm">save</span>
+            <span>Save Project Changes</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: EDIT DEPARTMENT                     -->
+  <!-- ========================================== -->
+  <div id="editDepartmentModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-secondary/15 border border-secondary/30 flex items-center justify-center text-secondary">
+            <span class="material-symbols-outlined text-lg">domain</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Edit Department</h3>
+            <p class="text-xs text-outline">Manage department profile, code, and leadership</p>
+          </div>
+        </div>
+        <button onclick="closeModal('editDepartmentModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="editDepartmentForm" onsubmit="handleEditDepartmentSubmit(event)" class="space-y-4">
+        <input type="hidden" id="editDeptId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Code <span class="text-error">*</span></label>
+            <input type="text" id="editDeptCode" required placeholder="AIML" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono uppercase">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-outline mb-1">Department Name <span class="text-error">*</span></label>
+            <input type="text" id="editDeptName" required placeholder="Artificial Intelligence & Machine Learning" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Head of Department (HOD) <span class="text-error">*</span></label>
+          <input type="text" id="editDeptHeadInput" required placeholder="e.g. Dr. Jane Smith, Ph.D." class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Description / Focus Area</label>
+          <textarea id="editDeptDescription" rows="3" placeholder="Overview of curriculum and academic mission" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none resize-none"></textarea>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('editDepartmentModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnSaveEditDept" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-md">
+            <span class="material-symbols-outlined text-sm">save</span>
+            <span>Save Department</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: EDIT COHORT                         -->
+  <!-- ========================================== -->
+  <div id="editCohortModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-tertiary/15 border border-tertiary/30 flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-lg">date_range</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Edit Academic Cohort</h3>
+            <p class="text-xs text-outline">Manage term schedules, academic years, and cohort status</p>
+          </div>
+        </div>
+        <button onclick="closeModal('editCohortModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="editCohortForm" onsubmit="handleEditCohortSubmit(event)" class="space-y-4">
+        <input type="hidden" id="editCohortId">
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Code <span class="text-error">*</span></label>
+            <input type="text" id="editCohortCode" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono uppercase">
+          </div>
+          <div class="sm:col-span-2">
+            <label class="block text-xs font-medium text-outline mb-1">Cohort Name <span class="text-error">*</span></label>
+            <input type="text" id="editCohortName" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Term</label>
+            <select id="editCohortTerm" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+              <option value="Spring">Spring</option>
+              <option value="Fall">Fall</option>
+              <option value="Summer">Summer</option>
+              <option value="AY24-25">AY24-25</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Year</label>
+            <input type="number" id="editCohortYear" min="2020" max="2035" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Status</label>
+            <select id="editCohortStatus" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+              <option value="ACTIVE">ACTIVE</option>
+              <option value="UPCOMING">UPCOMING</option>
+              <option value="ARCHIVED">ARCHIVED</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Department</label>
+          <input type="text" id="editCohortDept" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('editCohortModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnSaveEditCohort" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-md">
+            <span class="material-symbols-outlined text-sm">save</span>
+            <span>Save Cohort</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: EDIT DOCUMENT                       -->
+  <!-- ========================================== -->
+  <div id="editDocumentModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-tertiary/15 border border-tertiary/30 flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-lg">edit_document</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Edit Document</h3>
+            <p class="text-xs text-outline">Modify artifact title, category, and version release</p>
+          </div>
+        </div>
+        <button onclick="closeModal('editDocumentModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="editDocumentForm" onsubmit="handleEditDocumentSubmit(event)" class="space-y-4">
+        <input type="hidden" id="editDocId">
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Document Title <span class="text-error">*</span></label>
+          <input type="text" id="editDocTitle" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Category</label>
+            <select id="editDocCategory" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+              <option value="Specification">Technical Specification</option>
+              <option value="Rubric">Evaluation Rubric</option>
+              <option value="Report">Report / Thesis</option>
+              <option value="Architecture">System Architecture</option>
+              <option value="Policy">Academic Policy</option>
+              <option value="Guide">User Guide</option>
+              <option value="Template">Template</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Version</label>
+            <input type="text" id="editDocVersion" placeholder="v1.0" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('editDocumentModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnSaveEditDoc" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-md">
+            <span class="material-symbols-outlined text-sm">save</span>
+            <span>Save Document</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- ========================================== -->
+  <!-- MODAL: EDIT MILESTONE                      -->
+  <!-- ========================================== -->
+  <div id="editMilestoneModal" class="hidden fixed inset-0 bg-black/75 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div class="bg-surface-container-low border border-outline-variant/30 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[90vh] overflow-y-auto space-y-4">
+      <div class="flex items-center justify-between pb-3 border-b border-outline-variant/20">
+        <div class="flex items-center gap-2">
+          <div class="w-8 h-8 rounded-lg bg-tertiary/15 border border-tertiary/30 flex items-center justify-center text-tertiary">
+            <span class="material-symbols-outlined text-lg">flag</span>
+          </div>
+          <div>
+            <h3 class="font-headline font-bold text-base text-on-surface">Edit Milestone</h3>
+            <p class="text-xs text-outline">Update institutional deliverables, due dates, and status</p>
+          </div>
+        </div>
+        <button onclick="closeModal('editMilestoneModal')" class="text-outline hover:text-on-surface">
+          <span class="material-symbols-outlined text-base">close</span>
+        </button>
+      </div>
+
+      <form id="editMilestoneForm" onsubmit="handleEditMilestoneSubmit(event)" class="space-y-4">
+        <input type="hidden" id="editMilestoneId">
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Milestone Title <span class="text-error">*</span></label>
+          <input type="text" id="editMilestoneTitle" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Description / Requirements</label>
+          <textarea id="editMilestoneDesc" rows="3" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none resize-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Due Date <span class="text-error">*</span></label>
+            <input type="date" id="editMilestoneDueDate" required class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-outline mb-1">Status</label>
+            <select id="editMilestoneStatus" class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+              <option value="PENDING">PENDING</option>
+              <option value="SUBMITTED">SUBMITTED</option>
+              <option value="UNDER_REVIEW">UNDER_REVIEW</option>
+              <option value="APPROVED">APPROVED</option>
+              <option value="REJECTED">REJECTED</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-medium text-outline mb-1">Deliverable URL / Guidelines</label>
+          <input type="url" id="editMilestoneDeliverable" placeholder="https://..." class="w-full p-2.5 bg-surface-container rounded-xl border border-outline-variant/30 text-xs text-on-surface focus:border-tertiary focus:outline-none font-mono">
+        </div>
+
+        <div class="flex items-center justify-end gap-2 pt-3 border-t border-outline-variant/20">
+          <button type="button" onclick="closeModal('editMilestoneModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface">Cancel</button>
+          <button type="submit" id="btnSaveEditMilestone" class="px-4 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs flex items-center gap-1.5 shadow-md">
+            <span class="material-symbols-outlined text-sm">save</span>
+            <span>Save Milestone</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
   <!-- APPLICATION SCRIPTS -->
   <script>
     function escapeHtml(str) {
@@ -1828,10 +2323,14 @@
           <td class="py-2.5"><span class="text-[10px] font-mono px-1.5 py-0.5 rounded ${p.health === 'AT_RISK' ? 'bg-error/20 text-error' : 'bg-tertiary/20 text-tertiary'}">${p.health}</span></td>
           <td class="py-2.5 font-mono text-[11px]">${p.status}</td>
           <td class="py-2.5 text-right space-x-1.5 whitespace-nowrap">
-            <a href="/projects/${p._id}" class="px-2.5 py-1 rounded bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary text-[11px] font-semibold transition-colors inline-flex items-center gap-1">
+            <a href="/projects/${p._id}" class="px-2.5 py-1 rounded bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary text-[11px] font-semibold transition-colors inline-flex items-center gap-1 shadow-sm">
               <span class="material-symbols-outlined text-[13px]">folder_special</span>
               <span>Open</span>
             </a>
+            <button onclick="openEditProjectModal('${p._id}')" class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-tertiary text-[11px] font-medium transition-colors inline-flex items-center gap-1 border border-tertiary/30 shadow-sm" title="Edit Project">
+              <span class="material-symbols-outlined text-[13px]">edit</span>
+              <span>Edit</span>
+            </button>
             <button onclick="promptReassign('${p._id}', '${p.title.replace(/'/g, "\\'")}', '${p.facultyMentor ? p.facultyMentor._id : ''}')" class="px-2 py-1 rounded bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-[11px] font-medium transition-colors">
               Reassign
             </button>
@@ -1842,6 +2341,51 @@
           </td>
         </tr>
       `).join('');
+
+      // Populate Tab 5: All Institutional Projects List
+      const fullProjectsEl = document.getElementById('adminProjectsFullList');
+      if (fullProjectsEl && data.allProjects) {
+        if (data.allProjects.length === 0) {
+          fullProjectsEl.innerHTML = '<div class="p-8 text-center text-xs text-outline bg-surface-container rounded-2xl border border-outline-variant/20">No capstone projects registered. Click "Create Project" above to initialize projects.</div>';
+        } else {
+          fullProjectsEl.innerHTML = data.allProjects.map(p => `
+            <div class="p-5 rounded-2xl bg-surface-container-low border border-outline-variant/30 hover:border-tertiary/40 transition-all flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="space-y-2 flex-1">
+                <div class="flex flex-wrap items-center gap-2">
+                  <span class="font-mono font-bold text-xs px-2.5 py-0.5 rounded bg-tertiary/20 text-tertiary">${p.code}</span>
+                  <a href="/projects/${p._id}" class="font-headline font-bold text-base text-on-surface hover:text-tertiary transition-colors">${p.title}</a>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded ${p.health === 'AT_RISK' ? 'bg-error/20 text-error' : 'bg-tertiary/20 text-tertiary'} font-bold">${p.health}</span>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-outline">${p.status}</span>
+                </div>
+                <p class="text-xs text-outline line-clamp-2">${p.abstract || 'No abstract documented for this capstone project.'}</p>
+                <div class="flex flex-wrap items-center gap-4 text-xs text-outline pt-1">
+                  <span>Department: <strong class="text-on-surface">${p.department || 'AI&ML'}</strong></span>
+                  <span>Advisor: <strong class="text-secondary">${p.facultyMentor ? p.facultyMentor.name : 'Unassigned'}</strong></span>
+                  <span>Team: <strong>${p.teamMembers ? p.teamMembers.length : 0} Students</strong></span>
+                  <span>Progress: <strong class="text-tertiary font-mono">${p.progressPercentage || 0}%</strong></span>
+                </div>
+              </div>
+              <div class="flex flex-wrap items-center gap-2 shrink-0">
+                <a href="/projects/${p._id}" class="px-3 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary text-xs font-semibold transition-colors flex items-center gap-1 shadow-sm">
+                  <span class="material-symbols-outlined text-sm">folder_special</span>
+                  <span>Open</span>
+                </a>
+                <button onclick="openEditProjectModal('${p._id}')" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary text-xs font-medium transition-colors flex items-center gap-1 border border-tertiary/30 shadow-sm" title="Edit Project Details">
+                  <span class="material-symbols-outlined text-sm">edit</span>
+                  <span>Edit</span>
+                </button>
+                <button onclick="promptReassign('${p._id}', '${p.title.replace(/'/g, "\\'")}', '${p.facultyMentor ? p.facultyMentor._id : ''}')" class="px-3 py-1.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-medium transition-colors">
+                  Reassign
+                </button>
+                <button onclick="openDeleteProjectModal('${p._id}', '${p.code}', '${p.title.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-lg bg-error/15 hover:bg-error hover:text-white text-error text-xs font-medium transition-colors flex items-center gap-1" title="Delete Project">
+                  <span class="material-symbols-outlined text-sm">delete</span>
+                  <span>Delete</span>
+                </button>
+              </div>
+            </div>
+          `).join('');
+        }
+      }
 
       // Audit Log
       document.getElementById('auditLogSummary').innerHTML = data.auditSummary.map(a => `
@@ -1865,10 +2409,16 @@
             </div>
             <div class="text-xs text-outline">Current Advisor: <span class="text-secondary font-medium">${p.facultyMentor ? p.facultyMentor.name : 'None (Unassigned)'}</span></div>
           </div>
-          <button onclick="promptReassign('${p._id}', '${p.title.replace(/'/g, "\\'")}', '${p.facultyMentor ? p.facultyMentor._id : ''}')" class="px-3.5 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black text-xs font-semibold flex items-center gap-1.5 transition-colors">
-            <span class="material-symbols-outlined text-sm">assignment_ind</span>
-            <span>Assign / Change Advisor</span>
-          </button>
+          <div class="flex items-center gap-2">
+            <button onclick="openEditProjectModal('${p._id}')" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary text-xs font-medium flex items-center gap-1.5 transition-colors border border-tertiary/30 shadow-sm" title="Edit Project">
+              <span class="material-symbols-outlined text-sm">edit</span>
+              <span>Edit Project</span>
+            </button>
+            <button onclick="promptReassign('${p._id}', '${p.title.replace(/'/g, "\\'")}', '${p.facultyMentor ? p.facultyMentor._id : ''}')" class="px-3.5 py-1.5 rounded-lg bg-tertiary hover:bg-emerald-400 text-black text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-sm">
+              <span class="material-symbols-outlined text-sm">assignment_ind</span>
+              <span>Assign / Change Advisor</span>
+            </button>
+          </div>
         </div>
       `).join('');
 
@@ -2174,8 +2724,12 @@
             </div>
 
             <div class="flex items-center gap-2 mt-3">
-              <button type="button" onclick="event.stopPropagation(); openEditDeptHeadModal('${d.id || ''}', '${d.name.replace(/'/g, "\\'")}', '${(d.head || '').replace(/'/g, "\\'")}')" class="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-outline hover:text-secondary font-medium text-xs transition-all flex items-center justify-center gap-1 border border-outline-variant/20" title="Edit Head of Department">
+              <button type="button" onclick="event.stopPropagation(); openEditDepartmentModal('${d.id || ''}', '${d.name.replace(/'/g, "\\'")}')" class="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-tertiary font-medium text-xs transition-all flex items-center justify-center gap-1 border border-outline-variant/20 shadow-sm" title="Edit Department Details">
                 <span class="material-symbols-outlined text-sm">edit</span>
+                <span>Edit</span>
+              </button>
+              <button type="button" onclick="event.stopPropagation(); openEditDeptHeadModal('${d.id || ''}', '${d.name.replace(/'/g, "\\'")}', '${(d.head || '').replace(/'/g, "\\'")}')" class="py-2 px-3 rounded-xl bg-surface-container hover:bg-surface-container-high text-outline hover:text-secondary font-medium text-xs transition-all flex items-center justify-center gap-1 border border-outline-variant/20" title="Edit Head of Department">
+                <span class="material-symbols-outlined text-sm">supervisor_account</span>
                 <span>HOD</span>
               </button>
               <button type="button" onclick="event.stopPropagation(); openDepartmentView('${d.name.replace(/'/g, "\\'")}')" class="flex-1 py-2 px-3 rounded-xl bg-tertiary/15 hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-all flex items-center justify-center gap-1.5 border border-tertiary/30">
@@ -2241,7 +2795,13 @@
             </div>
             <div class="pt-2.5 border-t border-outline-variant/20 flex items-center justify-between text-[11px] font-mono">
               <span class="text-outline">${s.registerNumber || s.studentId || 'STUDENT'}</span>
-              <span class="px-2 py-0.5 rounded bg-surface-container-high text-outline text-[10px] font-mono">${s.academicYear || 'Student'}</span>
+              <div class="flex items-center gap-1.5">
+                <button type="button" onclick="openEditUserModal('${s._id}')" class="text-tertiary hover:underline text-[11px] flex items-center gap-0.5 font-medium" title="Edit Student">
+                  <span class="material-symbols-outlined text-[13px]">edit</span>
+                  <span>Edit</span>
+                </button>
+                <span class="px-2 py-0.5 rounded bg-surface-container-high text-outline text-[10px] font-mono">${s.academicYear || 'Student'}</span>
+              </div>
             </div>
           </div>
         `;
@@ -2316,7 +2876,13 @@
               </div>
               <div class="pt-2.5 border-t border-outline-variant/20 flex items-center justify-between text-[11px]">
                 <span class="text-outline font-mono">${assignedCount} Mentored Team${assignedCount === 1 ? '' : 's'}</span>
-                <span class="px-2 py-0.5 rounded bg-secondary/20 text-secondary text-[10px] font-mono font-bold">${f.status || 'Active'}</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="openEditUserModal('${f._id}')" class="text-tertiary hover:underline text-[11px] flex items-center gap-0.5 font-medium" title="Edit Faculty">
+                    <span class="material-symbols-outlined text-[13px]">edit</span>
+                    <span>Edit</span>
+                  </button>
+                  <span class="px-2 py-0.5 rounded bg-secondary/20 text-secondary text-[10px] font-mono font-bold">${f.status || 'Active'}</span>
+                </div>
               </div>
             </div>
           `;
@@ -2354,10 +2920,14 @@
               <div class="mr-2 w-32 shrink-0">
                 ${renderProgressLineGraph(p.progressPercentage || 0, { project: p, color: '#ff5436', width: 130, height: 32, showLabel: true })}
               </div>
-              <a href="/projects/${p._id}" class="px-3 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary text-xs font-semibold transition-colors flex items-center gap-1">
+              <a href="/projects/${p._id}" class="px-3 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary text-xs font-semibold transition-colors flex items-center gap-1 shadow-sm">
                 <span class="material-symbols-outlined text-xs">folder_special</span>
                 <span>Open Project</span>
               </a>
+              <button onclick="openEditProjectModal('${p._id}')" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary text-xs font-medium transition-colors flex items-center gap-1 border border-tertiary/30 shadow-sm" title="Edit Project">
+                <span class="material-symbols-outlined text-xs">edit</span>
+                <span>Edit</span>
+              </button>
               <button onclick="promptReassign('${p._id}', '${p.title.replace(/'/g, "\\'")}', '${p.facultyMentor ? p.facultyMentor._id : ''}')" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-on-surface text-xs font-medium transition-colors">
                 Reassign
               </button>
@@ -2503,10 +3073,16 @@
           </div>
           <div class="pt-3 border-t border-outline-variant/20 flex items-center justify-between text-xs">
             <span class="text-outline font-mono">${c.projectCount} Registered Project${c.projectCount === 1 ? '' : 's'}</span>
-            <span class="text-tertiary font-semibold flex items-center gap-1 group-hover:underline">
-              <span>Open Cohort Workspace</span>
-              <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </span>
+            <div class="flex items-center gap-2">
+              <button type="button" onclick="event.stopPropagation(); openEditCohortModal('${c.code}')" class="py-1 px-2.5 rounded-lg bg-surface-container hover:bg-surface-container-high text-tertiary font-medium text-xs transition-all flex items-center gap-1 border border-outline-variant/20 shadow-sm" title="Edit Cohort">
+                <span class="material-symbols-outlined text-[13px]">edit</span>
+                <span>Edit</span>
+              </button>
+              <span class="text-tertiary font-semibold flex items-center gap-1 group-hover:underline">
+                <span>Workspace</span>
+                <span class="material-symbols-outlined text-sm">arrow_forward</span>
+              </span>
+            </div>
           </div>
         </div>
       `).join('');
@@ -2602,8 +3178,12 @@
               </div>
               <a href="/projects/${p._id}" class="px-3.5 py-1.5 rounded-lg bg-tertiary/20 hover:bg-tertiary hover:text-black text-tertiary font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm">
                 <span class="material-symbols-outlined text-[15px]">folder_special</span>
-                <span>Open Project Workspace &rarr;</span>
+                <span>Open Workspace &rarr;</span>
               </a>
+              <button onclick="openEditProjectModal('${p._id}')" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary text-xs font-medium transition-colors flex items-center gap-1 border border-tertiary/30 shadow-sm" title="Edit Project">
+                <span class="material-symbols-outlined text-xs">edit</span>
+                <span>Edit</span>
+              </button>
               <button onclick="openDeleteProjectModal('${p._id}', '${p.code}', '${p.title.replace(/'/g, "\\'")}')" class="px-3 py-1.5 rounded-lg bg-error/15 hover:bg-error hover:text-white text-error text-xs font-medium transition-colors flex items-center gap-1" title="Delete Project">
                 <span class="material-symbols-outlined text-xs">delete</span>
                 <span>Delete</span>
@@ -2636,7 +3216,13 @@
               </div>
               <div class="pt-2 border-t border-outline-variant/15 flex items-center justify-between text-[10px]">
                 <span class="text-outline truncate">${assignedProj ? assignedProj.code : 'No Team'}</span>
-                <span class="px-1.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-mono font-bold">${s.status || 'Active'}</span>
+                <div class="flex items-center gap-1.5">
+                  <button type="button" onclick="openEditUserModal('${s._id}')" class="text-tertiary hover:underline text-[10px] flex items-center gap-0.5 font-medium" title="Edit Student">
+                    <span class="material-symbols-outlined text-xs">edit</span>
+                    <span>Edit</span>
+                  </button>
+                  <span class="px-1.5 py-0.5 rounded bg-tertiary/20 text-tertiary font-mono font-bold">${s.status || 'Active'}</span>
+                </div>
               </div>
             </div>
           `;
@@ -2665,10 +3251,16 @@
             </div>
             <div class="pt-2.5 border-t border-outline-variant/15 flex items-center justify-between text-[11px]">
               <span class="text-outline font-mono">${f.projects ? f.projects.length : 1} Mentored Team${(f.projects && f.projects.length === 1) ? '' : 's'}</span>
-              <a href="mailto:${f.email}" class="text-secondary hover:underline flex items-center gap-1 font-mono text-[10px]">
-                <span class="material-symbols-outlined text-xs">mail</span>
-                <span>Contact</span>
-              </a>
+              <div class="flex items-center gap-2">
+                <button type="button" onclick="openEditUserModal('${f._id}')" class="text-tertiary hover:underline text-[10px] flex items-center gap-0.5 font-medium" title="Edit Faculty">
+                  <span class="material-symbols-outlined text-xs">edit</span>
+                  <span>Edit</span>
+                </button>
+                <a href="mailto:${f.email}" class="text-secondary hover:underline flex items-center gap-1 font-mono text-[10px]">
+                  <span class="material-symbols-outlined text-xs">mail</span>
+                  <span>Contact</span>
+                </a>
+              </div>
             </div>
           </div>
         `).join('');
@@ -2694,6 +3286,10 @@
             <div class="text-[11px] text-outline">Weight: <span class="font-mono text-on-surface font-semibold">${m.weight}</span> &bull; Institutional Deadline: <span class="font-mono text-tertiary">${m.due}</span></div>
           </div>
           <div class="flex items-center gap-2 self-end sm:self-center">
+            <button onclick="openEditMilestoneModal('${m.phase}', '${m.title.replace(/'/g, "\\'")}', 'ABET Capstone deliverable review', '${m.due}', '${m.status}')" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary text-xs font-medium flex items-center gap-1 border border-tertiary/30 shadow-sm" title="Edit Milestone">
+              <span class="material-symbols-outlined text-xs">edit</span>
+              <span>Edit Milestone</span>
+            </button>
             <span class="text-[10px] font-mono px-2 py-1 rounded bg-surface-container-high text-outline">ABET Criterion 3 Rubric</span>
           </div>
         </div>
@@ -2733,10 +3329,16 @@
                 <div class="text-[10px] text-outline mt-0.5">Uploaded by ${d.uploadedBy ? d.uploadedBy.name : 'User'} on ${new Date(d.createdAt).toLocaleDateString()}</div>
               </div>
             </div>
-            <a href="${d.fileUrl || '#'}" target="_blank" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary font-medium transition-colors flex items-center gap-1">
-              <span class="material-symbols-outlined text-sm">download</span>
-              <span>View Artifact</span>
-            </a>
+            <div class="flex items-center gap-2">
+              <button onclick="openEditDocumentModal('${d._id}', '${d.title.replace(/'/g, "\\'")}', '${d.category || 'Specification'}', '${d.version || 'v1.0'}')" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary text-xs font-medium transition-colors flex items-center gap-1 border border-tertiary/30 shadow-sm" title="Edit Document">
+                <span class="material-symbols-outlined text-sm">edit</span>
+                <span>Edit</span>
+              </button>
+              <a href="${d.fileUrl || '#'}" target="_blank" class="px-3 py-1.5 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary font-medium transition-colors flex items-center gap-1 shadow-sm">
+                <span class="material-symbols-outlined text-sm">download</span>
+                <span>View Artifact</span>
+              </a>
+            </div>
           </div>
         `).join('');
       } catch (err) {}
@@ -2910,14 +3512,36 @@
           `;
         }
 
+        let editBtn = '';
+        if (ev.type === 'MILESTONE') {
+          const safeTitle = (ev.title || '').replace(/'/g, "\\'");
+          const safeDate = ev.date ? new Date(ev.date).toISOString().split('T')[0] : '';
+          editBtn = `
+            <button onclick="openEditMilestoneModal('${ev.id}', '${safeTitle}', '', '${safeDate}', '${ev.status || 'PENDING'}')" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary border border-tertiary/30 text-xs font-medium inline-flex items-center gap-1 shadow-sm">
+              <span class="material-symbols-outlined text-[13px]">edit</span>
+              <span>Edit Milestone</span>
+            </button>
+          `;
+        } else if (ev.type === 'DEFENSE') {
+          editBtn = `
+            <button onclick="openEditProjectModal('${ev.id}')" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary border border-tertiary/30 text-xs font-medium inline-flex items-center gap-1 shadow-sm">
+              <span class="material-symbols-outlined text-[13px]">edit</span>
+              <span>Edit Defense / Project</span>
+            </button>
+          `;
+        }
+
         return `
-          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 text-xs">
-            <div class="flex items-center justify-between mb-1.5">
-              <span class="text-[10px] font-mono px-2 py-0.5 rounded ${tagColor} font-bold">${ev.type}</span>
-              <span class="text-outline font-mono text-[11px]">${new Date(ev.date).toLocaleDateString()}</span>
+          <div class="p-3.5 rounded-xl bg-surface-container border border-outline-variant/20 text-xs flex flex-col justify-between gap-2">
+            <div>
+              <div class="flex items-center justify-between mb-1.5">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded ${tagColor} font-bold">${ev.type}</span>
+                <span class="text-outline font-mono text-[11px]">${new Date(ev.date).toLocaleDateString()}</span>
+              </div>
+              <div class="font-semibold text-on-surface mb-1">${escapeHtml(ev.title)}</div>
+              <div class="text-[10px] text-outline">${escapeHtml(ev.projectCode)} &bull; Status: <span class="text-on-surface font-mono font-medium">${escapeHtml(ev.status || 'Active')}</span></div>
             </div>
-            <div class="font-semibold text-on-surface mb-1">${ev.title}</div>
-            <div class="text-[10px] text-outline">${ev.projectCode} &bull; Status: <span class="text-on-surface font-mono font-medium">${ev.status || 'Active'}</span></div>
+            ${editBtn ? `<div class="pt-2 border-t border-outline-variant/10 flex justify-end">${editBtn}</div>` : ''}
           </div>
         `;
       }).join('');
@@ -3162,6 +3786,8 @@
         const json = await res.json();
         if (!json.success) return;
 
+        window._adminUsersList = json.users;
+
         document.getElementById('usersDirectoryTable').innerHTML = `
           <table class="w-full text-left text-xs">
             <thead>
@@ -3205,7 +3831,11 @@
                     <td class="py-3">
                       <span class="font-mono text-[11px] text-emerald-400 font-semibold">${u.status}</span>
                     </td>
-                    <td class="py-3 text-right">
+                    <td class="py-3 text-right whitespace-nowrap">
+                      <button type="button" onclick="openEditUserModal('${u._id}')" class="px-2.5 py-1 rounded-lg bg-surface-container-high hover:bg-surface-container-highest text-tertiary border border-tertiary/30 text-xs font-medium transition-colors inline-flex items-center gap-1 shadow-sm mr-1.5" title="Edit User Account">
+                        <span class="material-symbols-outlined text-[14px]">edit</span>
+                        <span>Edit</span>
+                      </button>
                       ${isSelf ? `
                         <span class="text-[10px] font-mono text-tertiary px-2 py-0.5 rounded bg-tertiary/10 border border-tertiary/20 font-semibold">Current Account</span>
                       ` : `
@@ -3834,6 +4464,509 @@
         }
       } catch (err) {
         showToast('Error deleting project: ' + err.message, 'error', 'ERROR');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      }
+    }
+
+    // ==========================================
+    // EDIT MODALS CONTROLLER & HANDLERS
+    // ==========================================
+
+    // 1. EDIT USER
+    function toggleEditUserRoleFields() {
+      const role = document.getElementById('editUserRole').value;
+      const studentFields = document.getElementById('editUserStudentFields');
+      const facultyFields = document.getElementById('editUserFacultyFields');
+
+      if (role === 'STUDENT') {
+        if (studentFields) studentFields.classList.remove('hidden');
+        if (facultyFields) facultyFields.classList.add('hidden');
+      } else if (role === 'FACULTY' || role === 'HOD') {
+        if (studentFields) studentFields.classList.add('hidden');
+        if (facultyFields) facultyFields.classList.remove('hidden');
+      } else {
+        if (studentFields) studentFields.classList.add('hidden');
+        if (facultyFields) facultyFields.classList.add('hidden');
+      }
+    }
+
+    async function openEditUserModal(userId) {
+      let user = null;
+      if (window._adminUsersList && window._adminUsersList.length > 0) {
+        user = window._adminUsersList.find(u => (u._id || u.id) === userId);
+      }
+      if (!user) {
+        try {
+          const res = await fetch('/api/admin/users');
+          const json = await res.json();
+          if (json.success && json.users) {
+            window._adminUsersList = json.users;
+            user = json.users.find(u => (u._id || u.id) === userId);
+          }
+        } catch (e) {}
+      }
+
+      if (!user) {
+        showToast('Unable to locate user record.', 'error', 'NOT FOUND');
+        return;
+      }
+
+      document.getElementById('editUserId').value = user._id || user.id;
+      document.getElementById('editUserName').value = user.name || '';
+      document.getElementById('editUserEmail').value = user.email || '';
+      document.getElementById('editUserRole').value = user.role || 'STUDENT';
+      document.getElementById('editUserStatus').value = user.status || 'ACTIVE';
+      if (document.getElementById('editUserDepartment')) {
+        document.getElementById('editUserDepartment').value = user.department || 'Artificial Intelligence & Machine Learning';
+      }
+      if (document.getElementById('editUserRegisterNumber')) {
+        document.getElementById('editUserRegisterNumber').value = user.registerNumber || user.studentId || '';
+      }
+      if (document.getElementById('editUserCategory')) {
+        document.getElementById('editUserCategory').value = user.studentCategory || 'REGULAR';
+      }
+      if (document.getElementById('editUserYear')) {
+        document.getElementById('editUserYear').value = user.academicYear || '4th Year';
+      }
+      if (document.getElementById('editUserSection')) {
+        document.getElementById('editUserSection').value = user.section || 'A';
+      }
+      if (document.getElementById('editUserTitle')) {
+        document.getElementById('editUserTitle').value = user.title || '';
+      }
+      if (document.getElementById('editUserFacultyId')) {
+        document.getElementById('editUserFacultyId').value = user.facultyId || '';
+      }
+      if (document.getElementById('editUserPassword')) {
+        document.getElementById('editUserPassword').value = '';
+      }
+
+      toggleEditUserRoleFields();
+      openModal('editUserModal');
+    }
+
+    async function handleEditUserSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editUserId').value;
+      if (!id) return;
+
+      const btn = document.getElementById('btnSaveEditUser');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span><span>Saving...</span>';
+      }
+
+      const role = document.getElementById('editUserRole').value;
+      const payload = {
+        name: document.getElementById('editUserName').value.trim(),
+        email: document.getElementById('editUserEmail').value.trim(),
+        role: role,
+        status: document.getElementById('editUserStatus').value,
+        department: document.getElementById('editUserDepartment').value,
+      };
+
+      if (role === 'STUDENT') {
+        payload.registerNumber = document.getElementById('editUserRegisterNumber').value.trim();
+        payload.studentCategory = document.getElementById('editUserCategory').value;
+        payload.academicYear = document.getElementById('editUserYear').value;
+        payload.section = document.getElementById('editUserSection').value;
+      } else if (role === 'FACULTY' || role === 'HOD') {
+        payload.title = document.getElementById('editUserTitle').value.trim();
+        payload.facultyId = document.getElementById('editUserFacultyId').value.trim();
+      }
+
+      const pwd = document.getElementById('editUserPassword').value;
+      if (pwd && pwd.trim().length > 0) {
+        payload.password = pwd.trim();
+      }
+
+      try {
+        const res = await fetch(`/api/admin/users/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message || 'User profile updated successfully.', 'success', 'USER UPDATED');
+          closeModal('editUserModal');
+          await loadUsersDirectory();
+          await loadAdminDashboard();
+        } else {
+          showToast(json.message || 'Failed to update user profile.', 'error', 'UPDATE FAILED');
+        }
+      } catch (err) {
+        showToast('Error updating user: ' + err.message, 'error', 'UPDATE FAILED');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      }
+    }
+
+    // 2. EDIT CAPSTONE PROJECT
+    async function openEditProjectModal(projectId) {
+      let project = null;
+      if (adminData && adminData.allProjects) {
+        project = adminData.allProjects.find(p => (p._id || p.id) === projectId);
+      }
+
+      if (!project) {
+        try {
+          const res = await fetch(`/api/projects/${projectId}`);
+          const json = await res.json();
+          if (json.success && json.project) {
+            project = json.project;
+          }
+        } catch (e) {}
+      }
+
+      if (!project) {
+        showToast('Unable to locate project record.', 'error', 'NOT FOUND');
+        return;
+      }
+
+      document.getElementById('editProjId').value = project._id || project.id;
+      document.getElementById('editProjCode').value = project.code || '';
+      document.getElementById('editProjTitle').value = project.title || '';
+      document.getElementById('editProjAbstract').value = project.abstract || project.description || '';
+      document.getElementById('editProjDepartment').value = project.department || 'Artificial Intelligence & Machine Learning';
+      document.getElementById('editProjStatus').value = project.status || 'PLANNING';
+      document.getElementById('editProjHealth').value = project.health || 'ON_TRACK';
+      document.getElementById('editProjRepoUrl').value = project.repositoryUrl || '';
+      document.getElementById('editProjDefenseDate').value = project.defenseDate ? new Date(project.defenseDate).toISOString().split('T')[0] : '';
+
+      // Populate faculty advisor dropdown
+      const mentorSelect = document.getElementById('editProjMentorSelect');
+      if (mentorSelect) {
+        let facultyList = (adminData && adminData.allFaculty) || [];
+        if (facultyList.length === 0 && window._adminUsersList) {
+          facultyList = window._adminUsersList.filter(u => u.role === 'FACULTY' || u.role === 'HOD');
+        }
+
+        const currentMentorId = project.facultyMentor ? (project.facultyMentor._id || project.facultyMentor.id || project.facultyMentor) : '';
+        
+        mentorSelect.innerHTML = '<option value="">None (Unassigned)</option>' +
+          facultyList.map(f => `
+            <option value="${f._id || f.id}" ${currentMentorId && (f._id || f.id).toString() === currentMentorId.toString() ? 'selected' : ''}>
+              ${f.name} (${f.department || 'Faculty'})
+            </option>
+          `).join('');
+      }
+
+      openModal('editProjectAdminModal');
+    }
+
+    async function handleEditProjectAdminSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editProjId').value;
+      if (!id) return;
+
+      const btn = document.getElementById('btnSaveEditProjectAdmin');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span><span>Saving...</span>';
+      }
+
+      const payload = {
+        title: document.getElementById('editProjTitle').value.trim(),
+        abstract: document.getElementById('editProjAbstract').value.trim(),
+        department: document.getElementById('editProjDepartment').value,
+        facultyMentor: document.getElementById('editProjMentorSelect').value || null,
+        status: document.getElementById('editProjStatus').value,
+        health: document.getElementById('editProjHealth').value,
+        repositoryUrl: document.getElementById('editProjRepoUrl').value.trim(),
+        defenseDate: document.getElementById('editProjDefenseDate').value || null,
+      };
+
+      try {
+        const res = await fetch(`/api/admin/projects/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message || 'Capstone project updated successfully.', 'success', 'PROJECT UPDATED');
+          closeModal('editProjectAdminModal');
+          await loadAdminDashboard();
+        } else {
+          showToast(json.message || 'Failed to update project.', 'error', 'UPDATE FAILED');
+        }
+      } catch (err) {
+        showToast('Error updating project: ' + err.message, 'error', 'UPDATE FAILED');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      }
+    }
+
+    // 3. EDIT DEPARTMENT
+    async function openEditDepartmentModal(deptIdOrName, deptDisplayName) {
+      let dept = null;
+      if (adminData && adminData.departmentStatistics) {
+        dept = adminData.departmentStatistics.find(d => (d._id && d._id === deptIdOrName) || d.name === deptIdOrName || d.code === deptIdOrName || d.name === deptDisplayName);
+      }
+
+      const idVal = (dept && dept._id) ? dept._id : (deptIdOrName || '');
+      const codeVal = (dept && dept.code) ? dept.code : (deptIdOrName || 'AIML').substring(0, 5).toUpperCase();
+      const nameVal = (dept && dept.name) ? dept.name : (deptDisplayName || deptIdOrName || '');
+      const headVal = (dept && (dept.head || dept.hod)) ? (dept.head || dept.hod) : '';
+      const descVal = (dept && dept.description) ? dept.description : '';
+
+      document.getElementById('editDeptId').value = idVal;
+      document.getElementById('editDeptCode').value = codeVal;
+      document.getElementById('editDeptName').value = nameVal;
+      document.getElementById('editDeptHeadInput').value = headVal;
+      document.getElementById('editDeptDescription').value = descVal;
+
+      openModal('editDepartmentModal');
+    }
+
+    async function handleEditDepartmentSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editDeptId').value || document.getElementById('editDeptCode').value;
+      if (!id) return;
+
+      const btn = document.getElementById('btnSaveEditDept');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span><span>Saving...</span>';
+      }
+
+      const payload = {
+        name: document.getElementById('editDeptName').value.trim(),
+        code: document.getElementById('editDeptCode').value.trim().toUpperCase(),
+        head: document.getElementById('editDeptHeadInput').value.trim(),
+        description: document.getElementById('editDeptDescription').value.trim(),
+      };
+
+      try {
+        const res = await fetch(`/api/admin/departments/${encodeURIComponent(id)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message || 'Department updated successfully.', 'success', 'DEPARTMENT UPDATED');
+          closeModal('editDepartmentModal');
+          await loadAdminDashboard();
+          if (currentViewingDeptName) {
+            openDepartmentView(payload.name || currentViewingDeptName);
+          }
+        } else {
+          showToast(json.message || 'Failed to update department.', 'error', 'UPDATE FAILED');
+        }
+      } catch (err) {
+        showToast('Error updating department: ' + err.message, 'error', 'UPDATE FAILED');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      }
+    }
+
+    // 4. EDIT COHORT
+    async function openEditCohortModal(cohortCodeOrName) {
+      let cohort = null;
+      if (adminData && adminData.cohortStatistics) {
+        cohort = adminData.cohortStatistics.find(c => (c._id && c._id === cohortCodeOrName) || c.code === cohortCodeOrName || c.name === cohortCodeOrName);
+      }
+
+      const idVal = (cohort && cohort._id) ? cohort._id : (cohortCodeOrName || '');
+      const codeVal = (cohort && cohort.code) ? cohort.code : (cohortCodeOrName || 'C-2025');
+      const nameVal = (cohort && cohort.name) ? cohort.name : (cohortCodeOrName || 'AY 2024-2025');
+      const termVal = (cohort && cohort.term) ? cohort.term : 'AY24-25';
+      const yearVal = (cohort && cohort.year) ? cohort.year : 2025;
+      const statusVal = (cohort && cohort.status) ? cohort.status : 'ACTIVE';
+      const deptVal = (cohort && cohort.department) ? cohort.department : 'Artificial Intelligence & Machine Learning';
+
+      document.getElementById('editCohortId').value = idVal;
+      document.getElementById('editCohortCode').value = codeVal;
+      document.getElementById('editCohortName').value = nameVal;
+      document.getElementById('editCohortTerm').value = termVal;
+      document.getElementById('editCohortYear').value = yearVal;
+      document.getElementById('editCohortStatus').value = statusVal;
+      document.getElementById('editCohortDept').value = deptVal;
+
+      openModal('editCohortModal');
+    }
+
+    async function handleEditCohortSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editCohortId').value || document.getElementById('editCohortCode').value;
+      if (!id) return;
+
+      const btn = document.getElementById('btnSaveEditCohort');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span><span>Saving...</span>';
+      }
+
+      const payload = {
+        name: document.getElementById('editCohortName').value.trim(),
+        code: document.getElementById('editCohortCode').value.trim().toUpperCase(),
+        term: document.getElementById('editCohortTerm').value,
+        year: Number(document.getElementById('editCohortYear').value),
+        status: document.getElementById('editCohortStatus').value,
+        department: document.getElementById('editCohortDept').value.trim(),
+      };
+
+      try {
+        const res = await fetch(`/api/admin/cohorts/${encodeURIComponent(id)}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message || 'Cohort updated successfully.', 'success', 'COHORT UPDATED');
+          closeModal('editCohortModal');
+          await loadAdminDashboard();
+          if (currentViewingCohortName) {
+            openCohortView(payload.name || currentViewingCohortName);
+          }
+        } else {
+          showToast(json.message || 'Failed to update cohort.', 'error', 'UPDATE FAILED');
+        }
+      } catch (err) {
+        showToast('Error updating cohort: ' + err.message, 'error', 'UPDATE FAILED');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      }
+    }
+
+    // 5. EDIT DOCUMENT
+    function openEditDocumentModal(docId, title, category, version) {
+      document.getElementById('editDocId').value = docId || '';
+      document.getElementById('editDocTitle').value = title || '';
+      if (document.getElementById('editDocCategory')) {
+        document.getElementById('editDocCategory').value = category || 'Specification';
+      }
+      if (document.getElementById('editDocVersion')) {
+        document.getElementById('editDocVersion').value = version || 'v1.0';
+      }
+      openModal('editDocumentModal');
+    }
+
+    async function handleEditDocumentSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editDocId').value;
+      if (!id) return;
+
+      const btn = document.getElementById('btnSaveEditDoc');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span><span>Saving...</span>';
+      }
+
+      const payload = {
+        title: document.getElementById('editDocTitle').value.trim(),
+        category: document.getElementById('editDocCategory').value,
+        version: document.getElementById('editDocVersion').value.trim(),
+      };
+
+      try {
+        const res = await fetch(`/api/documents/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message || 'Document updated successfully.', 'success', 'DOCUMENT UPDATED');
+          closeModal('editDocumentModal');
+          loadAdminDocuments();
+        } else {
+          showToast(json.message || 'Failed to update document.', 'error', 'UPDATE FAILED');
+        }
+      } catch (err) {
+        showToast('Error updating document: ' + err.message, 'error', 'UPDATE FAILED');
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = origHtml;
+        }
+      }
+    }
+
+    // 6. EDIT MILESTONE
+    function openEditMilestoneModal(id, title, desc, dueDate, status, deliverableUrl) {
+      document.getElementById('editMilestoneId').value = id || '';
+      document.getElementById('editMilestoneTitle').value = title || '';
+      document.getElementById('editMilestoneDesc').value = desc || '';
+      
+      let formattedDate = '';
+      if (dueDate) {
+        try {
+          formattedDate = new Date(dueDate).toISOString().split('T')[0];
+        } catch (e) {
+          formattedDate = dueDate;
+        }
+      }
+      document.getElementById('editMilestoneDueDate').value = formattedDate;
+      document.getElementById('editMilestoneStatus').value = status || 'PENDING';
+      document.getElementById('editMilestoneDeliverable').value = deliverableUrl || '';
+
+      openModal('editMilestoneModal');
+    }
+
+    async function handleEditMilestoneSubmit(e) {
+      e.preventDefault();
+      const id = document.getElementById('editMilestoneId').value;
+      if (!id) return;
+
+      const btn = document.getElementById('btnSaveEditMilestone');
+      const origHtml = btn ? btn.innerHTML : '';
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<span class="material-symbols-outlined animate-spin text-sm">progress_activity</span><span>Saving...</span>';
+      }
+
+      const payload = {
+        title: document.getElementById('editMilestoneTitle').value.trim(),
+        description: document.getElementById('editMilestoneDesc').value.trim(),
+        dueDate: document.getElementById('editMilestoneDueDate').value,
+        status: document.getElementById('editMilestoneStatus').value,
+        deliverableUrl: document.getElementById('editMilestoneDeliverable').value.trim(),
+      };
+
+      try {
+        const res = await fetch(`/api/milestones/${id}`, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const json = await res.json();
+        if (json.success) {
+          showToast(json.message || 'Milestone updated successfully.', 'success', 'MILESTONE UPDATED');
+          closeModal('editMilestoneModal');
+          if (currentViewingCohortName) {
+            openCohortView(currentViewingCohortName);
+          }
+          loadCalendar();
+        } else {
+          showToast(json.message || 'Failed to update milestone.', 'error', 'UPDATE FAILED');
+        }
+      } catch (err) {
+        showToast('Error updating milestone: ' + err.message, 'error', 'UPDATE FAILED');
       } finally {
         if (btn) {
           btn.disabled = false;

@@ -13,6 +13,7 @@ router.post('/users', requireHOD, adminController.createUser); // HOD CAN ADD US
 // Strictly ADMIN ONLY (HOD is blocked from removing users or changing structure)
 router.put('/users/:id', requireAdmin, adminController.updateUser);
 router.delete('/users/:id', requireAdmin, adminController.deleteUser); // HOD CANNOT REMOVE USERS!
+router.put('/projects/:id', requireAdmin, adminController.updateProjectAdmin);
 router.put('/projects/:id/faculty', requireAdmin, adminController.assignFacultyMentor);
 router.put('/projects/:id/status', requireAdmin, adminController.updateProjectStatus);
 
@@ -24,6 +25,7 @@ router.put('/departments/:id', requireAdmin, adminController.updateDepartment);
 
 router.get('/cohorts', requireHOD, adminController.getCohorts);
 router.post('/cohorts', requireAdmin, adminController.createCohort);
+router.put('/cohorts/:id', requireAdmin, adminController.updateCohort);
 router.get('/audit-trail', requireHOD, adminController.getAuditTrail);
 
 module.exports = router;
