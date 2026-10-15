@@ -645,3 +645,115 @@ html.light .progress-line-graph-widget > div:last-child {
   background-color: #ffffff !important;
   border-color: #e2e8f0 !important;
 }
+
+/* --------------------------------------------------------- */
+/* 10. SCREENSHOT ENHANCEMENTS & LIGHT THEME CONTRAST POLISH */
+/* --------------------------------------------------------- */
+
+/* Student Sidebar Active Cohort Card (Fix for Screenshot 1) */
+html.light .student-cohort-badge {
+  background-color: #f8fafc !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .student-cohort-badge #sideCohortTitle {
+  color: #0f172a !important;
+  font-weight: 700 !important;
+}
+
+html.light .student-cohort-badge #sideDeptTitle {
+  color: #475569 !important;
+  font-weight: 500 !important;
+}
+
+html.light .student-cohort-badge .student-icon-pill {
+  background-color: #ede9fe !important;
+  color: #4338ca !important;
+}
+
+html.light .student-cohort-badge .student-role-pill {
+  background-color: #e0e7ff !important;
+  color: #3730a3 !important;
+  border-color: #c7d2fe !important;
+  font-weight: 700 !important;
+}
+
+/* Super Dream Active Cohort Card */
+html.light .superdream-cohort-badge {
+  background-color: #fffbeb !important;
+  border-color: #fcd34d !important;
+  box-shadow: 0 1px 3px 0 rgba(245, 158, 11, 0.08) !important;
+}
+
+html.light .superdream-cohort-badge #sideCohortTitle {
+  color: #92400e !important;
+  font-weight: 700 !important;
+}
+
+html.light .superdream-cohort-badge #sideMentorName {
+  color: #78350f !important;
+  font-weight: 500 !important;
+}
+
+html.light .superdream-cohort-badge .superdream-icon-pill {
+  background-color: #fde68a !important;
+  color: #92400e !important;
+}
+
+html.light .superdream-cohort-badge .superdream-role-pill {
+  background-color: #fde68a !important;
+  color: #92400e !important;
+  border-color: #f59e0b !important;
+  font-weight: 700 !important;
+}
+
+/* Super Dream Designated Faculty Mentor Spotlight Banner (Fix for Screenshot 2 & 3) */
+#assignedMentorBanner {
+  background: linear-gradient(135deg, rgba(245, 158, 11, 0.12) 0%, rgba(245, 158, 11, 0.04) 50%, rgba(245, 158, 11, 0.01) 100%);
+  border-color: rgba(245, 158, 11, 0.35);
+}
+
+html.light #assignedMentorBanner {
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 45%, #ffffff 100%) !important;
+  border-color: #f59e0b !important;
+  box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.15), 0 4px 6px -2px rgba(245, 158, 11, 0.05) !important;
+}
+
+html.light #assignedMentorBanner #mentorNameDisplay {
+  color: #0f172a !important;
+}
+
+html.light #assignedMentorBanner #mentorTitleDisplay {
+  color: #475569 !important;
+}
+
+html.light #assignedMentorBanner a#mentorEmailLink {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #1e293b !important;
+}
+
+html.light #assignedMentorBanner a#mentorEmailLink:hover {
+  background-color: #f8fafc !important;
+}
+
+html.dark #assignedMentorBanner {
+  background: linear-gradient(to right, rgba(245, 158, 11, 0.15), #181b25, #1c1f29) !important;
+  border-color: rgba(245, 158, 11, 0.35) !important;
+}
+
+/* Eliminate dark translucent blocks in light mode */
+html.light .bg-surface-container-high\/60,
+html.light .bg-surface-container-high\/50,
+html.light .bg-surface-container-high\/40,
+html.light .bg-surface-container-high\/30 {
+  background-color: #f1f5f9 !important;
+}
+
+html.light .bg-surface-container\/60,
+html.light .bg-surface-container\/50,
+html.light .bg-surface-container\/40,
+html.light .bg-surface-container\/30 {
+  background-color: #f8fafc !important;
+}

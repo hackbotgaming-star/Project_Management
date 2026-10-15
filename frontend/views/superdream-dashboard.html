@@ -97,17 +97,17 @@
       </div>
 
       <!-- Super Dream Badge -->
-      <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
+      <div class="superdream-cohort-badge p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between">
         <div class="flex items-center gap-2 overflow-hidden">
-          <div class="w-6 h-6 rounded bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs font-mono font-bold">
+          <div class="superdream-icon-pill w-7 h-7 rounded-lg bg-amber-500/20 text-amber-300 flex items-center justify-center text-xs font-mono font-bold shrink-0">
             SD
           </div>
           <div class="truncate">
-            <div id="sideCohortTitle" class="text-xs font-semibold text-amber-300 truncate">3rd Year Super Dream</div>
+            <div id="sideCohortTitle" class="text-xs font-bold text-amber-300 truncate">3rd Year Super Dream</div>
             <div id="sideMentorName" class="text-[10px] text-outline truncate">Faculty Mentor Assigned</div>
           </div>
         </div>
-        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold">HONORS</span>
+        <span class="superdream-role-pill text-[10px] font-mono px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-300 border border-amber-500/40 font-bold shrink-0">HONORS</span>
       </div>
 
       <!-- Primary Action Buttons: Create Project & Create Task -->
@@ -228,7 +228,7 @@
             AI&ML 3RD YEAR HONORS
           </span>
           <span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-          <span id="headerAcademicBadge" class="text-xs text-outline">Section A &bull; Super Dream</span>
+          <span id="headerAcademicBadge" class="text-xs text-outline">Section A • Super Dream</span>
         </div>
         <h1 id="pageTitle" class="font-headline text-2xl font-bold text-on-surface tracking-tight mt-0.5">Super Dream Overview</h1>
       </div>
@@ -249,7 +249,7 @@
     <section id="tab-overview" class="tab-pane space-y-6">
 
       <!-- Assigned Mentor Spotlight Banner -->
-      <div id="assignedMentorBanner" class="p-6 rounded-2xl bg-gradient-to-r from-amber-500/15 via-surface-container-low to-surface-container-low border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-lg shadow-amber-500/5">
+      <div id="assignedMentorBanner" class="p-6 rounded-2xl border border-amber-500/30 flex flex-col md:flex-row md:items-center justify-between gap-4 shadow-lg shadow-amber-500/5 transition-all">
         <div class="flex items-center gap-4">
           <img id="mentorAvatar" src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150" class="w-14 h-14 rounded-2xl object-cover border-2 border-amber-500/50 shadow-md">
           <div class="space-y-1">
@@ -258,7 +258,7 @@
               YOUR DESIGNATED FACULTY MENTOR
             </div>
             <h3 id="mentorNameDisplay" class="font-headline font-bold text-lg text-on-surface">Dr. Aris Thorne</h3>
-            <p id="mentorTitleDisplay" class="text-xs text-outline font-medium">Associate Professor &bull; AI &amp; Deep Learning Research Lead</p>
+            <p id="mentorTitleDisplay" class="text-xs text-outline font-medium">Associate Professor • AI &amp; Deep Learning Research Lead</p>
           </div>
         </div>
         <div class="flex items-center gap-2 pt-2 md:pt-0">
@@ -365,7 +365,7 @@
         </div>
         <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/30 text-xs space-y-1">
           <div class="text-outline font-mono text-[10px]">MENTORSHIP SCOPE</div>
-          <div class="text-amber-300 font-semibold">1:1 Advising &bull; Sprint Reviews &bull; Placement Guidance</div>
+          <div class="text-amber-300 font-semibold">1:1 Advising • Sprint Reviews • Placement Guidance</div>
           <div class="text-outline text-[11px]">Direct communications are encrypted &amp; logged.</div>
         </div>
       </div>
@@ -845,7 +845,7 @@
       document.getElementById('userName').textContent = p.name;
       if (p.avatar) document.getElementById('userAvatar').src = p.avatar;
 
-      document.getElementById('headerAcademicBadge').textContent = `${p.academicYear || '3rd Year'} &bull; Sec ${p.section || 'A'}`;
+      document.getElementById('headerAcademicBadge').textContent = `${p.academicYear || '3rd Year'} • Sec ${p.section || 'A'}`;
       document.getElementById('sideCohortTitle').textContent = `AI&ML - ${p.academicYear || '3rd Year'} (Sec ${p.section || 'A'})`;
 
       // Stat Counters
@@ -862,13 +862,13 @@
       if (mentor) {
         document.getElementById('sideMentorName').textContent = `Mentor: ${mentor.name}`;
         document.getElementById('mentorNameDisplay').textContent = mentor.name;
-        document.getElementById('mentorTitleDisplay').textContent = `${mentor.title || 'Faculty Advisor'} &bull; ${mentor.department || 'AI&ML'}`;
+        document.getElementById('mentorTitleDisplay').textContent = `${mentor.title || 'Faculty Advisor'} • ${mentor.department || 'AI&ML'}`;
         if (mentor.avatar) document.getElementById('mentorAvatar').src = mentor.avatar;
         document.getElementById('mentorEmailLink').href = `mailto:${mentor.email}`;
 
         document.getElementById('hubMentorName').textContent = mentor.name;
         document.getElementById('hubMentorEmail').textContent = mentor.email;
-        document.getElementById('hubMentorDept').textContent = `${mentor.department || 'AI&ML'} &bull; ${mentor.title || 'Faculty Advisor'}`;
+        document.getElementById('hubMentorDept').textContent = `${mentor.department || 'AI&ML'} • ${mentor.title || 'Faculty Advisor'}`;
         if (mentor.avatar) document.getElementById('hubMentorAvatar').src = mentor.avatar;
       } else {
         document.getElementById('sideMentorName').textContent = 'Faculty Mentor Assigned';
@@ -927,7 +927,7 @@
           <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center justify-between">
             <div class="overflow-hidden pr-2">
               <div class="font-semibold text-on-surface truncate">${t.title}</div>
-              <div class="text-[10px] text-outline">${t.project ? t.project.title : 'Project'} &bull; Due ${new Date(t.dueDate).toLocaleDateString()}</div>
+              <div class="text-[10px] text-outline">${t.project ? t.project.title : 'Project'} • Due ${new Date(t.dueDate).toLocaleDateString()}</div>
             </div>
             <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 font-bold shrink-0">${t.priority}</span>
           </div>
@@ -943,7 +943,7 @@
           <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20 flex items-center justify-between">
             <div class="overflow-hidden pr-2">
               <div class="font-semibold text-on-surface truncate">${d.title}</div>
-              <div class="text-[10px] text-outline">${d.project} &bull; Due ${new Date(d.dueDate).toLocaleDateString()}</div>
+              <div class="text-[10px] text-outline">${d.project} • Due ${new Date(d.dueDate).toLocaleDateString()}</div>
             </div>
             <span class="text-[10px] font-mono px-2 py-0.5 rounded ${d.type === 'MILESTONE' ? 'bg-secondary/20 text-secondary' : 'bg-primary/20 text-primary'} font-bold shrink-0">${d.type}</span>
           </div>
@@ -977,7 +977,7 @@
               <img src="${peer.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-8 h-8 rounded-full object-cover border border-amber-500/30">
               <div class="overflow-hidden">
                 <div class="font-semibold text-xs text-on-surface truncate">${peer.name}</div>
-                <div class="text-[10px] text-outline font-mono truncate">${peer.studentId || 'SCHOLAR'} &bull; Sec ${peer.section || 'A'}</div>
+                <div class="text-[10px] text-outline font-mono truncate">${peer.studentId || 'SCHOLAR'} • Sec ${peer.section || 'A'}</div>
               </div>
             </div>
           `).join('');
@@ -1020,7 +1020,7 @@
                 <div class="text-xs text-outline font-mono">${p.email}</div>
                 <div class="flex items-center gap-2 mt-1">
                   <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-bold border border-amber-500/30">⭐ SUPER DREAM</span>
-                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-outline">${p.academicYear || '3rd Year'} &bull; Sec ${p.section || 'A'}</span>
+                  <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-surface-container-high text-outline">${p.academicYear || '3rd Year'} • Sec ${p.section || 'A'}</span>
                 </div>
               </div>
             </div>

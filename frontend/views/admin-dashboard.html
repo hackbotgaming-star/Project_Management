@@ -220,16 +220,13 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2.5">
-        <button onclick="openModal('createUserModal')" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-on-surface hover:bg-surface-container transition-colors flex items-center gap-1.5 shadow-sm">
+        <button onclick="openModal('createUserModal')" class="px-3.5 py-2 rounded-xl bg-surface-container-high hover:bg-surface-container-highest border border-outline-variant/30 text-xs font-semibold text-on-surface transition-colors flex items-center gap-2 shadow-sm">
           <span class="material-symbols-outlined text-sm">person_add</span>
           <span>Add User</span>
         </button>
-        <button onclick="openModal('adminNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-tertiary text-black font-semibold text-xs hover:bg-emerald-400 transition-colors flex items-center gap-1.5 shadow-sm">
+        <button onclick="openModal('adminNewProjectModal')" class="px-3.5 py-2 rounded-xl bg-tertiary hover:bg-emerald-400 text-black font-semibold text-xs transition-colors flex items-center gap-2 shadow-sm">
           <span class="material-symbols-outlined text-sm">add_circle</span>
           <span>New Project</span>
-        </button>
-        <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface hover:bg-surface-container transition-colors">
-          Logout
         </button>
       </div>
     </header>
@@ -1715,7 +1712,19 @@
       if (pane) pane.classList.remove('hidden');
       const navBtn = document.getElementById(`nav-${tabId}`);
       if (navBtn) navBtn.className = 'adm-nav-item flex items-center gap-3 px-3 py-2 text-xs font-medium rounded-lg text-tertiary bg-surface-container-high';
-      const pageTitleText = tabId.charAt(0).toUpperCase() + tabId.slice(1).replace('-', ' ');
+      const titleMap = {
+        'overview': 'Institutional Overview',
+        'projects': 'Capstone Projects Directory',
+        'faculty-assignment': 'Faculty Mentor Allocation',
+        'departments': 'Department Oversight',
+        'cohorts': 'Cohort Management',
+        'users': 'User Accounts Management',
+        'documents': 'Institutional Document Repository',
+        'analytics': 'Performance & Risk Analytics',
+        'audit': 'Institutional Audit Trail',
+        'od-management': 'On-Duty (OD) Management'
+      };
+      const pageTitleText = titleMap[tabId] || (tabId.charAt(0).toUpperCase() + tabId.slice(1).replace('-', ' '));
       document.getElementById('pageTitle').textContent = pageTitleText;
 
       closeMobileSidebar();
@@ -1724,7 +1733,6 @@
       if (tabId === 'documents') loadAdminDocuments();
       if (tabId === 'analytics') renderAnalyticsTab(adminData);
       if (tabId === 'od-management') {
-        document.getElementById('pageTitle').textContent = 'OD Management';
         loadAdminOdRequests();
       }
       if (tabId === 'cohorts' && adminData) {
