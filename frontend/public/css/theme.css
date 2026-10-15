@@ -126,7 +126,7 @@ html.light {
 
 /* Background & Base Typography */
 html.light body {
-  background-color: #f1f5f9 !important; /* Slate 100 */
+  background-color: #f8fafc !important; /* Crisp, bright Slate 50 canvas */
   color: #0f172a !important;            /* Slate 900 */
 }
 
@@ -138,22 +138,27 @@ html.light .bg-surface-container-lowest {
 }
 html.light .bg-surface-container-low {
   background-color: #ffffff !important;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05) !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03) !important;
 }
 html.light .bg-surface-container {
-  background-color: #f8fafc !important; /* Crisp light slate */
+  background-color: #f8fafc !important; /* Clean soft slate for nested strips */
+  border-color: #e2e8f0 !important;
 }
 html.light .bg-surface-container-high {
-  background-color: #e2e8f0 !important;
+  background-color: #f1f5f9 !important; /* Soft Slate 100 instead of dark muddy #e2e8f0 */
+  border-color: #cbd5e1 !important;
+  color: #334155 !important;
 }
 html.light .bg-surface-container-highest {
-  background-color: #cbd5e1 !important;
+  background-color: #e2e8f0 !important;
+  color: #1e293b !important;
 }
 html.light .bg-surface {
   background-color: #ffffff !important;
 }
 html.light .bg-background {
-  background-color: #f1f5f9 !important;
+  background-color: #f8fafc !important;
 }
 
 /* --------------------------------------------------------- */
@@ -205,7 +210,7 @@ html.light aside {
   border-right-color: #e2e8f0 !important;
 }
 html.light header {
-  background-color: #ffffff !important;
+  background-color: transparent !important;
   border-bottom-color: #e2e8f0 !important;
 }
 
@@ -779,3 +784,218 @@ html.light .bg-surface-container\/40,
 html.light .bg-surface-container\/30 {
   background-color: #f8fafc !important;
 }
+
+/* --------------------------------------------------------- */
+/* 11. LIGHT THEME POLISH FOR TABS: OVERVIEW, PROJECTS,      */
+/*     DOCUMENTS, TASKS & WORKSPACES                         */
+/* --------------------------------------------------------- */
+
+/* Main Content Area Canvas */
+html.light main {
+  background-color: #f8fafc !important;
+}
+
+/* Header Action Pills & Mentor Banner in Light Mode */
+html.light header .bg-surface-container {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Tab 1: Overview - Metric Cards & Project Hero */
+html.light #tab-overview .bg-surface-container-low,
+html.light #primaryProjectCard {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light #projStatusBarGraphWrap,
+html.light .progress-line-graph-widget .bg-surface-container\/30 {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #milestoneSubmitList > div,
+html.light #deadlinesList > div {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02) !important;
+}
+
+html.light #milestoneSubmitList > div:hover,
+html.light #deadlinesList > div:hover {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Tab 2: My Projects - Project Cards & Controls */
+html.light #projectsFullList > div,
+html.light #tab-projects .bg-surface-container-low {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #projectsFullList > div:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #projectsFullList .bg-surface-container-high {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #334155 !important;
+  font-weight: 600 !important;
+}
+
+html.light #projectsFullList .bg-surface-container {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #1e293b !important;
+}
+
+/* Tab 3: My Tasks - Cards, Chips, Filters & Dropdowns */
+html.light #tasksFullList > div,
+html.light #tab-tasks .bg-surface-container-low {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #tasksFullList > div:hover {
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.06), 0 2px 4px -2px rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #tasksFullList .bg-surface-container-high {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+  font-weight: 600 !important;
+}
+
+html.light #tasksFullList select {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  color: #0f172a !important;
+  font-weight: 600 !important;
+}
+
+/* Tab 6: Documents - Container, Rows, Icons, Download Buttons */
+html.light #documentsContainer {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #documentsContainer > div {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.02) !important;
+  transition: all 0.2s ease !important;
+}
+
+html.light #documentsContainer > div:hover {
+  background-color: #ffffff !important;
+  border-color: #cbd5e1 !important;
+  box-shadow: 0 3px 6px 0 rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light #documentsContainer .bg-surface-container-high:not(a) {
+  background-color: #eef2ff !important; /* Soft indigo-50 */
+  border: 1px solid #e0e7ff !important;
+  color: #4f46e5 !important;            /* Vibrant Indigo-600 */
+}
+
+html.light #documentsContainer a.bg-surface-container-high {
+  background-color: #ffffff !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #4338ca !important;
+  font-weight: 600 !important;
+}
+
+html.light #documentsContainer a.bg-surface-container-high:hover {
+  background-color: #eef2ff !important;
+  border-color: #c7d2fe !important;
+  color: #3730a3 !important;
+}
+
+/* Tab 4 & 5: Milestones & Calendar */
+html.light #milestonesFullList > div,
+html.light #tab-calendar .bg-surface-container-low,
+html.light #tab-calendar .bg-surface-container {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #calendarDaysGrid > div {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #calendarDaysGrid > div:hover {
+  background-color: #ede9fe !important;
+  border-color: #c7d2fe !important;
+}
+
+/* Tab 7: Team Roster Cards */
+html.light #teamFullRoster > div {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Tab 8: Notifications */
+html.light #notificationsFullList {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #notificationsFullList > div {
+  background-color: #f8fafc !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light #notificationsFullList > div.bg-primary\/5 {
+  background-color: #eef2ff !important;
+  border-color: #c7d2fe !important;
+}
+
+/* Tab 9 & 10: Profile & Settings */
+html.light #profileContainer,
+html.light #tab-settings .bg-surface-container-low {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light #tab-settings .bg-surface-container {
+  background-color: #f8fafc !important;
+}
+
+/* Faculty & Admin Dashboard Workspaces in Light Mode */
+html.light .fac-card,
+html.light .admin-card,
+html.light section.tab-pane .bg-surface-container-low {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04) !important;
+}
+
+html.light table thead tr {
+  background-color: #f8fafc !important;
+  border-bottom-color: #e2e8f0 !important;
+}
+
+html.light table tbody tr {
+  background-color: #ffffff !important;
+  border-bottom-color: #f1f5f9 !important;
+}
+
+html.light table tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
