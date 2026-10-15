@@ -226,17 +226,17 @@
         <h1 id="pageTitle" class="font-headline text-2xl font-bold text-on-surface tracking-tight mt-0.5">Overview</h1>
       </div>
 
-      <div class="flex flex-wrap items-center gap-2.5">
-        <button onclick="openModal('studentNewProjectModal')" class="px-3 py-1.5 rounded-lg bg-primary-container text-on-primary font-medium text-xs hover:bg-indigo-600 transition-colors flex items-center gap-1.5 shadow-sm">
-          <span class="material-symbols-outlined text-sm">add</span>
-          <span>New Project</span>
-        </button>
+      <div class="flex flex-wrap items-center gap-3">
         <!-- Faculty Mentor Direct Link -->
-        <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-surface-container border border-outline-variant/30 text-xs">
-          <span class="text-outline">Assigned Mentor:</span>
-          <span id="headerMentorName" class="font-medium text-secondary truncate max-w-[140px]">Dr. Aris Thorne</span>
-        <button onclick="handleLogout()" class="px-3 py-1.5 rounded-lg border border-outline-variant/30 text-xs text-outline hover:text-on-surface hover:bg-surface-container transition-colors">
-          Logout
+        <div class="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-surface-container border border-outline-variant/30 text-xs shadow-sm">
+          <span class="material-symbols-outlined text-sm text-secondary">school</span>
+          <span class="text-outline font-medium">Assigned Mentor:</span>
+          <span id="headerMentorName" class="font-bold text-secondary truncate max-w-[160px]">Dr. Aris Thorne</span>
+        </div>
+
+        <button onclick="openModal('studentNewProjectModal')" class="px-4 py-2 rounded-xl bg-primary-container text-on-primary font-semibold text-xs hover:bg-indigo-600 transition-colors flex items-center gap-1.5 shadow-sm">
+          <span class="material-symbols-outlined text-sm">add_circle</span>
+          <span>New Project</span>
         </button>
       </div>
     </header>
@@ -253,18 +253,21 @@
     </div>
 
     <!-- Super Dream Scholar Promotion Banner (Only shown if student is enrolled in Super Dream) -->
-    <div id="superDreamEnrolledBanner" class="hidden mb-6 p-4 rounded-2xl bg-gradient-to-r from-amber-500/20 via-surface-container-low to-surface-container-low border border-amber-500/40 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg shadow-amber-500/5">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 shrink-0">
-          <span class="material-symbols-outlined text-xl filled">stars</span>
+    <div id="superDreamEnrolledBanner" class="superdream-promo-banner hidden mb-6 p-5 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg transition-all">
+      <div class="flex items-center gap-3.5">
+        <div class="w-11 h-11 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-300 shrink-0 shadow-sm">
+          <span class="material-symbols-outlined text-2xl filled text-amber-400">stars</span>
         </div>
-        <div>
-          <div class="text-xs font-bold text-amber-300">⭐ You are enrolled in 3rd Year Super Dream Track!</div>
-          <p class="text-[11px] text-outline">You have access to a dedicated honors workspace with direct 1-on-1 faculty mentorship and specialized milestones.</p>
+        <div class="space-y-0.5">
+          <div class="text-xs font-bold text-amber-400 flex items-center gap-1.5">
+            <span>⭐ You are enrolled in 3rd Year Super Dream Track!</span>
+          </div>
+          <p id="superDreamBannerSub" class="text-xs text-outline leading-relaxed">You have access to a dedicated honors workspace with direct 1-on-1 faculty mentorship and specialized milestones.</p>
         </div>
       </div>
-      <a href="/superdream/dashboard" class="px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-semibold text-xs transition-colors flex items-center gap-1.5 shadow-sm whitespace-nowrap self-start sm:self-auto">
-        <span>Open Super Dream Dashboard &rarr;</span>
+      <a href="/superdream/dashboard" class="px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs transition-colors flex items-center gap-2 shadow-sm whitespace-nowrap self-start sm:self-auto shrink-0">
+        <span>Open Super Dream Dashboard</span>
+        <span class="material-symbols-outlined text-sm">arrow_forward</span>
       </a>
     </div>
 
