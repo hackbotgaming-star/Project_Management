@@ -12,11 +12,28 @@ async function runTests() {
   // Start app
   const app = require('../backend/server');
 
-  // Wait 2 seconds for DB and server to settle
-  await new Promise((r) => setTimeout(r, 2000));
-
   const PORT = process.env.PORT || 5000;
   const baseUrl = `http://localhost:${PORT}`;
+
+  // Wait for DB and server to be ready
+  console.log('Waiting for server to become responsive...');
+  let ready = false;
+  for (let i = 0; i < 30; i++) {
+    try {
+      const res = await fetch(`${baseUrl}/api/health`);
+      if (res.ok) {
+        ready = true;
+        break;
+      }
+    } catch (e) {
+      // Server not listening yet
+    }
+    await new Promise((r) => setTimeout(r, 500));
+  }
+  if (!ready) {
+    throw new Error('Server did not start within 15 seconds.');
+  }
+  console.log('Server is online and ready.');
 
   async function apiPost(endpoint, body, cookie = '') {
     const res = await fetch(`${baseUrl}${endpoint}`, {
