@@ -37,6 +37,7 @@ exports.createUser = async (req, res) => {
       cohort,
       title,
       studentId,
+      registerNumber,
       facultyId,
       studentCategory,
       academicYear,
@@ -57,6 +58,12 @@ exports.createUser = async (req, res) => {
     const yr = academicYear || '3rd Year';
     const sec = (section ? section.toUpperCase().trim() : 'A') === 'B' ? 'B' : 'A';
     const isRoleStudent = role.toUpperCase() === 'STUDENT';
+    const regNo = (registerNumber || studentId || '').trim();
+
+    if (isRoleStudent && !regNo) {
+      return res.status(400).json({ success: false, message: 'Register Number is required when adding a student.' });
+    }
+
     const wantsSuperDream = (studentCategory === 'SUPER_DREAM' || isSuperDream === true || isSuperDream === 'true');
 
     // Super Dream option is STRICTLY restricted to 3rd Year Students!
@@ -92,7 +99,8 @@ exports.createUser = async (req, res) => {
       section: sec,
       cohort: defaultCohort,
       title: userTitle,
-      studentId: studentId || (isRoleStudent ? `STU-${Date.now().toString().slice(-4)}` : null),
+      registerNumber: isRoleStudent ? regNo : null,
+      studentId: isRoleStudent ? regNo : null,
       facultyId: facultyId || (role.toUpperCase() === 'FACULTY' || role.toUpperCase() === 'HOD' ? `FAC-${Date.now().toString().slice(-4)}` : null),
       studentCategory: isRoleStudent ? normalizedCategory : 'REGULAR',
       mentor: assignedMentorId,
@@ -412,7 +420,7 @@ exports.getDepartmentDetails = async (req, res) => {
     const students = await User.find({
       role: 'STUDENT',
       $or: [{ department: department.name }, { department: department.code }]
-    }).select('name email avatar studentId cohort title status createdAt');
+    }).select('name email avatar registerNumber studentId cohort title status createdAt');
 
     // Find faculty belonging to this department
     const faculty = await User.find({

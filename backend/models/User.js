@@ -42,9 +42,15 @@ const UserSchema = new mongoose.Schema(
       type: String,
       default: 'AI&ML - 3rd Year (Section A)',
     },
+    registerNumber: {
+      type: String,
+      default: null,
+      trim: true,
+    },
     studentId: {
       type: String,
       default: null,
+      trim: true,
     },
     studentCategory: {
       type: String,

@@ -978,7 +978,7 @@
               <img src="${peer.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-8 h-8 rounded-full object-cover border border-amber-500/30">
               <div class="overflow-hidden">
                 <div class="font-semibold text-xs text-on-surface truncate">${peer.name}</div>
-                <div class="text-[10px] text-outline font-mono truncate">${peer.studentId || 'SCHOLAR'} • Sec ${peer.section || 'A'}</div>
+                <div class="text-[10px] text-outline font-mono truncate">${peer.registerNumber || peer.studentId || 'SCHOLAR'} • Sec ${peer.section || 'A'}</div>
               </div>
             </div>
           `).join('');
@@ -1002,7 +1002,7 @@
               <img src="${m.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-8 h-8 rounded-full object-cover border border-outline-variant/30">
               <div class="overflow-hidden">
                 <div class="font-semibold text-xs text-on-surface truncate">${m.name}</div>
-                <div class="text-[10px] text-outline font-mono truncate">${m.studentId || 'STUDENT'}</div>
+                <div class="text-[10px] text-outline font-mono truncate">${m.registerNumber || m.studentId || 'STUDENT'}</div>
               </div>
             </div>
           `).join('');
@@ -1027,8 +1027,8 @@
             </div>
             <div class="grid grid-cols-2 gap-3 text-xs">
               <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20">
-                <div class="text-outline text-[10px] font-mono">STUDENT ID</div>
-                <div class="text-on-surface font-bold mt-0.5">${p.studentId || 'STU-AIML-301'}</div>
+                <div class="text-outline text-[10px] font-mono">REGISTER NUMBER</div>
+                <div class="text-on-surface font-bold mt-0.5">${p.registerNumber || p.studentId || 'REG-AIML-301'}</div>
               </div>
               <div class="p-3 rounded-xl bg-surface-container border border-outline-variant/20">
                 <div class="text-outline text-[10px] font-mono">DEPARTMENT</div>

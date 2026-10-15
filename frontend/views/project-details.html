@@ -961,7 +961,7 @@
               <img src="${avatarSrc}" alt="${m.name}" class="w-9 h-9 rounded-lg object-cover border border-outline-variant/30 shrink-0" onerror="this.src='https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80'">
               <div class="min-w-0">
                 <div class="font-bold text-on-surface truncate">${m.name}</div>
-                <div class="text-[10px] text-outline font-mono truncate">${m.studentId || 'ID: STU-2025'} &bull; ${m.title || 'Student'}</div>
+                <div class="text-[10px] text-outline font-mono truncate">${m.registerNumber || m.studentId || 'REG NO N/A'} &bull; ${m.title || 'Student'}</div>
                 <div class="text-[10px] text-outline/80 truncate">${m.email}</div>
               </div>
             </div>
@@ -1253,7 +1253,7 @@
     function populateTaskModalAssignees(members) {
       const select = document.getElementById('taskInputAssignee');
       select.innerHTML = '<option value="">-- Assign To Teammate --</option>' +
-        members.map(m => `<option value="${m._id}">${m.name} (${m.studentId || m.role || 'Member'})</option>`).join('');
+        members.map(m => `<option value="${m._id}">${m.name} (${m.registerNumber || m.studentId || m.role || 'Member'})</option>`).join('');
     }
 
     function populateDocModalTasks(tasks) {
@@ -1363,7 +1363,7 @@
             <img src="${s.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=60'}" class="w-8 h-8 rounded-lg object-cover">
             <div class="text-xs min-w-0">
               <div class="font-bold text-on-surface truncate">${s.name}</div>
-              <div class="text-[10px] text-outline font-mono truncate">${s.studentId || 'ID'} &bull; ${s.department || ''}</div>
+              <div class="text-[10px] text-outline font-mono truncate">${s.registerNumber || s.studentId || 'REG NO'} &bull; ${s.department || ''}</div>
             </div>
           </label>
         `).join('');

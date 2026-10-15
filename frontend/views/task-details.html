@@ -532,7 +532,7 @@
       // Personnel
       if (task.assignedTo) {
         document.getElementById('assigneeName').textContent = task.assignedTo.name;
-        document.getElementById('assigneeSub').textContent = task.assignedTo.studentId || task.assignedTo.title || 'Student';
+        document.getElementById('assigneeSub').textContent = task.assignedTo.registerNumber || task.assignedTo.studentId || task.assignedTo.title || 'Student';
         document.getElementById('assigneeEmail').textContent = task.assignedTo.email;
         document.getElementById('assigneeAvatar').src = task.assignedTo.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80';
       } else {

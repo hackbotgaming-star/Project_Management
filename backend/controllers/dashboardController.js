@@ -34,7 +34,8 @@ exports.getStudentDashboard = async (req, res) => {
       academicYear: userAcademicYear,
       section: req.user.section || 'A',
       studentCategory: userAcademicYear === '3rd Year' ? (req.user.studentCategory || 'REGULAR') : 'REGULAR',
-      studentId: req.user.studentId,
+      registerNumber: req.user.registerNumber || req.user.studentId,
+      studentId: req.user.registerNumber || req.user.studentId,
       title: req.user.title,
       avatar: req.user.avatar,
       dateOfBirth: req.user.dateOfBirth,
@@ -394,7 +395,7 @@ exports.getAdminDashboard = async (req, res) => {
 
     // Faculty workload (number of assigned projects per faculty member)
     const facultyUsers = await User.find({ role: 'FACULTY' }).select('name email title avatar department studentId status createdAt');
-    const studentUsers = await User.find({ role: 'STUDENT' }).select('name email title avatar department studentId cohort status academicYear section studentCategory createdAt');
+    const studentUsers = await User.find({ role: 'STUDENT' }).select('name email title avatar department registerNumber studentId cohort status academicYear section studentCategory createdAt');
 
     const facultyWorkload = facultyUsers.map((fac) => {
       const assigned = allProjects.filter((p) => p.facultyMentor && p.facultyMentor._id.toString() === fac._id.toString());
@@ -493,7 +494,7 @@ exports.getHODDashboard = async (req, res) => {
 
     // Fetch all students and faculty
     const studentUsers = await User.find({ role: 'STUDENT' })
-      .select('name email title avatar department studentId cohort status academicYear section studentCategory mentor createdAt')
+      .select('name email title avatar department registerNumber studentId cohort status academicYear section studentCategory mentor createdAt')
       .populate('mentor', 'name email title avatar')
       .sort({ academicYear: 1, section: 1, name: 1 });
 
