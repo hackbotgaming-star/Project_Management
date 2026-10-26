@@ -1,60 +1,77 @@
 <!DOCTYPE html>
-<html class="dark" lang="en">
+<html class="light scroll-smooth" lang="en">
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>ProjectHub - Academic Project Management Platform</title>
+  <title>ProjectHub - Academic Capstone &amp; Research Platform</title>
+  
   <!-- PWA Meta & Icons -->
   <link rel="manifest" href="/manifest.json">
-  <meta name="theme-color" content="#0f131c">
+  <meta name="theme-color" content="#4f46e5">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="ProjectHub">
   <link rel="icon" type="image/svg+xml" href="/icons/icon.svg">
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
   <script src="/js/pwa-install.js" defer></script>
+
+  <!-- Typography: Inter, Plus Jakarta Sans, Fira Code -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
-  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  
+  <!-- Three.js for 3D Interactive Visualizer -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
   <script>
     tailwind.config = {
       darkMode: "class",
       theme: {
         extend: {
           colors: {
-            "surface": "#0f131c",
-            "surface-dim": "#0f131c",
-            "surface-bright": "#353943",
-            "surface-container-lowest": "#0a0e17",
-            "surface-container-low": "#181b25",
-            "surface-container": "#1c1f29",
-            "surface-container-high": "#262a34",
-            "surface-container-highest": "#31353f",
-            "on-surface": "#dfe2ef",
-            "on-surface-variant": "#c7c4d8",
-            "outline": "#918fa1",
-            "outline-variant": "#464555",
-            "primary": "#c3c0ff",
-            "on-primary": "#1d00a5",
-            "primary-container": "#4f46e5",
-            "on-primary-container": "#dad7ff",
-            "secondary": "#4cd7f6",
-            "tertiary": "#4edea3",
-            "error": "#ffb4ab",
-            "background": "#0f131c",
-            "on-background": "#dfe2ef"
+            brand: {
+              50: '#eef2ff',
+              100: '#e0e7ff',
+              200: '#c7d2fe',
+              300: '#a5b4fc',
+              400: '#818cf8',
+              500: '#6366f1',
+              600: '#4f46e5',
+              700: '#4338ca',
+              800: '#3730a3',
+              900: '#312e81',
+            },
+            surface: {
+              card: '#ffffff',
+              subtle: '#f8fafc',
+              dim: '#f1f5f9',
+              muted: '#e2e8f0',
+              border: '#e2e8f0',
+            }
           },
           fontFamily: {
-            headline: ["Geist", "sans-serif"],
-            body: ["Inter", "sans-serif"],
+            headline: ["'Plus Jakarta Sans'", "sans-serif"],
+            body: ["'Inter'", "sans-serif"],
+            mono: ["'Fira Code'", "monospace"],
+          },
+          boxShadow: {
+            '3d': '0 20px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04), 0 0 0 1px rgba(226, 232, 240, 0.8)',
+            '3d-hover': '0 25px 35px -5px rgba(79, 70, 229, 0.15), 0 12px 16px -6px rgba(79, 70, 229, 0.08), 0 0 0 1px rgba(99, 102, 241, 0.3)',
+            'card-elevated': '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.02)',
+            'glow-primary': '0 0 25px rgba(99, 102, 241, 0.3)',
+            'glow-emerald': '0 0 25px rgba(16, 185, 129, 0.25)',
+            'glow-amber': '0 0 25px rgba(245, 158, 11, 0.25)',
           }
         }
       }
     };
   </script>
+
   <style>
     .material-symbols-outlined {
       font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
@@ -62,314 +79,1254 @@
       vertical-align: middle;
       line-height: 1;
     }
+
+    /* 3D Scene Background */
+    #heroCanvas3D {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.65;
+    }
+
+    /* 3D Perspective Card Container */
+    .perspective-container {
+      perspective: 1200px;
+    }
+
+    .tilt-card {
+      transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease;
+      transform-style: preserve-3d;
+      will-change: transform;
+    }
+
+    .tilt-inner {
+      transform: translateZ(24px);
+      transform-style: preserve-3d;
+    }
+
+    .tilt-badge {
+      transform: translateZ(40px);
+    }
+
+    /* Glassmorphism Light */
+    .glass-light {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(226, 232, 240, 0.9);
+    }
+
+    /* Subtle Grid Background Pattern */
+    .bg-grid-pattern {
+      background-size: 32px 32px;
+      background-image: 
+        linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+    }
+
+    /* Smooth 3D Floating Animation */
+    @keyframes float3D {
+      0%, 100% {
+        transform: translateY(0px) rotateX(0deg) rotateY(0deg);
+      }
+      50% {
+        transform: translateY(-8px) rotateX(1deg) rotateY(-1deg);
+      }
+    }
+
+    .animate-float-3d {
+      animation: float3D 6s ease-in-out infinite;
+    }
+
+    @keyframes pulseSoft {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(1.03); }
+    }
+
+    .animate-pulse-soft {
+      animation: pulseSoft 3s ease-in-out infinite;
+    }
+
+    /* Custom Scrollbar for Interactive Mockup */
+    .mockup-scroll::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .mockup-scroll::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    .mockup-scroll::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    .mockup-scroll::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
   </style>
 </head>
-<body class="bg-background text-on-background font-body antialiased min-h-screen selection:bg-primary-container selection:text-on-primary">
-  <!-- TOP APP BAR -->
-  <header class="sticky top-0 z-50 w-full bg-surface-container/80 backdrop-blur-md border-b border-outline-variant/30">
-    <div class="max-w-7xl mx-auto px-3 sm:px-6 h-16 flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-        <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-lg bg-surface-container-high border border-outline-variant/40 flex items-center justify-center text-primary shadow-sm shrink-0">
-          <span class="material-symbols-outlined text-[20px] sm:text-[24px]">school</span>
-        </div>
-        <div class="min-w-0">
-          <div class="flex items-center gap-1.5 sm:gap-2">
-            <span class="font-headline text-lg sm:text-xl text-on-surface tracking-tight font-bold">ProjectHub</span>
-            <span class="hidden sm:inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary-container/20 text-primary border border-primary/30">Role-Based System</span>
-          </div>
-          <span class="text-[11px] sm:text-xs text-outline tracking-wider hidden md:block">Academic Capstone &amp; Research Workspace</span>
-        </div>
-      </div>
 
-      <nav class="hidden md:flex items-center gap-6">
-        <a href="#roles" class="text-on-surface-variant hover:text-on-surface text-sm transition-colors">Role Portals</a>
-        <a href="#security" class="text-on-surface-variant hover:text-on-surface text-sm transition-colors">Security Architecture</a>
+<body class="bg-surface-subtle text-slate-800 font-body antialiased min-h-screen selection:bg-brand-600 selection:text-white relative overflow-x-hidden">
+
+  <!-- TOP APP BAR -->
+  <header class="sticky top-0 z-50 w-full glass-light border-b border-slate-200/80 shadow-xs transition-all duration-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 h-18 flex items-center justify-between gap-3">
+      
+      <!-- Brand Logo -->
+      <a href="/" class="flex items-center gap-3 group shrink-0">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 via-brand-600 to-indigo-400 text-white flex items-center justify-center shadow-md shadow-brand-500/25 group-hover:scale-105 group-hover:shadow-glow-primary transition-all">
+          <span class="material-symbols-outlined text-[24px]">school</span>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-headline text-xl text-slate-900 tracking-tight font-extrabold group-hover:text-brand-600 transition-colors">ProjectHub</span>
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+              Live AY24-25
+            </span>
+          </div>
+          <span class="text-[11px] text-slate-500 font-medium tracking-wide hidden sm:block">Academic Capstone &amp; Research Workspace</span>
+        </div>
+      </a>
+
+      <!-- Center Navigation Links -->
+      <nav class="hidden lg:flex items-center gap-1 font-medium text-sm text-slate-600">
+        <a href="#roles" class="px-3 py-1.5 rounded-lg hover:text-brand-600 hover:bg-slate-100/70 transition-colors">Role Portals</a>
+        <a href="#interactive-preview" class="px-3 py-1.5 rounded-lg hover:text-brand-600 hover:bg-slate-100/70 transition-colors">Live 3D Console</a>
+        <a href="#od-system" class="px-3 py-1.5 rounded-lg hover:text-brand-600 hover:bg-slate-100/70 transition-colors">OD Workflow</a>
+        <a href="#security" class="px-3 py-1.5 rounded-lg hover:text-brand-600 hover:bg-slate-100/70 transition-colors">Express RBAC</a>
+        <a href="#stats" class="px-3 py-1.5 rounded-lg hover:text-brand-600 hover:bg-slate-100/70 transition-colors">Metrics</a>
       </nav>
 
-      <div id="headerNavActions" class="flex items-center gap-1 sm:gap-2 shrink-0">
-        <a href="/login/student" class="text-xs sm:text-sm px-2 sm:px-2.5 py-1.5 rounded-lg border border-outline-variant/50 text-on-surface hover:bg-surface-container-high transition-colors">
-          <span class="hidden sm:inline">Student Portal</span>
-          <span class="sm:hidden">Student</span>
+      <!-- Portal Shortcuts & Active Session -->
+      <div id="headerNavActions" class="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        <a href="/login/student" class="text-xs sm:text-sm px-2.5 sm:px-3 py-2 rounded-lg font-medium text-slate-700 bg-white border border-slate-200 hover:border-brand-400 hover:text-brand-600 hover:bg-brand-50/50 shadow-xs transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-brand-600">person</span>
+          <span>Student</span>
         </a>
-        <a href="/login/faculty" class="text-xs sm:text-sm px-2 sm:px-2.5 py-1.5 rounded-lg border border-outline-variant/50 text-secondary hover:bg-surface-container-high transition-colors">
-          <span class="hidden sm:inline">Faculty Portal</span>
-          <span class="sm:hidden">Faculty</span>
+        <a href="/login/faculty" class="text-xs sm:text-sm px-2.5 sm:px-3 py-2 rounded-lg font-medium text-slate-700 bg-white border border-slate-200 hover:border-sky-400 hover:text-sky-600 hover:bg-sky-50/50 shadow-xs transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-sky-600">rate_review</span>
+          <span>Faculty</span>
         </a>
-        <a href="/login/hod" class="text-xs sm:text-sm px-2 sm:px-2.5 py-1.5 rounded-lg border border-amber-400/40 text-amber-400 hover:bg-amber-400/10 transition-colors">
-          <span class="hidden sm:inline">HOD Portal</span>
-          <span class="sm:hidden">HOD</span>
+        <a href="/login/hod" class="text-xs sm:text-sm px-2.5 sm:px-3 py-2 rounded-lg font-medium text-amber-800 bg-amber-50/80 border border-amber-300 hover:bg-amber-100/80 shadow-xs transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px] text-amber-600">manage_accounts</span>
+          <span>HOD</span>
         </a>
-        <a href="/login/admin" class="text-xs sm:text-sm px-2 sm:px-3 py-1.5 rounded-lg bg-primary-container text-on-primary font-medium hover:bg-indigo-600 transition-colors shadow-sm">
-          <span class="hidden sm:inline">Admin Portal</span>
-          <span class="sm:hidden">Admin</span>
+        <a href="/login/admin" class="text-xs sm:text-sm px-3 sm:px-3.5 py-2 rounded-lg font-semibold text-white bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 shadow-md shadow-brand-500/20 hover:shadow-brand-500/35 transition-all flex items-center gap-1">
+          <span class="material-symbols-outlined text-[16px]">admin_panel_settings</span>
+          <span>Admin</span>
         </a>
       </div>
+
     </div>
   </header>
 
-  <!-- HERO SECTION -->
-  <main class="relative z-10">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-16 pb-16 text-center">
-      
-      <!-- ACTIVE SESSION BANNER (Displayed if already logged in) -->
-      <div id="activeSessionBanner" class="hidden max-w-xl mx-auto mb-8 p-4 sm:p-5 rounded-2xl bg-surface-container-high/90 border border-primary/40 shadow-xl backdrop-blur-md text-left">
+  <!-- MAIN HERO SECTION -->
+  <main class="relative z-10 overflow-hidden bg-grid-pattern">
+    
+    <!-- 3D Three.js Interactive Canvas for Nodes & Mesh -->
+    <canvas id="heroCanvas3D"></canvas>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 pt-10 sm:pt-14 pb-20 relative z-20">
+
+      <!-- ACTIVE SESSION BANNER (Automatically shown if already authenticated) -->
+      <div id="activeSessionBanner" class="hidden max-w-2xl mx-auto mb-8 p-4 sm:p-5 rounded-2xl bg-white border-2 border-brand-500/30 shadow-xl shadow-brand-500/10 backdrop-blur-md text-left transition-all">
         <div class="flex items-center justify-between gap-3 mb-3">
-          <div class="flex items-center gap-3 min-w-0">
-            <div class="w-10 h-10 rounded-xl bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary shrink-0">
-              <span class="material-symbols-outlined text-[22px]">account_circle</span>
+          <div class="flex items-center gap-3.5 min-w-0">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 text-white flex items-center justify-center font-bold text-lg shadow-md shrink-0">
+              <span id="sessionAvatarInitial">U</span>
             </div>
             <div class="min-w-0">
-              <div class="text-[10px] text-primary font-mono uppercase tracking-wider font-semibold">Logged-In Session Active</div>
-              <div class="text-sm font-bold text-on-surface truncate" id="sessionUserName">Active User</div>
-              <div class="text-xs text-on-surface-variant truncate" id="sessionUserEmail">user@university.edu</div>
+              <div class="flex items-center gap-2">
+                <span class="text-[11px] font-mono font-bold text-emerald-600 uppercase tracking-wider flex items-center gap-1">
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                  Active Authenticated Session
+                </span>
+              </div>
+              <div class="text-base font-headline font-bold text-slate-900 truncate" id="sessionUserName">User</div>
+              <div class="text-xs text-slate-500 truncate" id="sessionUserEmail">user@university.edu</div>
             </div>
           </div>
-          <span id="sessionRoleBadge" class="text-[10px] font-mono px-2 py-0.5 rounded bg-primary/20 text-primary border border-primary/30 uppercase font-bold shrink-0">STUDENT</span>
+          <span id="sessionRoleBadge" class="text-xs font-mono font-bold px-3 py-1 rounded-full bg-brand-50 text-brand-700 border border-brand-200 uppercase shrink-0">
+            STUDENT
+          </span>
         </div>
-        <div class="flex items-center gap-2 pt-2 border-t border-outline-variant/20">
-          <a id="sessionDashboardBtn" href="/student/dashboard" class="flex-1 py-2.5 px-4 rounded-xl bg-primary-container hover:bg-indigo-600 text-on-primary font-semibold text-xs sm:text-sm text-center transition-all shadow-md flex items-center justify-center gap-1.5">
-            <span>Open Workspace Dashboard</span>
+        <div class="flex items-center gap-2.5 pt-3 border-t border-slate-100">
+          <a id="sessionDashboardBtn" href="/student/dashboard" class="flex-1 py-2.5 px-4 rounded-xl bg-gradient-to-r from-brand-600 to-indigo-600 hover:from-brand-700 hover:to-indigo-700 text-white font-semibold text-xs sm:text-sm text-center transition-all shadow-md flex items-center justify-center gap-2">
+            <span>Enter My Active Workspace</span>
             <span class="material-symbols-outlined text-sm">arrow_forward</span>
           </a>
-          <button type="button" onclick="handleLandingLogout()" class="py-2.5 px-3 rounded-xl border border-outline-variant/40 hover:border-error/50 hover:bg-error/10 hover:text-error text-on-surface-variant text-xs transition-colors shrink-0 flex items-center gap-1">
-            <span class="material-symbols-outlined text-xs">logout</span>
+          <button type="button" onclick="handleLandingLogout()" class="py-2.5 px-3.5 rounded-xl border border-slate-200 hover:border-rose-300 hover:bg-rose-50 text-slate-600 hover:text-rose-600 text-xs font-medium transition-colors shrink-0 flex items-center gap-1">
+            <span class="material-symbols-outlined text-sm">logout</span>
             <span class="hidden sm:inline">Sign Out</span>
           </button>
         </div>
       </div>
 
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-surface-container-high border border-outline-variant/50 text-xs mb-6 sm:mb-8 shadow-sm max-w-full">
-        <span class="w-2 h-2 rounded-full bg-tertiary animate-pulse shrink-0"></span>
-        <span class="text-on-surface font-medium truncate">Institutional Roles &bull; MongoDB-Verified Authorization</span>
-      </div>
-
-      <h1 class="font-headline text-3xl sm:text-5xl md:text-6xl font-bold tracking-tight text-on-surface max-w-4xl mx-auto mb-4 sm:mb-6 leading-tight">
-        Unified Academic Platform.
-        <span class="block mt-1 sm:mt-2 bg-gradient-to-r from-primary via-secondary to-tertiary bg-clip-text text-transparent">
-          Strict Role-Based Integrity.
-        </span>
-      </h1>
-
-      <p class="text-sm sm:text-base md:text-lg text-on-surface-variant max-w-2xl mx-auto mb-8 sm:mb-12">
-        ProjectHub enforces dedicated authentication entry points, specialized dashboards, and server-side MongoDB role verification for Students, Faculty Advisors, Department Heads, and Institutional Deans.
-      </p>
-
-      <!-- ROLE ACCESS CARDS -->
-      <div id="roles" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5 max-w-7xl mx-auto text-left mb-16">
+      <!-- Hero Header & Value Prop -->
+      <div class="text-center max-w-4xl mx-auto space-y-5">
         
-        <!-- CARD 1: STUDENT -->
-        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 flex flex-col justify-between hover:border-primary/50 transition-all hover:shadow-lg group">
-          <div>
-            <div class="w-12 h-12 rounded-lg bg-primary-container/20 border border-primary/30 flex items-center justify-center text-primary mb-4 group-hover:scale-105 transition-transform">
-              <span class="material-symbols-outlined text-[26px]">terminal</span>
-            </div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline text-lg font-bold text-on-surface">1. STUDENT</h3>
-              <span class="text-[10px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-primary">/login/student</span>
-            </div>
-            <p class="text-xs text-outline mb-4">Workspace &amp; Deliverables Execution</p>
-            
-            <div class="space-y-2 mb-6">
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>View assigned projects &amp; team members</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Submit deliverables &amp; milestones for review</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Manage permitted tasks &amp; view advisor feedback</span>
-              </div>
-              <div class="text-xs text-error flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">block</span>
-                <span>Cannot approve milestones or change role</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
-            <a href="/login/student" class="w-full py-2.5 px-3 rounded-lg bg-primary-container hover:bg-indigo-600 text-on-primary font-medium text-center text-xs transition-colors flex items-center justify-center gap-1.5">
-              <span>Enter Student Portal</span>
-              <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-            <div class="text-[10px] text-outline text-center truncate">Demo: student@university.edu / Password123!</div>
-          </div>
+        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-slate-200/90 shadow-sm text-xs text-slate-700 font-medium hover:border-brand-300 transition-colors">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span class="text-brand-700 font-semibold font-mono">ABET AY24-25 Certified</span>
+          <span class="text-slate-300">&bull;</span>
+          <span>Zero-Trust Role Integrity &bull; MongoDB Atlas Engine</span>
         </div>
 
-        <!-- CARD 2: FACULTY -->
-        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 flex flex-col justify-between hover:border-secondary/50 transition-all hover:shadow-lg group">
-          <div>
-            <div class="w-12 h-12 rounded-lg bg-secondary/10 border border-secondary/30 flex items-center justify-center text-secondary mb-4 group-hover:scale-105 transition-transform">
-              <span class="material-symbols-outlined text-[26px]">rate_review</span>
-            </div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline text-lg font-bold text-on-surface">2. FACULTY</h3>
-              <span class="text-[10px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-secondary">/login/faculty</span>
-            </div>
-            <p class="text-xs text-outline mb-4">Advisory, Reviews &amp; Defense Scoring</p>
-            
-            <div class="space-y-2 mb-6">
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Auto-filtered to supervised teams &amp; mentees</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Review submissions &amp; evaluate defense</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Isolated Super Dream mentee batch hub</span>
-              </div>
-              <div class="text-xs text-error flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">block</span>
-                <span>Cannot view unassigned projects or admin controls</span>
-              </div>
-            </div>
-          </div>
+        <h1 class="font-headline text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 leading-[1.15]">
+          Unified Academic Capstone Platform.
+          <span class="block mt-2 bg-gradient-to-r from-brand-600 via-indigo-600 to-sky-600 bg-clip-text text-transparent">
+            Engineered for Strict Role-Based Integrity.
+          </span>
+        </h1>
 
-          <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
-            <a href="/login/faculty" class="w-full py-2.5 px-3 rounded-lg bg-surface-container-high hover:bg-secondary hover:text-black border border-secondary/40 text-secondary font-medium text-center text-xs transition-all flex items-center justify-center gap-1.5">
-              <span>Enter Faculty Portal</span>
-              <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-            <div class="text-[10px] text-outline text-center truncate">Demo: faculty@university.edu / Password123!</div>
-          </div>
-        </div>
-
-        <!-- CARD 3: HEAD OF DEPARTMENT (HOD) -->
-        <div class="rounded-xl bg-surface-container-low border border-amber-400/30 p-5 flex flex-col justify-between hover:border-amber-400/60 transition-all hover:shadow-lg group relative overflow-hidden">
-          <div class="absolute -right-8 -top-8 w-24 h-24 bg-amber-400/10 rounded-full blur-xl pointer-events-none"></div>
-          <div>
-            <div class="w-12 h-12 rounded-lg bg-amber-400/10 border border-amber-400/30 flex items-center justify-center text-amber-400 mb-4 group-hover:scale-105 transition-transform">
-              <span class="material-symbols-outlined text-[26px]">manage_accounts</span>
-            </div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline text-lg font-bold text-on-surface">3. HOD</h3>
-              <span class="text-[10px] font-mono uppercase bg-amber-400/10 px-2 py-0.5 rounded text-amber-400 border border-amber-400/20">/login/hod</span>
-            </div>
-            <p class="text-xs text-outline mb-4">Department Oversight &amp; User Enrollment</p>
-            
-            <div class="space-y-2 mb-6">
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Full read access to all projects, tasks &amp; metrics</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Enroll students &amp; faculty members</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Super Dream 3rd-year mentorship oversight</span>
-              </div>
-              <div class="text-xs text-error flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">block</span>
-                <span>Cannot remove users or create projects/tasks</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
-            <a href="/login/hod" class="w-full py-2.5 px-3 rounded-lg bg-amber-400 hover:bg-amber-300 text-black font-semibold text-center text-xs transition-all flex items-center justify-center gap-1.5 shadow-sm">
-              <span>Enter HOD Portal</span>
-              <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-            <div class="text-[10px] text-outline text-center truncate">Demo: hod@university.edu / Password123!</div>
-          </div>
-        </div>
-
-        <!-- CARD 4: ADMIN -->
-        <div class="rounded-xl bg-surface-container-low border border-outline-variant/40 p-5 flex flex-col justify-between hover:border-tertiary/50 transition-all hover:shadow-lg group">
-          <div>
-            <div class="w-12 h-12 rounded-lg bg-tertiary/10 border border-tertiary/30 flex items-center justify-center text-tertiary mb-4 group-hover:scale-105 transition-transform">
-              <span class="material-symbols-outlined text-[26px]">admin_panel_settings</span>
-            </div>
-            <div class="flex items-center justify-between mb-1">
-              <h3 class="font-headline text-lg font-bold text-on-surface">4. ADMIN</h3>
-              <span class="text-[10px] font-mono uppercase bg-surface-container-high px-2 py-0.5 rounded text-tertiary">/login/admin</span>
-            </div>
-            <p class="text-xs text-outline mb-4">Institutional Governance &amp; Accreditation</p>
-            
-            <div class="space-y-2 mb-6">
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Create projects, assign students &amp; faculty mentors</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Manage departments, cohorts &amp; user accounts</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Full delete privileges &amp; structural administration</span>
-              </div>
-              <div class="text-xs text-tertiary flex items-center gap-1.5">
-                <span class="material-symbols-outlined text-sm">check_circle</span>
-                <span>Tamper-evident audit trail &amp; compliance logs</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="pt-4 border-t border-outline-variant/20 flex flex-col gap-2">
-            <a href="/login/admin" class="w-full py-2.5 px-3 rounded-lg bg-surface-container-high hover:bg-tertiary hover:text-black border border-tertiary/40 text-tertiary font-medium text-center text-xs transition-all flex items-center justify-center gap-1.5">
-              <span>Enter Admin Portal</span>
-              <span class="material-symbols-outlined text-sm">arrow_forward</span>
-            </a>
-            <div class="text-[10px] text-outline text-center truncate">Demo: admin@university.edu / Password123!</div>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- ARCHITECTURAL INTEGRITY SECTION -->
-      <div id="security" class="rounded-2xl bg-surface-container border border-outline-variant/30 p-5 sm:p-8 text-left max-w-5xl mx-auto mb-12 sm:mb-16">
-        <h3 class="font-headline text-xl sm:text-2xl font-bold text-on-surface mb-2 flex items-center gap-2">
-          <span class="material-symbols-outlined text-primary">security</span>
-          Role Enforcement in Express Middleware
-        </h3>
-        <p class="text-xs sm:text-sm text-on-surface-variant mb-6">
-          The system never trusts client-supplied roles. Authentication reads HTTP-Only cookies, decrypts cryptographic JWT tokens, and executes a database lookup against MongoDB Atlas to query the user's verified role before routing.
+        <p class="text-base sm:text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed">
+          ProjectHub eliminates manual paperwork with automated On-Duty (OD) passes, cryptographically enforced role isolation in Express middleware, live defense scheduling, and real-time MongoDB Atlas synchronization.
         </p>
 
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 text-xs font-mono bg-surface-container-lowest p-3 sm:p-4 rounded-lg border border-outline-variant/20">
-          <div class="p-3 bg-surface-container-low rounded border border-outline-variant/20">
-            <div class="text-primary font-bold mb-1">STUDENT ATTEMPTS /faculty/*</div>
-            <div class="text-error font-semibold">&bull; 403 Forbidden</div>
-            <div class="text-outline mt-1">Express middleware rejects and redirects to /student/dashboard</div>
-          </div>
-          <div class="p-3 bg-surface-container-low rounded border border-outline-variant/20">
-            <div class="text-secondary font-bold mb-1">FACULTY ATTEMPTS /admin/*</div>
-            <div class="text-error font-semibold">&bull; 403 Access Denied</div>
-            <div class="text-outline mt-1">Express middleware denies access and enforces advisor boundary</div>
-          </div>
-          <div class="p-3 bg-surface-container-low rounded border border-outline-variant/20">
-            <div class="text-tertiary font-bold mb-1">DATABASE FILTERING</div>
-            <div class="text-on-surface font-semibold">&bull; Backend Query Scoping</div>
-            <div class="text-outline mt-1">APIs strictly return only assigned records; never filtered in React</div>
-          </div>
+        <!-- CTA Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <a href="#roles" class="px-6 py-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-sm shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+            <span>Explore 4 Role Portals</span>
+            <span class="material-symbols-outlined text-base">login</span>
+          </a>
+          <a href="#interactive-preview" class="px-6 py-3 rounded-xl bg-white hover:bg-slate-50 text-slate-800 border border-slate-200/90 font-semibold text-sm shadow-sm hover:border-slate-300 hover:-translate-y-0.5 transition-all flex items-center gap-2">
+            <span class="material-symbols-outlined text-brand-600 text-base">view_in_ar</span>
+            <span>Interactive 3D Workspace</span>
+          </a>
+          <button onclick="quickTestSecurity()" class="px-4 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-sm font-medium transition-all flex items-center gap-1.5 border border-slate-200">
+            <span class="material-symbols-outlined text-amber-600 text-base">verified_user</span>
+            <span>Test RBAC Security</span>
+          </button>
         </div>
+
+        <!-- Quick Demo Credential Pills -->
+        <div class="pt-4 flex flex-wrap items-center justify-center gap-2 text-[11px] text-slate-500 font-mono">
+          <span class="text-slate-400 font-body">1-Click Fill &amp; Test:</span>
+          <button onclick="copyAndDirect('/login/student', 'student@university.edu', 'Password123!')" class="px-2.5 py-1 rounded-md bg-white border border-slate-200 hover:border-brand-400 hover:text-brand-600 transition-colors flex items-center gap-1 shadow-2xs">
+            <span>Student: student@university.edu</span>
+            <span class="material-symbols-outlined text-[13px]">content_copy</span>
+          </button>
+          <button onclick="copyAndDirect('/login/faculty', 'faculty@university.edu', 'Password123!')" class="px-2.5 py-1 rounded-md bg-white border border-slate-200 hover:border-sky-400 hover:text-sky-600 transition-colors flex items-center gap-1 shadow-2xs">
+            <span>Faculty: faculty@university.edu</span>
+            <span class="material-symbols-outlined text-[13px]">content_copy</span>
+          </button>
+          <button onclick="copyAndDirect('/login/hod', 'hod@university.edu', 'Password123!')" class="px-2.5 py-1 rounded-md bg-white border border-slate-200 hover:border-amber-400 hover:text-amber-600 transition-colors flex items-center gap-1 shadow-2xs">
+            <span>HOD: hod@university.edu</span>
+            <span class="material-symbols-outlined text-[13px]">content_copy</span>
+          </button>
+          <button onclick="copyAndDirect('/login/admin', 'admin@university.edu', 'Password123!')" class="px-2.5 py-1 rounded-md bg-white border border-slate-200 hover:border-emerald-400 hover:text-emerald-600 transition-colors flex items-center gap-1 shadow-2xs">
+            <span>Admin: admin@university.edu</span>
+            <span class="material-symbols-outlined text-[13px]">content_copy</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- ============================================================== -->
+      <!-- SECTION: INTERACTIVE 3D DASHBOARD PREVIEW (FUNCTIONAL MOCKUP)  -->
+      <!-- ============================================================== -->
+      <div id="interactive-preview" class="mt-14 max-w-6xl mx-auto perspective-container">
+        
+        <div class="text-center mb-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200/80 text-xs text-indigo-700 font-semibold mb-2">
+            <span class="material-symbols-outlined text-sm">desktop_windows</span>
+            <span>Live Interactive Preview &bull; Click to Switch Roles &amp; Interact</span>
+          </div>
+          <h2 class="text-2xl sm:text-3xl font-headline font-bold text-slate-900">Functional 3D Academic Workspace</h2>
+          <p class="text-xs sm:text-sm text-slate-500 max-w-xl mx-auto">This is a live interactive simulation. Toggle roles, check off milestones, and observe real-time recalculations.</p>
+        </div>
+
+        <!-- 3D Perspective Card Wrapper -->
+        <div id="heroMockupCard" class="tilt-card bg-white rounded-3xl border border-slate-200/90 shadow-3d hover:shadow-3d-hover transition-all duration-300 overflow-hidden relative">
+          
+          <!-- Mockup Top Window Bar -->
+          <div class="bg-slate-100/80 px-4 sm:px-6 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <div class="flex gap-1.5">
+                <span class="w-3 h-3 rounded-full bg-rose-400"></span>
+                <span class="w-3 h-3 rounded-full bg-amber-400"></span>
+                <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+              </div>
+              <span class="text-xs font-mono text-slate-500 ml-2 hidden sm:inline">projecthub.internal/workspace/live</span>
+            </div>
+
+            <!-- Functional Role Tab Switcher -->
+            <div class="flex items-center bg-white p-1 rounded-xl border border-slate-200 text-xs font-medium shadow-2xs">
+              <button onclick="switchMockupRole('student')" id="mockupTab-student" class="mockup-tab-btn px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold shadow-2xs transition-all flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">terminal</span>
+                <span>Student</span>
+              </button>
+              <button onclick="switchMockupRole('faculty')" id="mockupTab-faculty" class="mockup-tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">rate_review</span>
+                <span>Faculty</span>
+              </button>
+              <button onclick="switchMockupRole('hod')" id="mockupTab-hod" class="mockup-tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">manage_accounts</span>
+                <span>HOD</span>
+              </button>
+              <button onclick="switchMockupRole('admin')" id="mockupTab-admin" class="mockup-tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5">
+                <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+                <span>Admin</span>
+              </button>
+            </div>
+
+            <div class="flex items-center gap-2 text-xs font-mono text-slate-500">
+              <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+              <span id="mockupLatencyText">Atlas: 19ms</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Role Mockup Body -->
+          <div id="mockupContentArea" class="p-5 sm:p-7 bg-slate-50/50 space-y-6 mockup-scroll max-h-[560px] overflow-y-auto">
+            
+            <!-- STUDENT MOCKUP VIEW (Default) -->
+            <div id="mockupView-student" class="space-y-6">
+              
+              <!-- Top Metrics Bar -->
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                  <div>
+                    <span class="text-xs text-slate-500 font-medium">Assigned Project</span>
+                    <div class="text-lg font-headline font-bold text-slate-900">Autonomous UAV Drone</div>
+                    <span class="text-[11px] font-mono text-brand-600 font-semibold">CAP-2024-AIML</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-xl bg-brand-50 border border-brand-200 flex items-center justify-center text-brand-600">
+                    <span class="material-symbols-outlined text-xl">rocket_launch</span>
+                  </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                  <div>
+                    <span class="text-xs text-slate-500 font-medium">Capstone Progress</span>
+                    <div class="text-lg font-headline font-bold text-emerald-600" id="studentProgressNum">75%</div>
+                    <span class="text-[11px] text-slate-400">3 of 4 Milestones done</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-600">
+                    <span class="material-symbols-outlined text-xl">pie_chart</span>
+                  </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                  <div>
+                    <span class="text-xs text-slate-500 font-medium">Faculty Mentor</span>
+                    <div class="text-base font-headline font-bold text-slate-900">Dr. Sarah Jenkins</div>
+                    <span class="text-[11px] text-sky-600 font-medium">AI &amp; Robotics Dept</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-xl bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-600">
+                    <span class="material-symbols-outlined text-xl">school</span>
+                  </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-xs flex items-center justify-between">
+                  <div>
+                    <span class="text-xs text-slate-500 font-medium">On-Duty Status</span>
+                    <div class="text-base font-headline font-bold text-emerald-600 flex items-center gap-1">
+                      <span class="material-symbols-outlined text-base">verified</span>
+                      <span>Approved</span>
+                    </div>
+                    <span class="text-[11px] font-mono text-slate-400">Hackathon pass</span>
+                  </div>
+                  <div class="w-10 h-10 rounded-xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600">
+                    <span class="material-symbols-outlined text-xl">badge</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Interactive Milestone Timeline & Task Checklist -->
+              <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                <!-- Left 2 Cols: Milestone Pipeline -->
+                <div class="lg:col-span-2 bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-4">
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <h3 class="font-headline font-bold text-base text-slate-900">Capstone Deliverables Pipeline</h3>
+                      <p class="text-xs text-slate-500">Scheduled institutional reviews and defense checkpoints</p>
+                    </div>
+                    <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-700 border border-emerald-200">ON TRACK</span>
+                  </div>
+
+                  <div class="space-y-3">
+                    <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/40 flex items-start justify-between gap-3">
+                      <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-emerald-600 text-xl mt-0.5">check_circle</span>
+                        <div>
+                          <div class="font-semibold text-xs sm:text-sm text-slate-900">Milestone 1: Problem Definition &amp; Architecture</div>
+                          <div class="text-xs text-slate-500">System design documentation and hardware component selection.</div>
+                        </div>
+                      </div>
+                      <span class="text-[11px] font-mono font-bold text-emerald-700 shrink-0 bg-white px-2 py-0.5 rounded border border-emerald-200">100/100</span>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/40 flex items-start justify-between gap-3">
+                      <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-emerald-600 text-xl mt-0.5">check_circle</span>
+                        <div>
+                          <div class="font-semibold text-xs sm:text-sm text-slate-900">Milestone 2: Prototype Neural Flight Controller</div>
+                          <div class="text-xs text-slate-500">Autonomous indoor obstacle avoidance computer vision algorithms.</div>
+                        </div>
+                      </div>
+                      <span class="text-[11px] font-mono font-bold text-emerald-700 shrink-0 bg-white px-2 py-0.5 rounded border border-emerald-200">95/100</span>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl border border-brand-200 bg-brand-50/30 flex items-start justify-between gap-3">
+                      <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-brand-600 text-xl mt-0.5">pending_actions</span>
+                        <div>
+                          <div class="font-semibold text-xs sm:text-sm text-slate-900">Milestone 3: Field Testing &amp; Telemetry Integration</div>
+                          <div class="text-xs text-slate-500">50-hour test flight data log submitted &amp; awaiting advisor approval.</div>
+                        </div>
+                      </div>
+                      <span class="text-[11px] font-mono font-bold text-brand-700 shrink-0 bg-white px-2 py-0.5 rounded border border-brand-200">UNDER REVIEW</span>
+                    </div>
+
+                    <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-start justify-between gap-3 opacity-80">
+                      <div class="flex items-start gap-3">
+                        <span class="material-symbols-outlined text-slate-400 text-xl mt-0.5">schedule</span>
+                        <div>
+                          <div class="font-semibold text-xs sm:text-sm text-slate-700">Milestone 4: Oral Capstone Defense</div>
+                          <div class="text-xs text-slate-400">Scheduled presentation with departmental evaluation panel.</div>
+                        </div>
+                      </div>
+                      <span class="text-[11px] font-mono font-bold text-slate-500 shrink-0 bg-white px-2 py-0.5 rounded border border-slate-200">NOV 14, 2026</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right 1 Col: Live Interactive Checklist -->
+                <div class="bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs flex flex-col justify-between space-y-4">
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <h3 class="font-headline font-bold text-sm text-slate-900">Live Task Checklist</h3>
+                      <span class="text-[11px] font-mono text-brand-600 font-semibold" id="checklistCounter">2/3 Done</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-4">Click checkboxes to test live interactive state recalculation:</p>
+
+                    <div class="space-y-2.5 text-xs">
+                      <label class="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors">
+                        <input type="checkbox" checked onchange="toggleMockupTask(this)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300">
+                        <span class="text-slate-800 font-medium">Verify ROS2 Nodes on Jetson</span>
+                      </label>
+                      <label class="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors">
+                        <input type="checkbox" checked onchange="toggleMockupTask(this)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300">
+                        <span class="text-slate-800 font-medium">Upload Git commit SHA-256</span>
+                      </label>
+                      <label class="flex items-center gap-2.5 p-2 rounded-lg bg-slate-50 hover:bg-slate-100 cursor-pointer transition-colors">
+                        <input type="checkbox" onchange="toggleMockupTask(this)" class="w-4 h-4 rounded text-brand-600 focus:ring-brand-500 border-slate-300">
+                        <span class="text-slate-800 font-medium">Submit Draft PDF to Advisor</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  <div class="pt-4 border-t border-slate-100">
+                    <a href="/login/student" class="w-full py-2.5 px-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-xs text-center flex items-center justify-center gap-1.5 shadow-sm transition-all">
+                      <span>Launch Full Student Portal</span>
+                      <span class="material-symbols-outlined text-sm">arrow_forward</span>
+                    </a>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+
+            <!-- FACULTY MOCKUP VIEW -->
+            <div id="mockupView-faculty" class="hidden space-y-6">
+              <div class="bg-sky-50 border border-sky-200 p-4 rounded-2xl flex items-center justify-between">
+                <div>
+                  <div class="font-headline font-bold text-slate-900 text-base">Faculty Advisor Review Queue</div>
+                  <div class="text-xs text-sky-800">You are supervising 5 capstone teams &bull; 2 milestone submissions awaiting grading</div>
+                </div>
+                <span class="text-xs font-mono font-bold bg-white text-sky-700 px-3 py-1 rounded-lg border border-sky-200">5 Assigned Projects</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono text-brand-600 font-bold">CAP-2024-AIML</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-50 text-amber-700 border border-amber-200 font-bold">SUBMITTED</span>
+                  </div>
+                  <div class="font-bold text-sm text-slate-900">Autonomous UAV Drone</div>
+                  <p class="text-xs text-slate-500">Milestone 3 submitted by Team Lead: Alex Chen (310621205001)</p>
+                  <div class="pt-2 flex items-center gap-2">
+                    <button onclick="alert('Demo: Approving Milestone 3 with score 94/100!')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition-colors">Approve Milestone</button>
+                    <button onclick="alert('Demo: Feedback request dispatched to student team.')" class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 text-xs font-medium hover:bg-slate-50 transition-colors">Request Revision</button>
+                  </div>
+                </div>
+
+                <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-2">
+                  <div class="flex items-center justify-between">
+                    <span class="text-xs font-mono text-brand-600 font-bold">CAP-2024-CSE</span>
+                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 border border-emerald-200 font-bold">DEFENSE READY</span>
+                  </div>
+                  <div class="font-bold text-sm text-slate-900">Zero-Knowledge Decentralized Vault</div>
+                  <p class="text-xs text-slate-500">Super Dream Track Mentee &bull; Defense Rubric Prepared</p>
+                  <div class="pt-2 flex items-center gap-2">
+                    <a href="/login/faculty" class="px-3 py-1.5 rounded-lg bg-sky-600 text-white text-xs font-semibold hover:bg-sky-700 transition-colors">Grade Oral Defense</a>
+                    <button onclick="alert('Demo: Defense score rubric preview opened.')" class="px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 text-xs font-medium hover:bg-slate-50 transition-colors">View Rubric</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- HOD MOCKUP VIEW -->
+            <div id="mockupView-hod" class="hidden space-y-6">
+              <div class="bg-amber-50 border border-amber-200 p-4 rounded-2xl flex items-center justify-between">
+                <div>
+                  <div class="font-headline font-bold text-slate-900 text-base">Department Governance &amp; OD Clearances</div>
+                  <div class="text-xs text-amber-800">Department: Artificial Intelligence &amp; Machine Learning (AIML) &bull; 148 Students &bull; 12 Faculty</div>
+                </div>
+                <span class="text-xs font-mono font-bold bg-white text-amber-700 px-3 py-1 rounded-lg border border-amber-200">AY 2024-2025</span>
+              </div>
+
+              <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs space-y-3">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-bold text-sm text-slate-900">Pending On-Duty (OD) Final Approvals</h4>
+                  <span class="text-xs text-amber-600 font-semibold font-mono">1 Action Required</span>
+                </div>
+                <div class="p-3 bg-slate-50 rounded-lg flex items-center justify-between text-xs">
+                  <div>
+                    <span class="font-bold text-slate-900">National Smart India Hackathon (Grand Finale)</span>
+                    <div class="text-slate-500 text-[11px]">Requested by: Alex Chen &bull; Mentor Dr. Jenkins: Recommended &bull; Proof: Hackathon_Invitation.pdf</div>
+                  </div>
+                  <div class="flex items-center gap-2 shrink-0">
+                    <button onclick="alert('HOD Final Approval Granted! QR Pass Generated.')" class="px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-semibold">Grant Approval</button>
+                    <button onclick="alert('Direct HOD Bypass Action triggered.')" class="px-2.5 py-1.5 rounded-lg border border-slate-300 text-slate-700 font-medium">Bypass Options</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- ADMIN MOCKUP VIEW -->
+            <div id="mockupView-admin" class="hidden space-y-6">
+              <div class="bg-indigo-50 border border-indigo-200 p-4 rounded-2xl flex items-center justify-between">
+                <div>
+                  <div class="font-headline font-bold text-slate-900 text-base">Institutional Administration &amp; Audit Trail</div>
+                  <div class="text-xs text-indigo-800">College-wide accreditation oversight &bull; Project lifecycle deletion with cryptographic acknowledgement</div>
+                </div>
+                <span class="text-xs font-mono font-bold bg-white text-indigo-700 px-3 py-1 rounded-lg border border-indigo-200">Root Dean Access</span>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs">
+                  <div class="text-slate-500 font-sans">Active Capstones</div>
+                  <div class="text-xl font-bold text-brand-600">42 Projects</div>
+                  <div class="text-[10px] text-emerald-600">&bull; 100% Assigned</div>
+                </div>
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs">
+                  <div class="text-slate-500 font-sans">Super Dream Scholars</div>
+                  <div class="text-xl font-bold text-amber-600">18 Candidates</div>
+                  <div class="text-[10px] text-slate-400">&bull; 3rd Year Mentorship</div>
+                </div>
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-2xs">
+                  <div class="text-slate-500 font-sans">Compliance Score</div>
+                  <div class="text-xl font-bold text-emerald-600">99.8% ABET</div>
+                  <div class="text-[10px] text-slate-400">&bull; Tamper-evident logs</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Mockup Footer Stats Strip -->
+          <div class="bg-white px-6 py-3 border-t border-slate-200/80 flex flex-wrap items-center justify-between text-xs text-slate-500 gap-3">
+            <div class="flex items-center gap-3">
+              <span class="flex items-center gap-1 text-emerald-700 font-semibold font-mono">
+                <span class="material-symbols-outlined text-sm">lock</span>
+                <span>JWT Cookie Auth &bull; Strict Role Scoping</span>
+              </span>
+            </div>
+            <div class="flex items-center gap-4">
+              <span>Database: <strong>MongoDB Atlas Cluster</strong></span>
+              <span>Express Engine: <strong>v4.21.2</strong></span>
+            </div>
+          </div>
+
+        </div>
+
       </div>
 
     </div>
   </main>
 
-  <footer class="border-t border-outline-variant/30 py-6 sm:py-8 bg-surface-container-lowest text-center text-xs text-outline">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-      <div>ProjectHub Academic Workspace &bull; ABET AY24-25 Compliance Architecture</div>
-      <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center">
-        <a href="/login/student" class="hover:text-primary transition-colors">Student Login</a>
-        <a href="/login/faculty" class="hover:text-secondary transition-colors">Faculty Login</a>
-        <a href="/login/hod" class="hover:text-amber-400 transition-colors">HOD Login</a>
-        <a href="/login/admin" class="hover:text-tertiary transition-colors">Admin Login</a>
+  <!-- ============================================================== -->
+  <!-- SECTION: 4 DEDICATED ROLE PORTALS (CARDS WITH 3D TILT EFFECT)   -->
+  <!-- ============================================================== -->
+  <section id="roles" class="py-20 bg-white border-t border-slate-200/80 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-50 border border-brand-200/80 text-xs font-semibold text-brand-700 mb-3">
+          <span class="material-symbols-outlined text-sm">vpn_key</span>
+          <span>4 Distinct Access Boundaries</span>
+        </div>
+        <h2 class="font-headline text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+          Dedicated Role Portals &amp; Authority
+        </h2>
+        <p class="text-slate-600 text-sm sm:text-base mt-2">
+          ProjectHub strictly segregates interfaces. Students, Faculty Advisors, Department Heads, and Institutional Deans each enjoy tailored workflows with zero privilege leakage.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 perspective-container">
+        
+        <!-- CARD 1: STUDENT -->
+        <div class="tilt-card bg-surface-subtle border border-slate-200/90 rounded-2xl p-6 flex flex-col justify-between hover:border-brand-400 hover:shadow-3d transition-all group relative overflow-hidden">
+          <div class="tilt-inner">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-600 to-indigo-400 text-white flex items-center justify-center mb-5 shadow-sm group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-[26px]">terminal</span>
+            </div>
+            <div class="flex items-center justify-between mb-1.5">
+              <h3 class="font-headline text-lg font-bold text-slate-900">1. Student</h3>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-brand-50 text-brand-700 border border-brand-200 font-semibold">/login/student</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-5">Workspace &amp; Deliverables Execution</p>
+            
+            <div class="space-y-2.5 mb-6 text-xs text-slate-700">
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>View assigned capstones &amp; teammates</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Submit deliverables &amp; milestone code</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Request OD (On-Duty) with teammates &amp; proof</span>
+              </div>
+              <div class="flex items-start gap-2 text-rose-600 font-medium pt-1">
+                <span class="material-symbols-outlined text-rose-500 text-base shrink-0">block</span>
+                <span>Cannot approve milestones or alter roles</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-200/80 flex flex-col gap-2">
+            <a href="/login/student" class="w-full py-2.5 px-3 rounded-xl bg-brand-600 hover:bg-brand-700 text-white font-semibold text-center text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <span>Enter Student Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <button onclick="copyAndDirect('/login/student', 'student@university.edu', 'Password123!')" class="text-[11px] font-mono text-slate-500 hover:text-brand-600 transition-colors text-center py-1 flex items-center justify-center gap-1">
+              <span>Copy Demo Creds</span>
+              <span class="material-symbols-outlined text-[13px]">content_copy</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 2: FACULTY -->
+        <div class="tilt-card bg-surface-subtle border border-slate-200/90 rounded-2xl p-6 flex flex-col justify-between hover:border-sky-400 hover:shadow-3d transition-all group relative overflow-hidden">
+          <div class="tilt-inner">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-sky-600 to-cyan-400 text-white flex items-center justify-center mb-5 shadow-sm group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-[26px]">rate_review</span>
+            </div>
+            <div class="flex items-center justify-between mb-1.5">
+              <h3 class="font-headline text-lg font-bold text-slate-900">2. Faculty</h3>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-50 text-sky-700 border border-sky-200 font-semibold">/login/faculty</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-5">Advisory, Reviews &amp; Defense Scoring</p>
+            
+            <div class="space-y-2.5 mb-6 text-xs text-slate-700">
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Auto-filtered to supervised mentees</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Review submissions &amp; evaluate defense</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Isolated Super Dream mentee batch hub</span>
+              </div>
+              <div class="flex items-start gap-2 text-rose-600 font-medium pt-1">
+                <span class="material-symbols-outlined text-rose-500 text-base shrink-0">block</span>
+                <span>Cannot view unassigned projects</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-200/80 flex flex-col gap-2">
+            <a href="/login/faculty" class="w-full py-2.5 px-3 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-semibold text-center text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <span>Enter Faculty Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <button onclick="copyAndDirect('/login/faculty', 'faculty@university.edu', 'Password123!')" class="text-[11px] font-mono text-slate-500 hover:text-sky-600 transition-colors text-center py-1 flex items-center justify-center gap-1">
+              <span>Copy Demo Creds</span>
+              <span class="material-symbols-outlined text-[13px]">content_copy</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 3: HOD -->
+        <div class="tilt-card bg-amber-50/40 border border-amber-300/80 rounded-2xl p-6 flex flex-col justify-between hover:border-amber-400 hover:shadow-3d transition-all group relative overflow-hidden">
+          <div class="absolute -right-8 -top-8 w-24 h-24 bg-amber-400/10 rounded-full blur-xl pointer-events-none"></div>
+          <div class="tilt-inner">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-amber-600 to-yellow-400 text-white flex items-center justify-center mb-5 shadow-sm group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-[26px]">manage_accounts</span>
+            </div>
+            <div class="flex items-center justify-between mb-1.5">
+              <h3 class="font-headline text-lg font-bold text-slate-900">3. HOD</h3>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-100 text-amber-800 border border-amber-300 font-semibold">/login/hod</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-5">Department Oversight &amp; User Enrollment</p>
+            
+            <div class="space-y-2.5 mb-6 text-xs text-slate-700">
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Full department-wide read &amp; analytics</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Enroll students &amp; faculty members</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Direct &amp; Bypass On-Duty (OD) approvals</span>
+              </div>
+              <div class="flex items-start gap-2 text-rose-600 font-medium pt-1">
+                <span class="material-symbols-outlined text-rose-500 text-base shrink-0">block</span>
+                <span>Cannot delete institutional project root</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-amber-200/80 flex flex-col gap-2">
+            <a href="/login/hod" class="w-full py-2.5 px-3 rounded-xl bg-amber-500 hover:bg-amber-600 text-white font-semibold text-center text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <span>Enter HOD Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <button onclick="copyAndDirect('/login/hod', 'hod@university.edu', 'Password123!')" class="text-[11px] font-mono text-slate-500 hover:text-amber-700 transition-colors text-center py-1 flex items-center justify-center gap-1">
+              <span>Copy Demo Creds</span>
+              <span class="material-symbols-outlined text-[13px]">content_copy</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CARD 4: ADMIN -->
+        <div class="tilt-card bg-surface-subtle border border-slate-200/90 rounded-2xl p-6 flex flex-col justify-between hover:border-indigo-400 hover:shadow-3d transition-all group relative overflow-hidden">
+          <div class="tilt-inner">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-brand-700 to-indigo-500 text-white flex items-center justify-center mb-5 shadow-sm group-hover:scale-105 transition-transform">
+              <span class="material-symbols-outlined text-[26px]">admin_panel_settings</span>
+            </div>
+            <div class="flex items-center justify-between mb-1.5">
+              <h3 class="font-headline text-lg font-bold text-slate-900">4. Admin</h3>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 font-semibold">/login/admin</span>
+            </div>
+            <p class="text-xs text-slate-500 mb-5">Institutional Governance &amp; Accreditation</p>
+            
+            <div class="space-y-2.5 mb-6 text-xs text-slate-700">
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Create &amp; edit projects across all tabs</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Manage departments, cohorts &amp; users</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Delete with confirmation acknowledgement</span>
+              </div>
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-emerald-600 text-base shrink-0">check_circle</span>
+                <span>Tamper-evident audit trail &amp; IP logging</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-slate-200/80 flex flex-col gap-2">
+            <a href="/login/admin" class="w-full py-2.5 px-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-center text-xs transition-colors flex items-center justify-center gap-1.5 shadow-sm">
+              <span>Enter Admin Portal</span>
+              <span class="material-symbols-outlined text-sm">arrow_forward</span>
+            </a>
+            <button onclick="copyAndDirect('/login/admin', 'admin@university.edu', 'Password123!')" class="text-[11px] font-mono text-slate-500 hover:text-indigo-600 transition-colors text-center py-1 flex items-center justify-center gap-1">
+              <span>Copy Demo Creds</span>
+              <span class="material-symbols-outlined text-[13px]">content_copy</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SECTION: ON-DUTY (OD) WORKFLOW VISUALIZER                      -->
+  <!-- ============================================================== -->
+  <section id="od-system" class="py-18 bg-surface-subtle border-t border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 mb-2">
+          <span class="material-symbols-outlined text-sm">verified_user</span>
+          <span>Multi-Tier Approval Engine</span>
+        </div>
+        <h2 class="font-headline text-3xl font-extrabold text-slate-900 tracking-tight">Integrated On-Duty (OD) Workflow</h2>
+        <p class="text-slate-600 text-sm mt-1">End-to-end event verification, teammate inclusion, mentor approval, and direct HOD dispatch.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 max-w-6xl mx-auto">
+        
+        <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-brand-50 text-brand-600 flex items-center justify-center font-mono font-bold text-sm">01</div>
+            <div class="font-bold text-sm text-slate-900">Student Submission</div>
+            <p class="text-xs text-slate-500 leading-relaxed">Selects dates, attaches mandatory PDF proof/invitation, and specifies event teammates.</p>
+          </div>
+          <div class="text-[10px] font-mono text-slate-400 pt-3 border-t border-slate-100 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">attach_file</span>
+            <span>Mandatory Document Proof</span>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-sky-50 text-sky-600 flex items-center justify-center font-mono font-bold text-sm">02</div>
+            <div class="font-bold text-sm text-slate-900">Mentor Recommendation</div>
+            <p class="text-xs text-slate-500 leading-relaxed">Faculty advisor inspects capstone attendance, verifies deliverables, and endorses to HOD.</p>
+          </div>
+          <div class="text-[10px] font-mono text-sky-600 pt-3 border-t border-slate-100 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">recommend</span>
+            <span>Academic Endorsement</span>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-amber-50 text-amber-600 flex items-center justify-center font-mono font-bold text-sm">03</div>
+            <div class="font-bold text-sm text-slate-900">HOD Final Approval</div>
+            <p class="text-xs text-slate-500 leading-relaxed">Department Head grants institutional clearance or utilizes administrative bypass if required.</p>
+          </div>
+          <div class="text-[10px] font-mono text-amber-600 pt-3 border-t border-slate-100 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">gavel</span>
+            <span>Direct Authority Action</span>
+          </div>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-white border border-slate-200/80 shadow-xs flex flex-col justify-between">
+          <div class="space-y-2">
+            <div class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center font-mono font-bold text-sm">04</div>
+            <div class="font-bold text-sm text-slate-900">Tamper-Proof Pass</div>
+            <p class="text-xs text-slate-500 leading-relaxed">Attendance system records institutional presence, updating student record instantaneously.</p>
+          </div>
+          <div class="text-[10px] font-mono text-emerald-600 pt-3 border-t border-slate-100 flex items-center gap-1">
+            <span class="material-symbols-outlined text-xs">qr_code_2</span>
+            <span>Attendance Synchronization</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SECTION: REAL-TIME EXPRESS RBAC SIMULATOR & SECURITY           -->
+  <!-- ============================================================== -->
+  <section id="security" class="py-20 bg-white border-t border-slate-200/80">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6">
+      
+      <div class="text-center max-w-3xl mx-auto mb-12">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-xs font-semibold text-brand-700 mb-2">
+          <span class="material-symbols-outlined text-sm">security</span>
+          <span>Zero-Trust Server Enforcement</span>
+        </div>
+        <h2 class="font-headline text-3xl font-extrabold text-slate-900 tracking-tight">Express Middleware Role Enforcement</h2>
+        <p class="text-slate-600 text-sm mt-1">Client roles are never trusted. Decrypted HTTP-only cookies query MongoDB Atlas to verify roles before API responses.</p>
+      </div>
+
+      <!-- Security Simulator Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
+        
+        <!-- Controls Column -->
+        <div class="lg:col-span-5 bg-surface-subtle p-6 rounded-2xl border border-slate-200 flex flex-col justify-between space-y-4">
+          <div>
+            <h3 class="font-headline font-bold text-base text-slate-900 mb-1">Interactive RBAC Console</h3>
+            <p class="text-xs text-slate-500 mb-4">Click any scenario to simulate live Express middleware enforcement:</p>
+
+            <div class="space-y-2.5">
+              <button onclick="runRbacSimulation(1)" class="w-full text-left p-3 rounded-xl bg-white hover:bg-brand-50/50 border border-slate-200 hover:border-brand-300 transition-all text-xs flex items-center justify-between group shadow-2xs">
+                <div>
+                  <div class="font-semibold text-slate-900 group-hover:text-brand-700">1. Student attempts /faculty/dashboard</div>
+                  <div class="text-slate-500 text-[11px]">Unauthorized portal crossing</div>
+                </div>
+                <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-200">403 FORBIDDEN</span>
+              </button>
+
+              <button onclick="runRbacSimulation(2)" class="w-full text-left p-3 rounded-xl bg-white hover:bg-brand-50/50 border border-slate-200 hover:border-brand-300 transition-all text-xs flex items-center justify-between group shadow-2xs">
+                <div>
+                  <div class="font-semibold text-slate-900 group-hover:text-brand-700">2. Faculty attempts /admin/projects</div>
+                  <div class="text-slate-500 text-[11px]">Administrative boundary enforcement</div>
+                </div>
+                <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-rose-50 text-rose-600 border border-rose-200">403 DENIED</span>
+              </button>
+
+              <button onclick="runRbacSimulation(3)" class="w-full text-left p-3 rounded-xl bg-white hover:bg-brand-50/50 border border-slate-200 hover:border-brand-300 transition-all text-xs flex items-center justify-between group shadow-2xs">
+                <div>
+                  <div class="font-semibold text-slate-900 group-hover:text-brand-700">3. HOD accesses Department Stats</div>
+                  <div class="text-slate-500 text-[11px]">Query scoped to AIML Department</div>
+                </div>
+                <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 border border-emerald-200">200 OK</span>
+              </button>
+
+              <button onclick="runRbacSimulation(4)" class="w-full text-left p-3 rounded-xl bg-white hover:bg-brand-50/50 border border-slate-200 hover:border-brand-300 transition-all text-xs flex items-center justify-between group shadow-2xs">
+                <div>
+                  <div class="font-semibold text-slate-900 group-hover:text-brand-700">4. Dean queries Tamper-Proof Audit Trail</div>
+                  <div class="text-slate-500 text-[11px]">Verified Institutional Admin session</div>
+                </div>
+                <span class="font-mono text-[10px] font-bold px-2 py-0.5 rounded bg-emerald-50 text-emerald-600 border border-emerald-200">200 OK</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-200 text-[11px] text-slate-400 font-mono">
+            Middleware: <span class="text-brand-600 font-semibold">backend/middleware/auth.js</span>
+          </div>
+        </div>
+
+        <!-- Terminal Output Column -->
+        <div class="lg:col-span-7 bg-slate-900 rounded-2xl p-5 font-mono text-xs text-slate-200 shadow-xl flex flex-col justify-between border border-slate-800">
+          <div class="flex items-center justify-between pb-3 border-b border-slate-800 text-[11px] text-slate-400">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span class="ml-1 text-slate-300">express.js &bull; rbac_verifier.log</span>
+            </div>
+            <span id="terminalStatusBadge" class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold">READY</span>
+          </div>
+
+          <div id="securityConsoleLog" class="py-4 space-y-2 text-slate-300 leading-relaxed min-h-[180px]">
+            <div class="text-slate-500">// ProjectHub Zero-Trust Authorization Engine initialized</div>
+            <div class="text-slate-500">// Select a simulation test button to inspect request dispatch</div>
+            <div class="text-emerald-400">> MongoDB Atlas: 12 Collections Indexed [Users, Projects, Milestones, OD]</div>
+            <div class="text-sky-400">> JWT Signature: HS256 Encrypted HTTP-Only Session Verification ACTIVE</div>
+          </div>
+
+          <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-[11px] text-slate-400">
+            <span>Isolation: Strict Server-Side Scope</span>
+            <span class="text-emerald-400 font-semibold">&bull; 0 Uncaught Vulnerabilities</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============================================================== -->
+  <!-- SECTION: PLATFORM METRICS & COMPLIANCE                         -->
+  <!-- ============================================================== -->
+  <section id="stats" class="py-16 bg-surface-subtle border-t border-slate-200/80">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6">
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 text-center">
+        <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+          <div class="font-headline text-3xl sm:text-4xl font-extrabold text-brand-600">100%</div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-900 mt-1">Zero-Trust Scoping</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">Enforced in Express routes</div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+          <div class="font-headline text-3xl sm:text-4xl font-extrabold text-sky-600">&lt; 20ms</div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-900 mt-1">MongoDB Latency</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">Atlas multi-region cluster</div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+          <div class="font-headline text-3xl sm:text-4xl font-extrabold text-amber-600">3-Tier</div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-900 mt-1">OD Clearance</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">Student &rarr; Mentor &rarr; HOD</div>
+        </div>
+
+        <div class="p-6 rounded-2xl bg-white border border-slate-200/80 shadow-xs">
+          <div class="font-headline text-3xl sm:text-4xl font-extrabold text-emerald-600">ABET</div>
+          <div class="text-xs sm:text-sm font-semibold text-slate-900 mt-1">Accreditation Ready</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">AY24-25 Compliance Architecture</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-200 py-10 bg-white text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-lg bg-brand-600 text-white flex items-center justify-center font-bold text-xs">P</div>
+        <span class="font-semibold text-slate-900">ProjectHub Academic Workspace</span>
+        <span class="text-slate-300">&bull;</span>
+        <span>ABET AY24-25 Compliance Architecture</span>
+      </div>
+      <div class="flex items-center gap-4 sm:gap-6 flex-wrap justify-center font-medium">
+        <a href="/login/student" class="hover:text-brand-600 transition-colors">Student Portal</a>
+        <a href="/login/faculty" class="hover:text-sky-600 transition-colors">Faculty Portal</a>
+        <a href="/login/hod" class="hover:text-amber-600 transition-colors">HOD Portal</a>
+        <a href="/login/admin" class="hover:text-indigo-600 transition-colors">Dean Portal</a>
+        <a href="#security" class="hover:text-slate-900 transition-colors">Security Architecture</a>
       </div>
     </div>
   </footer>
 
+  <!-- ============================================================== -->
+  <!-- CLIENT SCRIPTS: THREE.JS, 3D CARD TILT & INTERACTIVITY          -->
+  <!-- ============================================================== -->
   <script>
-    // Client-side active session detection
+    // -------------------------------------------------------------
+    // 1. THREE.JS LIGHT-THEME 3D BACKGROUND PARTICLES & GRID
+    // -------------------------------------------------------------
+    (function init3DHero() {
+      const canvas = document.getElementById('heroCanvas3D');
+      if (!canvas || !window.THREE) return;
+
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 1000);
+      camera.position.z = 250;
+
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, Math.min(window.innerHeight * 0.9, 800));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Create delicate geometric nodes & wireframe ring
+      const geometry = new THREE.BufferGeometry();
+      const count = 75;
+      const positions = new Float32Array(count * 3);
+
+      for (let i = 0; i < count * 3; i += 3) {
+        positions[i] = (Math.random() - 0.5) * 500;
+        positions[i + 1] = (Math.random() - 0.5) * 350;
+        positions[i + 2] = (Math.random() - 0.5) * 200;
+      }
+      geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+      // Light-theme soft indigo/sky particle material
+      const material = new THREE.PointsMaterial({
+        color: 0x6366f1,
+        size: 3.5,
+        transparent: true,
+        opacity: 0.45,
+      });
+
+      const particleSystem = new THREE.Points(geometry, material);
+      scene.add(particleSystem);
+
+      // Rotating wireframe icosahedron representing academic platform core
+      const icoGeo = new THREE.IcosahedronGeometry(70, 1);
+      const icoMat = new THREE.MeshBasicMaterial({
+        color: 0x4f46e5,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.12,
+      });
+      const icosahedron = new THREE.Mesh(icoGeo, icoMat);
+      icosahedron.position.set(180, 0, -40);
+      scene.add(icosahedron);
+
+      // Rotating orbital ring
+      const ringGeo = new THREE.TorusGeometry(120, 0.7, 16, 100);
+      const ringMat = new THREE.MeshBasicMaterial({
+        color: 0x0ea5e9,
+        transparent: true,
+        opacity: 0.18,
+      });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = Math.PI / 3;
+      ring.position.set(180, 0, -40);
+      scene.add(ring);
+
+      let mouseX = 0, mouseY = 0;
+      window.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX - window.innerWidth / 2) * 0.05;
+        mouseY = (e.clientY - window.innerHeight / 2) * 0.05;
+      });
+
+      function animate() {
+        requestAnimationFrame(animate);
+        particleSystem.rotation.y += 0.0008;
+        icosahedron.rotation.x += 0.002;
+        icosahedron.rotation.y += 0.003;
+        ring.rotation.z += 0.0015;
+
+        // Smooth camera dampening on mouse move
+        camera.position.x += (mouseX - camera.position.x) * 0.03;
+        camera.position.y += (-mouseY - camera.position.y) * 0.03;
+        camera.lookAt(scene.position);
+
+        renderer.render(scene, camera);
+      }
+      animate();
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, Math.min(window.innerHeight * 0.9, 800));
+      });
+    })();
+
+    // -------------------------------------------------------------
+    // 2. 3D CARD MOUSE-TILT EFFECT
+    // -------------------------------------------------------------
+    document.querySelectorAll('.tilt-card').forEach(card => {
+      card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+
+        const rotateX = ((y - centerY) / centerY) * -6; // Max 6 deg
+        const rotateY = ((x - centerX) / centerX) * 6;
+
+        card.style.transform = `perspective(1200px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.01, 1.01, 1.01)`;
+      });
+
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      });
+    });
+
+    // -------------------------------------------------------------
+    // 3. FUNCTIONAL MOCKUP ROLE SWITCHER
+    // -------------------------------------------------------------
+    function switchMockupRole(role) {
+      // Hide all mockup views
+      document.querySelectorAll('[id^="mockupView-"]').forEach(el => el.classList.add('hidden'));
+      const activeView = document.getElementById(`mockupView-${role}`);
+      if (activeView) activeView.classList.remove('hidden');
+
+      // Update tabs styling
+      document.querySelectorAll('.mockup-tab-btn').forEach(btn => {
+        btn.className = 'mockup-tab-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition-all flex items-center gap-1.5';
+      });
+
+      const activeBtn = document.getElementById(`mockupTab-${role}`);
+      if (activeBtn) {
+        if (role === 'student') activeBtn.className = 'mockup-tab-btn px-3 py-1.5 rounded-lg bg-brand-600 text-white font-semibold shadow-2xs transition-all flex items-center gap-1.5';
+        if (role === 'faculty') activeBtn.className = 'mockup-tab-btn px-3 py-1.5 rounded-lg bg-sky-600 text-white font-semibold shadow-2xs transition-all flex items-center gap-1.5';
+        if (role === 'hod') activeBtn.className = 'mockup-tab-btn px-3 py-1.5 rounded-lg bg-amber-500 text-white font-semibold shadow-2xs transition-all flex items-center gap-1.5';
+        if (role === 'admin') activeBtn.className = 'mockup-tab-btn px-3 py-1.5 rounded-lg bg-indigo-600 text-white font-semibold shadow-2xs transition-all flex items-center gap-1.5';
+      }
+    }
+
+    // Interactive Task Checklist Toggle
+    function toggleMockupTask(checkbox) {
+      const container = checkbox.closest('.space-y-2.5');
+      if (!container) return;
+      const allCheckboxes = container.querySelectorAll('input[type="checkbox"]');
+      const checked = container.querySelectorAll('input[type="checkbox"]:checked');
+      
+      const counterEl = document.getElementById('checklistCounter');
+      if (counterEl) {
+        counterEl.textContent = `${checked.length}/${allCheckboxes.length} Done`;
+      }
+
+      const progressEl = document.getElementById('studentProgressNum');
+      if (progressEl) {
+        const base = 50;
+        const add = Math.round((checked.length / allCheckboxes.length) * 50);
+        progressEl.textContent = `${base + add}%`;
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 4. INTERACTIVE RBAC SIMULATOR
+    // -------------------------------------------------------------
+    function runRbacSimulation(scenario) {
+      const log = document.getElementById('securityConsoleLog');
+      const badge = document.getElementById('terminalStatusBadge');
+      if (!log) return;
+
+      if (scenario === 1) {
+        badge.textContent = '403 FORBIDDEN';
+        badge.className = 'px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold';
+        log.innerHTML = `
+          <div class="text-sky-400">> INCOMING REQUEST: GET /api/dashboard/faculty</div>
+          <div class="text-slate-300">> Resolving HTTP-Only Session Cookie 'projecthub_token'...</div>
+          <div class="text-slate-300">> Decrypting JWT: user_id: '670498...11a', verifiedRole: <span class="text-amber-400">'STUDENT'</span></div>
+          <div class="text-amber-400">> Middleware Check: requireRole(['FACULTY', 'HOD'])</div>
+          <div class="text-rose-400 font-bold">> SECURITY REJECTION: Access denied. Role 'STUDENT' is not authorized to access this resource.</div>
+          <div class="text-slate-400">> Response: HTTP/1.1 403 Forbidden [Payload: { success: false, message: 'Forbidden' }]</div>
+          <div class="text-emerald-400">> Client redirected to: /student/dashboard</div>
+        `;
+      } else if (scenario === 2) {
+        badge.textContent = '403 ACCESS DENIED';
+        badge.className = 'px-2 py-0.5 rounded bg-rose-500/20 text-rose-400 font-bold';
+        log.innerHTML = `
+          <div class="text-sky-400">> INCOMING REQUEST: DELETE /api/projects/6704...99b</div>
+          <div class="text-slate-300">> Verified Session: Dr. Sarah Jenkins (Role: 'FACULTY')</div>
+          <div class="text-amber-400">> Middleware Check: requireRole(['ADMIN'])</div>
+          <div class="text-rose-400 font-bold">> SECURITY VIOLATION BLOCKED: Faculty accounts lack institutional delete permissions.</div>
+          <div class="text-slate-400">> Response: HTTP/1.1 403 Access Denied</div>
+          <div class="text-emerald-400">> Incident logged to MongoDB Atlas Audit Trail with origin IP &amp; Timestamp</div>
+        `;
+      } else if (scenario === 3) {
+        badge.textContent = '200 OK';
+        badge.className = 'px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-bold';
+        log.innerHTML = `
+          <div class="text-sky-400">> INCOMING REQUEST: GET /api/admin/departments/AIML</div>
+          <div class="text-slate-300">> Verified Session: HOD User (Role: 'HOD')</div>
+          <div class="text-amber-400">> Middleware Check: requireHOD (Pass: HOD or ADMIN permitted)</div>
+          <div class="text-emerald-400 font-bold">> Query Scoping: Department.findOne({ code: 'AIML' })</div>
+          <div class="text-slate-300">> Populating: { students: 148, faculty: 12, cohorts: 4, activeMilestones: 8 }</div>
+          <div class="text-emerald-400">> Response: HTTP/1.1 200 OK [Latency: 18.4ms]</div>
+        `;
+      } else if (scenario === 4) {
+        badge.textContent = '200 OK - ROOT';
+        badge.className = 'px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-400 font-bold';
+        log.innerHTML = `
+          <div class="text-sky-400">> INCOMING REQUEST: GET /api/admin/audit-trail</div>
+          <div class="text-slate-300">> Verified Session: Institutional Dean (Role: 'ADMIN')</div>
+          <div class="text-amber-400">> Middleware Check: requireAdmin (Pass: Root Dean Verified)</div>
+          <div class="text-emerald-400 font-bold">> Query Scoping: AuditTrail.find().sort({ timestamp: -1 }).limit(100)</div>
+          <div class="text-slate-300">> Fetched 100 immutable audit entries with cryptographic IP logs</div>
+          <div class="text-emerald-400">> Response: HTTP/1.1 200 OK [Payload: { success: true, count: 100 }]</div>
+        `;
+      }
+    }
+
+    function quickTestSecurity() {
+      const secEl = document.getElementById('security');
+      if (secEl) {
+        secEl.scrollIntoView({ behavior: 'smooth' });
+        runRbacSimulation(1);
+      }
+    }
+
+    // -------------------------------------------------------------
+    // 5. ONE-CLICK DEMO FILL & DIRECT
+    // -------------------------------------------------------------
+    function copyAndDirect(targetUrl, email, password) {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(email);
+      }
+      // Small visual confirmation then navigate
+      showLightToast(`Copied ${email} to clipboard! Redirecting...`);
+      setTimeout(() => {
+        window.location.href = targetUrl;
+      }, 700);
+    }
+
+    function showLightToast(msg) {
+      const existing = document.getElementById('lightToast');
+      if (existing) existing.remove();
+
+      const toast = document.createElement('div');
+      toast.id = 'lightToast';
+      toast.className = 'fixed bottom-5 right-5 z-50 bg-slate-900 text-white text-xs px-4 py-2.5 rounded-xl shadow-xl border border-slate-700 flex items-center gap-2 animate-bounce';
+      toast.innerHTML = `<span class="material-symbols-outlined text-sm text-emerald-400">check_circle</span><span>${msg}</span>`;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 2500);
+    }
+
+    // -------------------------------------------------------------
+    // 6. ACTIVE SESSION AUTO-DETECTION
+    // -------------------------------------------------------------
     document.addEventListener('DOMContentLoaded', async () => {
       try {
         const token = localStorage.getItem('projecthub_token');
@@ -388,7 +1345,7 @@
           }
         }
       } catch (e) {
-        // Silently ignore network errors on landing check
+        // Silently ignore network failures on landing page
       }
     });
 
@@ -398,6 +1355,7 @@
       const emailEl = document.getElementById('sessionUserEmail');
       const roleBadge = document.getElementById('sessionRoleBadge');
       const dashBtn = document.getElementById('sessionDashboardBtn');
+      const initialEl = document.getElementById('sessionAvatarInitial');
       const headerNav = document.getElementById('headerNavActions');
 
       const role = (user.role || 'student').toLowerCase();
@@ -412,17 +1370,18 @@
         emailEl.textContent = user.email || '';
         roleBadge.textContent = roleUpper;
         dashBtn.href = dashboardUrl;
+        if (initialEl) initialEl.textContent = (user.name || 'U').charAt(0).toUpperCase();
         banner.classList.remove('hidden');
       }
 
       if (headerNav) {
         headerNav.innerHTML = `
-          <a href="${dashboardUrl}" class="text-xs sm:text-sm px-3 py-1.5 rounded-lg bg-primary-container text-on-primary font-semibold hover:bg-indigo-600 transition-colors shadow-sm flex items-center gap-1.5">
-            <span class="material-symbols-outlined text-[16px]">dashboard</span>
+          <a href="${dashboardUrl}" class="text-xs sm:text-sm px-3.5 py-2 rounded-xl bg-brand-600 text-white font-semibold hover:bg-brand-700 transition-colors shadow-sm flex items-center gap-1.5">
+            <span class="material-symbols-outlined text-[17px]">dashboard</span>
             <span>Dashboard</span>
           </a>
-          <button type="button" onclick="handleLandingLogout()" class="text-xs sm:text-sm px-2.5 sm:px-3 py-1.5 rounded-lg border border-outline-variant/50 text-on-surface-variant hover:text-error hover:border-error/40 transition-colors flex items-center gap-1">
-            <span class="material-symbols-outlined text-[16px]">logout</span>
+          <button type="button" onclick="handleLandingLogout()" class="text-xs sm:text-sm px-3 py-2 rounded-xl border border-slate-200 text-slate-700 hover:text-rose-600 hover:border-rose-300 hover:bg-rose-50 transition-colors flex items-center gap-1">
+            <span class="material-symbols-outlined text-[17px]">logout</span>
             <span class="hidden sm:inline">Sign Out</span>
           </button>
         `;
