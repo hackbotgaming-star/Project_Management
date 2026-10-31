@@ -22,7 +22,7 @@ const superDreamRoutes = require('./routes/superDreamRoutes');
 const odRoutes = require('./routes/odRoutes');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+let PORT = parseInt(process.env.PORT, 10) || 5000;
 
 // Middleware
 app.use(morgan('dev'));
@@ -173,15 +173,32 @@ async function startServer() {
   try {
     await connectDB();
     await seedDatabase();
-    app.listen(PORT, () => {
-      console.log(`=======================================================`);
-      console.log(`🚀 ProjectHub Server running on http://localhost:${PORT}`);
-      console.log(`- Landing Page:     http://localhost:${PORT}/`);
-      console.log(`- Student Portal:   http://localhost:${PORT}/login/student`);
-      console.log(`- Faculty Portal:   http://localhost:${PORT}/login/faculty`);
-      console.log(`- Admin Portal:     http://localhost:${PORT}/login/admin`);
-      console.log(`=======================================================`);
-    });
+
+    const listenOnPort = (portToTry) => {
+      const server = app.listen(portToTry, () => {
+        PORT = portToTry;
+        app.set('port', PORT);
+        console.log(`=======================================================`);
+        console.log(`🚀 ProjectHub Server running on http://localhost:${PORT}`);
+        console.log(`- Landing Page:     http://localhost:${PORT}/`);
+        console.log(`- Student Portal:   http://localhost:${PORT}/login/student`);
+        console.log(`- Faculty Portal:   http://localhost:${PORT}/login/faculty`);
+        console.log(`- Admin Portal:     http://localhost:${PORT}/login/admin`);
+        console.log(`=======================================================`);
+      });
+
+      server.on('error', (err) => {
+        if (err.code === 'EADDRINUSE') {
+          console.warn(`⚠️ Port ${portToTry} is in use by another service. Trying port ${portToTry + 1}...`);
+          listenOnPort(portToTry + 1);
+        } else {
+          console.error('Fatal server startup error:', err);
+          process.exit(1);
+        }
+      });
+    };
+
+    listenOnPort(PORT);
   } catch (err) {
     console.error('Fatal initialization error:', err);
     process.exit(1);
